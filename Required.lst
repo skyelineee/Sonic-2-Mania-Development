@@ -40,3 +40,6 @@ writenop 000A1C00 2
 writenop 0006678B 2
 writenop 00176480 2
 writenop 00146560 2
+writenop 00090EC0 2
+writenop 0009F6E1 2
+writenop 000DB500 2
