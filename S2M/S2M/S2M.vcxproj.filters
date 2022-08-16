@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="GameAPI">
+      <UniqueIdentifier>{2b00ea04-a1d3-4639-b021-f84d63a0646a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{6902948b-3f72-4c94-ad2d-f4bd0e556365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Test">
+      <UniqueIdentifier>{2be99c0d-94c8-4d2e-b41c-8c3713865335}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Common">
+      <UniqueIdentifier>{598146be-572f-4aca-b8bc-1c39e9bd7e13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Global">
+      <UniqueIdentifier>{4e4dbb54-14b3-4307-baa0-915160d6c09c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="S2M.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameAPI\CPP\GameAPI\Game.cpp">
+      <Filter>GameAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Test\TestObject.cpp">
+      <Filter>Source Files\Objects\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Global\Player.cpp">
+      <Filter>Source Files\Objects\Global</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
+      <Filter>GameAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameAPI\CPP\GameAPI\GameObjects.hpp">
+      <Filter>GameAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameAPI\CPP\GameAPI\GameVariables.hpp">
+      <Filter>GameAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Test\TestObject.hpp">
+      <Filter>Source Files\Objects\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Global\Player.hpp">
+      <Filter>Source Files\Objects\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="S2M.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
