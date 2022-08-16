@@ -253,7 +253,7 @@ void Spring::State_Vertical()
                     int32 anim = player->animator.animationID;
 
                     player->animationReserve = Player::ANI_WALK;
-                    if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED)
+                    if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH)
                         player->animationReserve = player->animator.animationID;
 
                     if (player->state.Matches(&Player::State_TubeAirRoll) || player->state.Matches(&Player::State_TubeRoll)) {
@@ -328,7 +328,7 @@ void Spring::State_Vertical()
                         int32 anim = player->animator.animationID;
 
                         player->animationReserve = Player::ANI_WALK;
-                        if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED)
+                        if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH)
                             player->animationReserve = player->animator.animationID;
 
                         if (player->state.Matches(&Player::State_TubeAirRoll) || player->state.Matches(&Player::State_TubeRoll)) {
@@ -462,7 +462,7 @@ void Spring::State_Horizontal()
                     }
 
                     int32 anim = player->animator.animationID;
-                    if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH_ANGLED))
+                    if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH))
                         player->animator.animationID = Player::ANI_WALK;
 
                     player->controlLock = 16;
@@ -527,7 +527,7 @@ void Spring::State_Horizontal()
                     }
 
                     int32 anim = player->animator.animationID;
-                    if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH_ANGLED))
+                    if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH))
                         player->animator.animationID = Player::ANI_WALK;
 
                     player->controlLock    = 16;
@@ -583,7 +583,7 @@ void Spring::State_Diagonal()
                         player->state.Set(&Player::State_Air);
 
                         int32 anim = player->animator.animationID;
-                        if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH_ANGLED))
+                        if (anim != Player::ANI_JUMP && (anim < Player::ANI_WALK || anim > Player::ANI_DASH))
                             player->animator.animationID = Player::ANI_WALK;
                     }
 
@@ -591,7 +591,7 @@ void Spring::State_Diagonal()
                         if (!player->state.Matches(&Player::State_TubeAirRoll) && !player->state.Matches(&Player::State_TubeRoll)) {
                             int32 anim               = player->animator.animationID;
                             player->animationReserve = Player::ANI_WALK;
-                            if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED)
+                            if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH)
                                 player->animationReserve = player->animator.animationID;
                             player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_DIAGONAL, true, 0);
                         }

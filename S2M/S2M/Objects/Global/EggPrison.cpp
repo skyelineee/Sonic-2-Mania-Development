@@ -79,7 +79,7 @@ void EggPrison::Update()
 
                         if (this->type == EggPrison::Spring) {
                             int32 anim = player->animator.animationID;
-                            if ((anim >= Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED))
+                            if ((anim >= Player::ANI_WALK && anim <= Player::ANI_DASH))
                                 player->animationReserve = player->animator.animationID;
                             else
                                 player->animationReserve = Player::ANI_WALK;

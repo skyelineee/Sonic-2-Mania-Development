@@ -427,12 +427,6 @@ void Player::LateUpdate()
                     this->tailDirection = this->direction;
                     break;
 
-                case ANI_HANG_GIMMICK:
-                case ANI_HANG_PLAYER:
-                    this->tailAnimator.SetAnimation(this->tailFrames, 9, false, 0);
-                    this->tailDirection = this->direction;
-                    break;
-
                 case ANI_SPINDASH:
                     this->tailAnimator.SetAnimation(this->tailFrames, 2, false, 0);
                     this->tailDirection = this->direction;
@@ -686,10 +680,6 @@ void Player::Create(void *data)
                         SpriteFrame *dst = this->aniFrames.GetFrame(ANI_DASH, f + 1);
                         SpriteFrame *src = this->aniFrames.GetFrame(ANI_PEELOUT, f);
                         *dst             = *src;
-
-                        dst  = this->aniFrames.GetFrame(ANI_DASH_ANGLED, f + 1);
-                        src  = this->aniFrames.GetFrame(ANI_PEELOUT_ANGLED, f);
-                        *dst = *src;
                     }
                 }
                 break;
@@ -874,12 +864,16 @@ void Player::StageLoad()
     sVars->lookUpDelay    = 60;
     sVars->lookUpDistance = 96;
 
-    sVars->activeSuperSonicPalette       = sVars->superSonicPalette;
-    sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette;
-    sVars->activeSuperTailsPalette       = sVars->superTailsPalette;
-    sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette;
-    sVars->activeSuperKnuxPalette        = sVars->superKnuxPalette;
-    sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette;
+    sVars->activeSuperSonicPalette        = sVars->superSonicPalette;
+    sVars->activeSuperSonicPalette_Water  = sVars->superSonicPalette;
+    sVars->activeSuperTailsPalette        = sVars->superTailsPalette;
+    sVars->activeSuperTailsPalette_Water  = sVars->superTailsPalette;
+    sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
+    sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
+    sVars->activeSuperMightyPalette       = sVars->superMightyPalette;
+    sVars->activeSuperMightyPalette_Water = sVars->superMightyPalette;
+    sVars->activeSuperRayPalette          = sVars->superRayPalette;
+    sVars->activeSuperRayPalette_Water    = sVars->superRayPalette;
 
     sVars->canSuperCB = nullptr;
 
@@ -1315,10 +1309,6 @@ void Player::ChangeCharacter(int32 character)
                     SpriteFrame *dst = this->aniFrames.GetFrame(ANI_DASH, f + 1);
                     SpriteFrame *src = this->aniFrames.GetFrame(ANI_PEELOUT, f);
                     *dst             = *src;
-
-                    dst  = this->aniFrames.GetFrame(ANI_DASH_ANGLED, f + 1);
-                    src  = this->aniFrames.GetFrame(ANI_PEELOUT_ANGLED, f);
-                    *dst = *src;
                 }
             }
             break;
@@ -2176,7 +2166,7 @@ void Player::CheckStartFlyCarry(Player *leader)
         if (canFlyCarry && (leader->animator.animationID != ANI_FAN)) {
             if (abs(this->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !this->flyCarryTimer
                 && !leader->down && !leader->onGround) {
-                leader->animator.SetAnimation(leader->aniFrames, ANI_HANG_PLAYER, false, 0);
+                leader->animator.SetAnimation(leader->aniFrames, ANI_HANG, false, 0);
                 leader->state.Set(&Player::State_Carried);
                 leader->nextAirState.Set(nullptr);
                 leader->nextGroundState.Set(nullptr);

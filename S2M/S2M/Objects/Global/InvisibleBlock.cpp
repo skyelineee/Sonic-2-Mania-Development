@@ -64,7 +64,7 @@ void InvisibleBlock::Update()
 
                     if (this->noPush) {
                         int32 anim = player->animator.animationID;
-                        if (anim == Player::ANI_PUSH || (anim >= Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED))
+                        if (anim == Player::ANI_PUSH || (anim >= Player::ANI_WALK && anim <= Player::ANI_DASH))
                             player->animator.SetAnimation(player->aniFrames, Player::ANI_IDLE, false, 0);
                     }
 
@@ -101,7 +101,7 @@ void InvisibleBlock::Update()
 
                     if (this->noPush) {
                         int32 anim = player->animator.animationID;
-                        if (anim == Player::ANI_PUSH || (anim >= Player::ANI_WALK && anim <= Player::ANI_DASH_ANGLED))
+                        if (anim == Player::ANI_PUSH || (anim >= Player::ANI_WALK && anim <= Player::ANI_DASH))
                             player->animator.SetAnimation(player->aniFrames, Player::ANI_IDLE, false, 0);
                     }
 
