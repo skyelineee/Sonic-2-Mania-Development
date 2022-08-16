@@ -94,11 +94,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,11 +114,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,11 +134,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,11 +154,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,6 +172,58 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GameAPI\CPP\GameAPI\Game.cpp" />
+    <ClCompile Include="Objects\Global\ActClear.cpp" />
+    <ClCompile Include="Objects\Global\Animals.cpp" />
+    <ClCompile Include="Objects\Global\Announcer.cpp" />
+    <ClCompile Include="Objects\Global\BoundsMarker.cpp" />
+    <ClCompile Include="Objects\Global\Camera.cpp" />
+    <ClCompile Include="Objects\Global\EggPrison.cpp" />
+    <ClCompile Include="Objects\Global\COverlay.cpp" />
+    <ClCompile Include="Objects\Global\Debris.cpp" />
+    <ClCompile Include="Objects\Global\DebugMode.cpp" />
+    <ClCompile Include="Objects\Global\Dust.cpp" />
+    <ClCompile Include="Objects\Global\Explosion.cpp" />
+    <ClCompile Include="Objects\Global\GameOver.cpp" />
+    <ClCompile Include="Objects\Global\HUD.cpp" />
+    <ClCompile Include="Objects\Global\ImageTrail.cpp" />
+    <ClCompile Include="Objects\Global\InvincibleStars.cpp" />
+    <ClCompile Include="Objects\Global\InvisibleBlock.cpp" />
+    <ClCompile Include="Objects\Global\ItemBox.cpp" />
+    <ClCompile Include="Objects\Global\Localization.cpp" />
+    <ClCompile Include="Objects\Global\Music.cpp" />
+    <ClCompile Include="Objects\Global\PauseMenu.cpp" />
+    <ClCompile Include="Objects\Global\PlaneSwitch.cpp" />
+    <ClCompile Include="Objects\Global\ReplayRecorder.cpp" />
+    <ClCompile Include="Objects\Global\Ring.cpp" />
+    <ClCompile Include="Objects\Global\SaveGame.cpp" />
+    <ClCompile Include="Objects\Global\ScoreBonus.cpp" />
+    <ClCompile Include="Objects\Global\Shield.cpp" />
+    <ClCompile Include="Objects\Global\SignPost.cpp" />
+    <ClCompile Include="Objects\Global\SpecialRing.cpp" />
+    <ClCompile Include="Objects\Global\Spikes.cpp" />
+    <ClCompile Include="Objects\Global\Spring.cpp" />
+    <ClCompile Include="Objects\Global\StarPost.cpp" />
+    <ClCompile Include="Objects\Global\SuperSparkle.cpp" />
+    <ClCompile Include="Objects\Global\TitleCard.cpp" />
+    <ClCompile Include="Objects\Global\Zone.cpp" />
+    <ClCompile Include="Objects\Helpers\BadnikHelpers.cpp" />
+    <ClCompile Include="Objects\Helpers\CutsceneRules.cpp" />
+    <ClCompile Include="Objects\Helpers\CutsceneSeq.cpp" />
+    <ClCompile Include="Objects\Helpers\DialogRunner.cpp" />
+    <ClCompile Include="Objects\Helpers\DrawHelpers.cpp" />
+    <ClCompile Include="Objects\Helpers\FXAniTiles.cpp" />
+    <ClCompile Include="Objects\Helpers\FXAudioPan.cpp" />
+    <ClCompile Include="Objects\Helpers\FXFade.cpp" />
+    <ClCompile Include="Objects\Helpers\FXTileModifier.cpp" />
+    <ClCompile Include="Objects\Helpers\GameProgress.cpp" />
+    <ClCompile Include="Objects\Helpers\LogHelpers.cpp" />
+    <ClCompile Include="Objects\Helpers\MathHelpers.cpp" />
+    <ClCompile Include="Objects\Helpers\MenuParam.cpp" />
+    <ClCompile Include="Objects\Helpers\Options.cpp" />
+    <ClCompile Include="Objects\Helpers\PlayerHelpers.cpp" />
+    <ClCompile Include="Objects\Helpers\PlayerProbe.cpp" />
+    <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
+    <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="S2M.cpp" />
     <ClCompile Include="Objects\Global\Player.cpp" />
     <ClCompile Include="Objects\Test\TestObject.cpp">
@@ -183,7 +235,59 @@
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameObjects.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameVariables.hpp" />
+    <ClInclude Include="Objects\Global\ActClear.hpp" />
+    <ClInclude Include="Objects\Global\Animals.hpp" />
+    <ClInclude Include="Objects\Global\Announcer.hpp" />
+    <ClInclude Include="Objects\Global\BoundsMarker.hpp" />
+    <ClInclude Include="Objects\Global\Camera.hpp" />
+    <ClInclude Include="Objects\Global\EggPrison.hpp" />
+    <ClInclude Include="Objects\Global\COverlay.hpp" />
+    <ClInclude Include="Objects\Global\Debris.hpp" />
+    <ClInclude Include="Objects\Global\DebugMode.hpp" />
+    <ClInclude Include="Objects\Global\Dust.hpp" />
+    <ClInclude Include="Objects\Global\Explosion.hpp" />
+    <ClInclude Include="Objects\Global\GameOver.hpp" />
+    <ClInclude Include="Objects\Global\HUD.hpp" />
+    <ClInclude Include="Objects\Global\ImageTrail.hpp" />
+    <ClInclude Include="Objects\Global\InvincibleStars.hpp" />
+    <ClInclude Include="Objects\Global\InvisibleBlock.hpp" />
+    <ClInclude Include="Objects\Global\ItemBox.hpp" />
+    <ClInclude Include="Objects\Global\Localization.hpp" />
+    <ClInclude Include="Objects\Global\Music.hpp" />
+    <ClInclude Include="Objects\Global\PauseMenu.hpp" />
+    <ClInclude Include="Objects\Global\PlaneSwitch.hpp" />
     <ClInclude Include="Objects\Global\Player.hpp" />
+    <ClInclude Include="Objects\Global\ReplayRecorder.hpp" />
+    <ClInclude Include="Objects\Global\Ring.hpp" />
+    <ClInclude Include="Objects\Global\SaveGame.hpp" />
+    <ClInclude Include="Objects\Global\ScoreBonus.hpp" />
+    <ClInclude Include="Objects\Global\Shield.hpp" />
+    <ClInclude Include="Objects\Global\SignPost.hpp" />
+    <ClInclude Include="Objects\Global\SpecialRing.hpp" />
+    <ClInclude Include="Objects\Global\Spikes.hpp" />
+    <ClInclude Include="Objects\Global\Spring.hpp" />
+    <ClInclude Include="Objects\Global\StarPost.hpp" />
+    <ClInclude Include="Objects\Global\SuperSparkle.hpp" />
+    <ClInclude Include="Objects\Global\TitleCard.hpp" />
+    <ClInclude Include="Objects\Global\Zone.hpp" />
+    <ClInclude Include="Objects\Helpers\BadnikHelpers.hpp" />
+    <ClInclude Include="Objects\Helpers\CutsceneRules.hpp" />
+    <ClInclude Include="Objects\Helpers\CutsceneSeq.hpp" />
+    <ClInclude Include="Objects\Helpers\DialogRunner.hpp" />
+    <ClInclude Include="Objects\Helpers\DrawHelpers.hpp" />
+    <ClInclude Include="Objects\Helpers\FXAniTiles.hpp" />
+    <ClInclude Include="Objects\Helpers\FXAudioPan.hpp" />
+    <ClInclude Include="Objects\Helpers\FXFade.hpp" />
+    <ClInclude Include="Objects\Helpers\FXTileModifier.hpp" />
+    <ClInclude Include="Objects\Helpers\GameProgress.hpp" />
+    <ClInclude Include="Objects\Helpers\LogHelpers.hpp" />
+    <ClInclude Include="Objects\Helpers\MathHelpers.hpp" />
+    <ClInclude Include="Objects\Helpers\MenuParam.hpp" />
+    <ClInclude Include="Objects\Helpers\Options.hpp" />
+    <ClInclude Include="Objects\Helpers\PlayerHelpers.hpp" />
+    <ClInclude Include="Objects\Helpers\PlayerProbe.hpp" />
+    <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
+    <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\Test\TestObject.hpp">
       <SubType>
       </SubType>

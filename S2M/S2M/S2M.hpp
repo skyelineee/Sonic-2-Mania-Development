@@ -2,6 +2,31 @@
 
 #include "Game.hpp"
 
+// Enums
+
+enum S2MGameCheats {
+    SECRET_REGIONSWAP       = 1 << 2,
+    SECRET_CAMERATRACKING   = 1 << 3,
+    SECRET_PENPENMODE       = 1 << 4,
+    SECRET_RANDOMITEMS      = 1 << 5,
+    SECRET_BLUESHIELDMODE   = 1 << 6,
+    SECRET_NOITEMS          = 1 << 7,
+};
+
+enum S2MMedalMods {
+    MEDAL_NOLIVES  = 1 << 6,
+};
+
+enum GameTypes {
+    GAME_S1,
+    GAME_CD,
+    GAME_S2,
+    GAME_SM,
+    GAME_S3K,
+    GAME_S3,
+    GAME_SK,
+};
+
 // Global Variables
 
 // forward declare
@@ -56,7 +81,7 @@ struct GlobalVariables {
     int32 restartRings;
     int32 restart1UP;
     int32 restartPowerups;
-    int32 restartPos[8];
+    RSDK::Vector2 restartPos[4];
     int32 restartSlot[4];
     int32 restartDir[4];
     int32 restartMinutes;
@@ -74,8 +99,24 @@ struct GlobalVariables {
     int32 continues;
     int32 initCoolBonus;
     int32 coolBonus[4];
+    int32 stock;
+    int32 characterFlags;
     int32 vapeMode;
     int32 secrets;
     int32 superSecret;
     int32 superMusicEnabled;
+    int32 playerSpriteStyle;
+    int32 gameSpriteStyle;
+    int32 ostStyle;
+    int32 starpostStyle;
+    int32 gravityDir;
+    bool32 useManiaBehavior;
+    int32 tileCollisionMode;
+    int32 persistentTimer;
+    int32 atlCameraBoundsL[PLAYER_COUNT];
+    int32 atlCameraBoundsR[PLAYER_COUNT];
+    int32 atlCameraBoundsT[PLAYER_COUNT];
+    int32 atlCameraBoundsB[PLAYER_COUNT];
+    RSDK::Vector2 atlCameraPos[PLAYER_COUNT];
+    RSDK::Vector2 atlOffset;
 };
