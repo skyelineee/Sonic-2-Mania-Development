@@ -825,3 +825,371 @@ Object Class 64 is unimplimented!
 File not found: Data/Sprites/UI/SmallFont.bin
 File not found: Data/Sprites/UI/SmallFont.bin
 Attempting to save user file: Achievements.bin
+Attempting to load user file: Achievements.bin
+File not found: Data.rsdk
+Loaded file Data/Game/GameConfig.bin
+Failed to link game logic!
+Loaded file Data/Game/GameConfig.bin
+File not found: Data/SoundFX/Global/Jump.wav
+Unable to open sfx: Data/SoundFX/Global/Jump.wav
+File not found: Data/SoundFX/Global/Ring.wav
+Unable to open sfx: Data/SoundFX/Global/Ring.wav
+File not found: Data/SoundFX/Global/StarPost.wav
+Unable to open sfx: Data/SoundFX/Global/StarPost.wav
+File not found: Data/SoundFX/Global/LoseRings.wav
+Unable to open sfx: Data/SoundFX/Global/LoseRings.wav
+File not found: Data/SoundFX/Global/Spring.wav
+Unable to open sfx: Data/SoundFX/Global/Spring.wav
+File not found: Data/SoundFX/Global/Destroy.wav
+Unable to open sfx: Data/SoundFX/Global/Destroy.wav
+File not found: Data/SoundFX/Global/BlueShield.wav
+Unable to open sfx: Data/SoundFX/Global/BlueShield.wav
+File not found: Data/SoundFX/Global/BubbleShield.wav
+Unable to open sfx: Data/SoundFX/Global/BubbleShield.wav
+File not found: Data/SoundFX/Global/FireShield.wav
+Unable to open sfx: Data/SoundFX/Global/FireShield.wav
+File not found: Data/SoundFX/Global/LightningShield.wav
+Unable to open sfx: Data/SoundFX/Global/LightningShield.wav
+File not found: Data/SoundFX/Global/Skidding.wav
+Unable to open sfx: Data/SoundFX/Global/Skidding.wav
+File not found: Data/SoundFX/Global/Charge.wav
+Unable to open sfx: Data/SoundFX/Global/Charge.wav
+File not found: Data/SoundFX/Global/Release.wav
+Unable to open sfx: Data/SoundFX/Global/Release.wav
+File not found: Data/SoundFX/Global/DropDash.wav
+Unable to open sfx: Data/SoundFX/Global/DropDash.wav
+File not found: Data/SoundFX/Global/Hurt.wav
+Unable to open sfx: Data/SoundFX/Global/Hurt.wav
+File not found: Data/SoundFX/Global/Roll.wav
+Unable to open sfx: Data/SoundFX/Global/Roll.wav
+File not found: Data/SoundFX/Global/SignPost.wav
+Unable to open sfx: Data/SoundFX/Global/SignPost.wav
+File not found: Data/SoundFX/Global/SignPost2p.wav
+Unable to open sfx: Data/SoundFX/Global/SignPost2p.wav
+File not found: Data/SoundFX/Global/InstaShield.wav
+Unable to open sfx: Data/SoundFX/Global/InstaShield.wav
+File not found: Data/SoundFX/Global/FireDash.wav
+Unable to open sfx: Data/SoundFX/Global/FireDash.wav
+File not found: Data/SoundFX/Global/BubbleBounce.wav
+Unable to open sfx: Data/SoundFX/Global/BubbleBounce.wav
+File not found: Data/SoundFX/Global/LightningJump.wav
+Unable to open sfx: Data/SoundFX/Global/LightningJump.wav
+File not found: Data/SoundFX/Global/SpikesMove.wav
+Unable to open sfx: Data/SoundFX/Global/SpikesMove.wav
+File not found: Data/SoundFX/Global/Slide.wav
+Unable to open sfx: Data/SoundFX/Global/Slide.wav
+File not found: Data/SoundFX/Global/Twinkle.wav
+Unable to open sfx: Data/SoundFX/Global/Twinkle.wav
+File not found: Data/SoundFX/Global/ScoreAdd.wav
+Unable to open sfx: Data/SoundFX/Global/ScoreAdd.wav
+File not found: Data/SoundFX/Global/ScoreTotal.wav
+Unable to open sfx: Data/SoundFX/Global/ScoreTotal.wav
+Loaded file Data/SoundFX/Global/MenuBleep.wav
+Loaded file Data/SoundFX/Global/MenuAccept.wav
+File not found: Data/SoundFX/Global/OuttaHere.wav
+Unable to open sfx: Data/SoundFX/Global/OuttaHere.wav
+File not found: Data/SoundFX/Global/Grab.wav
+Unable to open sfx: Data/SoundFX/Global/Grab.wav
+File not found: Data/SoundFX/Global/Flying.wav
+Unable to open sfx: Data/SoundFX/Global/Flying.wav
+File not found: Data/SoundFX/Global/Tired.wav
+Unable to open sfx: Data/SoundFX/Global/Tired.wav
+File not found: Data/SoundFX/Global/Land.wav
+Unable to open sfx: Data/SoundFX/Global/Land.wav
+File not found: Data/SoundFX/Global/SpecialRing.wav
+Unable to open sfx: Data/SoundFX/Global/SpecialRing.wav
+File not found: Data/SoundFX/Global/SpecialWarp.wav
+Unable to open sfx: Data/SoundFX/Global/SpecialWarp.wav
+File not found: Data/SoundFX/Global/Teleport.wav
+Unable to open sfx: Data/SoundFX/Global/Teleport.wav
+File not found: Data/SoundFX/Global/PeelCharge.wav
+Unable to open sfx: Data/SoundFX/Global/PeelCharge.wav
+File not found: Data/SoundFX/Global/PeelRelease.wav
+Unable to open sfx: Data/SoundFX/Global/PeelRelease.wav
+File not found: Data/SoundFX/Global/HyperRing.wav
+Unable to open sfx: Data/SoundFX/Global/HyperRing.wav
+File not found: Data/SoundFX/Stage/Transform2.wav
+Unable to open sfx: Data/SoundFX/Stage/Transform2.wav
+Loaded file Data/SoundFX/Global/MenuWoosh.wav
+File not found: Data/SoundFX/VO/Three.wav
+Unable to open sfx: Data/SoundFX/VO/Three.wav
+File not found: Data/SoundFX/VO/Two.wav
+Unable to open sfx: Data/SoundFX/VO/Two.wav
+File not found: Data/SoundFX/VO/One.wav
+Unable to open sfx: Data/SoundFX/VO/One.wav
+File not found: Data/SoundFX/VO/Go.wav
+Unable to open sfx: Data/SoundFX/VO/Go.wav
+File not found: Data/SoundFX/VO/Goal.wav
+Unable to open sfx: Data/SoundFX/VO/Goal.wav
+File not found: Data/SoundFX/VO/SonicWins.wav
+Unable to open sfx: Data/SoundFX/VO/SonicWins.wav
+File not found: Data/SoundFX/VO/TailsWins.wav
+Unable to open sfx: Data/SoundFX/VO/TailsWins.wav
+File not found: Data/SoundFX/VO/KnuxWins.wav
+Unable to open sfx: Data/SoundFX/VO/KnuxWins.wav
+File not found: Data/SoundFX/Global/Push.wav
+Unable to open sfx: Data/SoundFX/Global/Push.wav
+File not found: Data/SoundFX/Stage/Fail.wav
+Unable to open sfx: Data/SoundFX/Stage/Fail.wav
+Loaded file Data/SoundFX/Stage/PimPom.wav
+File not found: Data/SoundFX/Global/Spike.wav
+Unable to open sfx: Data/SoundFX/Global/Spike.wav
+File not found: Data/SoundFX/Stage/Click.wav
+Unable to open sfx: Data/SoundFX/Stage/Click.wav
+File not found: Data/SoundFX/VO/NewRecordTop.wav
+Unable to open sfx: Data/SoundFX/VO/NewRecordTop.wav
+File not found: Data/SoundFX/VO/NewRecordMid.wav
+Unable to open sfx: Data/SoundFX/VO/NewRecordMid.wav
+File not found: Data/SoundFX/Special/Event.wav
+Unable to open sfx: Data/SoundFX/Special/Event.wav
+File not found: Data/SoundFX/Global/Swap.wav
+Unable to open sfx: Data/SoundFX/Global/Swap.wav
+File not found: Data/SoundFX/Stage/PowerDown.wav
+Unable to open sfx: Data/SoundFX/Stage/PowerDown.wav
+File not found: Data/SoundFX/Global/SwapFail.wav
+Unable to open sfx: Data/SoundFX/Global/SwapFail.wav
+File not found: Data/SoundFX/Global/MightyDeflect.wav
+Unable to open sfx: Data/SoundFX/Global/MightyDeflect.wav
+File not found: Data/SoundFX/Global/MightyDrill.wav
+Unable to open sfx: Data/SoundFX/Global/MightyDrill.wav
+File not found: Data/SoundFX/Global/MightyLand.wav
+Unable to open sfx: Data/SoundFX/Global/MightyLand.wav
+File not found: Data/SoundFX/Global/MightyUnspin.wav
+Unable to open sfx: Data/SoundFX/Global/MightyUnspin.wav
+File not found: Data/SoundFX/Global/RaySwoop.wav
+Unable to open sfx: Data/SoundFX/Global/RaySwoop.wav
+File not found: Data/SoundFX/Global/RayDive.wav
+Unable to open sfx: Data/SoundFX/Global/RayDive.wav
+File not found: Data/SoundFX/Global/Recovery.wav
+Unable to open sfx: Data/SoundFX/Global/Recovery.wav
+w: 1712 h: 999 windowed: 1
+File not found: Data/Shaders/DX9/None.hlsl
+File not found: Data/Shaders/CSO-DX9/None.vso
+File not found: Data/Shaders/DX9/None.hlsl
+File not found: Data/Shaders/CSO-DX9/None.fso
+File not found: Data/Shaders/DX9/Clean.hlsl
+File not found: Data/Shaders/CSO-DX9/Clean.vso
+File not found: Data/Shaders/DX9/Clean.hlsl
+File not found: Data/Shaders/CSO-DX9/Clean.fso
+File not found: Data/Shaders/DX9/CRT-Yeetron.hlsl
+File not found: Data/Shaders/CSO-DX9/CRT-Yeetron.vso
+File not found: Data/Shaders/DX9/CRT-Yeetron.hlsl
+File not found: Data/Shaders/CSO-DX9/CRT-Yeetron.fso
+File not found: Data/Shaders/DX9/CRT-Yee64.hlsl
+File not found: Data/Shaders/CSO-DX9/CRT-Yee64.vso
+File not found: Data/Shaders/DX9/CRT-Yee64.hlsl
+File not found: Data/Shaders/CSO-DX9/CRT-Yee64.fso
+File not found: Data/Shaders/DX9/YUV-420.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-420.vso
+File not found: Data/Shaders/DX9/YUV-420.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-420.fso
+File not found: Data/Shaders/DX9/YUV-422.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-422.vso
+File not found: Data/Shaders/DX9/YUV-422.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-422.fso
+File not found: Data/Shaders/DX9/YUV-444.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-444.vso
+File not found: Data/Shaders/DX9/YUV-444.hlsl
+File not found: Data/Shaders/CSO-DX9/YUV-444.fso
+File not found: Data/Shaders/DX9/RGB-Image.hlsl
+File not found: Data/Shaders/CSO-DX9/RGB-Image.vso
+File not found: Data/Shaders/DX9/RGB-Image.hlsl
+File not found: Data/Shaders/CSO-DX9/RGB-Image.fso
+Total HID GamePad Count: 0
+Loading Scene "Presentation - Check" with filter 255
+Loaded file Data/Stages/Check/TileConfig.bin
+Loaded file Data/Stages/Check/StageConfig.bin
+File not found: Data/SoundFX/Stage/LedgeBreak.wav
+Unable to open sfx: Data/SoundFX/Stage/LedgeBreak.wav
+File not found: Data/SoundFX/Stage/BossHit.wav
+Unable to open sfx: Data/SoundFX/Stage/BossHit.wav
+File not found: Data/SoundFX/Stage/Explosion2.wav
+Unable to open sfx: Data/SoundFX/Stage/Explosion2.wav
+File not found: Data/SoundFX/Stage/Drop.wav
+Unable to open sfx: Data/SoundFX/Stage/Drop.wav
+File not found: Data/SoundFX/Stage/Flap.wav
+Unable to open sfx: Data/SoundFX/Stage/Flap.wav
+File not found: Data/SoundFX/Stage/Splash.wav
+Unable to open sfx: Data/SoundFX/Stage/Splash.wav
+File not found: Data/SoundFX/Stage/Assemble.wav
+Unable to open sfx: Data/SoundFX/Stage/Assemble.wav
+File not found: Data/SoundFX/Stage/Sharp.wav
+Unable to open sfx: Data/SoundFX/Stage/Sharp.wav
+File not found: Data/SoundFX/Stage/Rotate.wav
+Unable to open sfx: Data/SoundFX/Stage/Rotate.wav
+File not found: Data/SoundFX/Stage/Impact2.wav
+Unable to open sfx: Data/SoundFX/Stage/Impact2.wav
+File not found: Data/SoundFX/Stage/Targeting1.wav
+Unable to open sfx: Data/SoundFX/Stage/Targeting1.wav
+File not found: Data/SoundFX/Stage/Buzzsaw.wav
+Unable to open sfx: Data/SoundFX/Stage/Buzzsaw.wav
+File not found: Data/SoundFX/Stage/Button2.wav
+Unable to open sfx: Data/SoundFX/Stage/Button2.wav
+File not found: Data/SoundFX/Stage/HullClose.wav
+Unable to open sfx: Data/SoundFX/Stage/HullClose.wav
+File not found: Data/SoundFX/Stage/Warning.wav
+Unable to open sfx: Data/SoundFX/Stage/Warning.wav
+File not found: Data/SoundFX/Stage/Drown.wav
+Unable to open sfx: Data/SoundFX/Stage/Drown.wav
+Loaded file Data/Stages/Check/16x16Tiles.gif
+Loaded file Data/Stages/Check/Scene1.bin
+Object Class 2 is unimplimented!
+Object Class 3 is unimplimented!
+Object Class 4 is unimplimented!
+Object Class 5 is unimplimented!
+Object Class 6 is unimplimented!
+Object Class 7 is unimplimented!
+Object Class 8 is unimplimented!
+Object Class 9 is unimplimented!
+Object Class 10 is unimplimented!
+Object Class 11 is unimplimented!
+File not found: Data/Sprites/UI/SmallFont.bin
+File not found: Data/Sprites/UI/SmallFont.bin
+Loading Scene "Mania Mode - Emerald Hill Zone 1" with filter 3
+Loaded file Data/Stages/EHZ/TileConfig.bin
+Loaded file Data/Stages/EHZ/StageConfig.bin
+File not found: Data/SoundFX/Stage/LedgeBreak.wav
+Unable to open sfx: Data/SoundFX/Stage/LedgeBreak.wav
+File not found: Data/SoundFX/Stage/Clang.wav
+Unable to open sfx: Data/SoundFX/Stage/Clang.wav
+File not found: Data/SoundFX/Stage/CannonFire.wav
+Unable to open sfx: Data/SoundFX/Stage/CannonFire.wav
+File not found: Data/SoundFX/Stage/Shot.wav
+Unable to open sfx: Data/SoundFX/Stage/Shot.wav
+File not found: Data/SoundFX/Stage/BossHit.wav
+Unable to open sfx: Data/SoundFX/Stage/BossHit.wav
+File not found: Data/SoundFX/Stage/Explosion2.wav
+Unable to open sfx: Data/SoundFX/Stage/Explosion2.wav
+File not found: Data/SoundFX/OOZ/GasPop.wav
+Unable to open sfx: Data/SoundFX/OOZ/GasPop.wav
+File not found: Data/SoundFX/OOZ/OOZLaser.wav
+Unable to open sfx: Data/SoundFX/OOZ/OOZLaser.wav
+File not found: Data/SoundFX/OOZ/OOZBullet.wav
+Unable to open sfx: Data/SoundFX/OOZ/OOZBullet.wav
+File not found: Data/SoundFX/OOZ/OOZSurface.wav
+Unable to open sfx: Data/SoundFX/OOZ/OOZSurface.wav
+File not found: Data/SoundFX/OOZ/LaserSplash.wav
+Unable to open sfx: Data/SoundFX/OOZ/LaserSplash.wav
+File not found: Data/SoundFX/OOZ/SmogClear.wav
+Unable to open sfx: Data/SoundFX/OOZ/SmogClear.wav
+File not found: Data/SoundFX/OOZ/SubHatchOpen.wav
+Unable to open sfx: Data/SoundFX/OOZ/SubHatchOpen.wav
+File not found: Data/SoundFX/OOZ/SubHatchClose.wav
+Unable to open sfx: Data/SoundFX/OOZ/SubHatchClose.wav
+File not found: Data/SoundFX/OOZ/SubDescend.wav
+Unable to open sfx: Data/SoundFX/OOZ/SubDescend.wav
+File not found: Data/SoundFX/OOZ/SubSurface.wav
+Unable to open sfx: Data/SoundFX/OOZ/SubSurface.wav
+File not found: Data/SoundFX/Stage/Flame2.wav
+Unable to open sfx: Data/SoundFX/Stage/Flame2.wav
+File not found: Data/SoundFX/Stage/Shoot1.wav
+Unable to open sfx: Data/SoundFX/Stage/Shoot1.wav
+File not found: Data/SoundFX/OOZ/Harpoon.wav
+Unable to open sfx: Data/SoundFX/OOZ/Harpoon.wav
+File not found: Data/SoundFX/OOZ/Slide.wav
+Unable to open sfx: Data/SoundFX/OOZ/Slide.wav
+File not found: Data/SoundFX/Stage/Push.wav
+Unable to open sfx: Data/SoundFX/Stage/Push.wav
+File not found: Data/SoundFX/OOZ/OilSwim.wav
+Unable to open sfx: Data/SoundFX/OOZ/OilSwim.wav
+File not found: Data/SoundFX/OOZ/Glug.wav
+Unable to open sfx: Data/SoundFX/OOZ/Glug.wav
+File not found: Data/SoundFX/OOZ/SubLaunch.wav
+Unable to open sfx: Data/SoundFX/OOZ/SubLaunch.wav
+File not found: Data/SoundFX/Stage/Assemble.wav
+Unable to open sfx: Data/SoundFX/Stage/Assemble.wav
+File not found: Data/SoundFX/Stage/Button2.wav
+Unable to open sfx: Data/SoundFX/Stage/Button2.wav
+File not found: Data/SoundFX/Stage/Buzzsaw.wav
+Unable to open sfx: Data/SoundFX/Stage/Buzzsaw.wav
+File not found: Data/SoundFX/Stage/Drop.wav
+Unable to open sfx: Data/SoundFX/Stage/Drop.wav
+File not found: Data/SoundFX/Stage/Drown.wav
+Unable to open sfx: Data/SoundFX/Stage/Drown.wav
+File not found: Data/SoundFX/Stage/DrownAlert.wav
+Unable to open sfx: Data/SoundFX/Stage/DrownAlert.wav
+File not found: Data/SoundFX/Stage/Flap.wav
+Unable to open sfx: Data/SoundFX/Stage/Flap.wav
+File not found: Data/SoundFX/Stage/HullClose.wav
+Unable to open sfx: Data/SoundFX/Stage/HullClose.wav
+File not found: Data/SoundFX/Stage/Impact2.wav
+Unable to open sfx: Data/SoundFX/Stage/Impact2.wav
+File not found: Data/SoundFX/Stage/Rotate.wav
+Unable to open sfx: Data/SoundFX/Stage/Rotate.wav
+File not found: Data/SoundFX/Stage/Sharp.wav
+Unable to open sfx: Data/SoundFX/Stage/Sharp.wav
+File not found: Data/SoundFX/Stage/Splash.wav
+Unable to open sfx: Data/SoundFX/Stage/Splash.wav
+File not found: Data/SoundFX/Stage/Targeting1.wav
+Unable to open sfx: Data/SoundFX/Stage/Targeting1.wav
+File not found: Data/SoundFX/Stage/Warning.wav
+Unable to open sfx: Data/SoundFX/Stage/Warning.wav
+File not found: Data/SoundFX/Stage/WaterfallLoop.wav
+Unable to open sfx: Data/SoundFX/Stage/WaterfallLoop.wav
+Loaded file Data/Stages/EHZ/16x16Tiles.gif
+Loaded file Data/Stages/EHZ/Scene1.bin
+Object Class 2 is unimplimented!
+Object Class 3 is unimplimented!
+Object Class 4 is unimplimented!
+Object Class 5 is unimplimented!
+Object Class 6 is unimplimented!
+Object Class 7 is unimplimented!
+Object Class 8 is unimplimented!
+Object Class 9 is unimplimented!
+Object Class 10 is unimplimented!
+Object Class 11 is unimplimented!
+Object Class 12 is unimplimented!
+Object Class 13 is unimplimented!
+Object Class 14 is unimplimented!
+Object Class 15 is unimplimented!
+Object Class 16 is unimplimented!
+Object Class 17 is unimplimented!
+Object Class 18 is unimplimented!
+Object Class 19 is unimplimented!
+Object Class 20 is unimplimented!
+Object Class 21 is unimplimented!
+Object Class 22 is unimplimented!
+Object Class 23 is unimplimented!
+Object Class 24 is unimplimented!
+Object Class 25 is unimplimented!
+Object Class 26 is unimplimented!
+Object Class 27 is unimplimented!
+Object Class 28 is unimplimented!
+Object Class 29 is unimplimented!
+Object Class 30 is unimplimented!
+Object Class 31 is unimplimented!
+Object Class 32 is unimplimented!
+Object Class 33 is unimplimented!
+Object Class 34 is unimplimented!
+Object Class 35 is unimplimented!
+Object Class 36 is unimplimented!
+Object Class 37 is unimplimented!
+Object Class 38 is unimplimented!
+Object Class 39 is unimplimented!
+Object Class 40 is unimplimented!
+Object Class 41 is unimplimented!
+Object Class 42 is unimplimented!
+Object Class 43 is unimplimented!
+Object Class 44 is unimplimented!
+Object Class 45 is unimplimented!
+Object Class 46 is unimplimented!
+Object Class 47 is unimplimented!
+Object Class 48 is unimplimented!
+Object Class 49 is unimplimented!
+Object Class 50 is unimplimented!
+Object Class 51 is unimplimented!
+Object Class 52 is unimplimented!
+Object Class 53 is unimplimented!
+Object Class 54 is unimplimented!
+Object Class 55 is unimplimented!
+Object Class 56 is unimplimented!
+Object Class 57 is unimplimented!
+Object Class 58 is unimplimented!
+Object Class 59 is unimplimented!
+Object Class 60 is unimplimented!
+Object Class 61 is unimplimented!
+Object Class 62 is unimplimented!
+Object Class 63 is unimplimented!
+Object Class 64 is unimplimented!
+File not found: Data/Sprites/UI/SmallFont.bin
+File not found: Data/Sprites/UI/SmallFont.bin
