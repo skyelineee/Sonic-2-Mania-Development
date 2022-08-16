@@ -27,7 +27,7 @@ char GameLogic::dynamicPath[0x40];
 int32 GameLogic::dynamicPathActID;
 int32 GameLogic::dynamicPathUnknown;
 
-// stageFolder, spriteFolder, zoneID, actID, isSavable, listPos
+// stageFolder, spriteFolder, zoneID, actID, noActID, isSavable, listPos
 GameLogic::StageFolderInfo GameLogic::stageList[] = {
     { "LSelect", "LSelect", -1, 0, false, false, 0 },
     { "EHZ", "EHZ", 0, 1, false, false, 0 },
