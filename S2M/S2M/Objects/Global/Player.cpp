@@ -218,7 +218,7 @@ void Player::LateUpdate()
     }
 
     if (this->superState == Player::SuperStateFadeIn && !this->state.Matches(&Player::State_Transform))
-        TryTransform(false, Player::TransformEmeralds);
+        TryTransform(false, false);
 
     if (this->state.Matches(&Player::State_Carried)) {
         this->flyCarryLeaderPos.x = this->position.x >> 0x10 << 0x10;
@@ -883,23 +883,7 @@ void Player::StageLoad()
 
     sVars->canSuperCB = nullptr;
 
-    // Handle gotHit values (used for TMZ1 achievement in mania, I think it's unused in S3)
     for (int32 p = 0; p < PLAYER_COUNT; ++p) sVars->gotHit[p] = false;
-
-    sVars->superSonicPaletteIndex1 = 2;
-    sVars->superSonicPaletteIndex2 = 3;
-    sVars->superSonicPaletteIndex3 = 4;
-    sVars->superSonicPaletteIndex4 = 0xFF;
-
-    sVars->superTailsPaletteIndex1 = 8;
-    sVars->superTailsPaletteIndex2 = 9;
-    sVars->superTailsPaletteIndex3 = 11;
-    sVars->superTailsPaletteIndex4 = 0xFF;
-
-    sVars->superKnuxPaletteIndex1 = 18;
-    sVars->superKnuxPaletteIndex2 = 19;
-    sVars->superKnuxPaletteIndex3 = 20;
-    sVars->superKnuxPaletteIndex4 = 0xFF;
 }
 
 // Extra Entity Functions
@@ -1392,7 +1376,7 @@ void Player::ChangeCharacter(int32 character)
 
     if (this->superState != Player::SuperStateNone) {
         if (this->superState == Player::SuperStateSuper)
-            TryTransform(true, Player::TransformSuper);
+            TryTransform(true, true);
     }
 
     UpdatePhysicsState();
@@ -3060,7 +3044,7 @@ void Player::Action_DblJumpSonic()
             else {
                 if (controllerInfo[this->controllerID].keyY.press) {
                     SaveGame::GetSaveRAM();
-                    TryTransform(false, Player::TransformEmeralds);
+                    TryTransform(false, false);
                 }
             }
             return;
@@ -3102,7 +3086,7 @@ void Player::Action_DblJumpTails()
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
         SaveGame::GetSaveRAM();
-        TryTransform(false, Player::TransformEmeralds);
+        TryTransform(false, false);
     }
 }
 void Player::Action_DblJumpKnux()
@@ -3174,7 +3158,7 @@ void Player::Action_DblJumpKnux()
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
         SaveGame::GetSaveRAM();
-        TryTransform(false, Player::TransformEmeralds);
+        TryTransform(false, false);
     }
 }
 
@@ -3209,7 +3193,7 @@ void Player::Action_DblJumpMighty()
         }
         else if (controllerInfo[this->controllerID].keyY.press) {
             SaveGame::GetSaveRAM();
-            TryTransform(false, Player::TransformEmeralds);
+            TryTransform(false, false);
         }
     }
     else if (--this->jumpAbilityState == 1)
@@ -3263,7 +3247,7 @@ void Player::Action_DblJumpRay()
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
         SaveGame::GetSaveRAM();
-        TryTransform(false, Player::TransformEmeralds);
+        TryTransform(false, false);
     }
 }
 void Player::Action_SuperDash()
@@ -7748,21 +7732,6 @@ void Player::StaticLoad(Static *sVars)
     memcpy(sVars->knuxPhysicsTable, knuxPhysicsTable, sizeof(knuxPhysicsTable));
     memcpy(sVars->mightyPhysicsTable, mightyPhysicsTable, sizeof(mightyPhysicsTable));
     memcpy(sVars->rayPhysicsTable, rayPhysicsTable, sizeof(rayPhysicsTable));
-
-    sVars->superSonicPaletteIndex1 = 2;
-    sVars->superSonicPaletteIndex2 = 3;
-    sVars->superSonicPaletteIndex3 = 4;
-    sVars->superSonicPaletteIndex4 = 0xFF;
-
-    sVars->superTailsPaletteIndex1 = 8;
-    sVars->superTailsPaletteIndex2 = 9;
-    sVars->superTailsPaletteIndex3 = 11;
-    sVars->superTailsPaletteIndex4 = 0xFF;
-
-    sVars->superKnuxPaletteIndex1 = 18;
-    sVars->superKnuxPaletteIndex2 = 19;
-    sVars->superKnuxPaletteIndex3 = 20;
-    sVars->superKnuxPaletteIndex4 = 0xFF;
 
     // ---------------
     // SUPER SONIC

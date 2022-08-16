@@ -142,11 +142,6 @@ struct Player : RSDK::GameObject::Entity {
         ManiaSprites,
     };
 
-    enum TransformModes {
-        TransformEmeralds, // Use emeralds to decide
-        TransformSuper,    // force transform to super
-    };
-
     // ==============================
     // STRUCTS
     // ==============================
@@ -161,21 +156,6 @@ struct Player : RSDK::GameObject::Entity {
         int32 knuxPhysicsTable[64];
         int32 mightyPhysicsTable[64];
         int32 rayPhysicsTable[64];
-
-        int32 superSonicPaletteIndex1;
-        int32 superSonicPaletteIndex2;
-        int32 superSonicPaletteIndex3;
-        int32 superSonicPaletteIndex4;
-
-        int32 superTailsPaletteIndex1;
-        int32 superTailsPaletteIndex2;
-        int32 superTailsPaletteIndex3;
-        int32 superTailsPaletteIndex4;
-
-        int32 superKnuxPaletteIndex1;
-        int32 superKnuxPaletteIndex2;
-        int32 superKnuxPaletteIndex3;
-        int32 superKnuxPaletteIndex4;
 
         color superSonicPalette[18];
         color superTailsPalette[18];
@@ -386,7 +366,6 @@ struct Player : RSDK::GameObject::Entity {
     RSDK::StateMachine<Player> storedStateInput;
     RSDK::Vector2 field_3D0;
     bool32 disableTileCollisions;
-    int32 field_3F8;
 
     // ==============================
     // EVENTS
