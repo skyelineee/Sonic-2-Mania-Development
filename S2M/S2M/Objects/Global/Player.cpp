@@ -3044,7 +3044,7 @@ void Player::Action_DblJumpSonic()
     }
 
     if ((this->jumpAbilityState >= 2 || dropdashAllowed) && this->jumpHold) {
-        if (++this->jumpAbilityState > 22) {
+        if (++this->jumpAbilityState >= 22) {
             this->state.Set(&Player::State_DropDash);
             this->nextGroundState.Set(nullptr);
             this->nextAirState.Set(nullptr);
@@ -3737,9 +3737,9 @@ void Player::State_Peelout()
     }
     else if (this->abilityTimer < this->minDashVelocity) {
         if (this->animator.animationID == ANI_DASH || this->animator.animationID == ANI_RUN)
-            this->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 1);
-        else
             this->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 0);
+        else
+            this->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 1);
 
         this->animator.speed = (this->abilityTimer >> 12) + 96;
         if (this->animator.speed > 0x200)
@@ -3749,9 +3749,9 @@ void Player::State_Peelout()
     }
     else {
         if (this->animator.animationID == ANI_DASH || this->animator.animationID == ANI_RUN)
-            this->animator.SetAnimation(this->aniFrames, ANI_DASH, false, 1);
-        else
             this->animator.SetAnimation(this->aniFrames, ANI_DASH, false, 0);
+        else
+            this->animator.SetAnimation(this->aniFrames, ANI_DASH, false, 1);
 
         this->minDashVelocity = 0xB8000;
     }
