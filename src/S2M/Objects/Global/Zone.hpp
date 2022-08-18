@@ -47,8 +47,23 @@ struct Zone : RSDK::GameObject::Entity {
     // ==============================
     enum ZoneIDs {
         Invalid = -1,
+        OWZ,
         EHZ,
-        // TODO: nuggie can you fill this out LOL
+        CPZ,
+        ARZ,
+        SWZ,
+        CNZ,
+        HTZ,
+        MCZ,
+        HPZ,
+        SSZ,
+        OOZ,
+        MTZ,
+        CCZ,
+        SCZ,
+        WFZ,
+        DEZ
+        // nuggie has finished this task.
     };
 
     enum ActIDs {

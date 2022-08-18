@@ -1,8 +1,8 @@
-Achievements.bin
-SaveData.bin
-TimeAttackDB.bin
-ReplayDB.bin
+/*.bin
 Settings.ini
+mod.ini
 log.txt
-Sonic2Mania.exe
-Game.dll
+*.exe
+*.dll
+
+.vs*
