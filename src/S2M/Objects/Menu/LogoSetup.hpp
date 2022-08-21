@@ -32,8 +32,8 @@ struct LogoSetup : RSDK::GameObject::Entity {
     static void StageLoad();
     static void Serialize();
 #if RETRO_INCLUDE_EDITOR
-    static void EditorDraw();
-    void EditorLoad();
+    void EditorDraw();
+    static void EditorLoad();
 #endif
 
 // ==============================

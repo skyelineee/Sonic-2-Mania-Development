@@ -59,7 +59,7 @@ void LogoSetup::State_ShowLogos()
 
         this->timer = 0;
         this->state.Set(&LogoSetup::State_FadeToNextLogos);
-        RSDK::StateMachine<LogoSetup> stateDraw;
+        this->stateDraw.Set(nullptr);
     }
     else {
         this->timer -= 16;
@@ -67,6 +67,15 @@ void LogoSetup::State_ShowLogos()
 }
 
 void LogoSetup::State_FadeToNextLogos()
+{
+    if (++this->timer > 120 || (this->timer > 30 && controllerInfo->keyStart.press)) {
+        this->timer     = 0;
+        this->state.Set(&LogoSetup::State_NextLogos);
+        this->stateDraw.Set(&LogoSetup::Draw_Fade);
+    }
+}
+
+void LogoSetup::State_NextLogos()
 {
     if (this->timer >= 1024) {
         if (screenInfo->position.y >= SCREEN_YSIZE) {
