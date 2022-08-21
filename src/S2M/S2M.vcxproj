@@ -224,6 +224,7 @@
     <ClCompile Include="Objects\Helpers\PlayerProbe.cpp" />
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
+    <ClCompile Include="Objects\Menu\LogoSetup.cpp" />
     <ClCompile Include="S2M.cpp" />
     <ClCompile Include="Objects\Global\Player.cpp" />
     <ClCompile Include="Objects\Test\TestObject.cpp">
@@ -288,6 +289,7 @@
     <ClInclude Include="Objects\Helpers\PlayerProbe.hpp" />
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
+    <ClInclude Include="Objects\Menu\LogoSetup.hpp" />
     <ClInclude Include="Objects\Test\TestObject.hpp">
       <SubType>
       </SubType>

@@ -23,6 +23,9 @@
     <Filter Include="Source Files\Objects\Helpers">
       <UniqueIdentifier>{9652c069-dedb-4835-a8a9-4458d26248c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Menu">
+      <UniqueIdentifier>{031b3d2b-baea-4b33-b745-bddbbe2cbc70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -192,6 +195,9 @@
     </ClCompile>
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp">
       <Filter>Source Files\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\LogoSetup.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +374,9 @@
     </ClInclude>
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp">
       <Filter>Source Files\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\LogoSetup.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
