@@ -8,7 +8,11 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(LogoSetup);
 
-void LogoSetup::Update() { state.Run(this); }
+void LogoSetup::Update() 
+{ 
+    state.Run(this);
+    screenInfo->position.x = 0x100 - screenInfo->center.x;
+}
 void LogoSetup::LateUpdate() {}
 void LogoSetup::StaticUpdate() {}
 void LogoSetup::Draw() { stateDraw.Run(this); }
@@ -80,7 +84,7 @@ void LogoSetup::State_NextLogos()
     if (this->timer >= 1024) {
         if (screenInfo->position.y >= SCREEN_YSIZE) {
             ++sceneInfo->listPos;
-            Stage::SetScene("Presentation", "Logos");
+            Stage::LoadScene();
         }
         else {
             screenInfo->position.y += SCREEN_YSIZE;
