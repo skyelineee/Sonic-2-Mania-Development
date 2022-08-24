@@ -12,7 +12,7 @@ struct StageFolderInfo {
     uint8 actID;
     bool32 noActID;
     bool32 isSavable;
-    int32 listPos;
+    bool32 useFolderIDs;
 };
 
 extern StageFolderInfo stageList[];
@@ -24,21 +24,32 @@ extern void StrCopy(char *dest, uint32 bufferSize, const char *src);
 extern void StrAppend(char *dest, uint32 bufferSize, const char *src);
 
 #define RSDK_DYNAMIC_PATH(name)                                                                                                                      \
-    GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), stageList[Zone::sVars->folderListPos].spriteFolder);                  \
+    if (Zone::sVars)                                                                                                                                 \
+        GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), stageList[Zone::sVars->folderListPos].spriteFolder);              \
+    else                                                                                                                                             \
+        GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "[None]");                                                        \
     GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "/");                                                               \
     GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), name);                                                              \
     GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), ".bin");
 
-#define RSDK_DYNAMIC_PATH_ACTID(name)                                                                                                                \
-    GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), stageList[Zone::sVars->folderListPos].spriteFolder);                  \
-    GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "/");                                                               \
-    GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), name);                                                              \
-    if (Zone::sVars->useFolderIDs) {                                                                                                                 \
-        GameLogic::dynamicPathActID   = '1' + Zone::sVars->actID;                                                                                    \
-        GameLogic::dynamicPathUnknown = 0;                                                                                                           \
-        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), (const char *)&GameLogic::dynamicPathActID);                    \
+#define RSDK_DYNAMIC_PATH_ACTID(name) \
+    if (Zone::sVars) {                                                                                                                               \
+        GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), stageList[Zone::sVars->folderListPos].spriteFolder);              \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "/");                                                           \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), name);                                                          \
+        if (Zone::sVars->useFolderIDs) {                                                                                                             \
+            GameLogic::dynamicPathActID   = '1' + Zone::sVars->actID;                                                                                \
+            GameLogic::dynamicPathUnknown = 0;                                                                                                       \
+            GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), (const char *)&GameLogic::dynamicPathActID);                \
+        }                                                                                                                                            \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), ".bin");                                                        \
     }                                                                                                                                                \
-    GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), ".bin"); 
+    else {                                                                                                                                           \
+        GameLogic::StrCopy(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "[None]");                                                        \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), "/");                                                           \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), name);                                                          \
+        GameLogic::StrAppend(GameLogic::dynamicPath, sizeof(GameLogic::dynamicPath), ".bin");                                                        \
+    }
 
 struct Zone : RSDK::GameObject::Entity {
 

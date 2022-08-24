@@ -2,7 +2,7 @@
 #include "S2M.hpp"
 
 #include "Player.hpp"
-// #include "Common/Platform.hpp"
+#include "Common/Platform.hpp"
 
 namespace GameLogic
 {
@@ -101,7 +101,7 @@ struct Ring : RSDK::GameObject::Entity {
     static void LoseHyperRings(RSDK::Vector2 *position, int32 rings, uint8 cPlane);
     static void FakeLoseRings(RSDK::Vector2 *position, int32 ringCount, uint8 drawGroup);
 
-    // int32 CheckPlatformCollisions(Platform *platform);
+    int32 CheckPlatformCollisions(Platform *platform);
     void CheckObjectCollisions(int32 x, int32 y);
 
     void State_Normal();
@@ -114,11 +114,6 @@ struct Ring : RSDK::GameObject::Entity {
     void State_Combi();
     void State_Attracted();
     void State_Sparkle();
-
-    void InitMissionReborn();
-    void State_MissionWaitReborn();
-
-    static bool32 CheckOnScreen(RSDK::Vector2 *position, RSDK::Hitbox *hitbox);
 
     void Draw_Normal();
     void Draw_Oscillating();

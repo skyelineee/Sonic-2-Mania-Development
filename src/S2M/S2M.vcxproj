@@ -172,6 +172,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GameAPI\CPP\GameAPI\Game.cpp" />
+    <ClCompile Include="Objects\Common\BGSwitch.cpp" />
+    <ClCompile Include="Objects\Common\BreakableWall.cpp" />
+    <ClCompile Include="Objects\Common\Button.cpp" />
+    <ClCompile Include="Objects\Common\CollapsingPlatform.cpp" />
+    <ClCompile Include="Objects\Common\Decoration.cpp" />
+    <ClCompile Include="Objects\Common\FlingRamp.cpp" />
+    <ClCompile Include="Objects\Common\ForceSpin.cpp" />
+    <ClCompile Include="Objects\Common\ForceUnstick.cpp" />
+    <ClCompile Include="Objects\Common\GenericTrigger.cpp" />
+    <ClCompile Include="Objects\Common\ParallaxSprite.cpp" />
+    <ClCompile Include="Objects\Common\Platform.cpp" />
+    <ClCompile Include="Objects\Common\PlatformControl.cpp" />
+    <ClCompile Include="Objects\Common\PlatformNode.cpp" />
+    <ClCompile Include="Objects\Common\ScreenWrap.cpp" />
+    <ClCompile Include="Objects\Common\TilePlatform.cpp" />
+    <ClCompile Include="Objects\Common\Water.cpp" />
     <ClCompile Include="Objects\Global\ActClear.cpp" />
     <ClCompile Include="Objects\Global\Animals.cpp" />
     <ClCompile Include="Objects\Global\Announcer.cpp" />
@@ -236,6 +252,22 @@
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameObjects.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameVariables.hpp" />
+    <ClInclude Include="Objects\Common\BGSwitch.hpp" />
+    <ClInclude Include="Objects\Common\BreakableWall.hpp" />
+    <ClInclude Include="Objects\Common\Button.hpp" />
+    <ClInclude Include="Objects\Common\CollapsingPlatform.hpp" />
+    <ClInclude Include="Objects\Common\Decoration.hpp" />
+    <ClInclude Include="Objects\Common\FlingRamp.hpp" />
+    <ClInclude Include="Objects\Common\ForceSpin.hpp" />
+    <ClInclude Include="Objects\Common\ForceUnstick.hpp" />
+    <ClInclude Include="Objects\Common\GenericTrigger.hpp" />
+    <ClInclude Include="Objects\Common\ParallaxSprite.hpp" />
+    <ClInclude Include="Objects\Common\Platform.hpp" />
+    <ClInclude Include="Objects\Common\PlatformControl.hpp" />
+    <ClInclude Include="Objects\Common\PlatformNode.hpp" />
+    <ClInclude Include="Objects\Common\ScreenWrap.hpp" />
+    <ClInclude Include="Objects\Common\TilePlatform.hpp" />
+    <ClInclude Include="Objects\Common\Water.hpp" />
     <ClInclude Include="Objects\Global\ActClear.hpp" />
     <ClInclude Include="Objects\Global\Animals.hpp" />
     <ClInclude Include="Objects\Global\Announcer.hpp" />

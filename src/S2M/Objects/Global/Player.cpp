@@ -8,7 +8,7 @@
 #include "Zone.hpp"
 #include "SaveGame.hpp"
 #include "DebugMode.hpp"
-// #include "Common/ScreenWrap.hpp"
+#include "Common/ScreenWrap.hpp"
 #include "Camera.hpp"
 #include "PauseMenu.hpp"
 #include "Music.hpp"
@@ -24,7 +24,7 @@
 #include "ImageTrail.hpp"
 #include "BoundsMarker.hpp"
 #include "GameOver.hpp"
-// #include "Common/Water.hpp"
+#include "Common/Water.hpp"
 
 #include "Helpers/FXFade.hpp"
 // #include "Competition/CompetitionSession.hpp"
@@ -315,7 +315,7 @@ void Player::LateUpdate()
                 // (yes I know this is super minor but its neat to know anyways)
                 this->gravityStrength = 0x1000;
                 this->velocity.y      = 0;
-                // Water::sVars->sfxDrown.Play();
+                Water::sVars->sfxDrown.Play();
                 this->state.Set(&Player::State_Drown);
                 this->stateGravity.Set(&Player::Gravity_NULL);
 
@@ -562,19 +562,19 @@ void Player::Draw()
 
     bool32 allowDraw = true;
 
-    // if (ScreenWrap::CheckCompetitionWrap()) {
-    //     for (auto player : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
-    //         if (player != this && player->characterID == this->characterID) {
-    //             if (sceneInfo->currentScreenID == player->playerID) {
-    //                 int32 timer = Zone::sVars->timer >= 0 ? Zone::sVars->timer : (Zone::sVars->timer + 1);
-    //                 if (Zone::sVars->timer - (timer & -2) != (player->playerID & 1)) {
-    //                     allowDraw = false;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    if (ScreenWrap::CheckCompetitionWrap()) {
+        for (auto player : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
+            if (player != this && player->characterID == this->characterID) {
+                if (sceneInfo->currentScreenID == player->playerID) {
+                    int32 timer = Zone::sVars->timer >= 0 ? Zone::sVars->timer : (Zone::sVars->timer + 1);
+                    if (Zone::sVars->timer - (timer & -2) != (player->playerID & 1)) {
+                        allowDraw = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     if (allowDraw) {
         int32 dirStore = this->direction;
@@ -650,7 +650,7 @@ void Player::Draw()
             paletteBank[1].SetEntry(i, paletteStorage[0][i]);
         }
 
-        // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Player::Draw), false);
+        ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Player::Draw), false);
     }
 }
 
@@ -2056,7 +2056,8 @@ void Player::HandleGroundAnimation()
                 switch (this->flailing) {
                     case 0b00000001:
                     case 0b00000011:
-                        if (this->direction == FLIP_X || (this->characterID == ID_SONIC && this->superState == Player::SuperStateSuper) || this->isChibi) {
+                        if (this->direction == FLIP_X || (this->characterID == ID_SONIC && this->superState == Player::SuperStateSuper)
+                            || this->isChibi) {
                             this->direction = FLIP_X;
                             this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_1, false, 0);
                         }
@@ -2090,12 +2091,12 @@ void Player::HandleGroundAnimation()
                 if (++this->outtaHereTimer >= 72000000) {
                     this->animator.SetAnimation(this->aniFrames, ANI_OUTTA_HERE, false, 0);
                     // this->state.Set(&Player::State_OuttaHere);
-                    this->tileCollisions  = TILECOLLISION_NONE;
-                    this->interaction     = false;
+                    this->tileCollisions = TILECOLLISION_NONE;
+                    this->interaction    = false;
                     this->nextAirState.Set(nullptr);
                     this->nextGroundState.Set(nullptr);
-                    this->velocity.x      = 0;
-                    this->velocity.y      = 0;
+                    this->velocity.x = 0;
+                    this->velocity.y = 0;
                     // sVars->sfxOuttahere.Play();
                 }
             }
@@ -2516,19 +2517,21 @@ void Player::HandleSuperColors_Sonic(bool32 updatePalette)
             paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[6], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
                                           this->superColorIndex, this->superColorCount);
 
-            // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-            //     paletteBank[1].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[6], &sVars->activeSuperSonicPalette_Water[12],
-            //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-            // }
+            if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[6],
+                                                                       &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
+                                                                       this->superColorIndex, this->superColorCount);
+            }
         }
         else {
             paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[0], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
                                           this->superColorIndex, this->superColorCount);
 
-            // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-            //     paletteBank[1].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[0], &sVars->activeSuperSonicPalette_Water[12],
-            //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-            // }
+            if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[0],
+                                                                       &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
+                                                                       this->superColorIndex, this->superColorCount);
+            }
         }
     }
     else {
@@ -2570,10 +2573,11 @@ void Player::HandleSuperColors_Tails(bool32 updatePalette)
         paletteBank[0].SetLimitedFade(&sVars->activeSuperTailsPalette[0], &sVars->activeSuperTailsPalette[12], this->superBlendAmount,
                                       this->superColorIndex, this->superColorCount);
 
-        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperTailsPalette_Water[0], &sVars->activeSuperTailsPalette_Water[12],
-        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-        // }
+        if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperTailsPalette_Water[0],
+                                                                   &sVars->activeSuperTailsPalette_Water[12], this->superBlendAmount,
+                                                                   this->superColorIndex, this->superColorCount);
+        }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2602,10 +2606,10 @@ void Player::HandleSuperColors_Knux(bool32 updatePalette)
         paletteBank[0].SetLimitedFade(&sVars->activeSuperKnuxPalette[0], &sVars->activeSuperKnuxPalette[12], this->superBlendAmount,
                                       this->superColorIndex, this->superColorCount);
 
-        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperKnuxPalette_Water[0], &sVars->activeSuperKnuxPalette_Water[12],
-        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-        // }
+        if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperKnuxPalette_Water[0], &sVars->activeSuperKnuxPalette_Water[12],
+                                                                   this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2634,10 +2638,11 @@ void Player::HandleSuperColors_Mighty(bool32 updatePalette)
         paletteBank[0].SetLimitedFade(&sVars->activeSuperMightyPalette[0], &sVars->activeSuperMightyPalette[12], this->superBlendAmount,
                                       this->superColorIndex, this->superColorCount);
 
-        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperMightyPalette_Water[0], &sVars->activeSuperMightyPalette_Water[12],
-        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-        // }
+        if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperMightyPalette_Water[0],
+                                                                   &sVars->activeSuperMightyPalette_Water[12], this->superBlendAmount,
+                                                                   this->superColorIndex, this->superColorCount);
+        }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2666,10 +2671,10 @@ void Player::HandleSuperColors_Ray(bool32 updatePalette)
         paletteBank[0].SetLimitedFade(&sVars->activeSuperRayPalette[0], &sVars->activeSuperRayPalette[12], this->superBlendAmount,
                                       this->superColorIndex, this->superColorCount);
 
-        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
-        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperRayPalette_Water[0], &sVars->activeSuperRayPalette_Water[12],
-        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
-        // }
+        if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperRayPalette_Water[0], &sVars->activeSuperRayPalette_Water[12],
+                                                                   this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2881,8 +2886,8 @@ void Player::FinishedReturnToPlayer(Player *leader)
     if (BoundsMarker::sVars)
         BoundsMarker::ApplyAllBounds(this, false);
 
-    // if (Water::sVars)
-    //     Water::ApplyHeightTriggers();
+    if (Water::sVars)
+        Water::ApplyHeightTriggers();
 }
 
 // Actions
@@ -3098,8 +3103,8 @@ void Player::HandleDeath()
                 if (BoundsMarker::sVars)
                     BoundsMarker::ApplyAllBounds(this, true);
 
-                // if (Water::sVars)
-                //     Water::ApplyHeightTriggers();
+                if (Water::sVars)
+                    Water::ApplyHeightTriggers();
             }
         }
         else {
@@ -3135,8 +3140,8 @@ void Player::HandleDeath()
                     if (BoundsMarker::sVars)
                         BoundsMarker::ApplyAllBounds(this, true);
 
-                    // if (Water::sVars)
-                    //     Water::ApplyHeightTriggers();
+                    if (Water::sVars)
+                        Water::ApplyHeightTriggers();
                 }
             }
             else {
@@ -3454,7 +3459,7 @@ void Player::Action_DblJumpMighty()
                 trail->Reset(ImageTrail::sVars->classID, this);
 
                 if (this->camera && !Zone::sVars->autoScrollSpeed) {
-                    this->scrollDelay   = 8;
+                    this->scrollDelay = 8;
                     this->camera->state.Set(&Camera::State_FollowX);
                 }
 
@@ -3659,8 +3664,7 @@ void Player::State_Air()
                 if (this->animator.animationID <= ANI_SPRING_DIAGONAL) {
                     this->animator.SetAnimation(this->aniFrames, this->animationReserve, false, 0);
                 }
-                else if ((this->animator.animationID == ANI_SPRING_CS)
-                         && !this->animator.frameID) {
+                else if ((this->animator.animationID == ANI_SPRING_CS) && !this->animator.frameID) {
                     this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 }
             }
@@ -6014,7 +6018,6 @@ void Player::SpawnMightyHammerdropDust(int32 speed, RSDK::Hitbox *hitbox)
         dust->scale.y = 256;
     }
 
-    
     if (globals->gravityDir == CMODE_ROOF) {
         if (this->angle == 0x80)
             dust->TileGrip(dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
@@ -6037,7 +6040,6 @@ void Player::SpawnMightyHammerdropDust(int32 speed, RSDK::Hitbox *hitbox)
             dust->position.y += 0x80000;
         }
     }
-
 }
 bool32 Player::CheckMightyUnspin(int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer)
 {
@@ -6277,10 +6279,10 @@ void Player::State_FlyToPlayer()
         case ID_RAY: this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0); break;
 
         case ID_TAILS:
-            // if (Water::sVars && this->position.y > Water::sVars->waterLevel)
-            //     this->animator.SetAnimation(this->aniFrames, ANI_SWIM, false, 0);
-            // else
-            this->animator.SetAnimation(this->aniFrames, ANI_FLY, false, 0);
+            if (Water::sVars && this->position.y > Water::sVars->waterLevel)
+                this->animator.SetAnimation(this->aniFrames, ANI_SWIM, false, 0);
+            else
+                this->animator.SetAnimation(this->aniFrames, ANI_FLY, false, 0);
 
             this->scale.x = 0x200;
             this->scale.y = 0x200;
@@ -6295,10 +6297,10 @@ void Player::State_FlyToPlayer()
             break;
     }
 
-    // if (leader->underwater && leader->position.y < Water::sVars->waterLevel)
-    //     this->drawGroup = leader->drawGroup;
-    // else
-    this->drawGroup = Zone::sVars->playerDrawGroup[1];
+    if (leader->underwater && leader->position.y < Water::sVars->waterLevel)
+        this->drawGroup = leader->drawGroup;
+    else
+        this->drawGroup = Zone::sVars->playerDrawGroup[1];
 
     Entity *parent = (Entity *)this->abilityPtrs[0];
     int32 screenX  = (screenInfo->size.x + screenInfo->center.x) << 16;

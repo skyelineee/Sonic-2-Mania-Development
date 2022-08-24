@@ -18,20 +18,37 @@ void DebugMode::Update()
 {
     bool32 moved = false;
 
-    if (controllerInfo[Input::CONT_P1].keyUp.down || analogStickInfoL[Input::CONT_P1].keyUp.down) {
+    bool32 up    = controllerInfo[Input::CONT_P1].keyUp.down || analogStickInfoL[Input::CONT_P1].keyUp.down;
+    bool32 down  = controllerInfo[Input::CONT_P1].keyDown.down || analogStickInfoL[Input::CONT_P1].keyDown.down;
+    bool32 left  = controllerInfo[Input::CONT_P1].keyLeft.down || analogStickInfoL[Input::CONT_P1].keyLeft.down;
+    bool32 right = controllerInfo[Input::CONT_P1].keyRight.down || analogStickInfoL[Input::CONT_P1].keyRight.down;
+
+    if (up && down) {
+        moved = true;
+        up   = false;
+        down = false;
+    }
+
+    if (left && right) {
+        moved = true;
+        left  = false;
+        right = false;
+    }
+
+    if (up) {
         this->position.y -= this->velocity.y;
         moved = true;
     }
-    else if (controllerInfo[Input::CONT_P1].keyDown.down || analogStickInfoL[Input::CONT_P1].keyDown.down) {
+    else if (down) {
         this->position.y += this->velocity.y;
         moved = true;
     }
 
-    if (controllerInfo[Input::CONT_P1].keyLeft.down || analogStickInfoL[Input::CONT_P1].keyLeft.down) {
+    if (left) {
         this->position.x -= this->velocity.y;
         moved = true;
     }
-    else if (controllerInfo[Input::CONT_P1].keyRight.down || analogStickInfoL[Input::CONT_P1].keyRight.down) {
+    else if (right) {
         this->position.x += this->velocity.y;
         moved = true;
     }

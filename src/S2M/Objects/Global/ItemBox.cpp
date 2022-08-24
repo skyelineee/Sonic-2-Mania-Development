@@ -15,6 +15,7 @@
 #include "Debris.hpp"
 #include "Dust.hpp"
 #include "HUD.hpp"
+#include "Common/TilePlatform.hpp"
 
 using namespace RSDK;
 
@@ -959,7 +960,7 @@ bool32 ItemBox::HandleFallingCollision()
     this->moveOffset.y += this->position.y;
     return false;
 }
-/*bool32 ItemBox::HandlePlatformCollision(Platform *platform)
+bool32 ItemBox::HandlePlatformCollision(Platform *platform)
 {    
     bool32 collided = false;
     if (!platform->state.Matches(&Platform::State_Falling2) && !platform->state.Matches(&Platform::State_Hold)) {
@@ -983,8 +984,6 @@ bool32 ItemBox::HandleFallingCollision()
             case Platform::C_SolidNoCrush:
             case Platform::C_SolidHurtAll:
             case Platform::C_SolidHurtNoCrush:
-            case Platform::C_SolidConveyor:
-            case Platform::C_SolidConveyorSwap:
                 collided = platform->CheckCollisionBox(platform->animator.GetHitbox(1), this, &sVars->hitboxItemBox, true);
                 break;
 
@@ -1046,34 +1045,50 @@ bool32 ItemBox::HandleFallingCollision()
     }
 
     return collided;
-}*/
+}
 void ItemBox::HandleObjectCollisions()
 {
     bool32 platformCollided = false;
 
-    // if (Platform::sVars) {
-    //     if (this->parent) {
-    //         Platform *platform = (Platform *)this->parent;
-    // 
-    //         if (platform->classID == Platform::sVars->classID) {
-    //             platform->stood    = true;
-    //             this->position.x   = this->scale.x + platform->drawPos.x;
-    //             this->position.y   = (this->scale.y + platform->drawPos.y) & 0xFFFF0000;
-    //             this->moveOffset.x = platform->collisionOffset.x & 0xFFFF0000;
-    //             this->moveOffset.y = platform->collisionOffset.y & 0xFFFF0000;
-    //             this->contentsPos.x += platform->collisionOffset.x;
-    //             this->contentsPos.y += platform->collisionOffset.y;
-    //             this->velocity.y = 0;
-    //             platformCollided = true;
-    //         }
-    //     }
-    //     else {
-    //         for (auto platform : GameObject::GetEntities<Platform>(FOR_ACTIVE_ENTITIES)) {
-    //             if (ItemBox::HandlePlatformCollision(platform))
-    //                 platformCollided = true;
-    //         }
-    //     }
-    // }
+    if (Platform::sVars) {
+        if (this->parent) {
+            Platform *platform = (Platform *)this->parent;
+    
+            if (platform->classID == Platform::sVars->classID) {
+                platform->stood    = true;
+                this->position.x   = this->scale.x + platform->drawPos.x;
+                this->position.y   = (this->scale.y + platform->drawPos.y) & 0xFFFF0000;
+                this->moveOffset.x = platform->collisionOffset.x & 0xFFFF0000;
+                this->moveOffset.y = platform->collisionOffset.y & 0xFFFF0000;
+                this->contentsPos.x += platform->collisionOffset.x;
+                this->contentsPos.y += platform->collisionOffset.y;
+                this->velocity.y = 0;
+                platformCollided = true;
+            }
+        }
+        else {
+            for (auto platform : GameObject::GetEntities<Platform>(FOR_ACTIVE_ENTITIES)) {
+                if (ItemBox::HandlePlatformCollision(platform))
+                    platformCollided = true;
+            }
+        }
+    }
+
+    if (TilePlatform::sVars && this->parent) {
+        TilePlatform *platform = (TilePlatform *)this->parent;
+
+        if (platform->classID == TilePlatform::sVars->classID) {
+            platform->stood    = true;
+            this->position.x   = this->scale.x + platform->drawPos.x;
+            this->position.y   = (this->scale.y + platform->drawPos.y) & 0xFFFF0000;
+            this->moveOffset.x = platform->collisionOffset.x & 0xFFFF0000;
+            this->moveOffset.y = platform->collisionOffset.y & 0xFFFF0000;
+            this->contentsPos.x += platform->collisionOffset.x;
+            this->contentsPos.y += platform->collisionOffset.y;
+            this->velocity.y = 0;
+            platformCollided = true;
+        }
+    }
 
     if (!platformCollided)
         this->parent = nullptr;

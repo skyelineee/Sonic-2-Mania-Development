@@ -2,7 +2,7 @@
 #include "S2M.hpp"
 
 #include "Player.hpp"
-// #include "Common/Platform.hpp"
+#include "Common/Platform.hpp"
 
 namespace GameLogic
 {
@@ -116,7 +116,7 @@ struct ItemBox : RSDK::GameObject::Entity {
     void GivePowerup();
     void Break(Player *player);
     bool32 HandleFallingCollision();
-    // bool32 HandlePlatformCollision(Platform *platform);
+    bool32 HandlePlatformCollision(Platform *platform);
     void HandleObjectCollisions();
 
     // ==============================

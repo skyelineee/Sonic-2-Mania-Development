@@ -7,7 +7,7 @@
 #include "Dust.hpp"
 #include "Player.hpp"
 #include "Zone.hpp"
-// #include "Common/ScreenWrap.hpp"
+#include "Common/ScreenWrap.hpp"
 
 using namespace RSDK;
 
@@ -21,7 +21,7 @@ void Dust::StaticUpdate() {}
 void Dust::Draw()
 {
     this->animator.DrawSprite(&this->position, false);
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Dust::Draw), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Dust::Draw), true);
 }
 
 void Dust::Create(void *data)

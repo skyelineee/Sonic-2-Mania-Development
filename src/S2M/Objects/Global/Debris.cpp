@@ -7,7 +7,7 @@
 #include "Debris.hpp"
 #include "Player.hpp"
 #include "Zone.hpp"
-// #include "Common/ScreenWrap.hpp"
+#include "Common/ScreenWrap.hpp"
 
 using namespace RSDK;
 
@@ -37,15 +37,15 @@ void Debris::Update()
     if (!this->screenRelative) {
         CheckPlayerCollisions();
         if (this->active == ACTIVE_NORMAL && this->updateRange.x >= 0 && this->updateRange.y >= 0) {
-            // if (ScreenWrap::CheckCompetitionWrap()) {
-            //     TileLayer *layer = Zone::sVars->fgLayer[1].GetTileLayer();
-            //     if ((this->position.y >> 16) >= 16 * layer->height)
-            //         this->Destroy();
-            // }
-            // else {
+            if (ScreenWrap::CheckCompetitionWrap()) {
+                TileLayer *layer = Zone::sVars->fgLayer[1].GetTileLayer();
+                if ((this->position.y >> 16) >= 16 * layer->height)
+                    this->Destroy();
+            }
+            else {
                  if (!CheckOnScreen(&this->updateRange))
                      this->Destroy();
-            // }
+            }
         }
     }
 }
@@ -54,7 +54,7 @@ void Debris::StaticUpdate() {}
 void Debris::Draw()
 {
     this->stateDraw.Run(this);
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Debris::Draw), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Debris::Draw), true);
 }
 
 void Debris::Create(void *data)
@@ -104,8 +104,8 @@ void Debris::Create(void *data)
         }
         this->screenRelative = false;
 
-        // if (ScreenWrap::CheckCompetitionWrap())
-        //     this->active = ACTIVE_NORMAL;
+        if (ScreenWrap::CheckCompetitionWrap())
+            this->active = ACTIVE_NORMAL;
     }
 }
 
@@ -292,7 +292,7 @@ void Debris::CheckPlayerCollisions()
         }
     }
 
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Debris::CheckPlayerCollisions), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Debris::CheckPlayerCollisions), true);
 }
 
 Debris *Debris::CreateFromEntries(Debris::Info *entries, uint16 entryCount, RSDK::Vector2 pos, int32 gravityStrength, uint16 offsetMode,

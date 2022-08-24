@@ -8,7 +8,7 @@
 #include "Player.hpp"
 #include "Zone.hpp"
 #include "DebugMode.hpp"
-// #include "Common/ScreenWrap.hpp"
+#include "Common/ScreenWrap.hpp"
 
 using namespace RSDK;
 
@@ -33,7 +33,7 @@ void Spring::StaticUpdate() {}
 void Spring::Draw()
 {
     this->animator.DrawSprite(&this->position, false);
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::Draw), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::Draw), true);
 }
 
 void Spring::Create(void *data)
@@ -140,8 +140,8 @@ void Spring::Create(void *data)
                 break;
         }
 
-        // if (ScreenWrap::CheckCompetitionWrap())
-        //     this->active = ACTIVE_NORMAL;
+        if (ScreenWrap::CheckCompetitionWrap())
+            this->active = ACTIVE_NORMAL;
     }
 }
 
@@ -414,7 +414,7 @@ void Spring::State_Vertical()
         }
     }
 
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Vertical), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Vertical), true);
 }
 void Spring::State_Horizontal()
 {
@@ -552,7 +552,7 @@ void Spring::State_Horizontal()
         }
     }
 
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Horizontal), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Horizontal), true);
 }
 void Spring::State_Diagonal()
 {
@@ -625,7 +625,7 @@ void Spring::State_Diagonal()
         }
     }
 
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Diagonal), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Spring::State_Diagonal), true);
 }
 
 void Spring::State_Falling()

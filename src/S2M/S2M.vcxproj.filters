@@ -199,6 +199,54 @@
     <ClCompile Include="Objects\Menu\LogoSetup.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Common\BGSwitch.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\BreakableWall.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\Button.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\CollapsingPlatform.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\Decoration.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\FlingRamp.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\ForceSpin.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\ForceUnstick.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\GenericTrigger.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\ParallaxSprite.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\Platform.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\PlatformControl.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\PlatformNode.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\ScreenWrap.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\TilePlatform.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\Water.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -377,6 +425,54 @@
     </ClInclude>
     <ClInclude Include="Objects\Menu\LogoSetup.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\BGSwitch.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\BreakableWall.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\Button.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\CollapsingPlatform.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\Decoration.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\FlingRamp.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\ForceSpin.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\ForceUnstick.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\GenericTrigger.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\ParallaxSprite.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\Platform.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\PlatformControl.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\PlatformNode.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\ScreenWrap.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\TilePlatform.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\Water.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

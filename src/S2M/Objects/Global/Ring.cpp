@@ -390,7 +390,7 @@ void Ring::FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
     }
 }
 
-/*int32 Ring::CheckPlatformCollisions(Platform *platform)
+int32 Ring::CheckPlatformCollisions(Platform *platform)
 {
     int32 side = C_NONE;
     if (!platform->state.Matches(&Platform::State_Falling2) && !platform->state.Matches(&Platform::State_Hold)) {
@@ -419,9 +419,6 @@ void Ring::FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
             case Platform::C_SolidNoCrush:
             case Platform::C_SolidHurtAll:
             case Platform::C_SolidHurtNoCrush:
-            case Platform::C_SolidConveyor:
-            case Platform::C_SolidConveyorSwap:
-            case Platform::C_SolidSpecial:
             case Platform::C_Null: {
                 Hitbox *hitbox = platform->animator.GetHitbox(1);
                 if (hitbox->top || hitbox->bottom || hitbox->left || hitbox->right)
@@ -448,19 +445,19 @@ void Ring::FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawGroup)
     }
 
     return side;
-}*/
+}
 void Ring::CheckObjectCollisions(int32 x, int32 y)
 {
     int32 collisionSides = 0;
     int32 xVel           = this->velocity.x;
     int32 yVel           = this->velocity.y;
 
-    // if (Platform::sVars) {
-    //     for (auto platform : GameObject::GetEntities<Platform>(FOR_ACTIVE_ENTITIES)) {
-    //         collisionSides |= 1 << CheckPlatformCollisions(platform);
-    //     }
-    // }
-    // 
+    if (Platform::sVars) {
+        for (auto platform : GameObject::GetEntities<Platform>(FOR_ACTIVE_ENTITIES)) {
+            collisionSides |= 1 << CheckPlatformCollisions(platform);
+        }
+    }
+    
     // if (Bridge::sVars) {
     //     for (auto bridge : GameObject::GetEntities<Bridge>(FOR_ACTIVE_ENTITIES)) {
     //         bool32 collided = bridge->HandleCollisions(this, &sVars->hitbox, false, false);
@@ -767,47 +764,6 @@ void Ring::State_Sparkle()
         this->visible = false;
         this->timer--;
     }
-}
-
-void Ring::InitMissionReborn()
-{
-    SET_CURRENT_STATE();
-
-    this->respawnTime = RSDK::sceneInfo->seconds + 60 * RSDK::sceneInfo->minutes;
-    this->position.x  = this->startPos.x;
-    this->position.y  = this->startPos.y;
-    this->state.Set(&Ring::State_MissionWaitReborn);
-    this->stateDraw.Set(nullptr);
-}
-
-void Ring::State_MissionWaitReborn()
-{
-    SET_CURRENT_STATE();
-
-    int32 time = RSDK::sceneInfo->seconds + 60 * RSDK::sceneInfo->minutes;
-    if ((uint32)(time - this->respawnTime) >= 20) {
-        this->state.Set(nullptr);
-        this->Create(nullptr);
-    }
-    else {
-        if (CheckOnScreen(&this->position, &sVars->hitbox))
-            this->respawnTime = time;
-    }
-}
-
-// might eventually go in smth like "MissionHelpers" or whatever, but for now it can stay here
-bool32 Ring::CheckOnScreen(RSDK::Vector2 *position, RSDK::Hitbox *hitbox)
-{
-    int32 x = position->x >> 16;
-    int32 y = position->y >> 16;
-
-    if (hitbox->right + x < screenInfo->position.x || hitbox->left + x > screenInfo->clipBound_X2 + screenInfo->position.x)
-        return false;
-
-    if (hitbox->bottom + y < screenInfo->position.y || hitbox->top + y > screenInfo->clipBound_Y2 + screenInfo->position.y)
-        return false;
-
-    return true;
 }
 
 void Ring::Draw_Normal()

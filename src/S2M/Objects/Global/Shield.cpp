@@ -6,9 +6,9 @@
 
 #include "Shield.hpp"
 #include "Zone.hpp"
-// #include "Common/ScreenWrap.hpp"
+#include "Common/ScreenWrap.hpp"
 #include "Debris.hpp"
-// #include "Common/Water.hpp"
+#include "Common/Water.hpp"
 
 using namespace RSDK;
 
@@ -88,7 +88,7 @@ void Shield::Draw()
             this->shieldAnimator.DrawSprite(nullptr, false);
             this->direction = dirStore;
 
-            // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Shield::Draw), false);
+            ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&Shield::Draw), false);
         }
     }
 }
@@ -298,15 +298,15 @@ void Shield::State_LightningFlash()
     SET_CURRENT_STATE();
 
     this->timer++;
-    // if (this->timer < 3) {
-    //     color flashColor = paletteBank[0].GetEntry(16);
-    //     for (int32 c = 0; c < 256; ++c) paletteBank[Water::sVars->waterPalette].SetEntry(c, flashColor);
-    // }
-    // else {
-    //     for (int32 c = 0; c < 256; ++c) paletteBank[Water::sVars->waterPalette].SetEntry(c, Water::sVars->flashColorStorage[c]);
-    //     Water::sVars->isLightningFlashing = false;
-    //     this->Destroy();
-    // }
+    if (this->timer < 3) {
+        color flashColor = paletteBank[0].GetEntry(16);
+        for (int32 c = 0; c < 256; ++c) paletteBank[Water::sVars->waterPalette].SetEntry(c, flashColor);
+    }
+    else {
+        for (int32 c = 0; c < 256; ++c) paletteBank[Water::sVars->waterPalette].SetEntry(c, Water::sVars->flashColorStorage[c]);
+        Water::sVars->isLightningFlashing = false;
+        this->Destroy();
+    }
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -142,8 +142,8 @@ void Animals::StageLoad()
 {
     sVars->aniFrames.Load("Global/Animals.bin", SCOPE_STAGE);
 
-    // if (Platform::sVars)
-    //     sVars->hasPlatform = true;
+    if (Platform::sVars)
+        sVars->hasPlatform = true;
     // if (Bridge::sVars)
     //     sVars->hasBridge = true;
 }
@@ -177,7 +177,7 @@ void Animals::CheckDirection()
         this->velocity.x = sVars->xVelocity[this->type];
 }
 
-/*bool32 Animals::CheckPlatformCollision(Platform *platform)
+bool32 Animals::CheckPlatformCollision(Platform *platform)
 {
     bool32 collided = false;
     if (!platform->state.Matches(&Platform::State_Falling2) && !platform->state.Matches(&Platform::State_Hold)) {
@@ -187,7 +187,6 @@ void Animals::CheckDirection()
         switch (platform->collision) {
             case Platform::C_Hurt:
             case Platform::C_None: 
-            case Platform::C_SolidSpecial: 
             default: break;
 
             case Platform::C_Platform:
@@ -205,8 +204,6 @@ void Animals::CheckDirection()
             case Platform::C_SolidNoCrush:
             case Platform::C_SolidHurtAll:
             case Platform::C_SolidHurtNoCrush:
-            case Platform::C_SolidConveyor:
-            case Platform::C_SolidConveyorSwap:
                 collided = platform->CheckCollisionPlatform(platform->animator.GetHitbox(0), this, &this->hitboxAnimal, true);
                 break;
 
@@ -240,7 +237,7 @@ void Animals::CheckDirection()
     }
 
     return collided;
-}*/
+}
 
 bool32 Animals::CheckGroundCollision()
 {
@@ -264,11 +261,11 @@ bool32 Animals::CheckGroundCollision()
     }
 
     if (sVars->hasPlatform) {
-        // foreach_active(Platform, platform)
-        // {
-        //     if (CheckPlatformCollision(platform))
-        //         return true;
-        // }
+        for (auto platform : GameObject::GetEntities<Platform>(FOR_ACTIVE_ENTITIES))
+        {
+            if (CheckPlatformCollision(platform)) 
+                return true;
+        }
     }
 
     if (sVars->hasBridge) {

@@ -1,7 +1,7 @@
 #pragma once
 #include "S2M.hpp"
 
-// #include "Common/Platform.hpp"
+#include "Common/Platform.hpp"
 
 namespace GameLogic
 {
@@ -91,7 +91,7 @@ struct Animals : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
     void CheckDirection();
-    // bool32 CheckPlatformCollision(Platform *platform);
+    bool32 CheckPlatformCollision(Platform *platform);
     bool32 CheckGroundCollision();
 
     void State_Fall();

@@ -8,9 +8,7 @@
 #include "Player.hpp"
 #include "Zone.hpp"
 #include "DebugMode.hpp"
-// #include "Common/ScreenWrap.hpp"
-
-// #include "Competition/CompItem.hpp"
+#include "Common/ScreenWrap.hpp"
 
 using namespace RSDK;
 
@@ -26,14 +24,14 @@ void PlaneSwitch::Update()
         CheckCollisions(player, this->flags, this->size, true, Zone::sVars->playerDrawGroup[0], Zone::sVars->playerDrawGroup[1]);
     }
 
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&PlaneSwitch::Update), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&PlaneSwitch::Update), true);
 }
 void PlaneSwitch::LateUpdate() {}
 void PlaneSwitch::StaticUpdate() {}
 void PlaneSwitch::Draw()
 {
     DrawSprites();
-    // ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&PlaneSwitch::Draw), true);
+    ScreenWrap::HandleHWrap(RSDK::ToGenericPtr(&PlaneSwitch::Draw), true);
 }
 
 void PlaneSwitch::Create(void *data)
@@ -49,8 +47,8 @@ void PlaneSwitch::Create(void *data)
         this->drawGroup     = Zone::sVars->objectDrawGroup[0];
         this->negAngle      = (uint8) - (this->angle & 0xFF);
 
-        // if (ScreenWrap::CheckCompetitionWrap())
-        //     this->active = ACTIVE_NORMAL;
+        if (ScreenWrap::CheckCompetitionWrap())
+            this->active = ACTIVE_NORMAL;
     }
 }
 

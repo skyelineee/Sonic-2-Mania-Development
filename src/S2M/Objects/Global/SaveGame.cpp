@@ -187,7 +187,7 @@ SaveGame *SaveGame::GetSaveDataPtr(uint8 saveSlot)
 
     int32 slotPos = saveSlot * 0x100;
 
-    return (SaveGame *)&globals->saveRAM[0x0000 + slotPos]; // 0x1400 -> 0x1C00 => 8 save slots
+    return (SaveGame *)&globals->saveRAM[0x000 + slotPos]; // 0x000 -> 0x800 => 8 save slots
 }
 
 bool32 SaveGame::CheckDisableRestart()

@@ -29,8 +29,16 @@ int32 GameLogic::dynamicPathUnknown;
 
 // stageFolder, spriteFolder, zoneID, actID, noActID, isSavable, listPos
 GameLogic::StageFolderInfo GameLogic::stageList[] = {
-    { "LSelect", "LSelect", -1, 0, false, false, 0 },
-    { "EHZ", "EHZ", 0, 1, false, false, 0 },
+    { "LSelect", "LSelect", -1, 0, false, false, false }, { "OWZ", "OWZ", 0, 0, true, false, false },   { "EHZ", "EHZ", 1, 0, false, false, false },
+    { "EHZ", "EHZ", 1, 1, false, true, false },           { "CPZ", "CPZ", 2, 0, false, false, false },  { "CPZ", "CPZ", 2, 1, false, true, false },
+    { "ARZ", "ARZ", 3, 0, false, false, false },          { "ARZ", "ARZ", 3, 1, false, true, false },   { "SWZ", "SWZ", 4, 0, false, false, false },
+    { "SWZ", "SWZ", 4, 1, false, true, false },           { "CNZ", "CNZ", 5, 0, false, false, false },  { "CNZ", "CNZ", 5, 1, false, true, false },
+    { "HTZ", "HTZ", 6, 0, false, false, false },          { "HTZ", "HTZ", 6, 1, false, true, false },   { "MCZ", "MCZ", 7, 0, false, false, false },
+    { "MCZ", "MCZ", 7, 1, false, true, false },           { "HPZ", "HPZ", 8, 0, true, true, false },    { "SSZ", "SSZ", 9, 0, false, false, false },
+    { "SSZ", "SSZ", 9, 1, false, true, false },           { "OOZ", "OOZ", 10, 0, false, false, false }, { "OOZ", "OOZ", 10, 1, false, true, false },
+    { "MTZ", "MTZ", 11, 0, false, false, false },         { "MTZ", "MTZ", 11, 1, false, true, false },  { "CCZ", "CCZ", 12, 0, false, false, false },
+    { "CCZ", "CCZ", 12, 1, false, true, false },          { "SCZ", "SCZ", 13, 0, true, true, false },   { "WFZ", "WFZ", 14, 0, true, true, false },
+    { "DEZ", "DEZ", 15, 0, false, false, false },         { "DEZ", "DEZ", 15, 1, false, true, false },
 };
 
 void GameLogic::StrCopy(char *dest, uint32 destSize, const char *src)
@@ -155,7 +163,7 @@ void Zone::StageLoad()
 
     sVars->folderListPos = 0;
     sVars->actID         = stageList[sVars->folderListPos].actID;
-    sVars->useFolderIDs  = stageList[sVars->folderListPos].listPos;
+    sVars->useFolderIDs  = stageList[sVars->folderListPos].useFolderIDs;
 
     for (int32 i = 0; i < 0x80; ++i) {
         StageFolderInfo *stage = &stageList[i];
@@ -164,7 +172,7 @@ void Zone::StageLoad()
             if (sceneInfo->inEditor || stage->noActID) {
                 sVars->folderListPos = i;
                 sVars->actID         = stage->actID;
-                sVars->useFolderIDs  = stage->listPos;
+                sVars->useFolderIDs  = stage->useFolderIDs;
                 i                    = 0x80;
                 break;
             }
@@ -174,7 +182,7 @@ void Zone::StageLoad()
                     if ('1' + stage->actID == stageID) {
                         sVars->folderListPos = i;
                         sVars->actID         = stage->actID;
-                        sVars->useFolderIDs  = stage->listPos;
+                        sVars->useFolderIDs  = stage->useFolderIDs;
                         i                    = 0x80;
                         break;
                     }
@@ -794,7 +802,7 @@ void Zone::EditorLoad()
 
     sVars->folderListPos = 0;
     sVars->actID         = stageList[sVars->folderListPos].actID;
-    sVars->useFolderIDs  = stageList[sVars->folderListPos].listPos;
+    sVars->useFolderIDs  = stageList[sVars->folderListPos].useFolderIDs;
 
     for (int32 i = 0; i < 0x80; ++i) {
         StageFolderInfo *stage = &stageList[i];
@@ -803,7 +811,7 @@ void Zone::EditorLoad()
             if (sceneInfo->inEditor || stage->noActID) {
                 sVars->folderListPos = i;
                 sVars->actID         = stage->actID;
-                sVars->useFolderIDs  = stage->listPos;
+                sVars->useFolderIDs  = stage->useFolderIDs;
                 break;
             }
             else {
@@ -812,7 +820,7 @@ void Zone::EditorLoad()
                     if ('1' + stage->actID == stageID) {
                         sVars->folderListPos = i;
                         sVars->actID         = stage->actID;
-                        sVars->useFolderIDs  = stage->listPos;
+                        sVars->useFolderIDs  = stage->useFolderIDs;
                         break;
                     }
                 }
