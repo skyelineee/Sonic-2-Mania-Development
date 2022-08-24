@@ -951,18 +951,34 @@ void Player::LoadPlayerSprites()
         case ID_SONIC:
             sVars->sonicFrames.Load("Players/Sonic.bin", SCOPE_STAGE);
             sVars->superFrames.Load("Players/SuperSonic.bin", SCOPE_STAGE);
+            this->superColorIndex = 64;
+            this->superColorCount = 6;
             break;
 
         case ID_TAILS:
             sVars->tailsFrames.Load("Players/Tails.bin", SCOPE_STAGE);
             sVars->tailsTailsFrames.Load("Players/TailSprite.bin", SCOPE_STAGE);
+            this->superColorIndex = 70;
+            this->superColorCount = 6;
             break;
 
-        case ID_KNUCKLES: sVars->knuxFrames.Load("Players/Knux.bin", SCOPE_STAGE); break;
+        case ID_KNUCKLES:
+            sVars->knuxFrames.Load("Players/Knux.bin", SCOPE_STAGE);
+            this->superColorIndex = 80;
+            this->superColorCount = 6;
+            break;
 
-        case ID_MIGHTY: sVars->mightyFrames.Load("Players/Mighty.bin", SCOPE_STAGE); break;
+        case ID_MIGHTY:
+            sVars->mightyFrames.Load("Players/Mighty.bin", SCOPE_STAGE);
+            this->superColorIndex = 96;
+            this->superColorCount = 6;
+            break;
 
-        case ID_RAY: sVars->rayFrames.Load("Players/Ray.bin", SCOPE_STAGE); break;
+        case ID_RAY:
+            sVars->rayFrames.Load("Players/Ray.bin", SCOPE_STAGE);
+            this->superColorIndex = 113;
+            this->superColorCount = 7;
+            break;
     }
 
     this->spriteType = ManiaSprites;
@@ -1540,7 +1556,7 @@ Player *Player::GetNearestPlayerXY()
     return targetPlayer;
 }
 
-void Player::HandleIdleAnimation()
+void Player::HandleIdleAnimation_Classic()
 {
     switch (this->characterID) {
         case ID_SONIC:
@@ -1617,7 +1633,7 @@ void Player::HandleIdleAnimation()
     }
 }
 
-void Player::HandleGroundAnimation()
+void Player::HandleGroundAnimation_Classic()
 {
     if (this->skidding > 0) {
         int32 animID = this->animator.animationID & 0xFFFE;
@@ -1844,6 +1860,253 @@ void Player::HandleGroundAnimation()
 
     this->flailing = 0;
 }
+
+void Player::HandleIdleAnimation()
+{
+    switch (this->characterID) {
+        case ID_SONIC:
+            if (this->timer != 720 || this->isChibi || this->superState == Player::SuperStateSuper) {
+                if (this->timer < 240) {
+                    this->timer++;
+                    this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
+                }
+                else {
+                    this->timer++;
+                    if (this->animator.animationID == ANI_BORED_1) {
+                        if (this->animator.frameID == 41)
+                            this->timer = 0;
+                    }
+                    else
+                        this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
+                }
+            }
+            else {
+                if (this->animator.animationID == ANI_BORED_2) {
+                    if (this->animator.frameID == 67)
+                        this->timer = 0;
+                }
+                else
+                    this->animator.SetAnimation(this->aniFrames, ANI_BORED_2, false, 0);
+            }
+            break;
+
+        case ID_TAILS:
+            if (this->timer < 240) {
+                this->timer++;
+                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
+            }
+            else if (this->animator.animationID == ANI_BORED_1) {
+                if (this->animator.frameID == 45)
+                    this->timer = 0;
+            }
+            else {
+                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
+            }
+            break;
+
+        case ID_KNUCKLES:
+            if (this->timer < 240) {
+                this->timer++;
+                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
+            }
+            else if (this->animator.animationID == ANI_BORED_1) {
+                if (this->animator.frameID == 69)
+                    this->timer = 0;
+            }
+            else {
+                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
+            }
+            break;
+
+        case ID_MIGHTY:
+            if (this->timer < 240) {
+                this->timer++;
+                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
+            }
+            else if (this->animator.animationID == ANI_BORED_1) {
+                if (this->animator.frameID == 35)
+                    this->timer = 0;
+            }
+            else {
+                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
+            }
+            break;
+
+        case ID_RAY:
+            if (this->timer < 240) {
+                this->timer++;
+                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
+            }
+            else if (this->animator.animationID == ANI_BORED_1) {
+                if (this->animator.frameID == 55)
+                    this->timer = 0;
+            }
+            else {
+                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
+            }
+            break;
+
+        default: break;
+    }
+}
+void Player::HandleGroundAnimation()
+{
+    if (this->skidding > 0) {
+        if (this->animator.animationID != ANI_SKID) {
+            if (this->animator.animationID == ANI_SKID_TURN) {
+                if (this->animator.frameID == this->animator.frameCount - 1) {
+                    this->direction ^= FLIP_X;
+                    this->skidding = 1;
+                    this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 0);
+                }
+            }
+            else {
+                this->animator.SetAnimation(this->aniFrames, ANI_SKID, false, 0);
+                if (abs(this->groundVel) >= 0x60000) {
+                    if (abs(this->groundVel) >= 0xA0000)
+                        this->animator.speed = 64;
+                    else
+                        this->animator.speed = 144;
+                }
+                else {
+                    this->skidding -= 8;
+                }
+
+                sVars->sfxSkidding.Play();
+                Dust *dust = GameObject::Create<Dust>(this, this->position.x, this->position.y);
+                dust->state.Set(&Dust::State_DustTrail);
+            }
+        }
+        else {
+            int32 spd = this->animator.speed;
+            if (this->direction) {
+                if (this->groundVel >= 0) {
+                    this->animator.SetAnimation(this->aniFrames, ANI_SKID_TURN, false, 0);
+                }
+            }
+            else if (this->groundVel <= 0) {
+                this->animator.SetAnimation(this->aniFrames, ANI_SKID_TURN, false, 0);
+            }
+
+            this->animator.speed = spd;
+        }
+
+        --this->skidding;
+    }
+    else {
+        if (this->pushing > -3 && this->pushing < 3) {
+            if (this->groundVel || (this->angle >= 0x20 && this->angle <= 0xE0 && !this->invertGravity)) {
+                this->timer          = 0;
+                this->outtaHereTimer = 0;
+
+                int32 velocity = abs(this->groundVel);
+                if (velocity < this->minJogVelocity) {
+                    if (this->animator.animationID == ANI_JOG) {
+                        if (this->animator.frameID == 9)
+                            this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 9);
+                    }
+                    else if (this->animator.animationID == ANI_FALL) {
+                        this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, this->animator.frameID);
+                    }
+                    else {
+                        this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 0);
+                    }
+                    this->animator.speed = (velocity >> 12) + 48;
+                    this->minJogVelocity = 0x40000;
+                }
+                else if (velocity < this->minRunVelocity) {
+                    if (this->animator.animationID != ANI_WALK || this->animator.frameID == 3)
+                        this->animator.SetAnimation(this->aniFrames, ANI_JOG, false, 0);
+                    this->animator.speed = (velocity >> 12) + 0x40;
+                    this->minJogVelocity = 0x38000;
+                    this->minRunVelocity = 0x60000;
+                }
+                else if (velocity < this->minDashVelocity) {
+                    if (this->animator.animationID == ANI_DASH || this->animator.animationID == ANI_RUN)
+                        this->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 0);
+                    else
+                        this->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 1);
+
+                    this->animator.speed  = MIN((velocity >> 12) + 0x60, 0x200);
+                    this->minRunVelocity  = 0x58000;
+                    this->minDashVelocity = 0xC0000;
+                }
+                else {
+                    if (this->animator.animationID == ANI_DASH || this->animator.animationID == ANI_RUN)
+                        this->animator.SetAnimation(this->aniFrames, ANI_DASH, false, 0);
+                    else
+                        this->animator.SetAnimation(this->aniFrames, ANI_DASH, false, 1);
+                    this->minDashVelocity = 0xB8000;
+                }
+            }
+            else {
+                this->minJogVelocity  = 0x40000;
+                this->minRunVelocity  = 0x60000;
+                this->minDashVelocity = 0xC0000;
+
+                Vector2 posStore = this->position;
+
+                this->flailing |= this->TileGrip(this->collisionLayers, CMODE_FLOOR, this->collisionPlane, this->sensorX[0], this->sensorY, 10) << 0;
+                this->flailing |= this->TileGrip(this->collisionLayers, CMODE_FLOOR, this->collisionPlane, this->sensorX[1], this->sensorY, 10) << 1;
+                this->flailing |= this->TileGrip(this->collisionLayers, CMODE_FLOOR, this->collisionPlane, this->sensorX[2], this->sensorY, 10) << 2;
+                this->flailing |= this->TileGrip(this->collisionLayers, CMODE_FLOOR, this->collisionPlane, this->sensorX[3], this->sensorY, 10) << 3;
+                this->flailing |= this->TileGrip(this->collisionLayers, CMODE_FLOOR, this->collisionPlane, this->sensorX[4], this->sensorY, 10) << 4;
+
+                this->position = posStore;
+                switch (this->flailing) {
+                    case 0b00000001:
+                    case 0b00000011:
+                        if (this->direction == FLIP_X || (this->characterID == ID_SONIC && this->superState == Player::SuperStateSuper) || this->isChibi) {
+                            this->direction = FLIP_X;
+                            this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_1, false, 0);
+                        }
+                        else {
+                            this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_2, false, 0);
+                        }
+                        break;
+
+                    case 0b00010000:
+                    case 0b00011000:
+                        if (this->direction && (this->characterID != ID_SONIC || this->superState != Player::SuperStateSuper) && !this->isChibi) {
+                            this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_2, false, 0);
+                        }
+                        else {
+                            this->direction = FLIP_NONE;
+                            this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_1, false, 0);
+                        }
+                        break;
+
+                    // bit 5 & 6 are never set, this code cannot be reached
+                    // in theory, bit 5 & 6 would be set using sensorLC & sensorLR equivalents from v4/S2/S3
+                    case 0b01101111:
+                    case 0b01110100: this->animator.SetAnimation(this->aniFrames, ANI_BALANCE_1, false, 0); break;
+
+                    // Not balancing
+                    case 0b00000000:
+                    default: HandleIdleAnimation(); break;
+                }
+
+                // Wait for ~333 hours to do outta here (sonic is has gotten surprisingly patient since CD...)
+                if (++this->outtaHereTimer >= 72000000) {
+                    this->animator.SetAnimation(this->aniFrames, ANI_OUTTA_HERE, false, 0);
+                    // this->state.Set(&Player::State_OuttaHere);
+                    this->tileCollisions  = TILECOLLISION_NONE;
+                    this->interaction     = false;
+                    this->nextAirState.Set(nullptr);
+                    this->nextGroundState.Set(nullptr);
+                    this->velocity.x      = 0;
+                    this->velocity.y      = 0;
+                    // sVars->sfxOuttahere.Play();
+                }
+            }
+        }
+        else {
+            this->pushing = CLAMP(this->pushing, -3, 3);
+            this->animator.SetAnimation(this->aniFrames, ANI_PUSH, false, 0);
+        }
+    }
+}
+
 void Player::HandleGroundMovement()
 {
     uint8 angle = this->angle + (globals->gravityDir << 6);
@@ -2249,16 +2512,30 @@ void Player::CheckStartFlyCarry(Player *leader)
 void Player::HandleSuperColors_Sonic(bool32 updatePalette)
 {
     if (updatePalette) {
-        paletteBank[0].SetLimitedFade(6, 7, this->superBlendAmount, 64, 69);
+        if (this->superBlendState & 2) {
+            paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[6], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
+                                          this->superColorIndex, this->superColorCount);
 
-        //if (Water::sVars && !Water::sVars->isLightningFlashing)
-        //    paletteBank[1].SetLimitedFade(6, 7, this->superBlendAmount, 64, 69);
+            // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            //     paletteBank[1].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[6], &sVars->activeSuperSonicPalette_Water[12],
+            //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+            // }
+        }
+        else {
+            paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[0], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
+                                          this->superColorIndex, this->superColorCount);
+
+            // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+            //     paletteBank[1].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[0], &sVars->activeSuperSonicPalette_Water[12],
+            //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+            // }
+        }
     }
     else {
         if (this->superState == Player::SuperStateSuper) {
             if (this->superBlendState & 1) {
                 if (this->superBlendAmount <= 0)
-                    this->superBlendState &= 2;
+                    this->superBlendState &= ~1;
                 else
                     this->superBlendAmount -= 4;
             }
@@ -2278,8 +2555,10 @@ void Player::HandleSuperColors_Sonic(bool32 updatePalette)
             }
         }
         else {
-            if (this->superBlendAmount <= 0)
+            if (this->superBlendAmount <= 0) {
+                this->superBlendState &= ~2;
                 this->superState = Player::SuperStateDone;
+            }
             else
                 this->superBlendAmount -= 4;
         }
@@ -2288,13 +2567,13 @@ void Player::HandleSuperColors_Sonic(bool32 updatePalette)
 void Player::HandleSuperColors_Tails(bool32 updatePalette)
 {
     if (updatePalette) {
-        // Bug Details:
-        // set this "76" to "75" to fix tails' super palette overwriting an extra colour
+        paletteBank[0].SetLimitedFade(&sVars->activeSuperTailsPalette[0], &sVars->activeSuperTailsPalette[12], this->superBlendAmount,
+                                      this->superColorIndex, this->superColorCount);
 
-        paletteBank[0].SetLimitedFade(6, 7, this->superBlendAmount, 70, 76);
-
-        // if (Water::sVars && !Water::sVars->isLightningFlashing)
-        //    paletteBank[1].SetLimitedFade(6, 7, this->superBlendAmount, 70, 76);
+        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperTailsPalette_Water[0], &sVars->activeSuperTailsPalette_Water[12],
+        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        // }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2320,13 +2599,13 @@ void Player::HandleSuperColors_Tails(bool32 updatePalette)
 void Player::HandleSuperColors_Knux(bool32 updatePalette)
 {
     if (updatePalette) {
-        // Bug Details:
-        // set this "86" to "85" to fix knuckles's super palette overwriting an extra colour
+        paletteBank[0].SetLimitedFade(&sVars->activeSuperKnuxPalette[0], &sVars->activeSuperKnuxPalette[12], this->superBlendAmount,
+                                      this->superColorIndex, this->superColorCount);
 
-        paletteBank[0].SetLimitedFade(6, 7, this->superBlendAmount, 80, 86);
-
-        // if (Water::sVars && !Water::sVars->isLightningFlashing)
-        //    paletteBank[1].SetLimitedFade(6, 7, this->superBlendAmount, 80, 86);
+        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperKnuxPalette_Water[0], &sVars->activeSuperKnuxPalette_Water[12],
+        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        // }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2352,13 +2631,13 @@ void Player::HandleSuperColors_Knux(bool32 updatePalette)
 void Player::HandleSuperColors_Mighty(bool32 updatePalette)
 {
     if (updatePalette) {
-        // Bug Details:
-        // set this "102" to "101" to fix mighty's super palette messing up a skin tone colour
+        paletteBank[0].SetLimitedFade(&sVars->activeSuperMightyPalette[0], &sVars->activeSuperMightyPalette[12], this->superBlendAmount,
+                                      this->superColorIndex, this->superColorCount);
 
-        paletteBank[0].SetLimitedFade(6, 7, this->superBlendAmount, 96, 102);
-
-        // if (Water::sVars && !Water::sVars->isLightningFlashing)
-        //    paletteBank[1].SetLimitedFade(6, 7, this->superBlendAmount, 96, 102);
+        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperMightyPalette_Water[0], &sVars->activeSuperMightyPalette_Water[12],
+        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        // }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -2384,10 +2663,13 @@ void Player::HandleSuperColors_Mighty(bool32 updatePalette)
 void Player::HandleSuperColors_Ray(bool32 updatePalette)
 {
     if (updatePalette) {
-        paletteBank[0].SetLimitedFade(6, 7, this->superBlendAmount, 113, 119);
+        paletteBank[0].SetLimitedFade(&sVars->activeSuperRayPalette[0], &sVars->activeSuperRayPalette[12], this->superBlendAmount,
+                                      this->superColorIndex, this->superColorCount);
 
-        // if (Water::sVars && !Water::sVars->isLightningFlashing)
-        //    paletteBank[1].SetLimitedFade(6, 7, this->superBlendAmount, 113, 119);
+        // if (Water::sVars && !Water::sVars->isLightningFlashing) {
+        //     paletteBank[1].SetLimitedFade(&sVars->activeSuperRayPalette_Water[0], &sVars->activeSuperRayPalette_Water[12],
+        //     this->superBlendAmount, this->superColorIndex, this->superColorCount);
+        // }
     }
     else {
         if (this->superState != Player::SuperStateSuper) {
@@ -3297,8 +3579,11 @@ void Player::State_Ground()
 
         this->stateGravity.Set(&Player::Gravity_False);
 
-        if (!this->disableGroundAnims && this->spriteType == ClassicSprites) {
-            HandleGroundAnimation();
+        if (!this->disableGroundAnims) {
+            switch (this->spriteType) {
+                case ClassicSprites: HandleGroundAnimation_Classic(); break;
+                case ManiaSprites: HandleGroundAnimation(); break;
+            }
         }
 
         if (this->jumpPress) {

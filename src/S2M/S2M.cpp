@@ -25,10 +25,10 @@ void GlobalVariables::Init(void *g)
     globals->characterFlags = ID_SONIC | ID_TAILS | ID_KNUCKLES | ID_MIGHTY | ID_RAY;
 
     globals->superMusicEnabled = true;
-    globals->playerSpriteStyle = GAME_S2;
-    globals->gameSpriteStyle   = GAME_S2;
-    globals->ostStyle          = GAME_S2;
-    globals->starpostStyle     = GAME_S2;
+    globals->playerSpriteStyle = GAME_SM;
+    globals->gameSpriteStyle   = GAME_SM;
+    globals->ostStyle          = GAME_SM;
+    globals->starpostStyle     = GAME_SM;
 
     globals->restart1UP      = 100;
     globals->restartScore1UP = 5000;

@@ -308,6 +308,8 @@ struct Player : RSDK::GameObject::Entity {
     int32 superBlendAmount;
     int32 superBlendState;
     int32 superBlendTimer;
+    uint8 superColorIndex;
+    uint8 superColorCount;
     int8 superTableIndex;
     bool32 sidekick;
     int32 scoreBonus;
@@ -407,6 +409,8 @@ struct Player : RSDK::GameObject::Entity {
     static Player *GetNearestPlayerX();
     static Player *GetNearestPlayerXY();
 
+    void HandleIdleAnimation_Classic();
+    void HandleGroundAnimation_Classic();
     void HandleIdleAnimation();
     void HandleGroundAnimation();
     void HandleGroundMovement();

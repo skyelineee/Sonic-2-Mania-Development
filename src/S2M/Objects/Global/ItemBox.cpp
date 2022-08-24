@@ -362,26 +362,27 @@ void ItemBox::CheckHit()
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
     {
         if (this->planeFilter <= 0 || player->collisionPlane == (((uint8)this->planeFilter - 1) & 1)) {
+
             if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1 && !this->parent) {
-                if (player->CheckCollisionTouchCircle(0x1000000, this, 0x100000)) {
+                if (player->CheckCollisionTouchCircle(TO_FIXED(256), this, TO_FIXED(16))) {
                     switch (globals->gravityDir) {
                         default: break;
                         case CMODE_FLOOR:
-                            if (this->position.y - 0x800000 < player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
+                            if (this->position.y - TO_FIXED(128) < player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
                                 this->active = ACTIVE_NORMAL;
                                 this->state.Set(&ItemBox::State_Falling);
-                                this->velocity.y = -0x20000;
+                                this->velocity.y = -TO_FIXED(2);
                             }
                             break;
+
                         case CMODE_ROOF:
-                            if (this->position.y + 0x800000 > player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
+                            if (this->position.y + TO_FIXED(128) > player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
                                 this->active = ACTIVE_NORMAL;
                                 this->state.Set(&ItemBox::State_Falling);
-                                this->velocity.y = 0x20000;
+                                this->velocity.y = TO_FIXED(2);
                             }
                             break;
                     }
-
                 }
             }
 
