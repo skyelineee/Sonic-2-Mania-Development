@@ -77,7 +77,7 @@ void Player::Update()
         }
 
         if (this->invincibleTimer) {
-            if (this->invincibleTimer <= 0) {
+            if (this->invincibleTimer < 0) {
                 this->invincibleTimer++;
             }
             else {

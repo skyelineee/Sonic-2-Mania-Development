@@ -176,7 +176,7 @@ void CollapsingPlatform::Create(void *data)
             this->drawGroup = this->targetLayer.GetTileLayer()->drawGroup[0];
         }
         else {
-            if (this->targetLayer.Loaded()) {
+            if (this->targetLayer.id != 0) {
                 this->targetLayer = Zone::sVars->fgLayer[1];
                 this->drawGroup   = Zone::sVars->objectDrawGroup[1];
             }
