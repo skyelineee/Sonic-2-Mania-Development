@@ -17,7 +17,7 @@ struct Player : RSDK::GameObject::Entity {
         ANI_LOOK_UP,
         ANI_CROUCH,
         ANI_WALK,
-        ANI_FALL,
+        ANI_AIR_WALK,
         ANI_JOG,
         ANI_RUN,
         ANI_DASH,
@@ -76,7 +76,6 @@ struct Player : RSDK::GameObject::Entity {
         // Sonic Ability Anim Aliases
         ANI_DROPDASH            = ANI_ABILITY_0,
         ANI_PEELOUT             = ANI_ABILITY_1,
-        ANI_PEELOUT_ANGLED      = ANI_ABILITY_2,
 
         // Tails Ability Anim Aliases
         ANI_FLY                  = ANI_ABILITY_0,

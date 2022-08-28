@@ -1852,7 +1852,7 @@ void Platform::Collision_Solid_Hold()
                 if ((1 << playerID) & stoodPlayers) {
                     if (player->state.Matches(&Player::State_Static)) {
                         player->state.Set(&Player::State_Air);
-                        player->animator.SetAnimation(player->aniFrames, Player::ANI_FALL, false, 0);
+                        player->animator.SetAnimation(player->aniFrames, Player::ANI_AIR_WALK, false, 0);
                     }
                 }
                 break;
