@@ -1,4 +1,9 @@
-#include "Game.hpp"
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic 2 Mania
+// Object Description: LogoSetup Object
+// Object Author: AChickMcNuggie
+// ---------------------------------------------------------------------
+
 #include "S2M.hpp"
 #include "LogoSetup.hpp"
 

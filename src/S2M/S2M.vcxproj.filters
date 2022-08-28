@@ -247,6 +247,12 @@
     <ClCompile Include="Objects\Common\Water.cpp">
       <Filter>Source Files\Objects\Common</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\Sega.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIPicture.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -473,6 +479,12 @@
     </ClInclude>
     <ClInclude Include="Objects\Common\Water.hpp">
       <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\Sega.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIPicture.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

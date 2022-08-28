@@ -394,7 +394,12 @@ void HUD::Create(void *data)
 
 void HUD::StageLoad()
 {
-    sVars->aniFrames.Load("Global/HUD.bin", SCOPE_STAGE);
+    switch GET_CHARACTER_ID(1) {
+        default: break;
+        case ID_SONIC: sVars->aniFrames.Load("Global/HUDSonic.bin", SCOPE_STAGE); break;
+        case ID_TAILS: sVars->aniFrames.Load("Global/HUDTails.bin", SCOPE_STAGE); break;
+        case ID_KNUCKLES: sVars->aniFrames.Load("Global/HUDKnux.bin", SCOPE_STAGE); break;
+    }
     sVars->superButtonFrames.Load("Global/SuperButtons.bin", SCOPE_STAGE);
 
     sVars->sfxClick.Get("Stage/Click.wav");
