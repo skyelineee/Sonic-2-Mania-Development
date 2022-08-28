@@ -413,7 +413,7 @@ void BreakableWall::CheckBreak_Wall()
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
                                     player->animator.SetAnimation(player->aniFrames, Player::ANI_GLIDE_DROP, false, 0);
-                                    player->state.Set(&Player::State_GlideDrop);
+                                    player->state.Set(&Player::State_KnuxGlideDrop);
                                 }
                             }
                             else if (player->animator.animationID == Player::ANI_GLIDE_SLIDE) {
@@ -472,7 +472,7 @@ void BreakableWall::CheckBreak_Floor()
 
                         case ID_MIGHTY:
                             if (!canBreak)
-                                canBreak = player->state.Matches(&Player::State_DrillKick);
+                                canBreak = player->state.Matches(&Player::State_MightyHammerDrop);
                             break;
                     }
 
@@ -489,7 +489,7 @@ void BreakableWall::CheckBreak_Floor()
 
                         sVars->sfxLedgeBreak.Play();
 
-                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
                             player->velocity.y = velY - 0x10000;
                         else
                             player->velocity.y = -0x30000;
@@ -532,7 +532,7 @@ void BreakableWall::CheckBreak_BurrowFloor()
 
                         case ID_MIGHTY:
                             if (!canBreak)
-                                canBreak = player->state.Matches(&Player::State_DrillKick);
+                                canBreak = player->state.Matches(&Player::State_MightyHammerDrop);
                             break;
                     }
 
@@ -554,7 +554,7 @@ void BreakableWall::CheckBreak_BurrowFloor()
 
                         player->GiveScoreBonus(this->position);
 
-                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
                             player->velocity.y = velY - 0x10000;
                         else
                             player->velocity.y = 0;

@@ -22,7 +22,7 @@ void ImageTrail::LateUpdate()
         this->baseAlpha = 0x100;
     }
     else {
-        if (player->state.Matches(&Player::State_DrillKick)) {
+        if (player->state.Matches(&Player::State_MightyHammerDrop)) {
             this->fadeoutTimer = 0x10;
         }
         else {

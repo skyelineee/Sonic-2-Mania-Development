@@ -804,11 +804,11 @@ void Water::BubbleFinishPopBehavior()
                                     this->allowBreathe = true;
                             }
 
-                            if (player->state.Matches(&Player::State_Carried)) {
+                            if (player->state.Matches(&Player::State_FlyCarried)) {
                                 player->state.Set(&Player::State_Air);
                                 GameObject::Get<Player>(SLOT_PLAYER2)->flyCarryTimer = 30;
                             }
-                            else if (player->state.Matches(&Player::State_DrillKick)) {
+                            else if (player->state.Matches(&Player::State_MightyHammerDrop)) {
                                 player->state.Set(&Player::State_Air);
                             }
                             // }

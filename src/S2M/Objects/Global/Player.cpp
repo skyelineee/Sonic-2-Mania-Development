@@ -136,7 +136,7 @@ void Player::Update()
 
         this->HandleSuperForm();
 
-        if (this->characterID == ID_TAILS && !this->state.Matches(&Player::State_Fly) && !this->state.Matches(&Player::State_FlyBoss)
+        if (this->characterID == ID_TAILS && !this->state.Matches(&Player::State_TailsFlight)
             && this->abilitySpeed)
             this->abilitySpeed = 0;
 
@@ -220,7 +220,7 @@ void Player::LateUpdate()
     if (this->superState == Player::SuperStateFadeIn && !this->state.Matches(&Player::State_Transform))
         TryTransform(false, false);
 
-    if (this->state.Matches(&Player::State_Carried)) {
+    if (this->state.Matches(&Player::State_FlyCarried)) {
         this->flyCarryLeaderPos.x = this->position.x >> 0x10 << 0x10;
         this->flyCarryLeaderPos.y = this->position.y >> 0x10 << 0x10;
     }
@@ -1368,10 +1368,10 @@ void Player::ChangeCharacter(int32 character)
     this->sensorX[3] = -0x50000;
     this->sensorX[4] = -0xA0000;
 
-    if (this->state.Matches(&Player::State_WallClimb) || this->state.Matches(&Player::State_DropDash) || this->state.Matches(&Player::State_Fly)
-        || this->state.Matches(&Player::State_GlideDrop) || this->state.Matches(&Player::State_GlideLeft)
-        || this->state.Matches(&Player::State_GlideRight) || this->state.Matches(&Player::State_GlideSlide)
-        || this->state.Matches(&Player::State_LedgePullUp) || this->state.Matches(&Player::State_DrillKick)
+    if (this->state.Matches(&Player::State_KnuxWallClimb) || this->state.Matches(&Player::State_DropDash) || this->state.Matches(&Player::State_TailsFlight)
+        || this->state.Matches(&Player::State_KnuxGlideDrop) || this->state.Matches(&Player::State_KnuxGlideLeft)
+        || this->state.Matches(&Player::State_KnuxGlideRight) || this->state.Matches(&Player::State_KnuxGlideSlide)
+        || this->state.Matches(&Player::State_KnuxLedgePullUp) || this->state.Matches(&Player::State_MightyHammerDrop)
         || this->state.Matches(&Player::State_RayFly)) {
         this->state.Set(&Player::State_Air);
         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
@@ -2422,7 +2422,7 @@ void Player::CheckStartFlyCarry(Player *leader)
             break;
     }
 
-    if (!leader->state.Matches(&Player::State_Carried) && (!leader->onGround || this->velocity.y < 0)) {
+    if (!leader->state.Matches(&Player::State_FlyCarried) && (!leader->onGround || this->velocity.y < 0)) {
         bool32 canFlyCarry = (leader->state.Matches(&Player::State_Roll) || leader->state.Matches(&Player::State_LookUp)
                               || leader->state.Matches(&Player::State_Crouch) || leader->state.Matches(&Player::State_Air)
                               || leader->state.Matches(&Player::State_Ground));
@@ -2431,7 +2431,7 @@ void Player::CheckStartFlyCarry(Player *leader)
             if (abs(this->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !this->flyCarryTimer
                 && !leader->down && !leader->onGround) {
                 leader->animator.SetAnimation(leader->aniFrames, ANI_HANG, false, 0);
-                leader->state.Set(&Player::State_Carried);
+                leader->state.Set(&Player::State_FlyCarried);
                 leader->nextAirState.Set(nullptr);
                 leader->nextGroundState.Set(nullptr);
                 sVars->sfxGrab.Play();
@@ -2439,7 +2439,7 @@ void Player::CheckStartFlyCarry(Player *leader)
         }
     }
 
-    if (leader->state.Matches(&Player::State_Carried)) {
+    if (leader->state.Matches(&Player::State_FlyCarried)) {
         int32 entityXPos = this->position.x;
         int32 entityYPos = this->position.y;
         int32 entityXVel = this->velocity.x;
@@ -3355,7 +3355,7 @@ void Player::Action_DblJumpTails()
                 this->animator.SetAnimation(this->aniFrames, ANI_FLY, false, 0);
             else
                 this->animator.SetAnimation(this->aniFrames, ANI_SWIM, false, 0);
-            this->state.Set(&Player::State_Fly);
+            this->state.Set(&Player::State_TailsFlight);
             this->stateGravity.Set(&Player::Gravity_NULL);
             this->nextGroundState.Set(nullptr);
             this->nextAirState.Set(nullptr);
@@ -3389,14 +3389,14 @@ void Player::Action_DblJumpKnux()
                         this->velocity.y = 0;
 
                     if (!(this->direction & FLIP_X)) {
-                        this->state.Set(&Player::State_GlideRight);
+                        this->state.Set(&Player::State_KnuxGlideRight);
                         this->stateGravity.Set(&Player::Gravity_NULL);
                         this->velocity.x     = 0x40000;
                         this->timer          = 0;
                         this->outtaHereTimer = 0;
                     }
                     else {
-                        this->state.Set(&Player::State_GlideLeft);
+                        this->state.Set(&Player::State_KnuxGlideLeft);
                         this->stateGravity.Set(&Player::Gravity_NULL);
                         this->velocity.x = -0x40000;
                         this->timer      = 256;
@@ -3409,14 +3409,14 @@ void Player::Action_DblJumpKnux()
                         this->velocity.y = 0;
 
                     if (this->direction & FLIP_X) {
-                        this->state.Set(&Player::State_GlideRight);
+                        this->state.Set(&Player::State_KnuxGlideRight);
                         this->stateGravity.Set(&Player::Gravity_NULL);
                         this->velocity.x     = 0x40000;
                         this->timer          = 0;
                         this->outtaHereTimer = 0;
                     }
                     else {
-                        this->state.Set(&Player::State_GlideLeft);
+                        this->state.Set(&Player::State_KnuxGlideLeft);
                         this->stateGravity.Set(&Player::Gravity_NULL);
                         this->velocity.x = -0x40000;
                         this->timer      = 256;
@@ -3464,7 +3464,7 @@ void Player::Action_DblJumpMighty()
                 }
 
                 sVars->sfxMightyDrill.Play(false, 0xFE);
-                this->state.Set(&Player::State_DrillKick);
+                this->state.Set(&Player::State_MightyHammerDrop);
                 this->stateGravity.Set(&Player::Gravity_True);
             }
         }
@@ -4412,7 +4412,7 @@ void Player::State_BubbleBounce()
         this->state.Set(&Player::State_Air);
     }
 }
-void Player::State_Fly()
+void Player::State_TailsFlight()
 {
     SET_CURRENT_STATE();
 
@@ -4476,13 +4476,13 @@ void Player::State_Fly()
 
         if (this->timer >= 480) {
             if (!this->underwater) {
-                if (leader->state.Matches(&Player::State_Carried))
+                if (leader->state.Matches(&Player::State_FlyCarried))
                     this->animator.SetAnimation(this->aniFrames, ANI_FLY_LIFT_TIRED, false, 0);
                 else
                     this->animator.SetAnimation(this->aniFrames, ANI_FLY_TIRED, false, 0);
             }
             else {
-                if (leader->state.Matches(&Player::State_Carried))
+                if (leader->state.Matches(&Player::State_FlyCarried))
                     this->animator.SetAnimation(this->aniFrames, ANI_SWIM_LIFT, false, 0);
                 else
                     this->animator.SetAnimation(this->aniFrames, ANI_SWIM_TIRED, false, 0);
@@ -4490,7 +4490,7 @@ void Player::State_Fly()
         }
         else {
             if (this->underwater) {
-                if (leader->state.Matches(&Player::State_Carried)) {
+                if (leader->state.Matches(&Player::State_FlyCarried)) {
                     this->animator.SetAnimation(this->aniFrames, ANI_SWIM_LIFT, false, 0);
                 }
                 else {
@@ -4503,7 +4503,7 @@ void Player::State_Fly()
                 }
             }
             else {
-                if (!leader->state.Matches(&Player::State_Carried)) {
+                if (!leader->state.Matches(&Player::State_FlyCarried)) {
                     this->animator.SetAnimation(this->aniFrames, ANI_FLY, false, 0);
                 }
                 else {
@@ -4521,357 +4521,45 @@ void Player::State_Fly()
 
             if (++this->timer == 480) {
                 if (!this->underwater) {
-                    if (leader->state.Matches(&Player::State_Carried))
+                    if (leader->state.Matches(&Player::State_FlyCarried))
                         this->animator.SetAnimation(this->aniFrames, ANI_FLY_LIFT_TIRED, false, 0);
                     else
                         this->animator.SetAnimation(this->aniFrames, ANI_FLY_TIRED, false, 0);
                 }
                 else {
-                    if (leader->state.Matches(&Player::State_Carried))
+                    if (leader->state.Matches(&Player::State_FlyCarried))
                         this->animator.SetAnimation(this->aniFrames, ANI_SWIM_LIFT, false, 0);
                     else
                         this->animator.SetAnimation(this->aniFrames, ANI_SWIM_TIRED, false, 0);
                 }
             }
-            else if (this->jumpPress && (!this->underwater || !leader->state.Matches(&Player::State_Carried))) {
+            else if (this->jumpPress && (!this->underwater || !leader->state.Matches(&Player::State_FlyCarried))) {
                 this->abilitySpeed = -0x2000;
                 this->abilityValue = 0;
             }
         }
+
+        // Flight Cancel!
+
+        if (!this->sidekick) {
+            if (this->timer < 480 && this->down && !leader->state.Matches(&Player::State_FlyCarried)) {
+                this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                this->state.Set(&Player::State_Air);
+                this->jumpAbilityState = 0;
+            }
+        }
+        else {
+            // TODO: Do something else for P2 to activate it?
+        }
     }
 }
-void Player::State_FlyBoss()
-{
-    SET_CURRENT_STATE();
-
-    int32 screenBottom = screenInfo->position.y + screenInfo->size.y;
-    int32 targetPos    = screenBottom - 56;
-    int32 bottom       = screenBottom + 64;
-
-    int32 bottomTrigger = screenBottom + 40;
-    int32 bottomBounds  = screenBottom + 96;
-
-    if (!this->playerID) {
-        int32 playerIY = this->position.y >> 16;
-
-        switch (this->abilityValues[1]) {
-            case 0:
-                this->abilityValue = 99;
-                this->velocity.y += 0x1C00;
-                this->up   = false;
-                this->down = false;
-
-                if (this->position.y << 16 > bottomTrigger) {
-                    this->position.y = bottomTrigger << 16;
-                    this->velocity.x = 0;
-                    this->velocity.y = 0;
-                    this->direction &= ~FLIP_X;
-                    this->abilityValues[1] = 2;
-                    if (bottomBounds < bottomTrigger) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                else {
-                    if (bottomBounds < playerIY) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                break;
-
-            case 1:
-                this->position.y      = bottomTrigger << 16;
-                this->velocity.x      = 0;
-                this->velocity.y      = -(1 << 16);
-                this->invincibleTimer = 0;
-                this->blinkTimer      = 0;
-                this->visible         = true;
-                this->jumpPress       = true;
-                this->direction &= ~FLIP_X;
-                this->abilityValues[1] = 2;
-                if (bottomBounds < bottomTrigger) {
-                    this->position.y       = bottomBounds << 16;
-                    this->velocity.x       = 0;
-                    this->velocity.y       = 0;
-                    this->up               = false;
-                    this->down             = false;
-                    this->left             = false;
-                    this->right            = false;
-                    this->jumpPress        = false;
-                    this->jumpHold         = false;
-                    this->abilityValues[1] = 0;
-                }
-                break;
-
-            case 2:
-                this->jumpPress = true;
-
-                if (playerIY >= targetPos) {
-                    if (bottomBounds < bottom) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                else {
-                    this->abilityValues[1] = 3;
-
-                    if (bottomBounds < bottom) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                break;
-
-            case 3:
-                if (playerIY <= bottom) {
-                    if (playerIY > bottomBounds) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                else {
-                    this->abilityValues[1] = 2;
-                    this->direction &= ~FLIP_X;
-                    this->position.y = bottom << 16;
-                    this->velocity.x = 0;
-                    this->velocity.y = 0;
-                    if (bottomBounds < bottom) {
-                        this->position.y       = bottomBounds << 16;
-                        this->velocity.x       = 0;
-                        this->velocity.y       = 0;
-                        this->up               = false;
-                        this->down             = false;
-                        this->left             = false;
-                        this->right            = false;
-                        this->jumpPress        = false;
-                        this->jumpHold         = false;
-                        this->abilityValues[1] = 0;
-                    }
-                }
-                break;
-
-            case 4:
-                this->jumpPress  = false;
-                this->velocity.x = 0;
-                this->velocity.y = 0;
-                this->position.y = bottom << 16;
-                if (bottomBounds < bottom) {
-                    this->position.y       = bottomBounds << 16;
-                    this->velocity.x       = 0;
-                    this->velocity.y       = 0;
-                    this->up               = false;
-                    this->down             = false;
-                    this->left             = false;
-                    this->right            = false;
-                    this->jumpPress        = false;
-                    this->jumpHold         = false;
-                    this->abilityValues[1] = 0;
-                }
-                break;
-
-            default:
-                if (playerIY > bottomBounds) {
-                    this->position.y       = bottomBounds << 16;
-                    this->velocity.x       = 0;
-                    this->velocity.y       = 0;
-                    this->up               = false;
-                    this->down             = false;
-                    this->left             = false;
-                    this->right            = false;
-                    this->jumpPress        = false;
-                    this->jumpHold         = false;
-                    this->abilityValues[1] = 0;
-                }
-                break;
-        }
-    }
-    else {
-        Player *leader = GameObject::Get<Player>(SLOT_PLAYER1);
-
-        int32 playerIY = this->position.y >> 16;
-        switch (leader->abilityValues[1]) {
-            case 0:
-                leader->up         = false;
-                leader->down       = false;
-                this->abilityValue = 99;
-                this->velocity.y += 0x1C00;
-                this->up        = false;
-                this->down      = false;
-                this->jumpPress = false;
-
-                if (playerIY > bottomTrigger) {
-                    this->position.y = bottomTrigger << 16;
-                    this->direction &= ~FLIP_X;
-                    this->velocity.x = 0;
-                    this->velocity.y = 0;
-                    leader->direction &= ~FLIP_X;
-                    leader->velocity.x = 0;
-                    leader->velocity.y = 0;
-                    leader->position.y = (playerIY + 14) << 16;
-                    this->position.x   = leader->position.x;
-
-                    if (!leader->stateInput.Matches(&Player::Input_AI_WaitForP1) && !leader->stateInput.Matches(&Player::Input_AI_SpindashPt2)
-                        && !leader->stateInput.Matches(&Player::Input_AI_Follow) && !leader->stateInput.Matches(&Player::Input_AI_SpindashPt1)) {
-                        leader->storedStateInput = leader->stateInput;
-                    }
-                    else {
-                        leader->timer = -15;
-                        leader->stateInput.Set(&Player::Input_AI_WaitForP1);
-                    }
-
-                    if (!leader->state.Matches(&Player::State_Carried)) {
-                        leader->state.Matches(&Player::State_Air);
-                        leader->abilityValues[1] = 1;
-                    }
-                    else {
-                        leader->abilityValues[1] = 2;
-                    }
-                }
-                break;
-
-            case 1:
-                leader->down     = false;
-                this->jumpPress  = false;
-                this->velocity.x = 0;
-                this->velocity.y = 0;
-                this->position.y = bottomTrigger << 16;
-                if ((leader->position.y >> 16) > bottom) {
-                    leader->velocity.x = 0;
-                    leader->position.x = this->position.x;
-                    leader->position.y = (playerIY + 18) << 16;
-                    this->CheckStartFlyCarry(leader);
-                }
-
-                if (!leader->state.Matches(&Player::State_Carried)) {
-                    this->visible         = true;
-                    this->jumpPress       = true;
-                    this->velocity.y      = -(1 << 16);
-                    this->invincibleTimer = 0;
-                    this->blinkTimer      = 0;
-                    this->direction &= ~FLIP_X;
-                    leader->velocity.x = 0;
-                    leader->velocity.y = 0;
-                    leader->direction &= ~FLIP_X;
-                    leader->abilityValues[1] = 2;
-                }
-                break;
-
-            case 2:
-                this->jumpPress = true;
-                if (playerIY < targetPos)
-                    leader->abilityValues[1] = 3;
-                leader->down = false;
-                break;
-
-            case 3:
-                this->jumpPress = false;
-
-                if (!leader->state.Matches(&Player::State_Carried)) {
-                    if (leader->up)
-                        this->jumpPress = true;
-
-                    if (!leader->down && this->velocity.y >= 0x10C00) {
-                        this->velocity.y = 0x10C00;
-                        this->jumpPress  = true;
-                    }
-                }
-
-                if (playerIY > bottom) {
-                    this->position.y         = bottom << 16;
-                    this->velocity.x         = 0;
-                    this->velocity.y         = 0;
-                    leader->abilityValues[1] = 4;
-                    sVars->sfxFlying.Play();
-                }
-
-                if (playerIY > screenBottom + 16) {
-                    this->jumpPress          = true;
-                    leader->abilityValues[1] = 2;
-                }
-                break;
-
-            case 4:
-                this->jumpPress  = false;
-                this->velocity.x = 0;
-                this->velocity.y = 0;
-                this->position.y = bottom << 16;
-                break;
-
-            default: break;
-        }
-
-        if (!leader->state.Matches(&Player::State_Static) && leader->abilityValues[1] >= 2 && (leader->position.y >> 16) > bottomBounds) {
-            leader->position.y = bottomBounds << 16;
-            leader->velocity.x = 0;
-            leader->velocity.y = 0;
-            leader->up         = false;
-            leader->down       = false;
-            leader->left       = false;
-            leader->right      = false;
-            leader->jumpPress  = false;
-            leader->jumpHold   = false;
-
-            if (!leader->stateInput.Matches(&Player::Input_NULL))
-                leader->storedStateInput = leader->stateInput;
-
-            leader->stateInput.Set(&Player::Input_NULL);
-            leader->stateGravity.Set(&Player::Gravity_NULL);
-            leader->state.Set(&Player::State_Static);
-            leader->abilityValues[1] = 0;
-        }
-    }
-
-    this->timer = 120;
-    State_Fly();
-}
-void Player::State_Carried()
+void Player::State_FlyCarried()
 {
     SET_CURRENT_STATE();
 
     Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
 
-    if (!sidekick->state.Matches(&Player::State_Fly))
+    if (!sidekick->state.Matches(&Player::State_TailsFlight))
         this->state.Set(&Player::State_Air);
 
     if (this->flyCarrySidekickPos.x != this->flyCarryLeaderPos.x)
@@ -4882,43 +4570,7 @@ void Player::State_Carried()
             this->state.Set(&Player::State_Ground);
     }
 
-    if (sidekick->state.Matches(&Player::State_FlyBoss)) {
-        if (this->jumpPress) {
-            this->state.Set(&Player::State_Air);
-
-            switch (globals->gravityDir) {
-                default: break;
-
-                case CMODE_FLOOR:
-                    if (!this->underwater)
-                        this->velocity.y = -0x40000;
-                    else
-                        this->velocity.y = -0x20000;
-                    break;
-
-                case CMODE_ROOF:
-                    if (!this->underwater)
-                        this->velocity.y = 0x40000;
-                    else
-                        this->velocity.y = 0x20000;
-                    break;
-            }
-
-            this->down              = 0;
-            this->jumpAbilityState  = 1;
-            this->disableGravity    = true;
-            this->timer             = 0;
-            this->outtaHereTimer    = 0;
-            this->velocity.x        = sidekick->velocity.x;
-            sidekick->velocity.x    = 0;
-            sidekick->jumpPress     = true;
-            sidekick->flyCarryTimer = 60;
-            sVars->sfxJump.Play();
-            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-            this->state.Set(&Player::State_Air);
-        }
-    }
-    else if (this->state.Matches(&Player::State_Carried)) {
+    if (this->state.Matches(&Player::State_FlyCarried)) {
         if (this->jumpPress && this->down) {
             this->state.Set(&Player::State_Air);
 
@@ -4948,7 +4600,7 @@ void Player::State_Carried()
     }
 }
 
-void Player::State_GlideLeft()
+void Player::State_KnuxGlideLeft()
 {
     SET_CURRENT_STATE();
 
@@ -4965,7 +4617,7 @@ void Player::State_GlideLeft()
             }
             this->abilitySpeed = 0;
             this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-            this->state.Set(&Player::State_GlideDrop);
+            this->state.Set(&Player::State_KnuxGlideDrop);
         }
         else {
             int32 velocity = this->abilitySpeed;
@@ -5077,7 +4729,7 @@ void Player::State_GlideLeft()
             }
 
             if (this->right) {
-                this->state.Set(&Player::State_GlideRight);
+                this->state.Set(&Player::State_KnuxGlideRight);
 
                 if (this->spriteType == ManiaSprites) {
                     switch (globals->gravityDir) {
@@ -5097,7 +4749,7 @@ void Player::State_GlideLeft()
                     this->timer          = 0;
 
                     if (highPos == lowPos) {
-                        this->state.Set(&Player::State_WallClimb);
+                        this->state.Set(&Player::State_KnuxWallClimb);
                         this->velocity.x     = 0;
                         this->velocity.y     = 0;
                         this->outtaHereTimer = 0;
@@ -5113,7 +4765,7 @@ void Player::State_GlideLeft()
                                 this->velocity.x = newVel;
                         }
                         this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-                        this->state.Set(&Player::State_GlideDrop);
+                        this->state.Set(&Player::State_KnuxGlideDrop);
                     }
                 }
                 else if (collidedHigh) {
@@ -5128,14 +4780,14 @@ void Player::State_GlideLeft()
                     }
                     this->abilitySpeed = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-                    this->state.Set(&Player::State_GlideDrop);
+                    this->state.Set(&Player::State_KnuxGlideDrop);
                 }
             }
         }
     }
     else if (this->collisionMode == globals->gravityDir) {
         this->timer = 0;
-        this->state.Set(&Player::State_GlideSlide);
+        this->state.Set(&Player::State_KnuxGlideSlide);
 
         this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_SLIDE, false, 0);
         switch (globals->gravityDir) {
@@ -5175,7 +4827,7 @@ void Player::State_GlideLeft()
             break;
     }
 }
-void Player::State_GlideRight()
+void Player::State_KnuxGlideRight()
 {
     SET_CURRENT_STATE();
 
@@ -5193,7 +4845,7 @@ void Player::State_GlideRight()
 
             this->abilitySpeed = 0;
             this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-            this->state.Set(&Player::State_GlideDrop);
+            this->state.Set(&Player::State_KnuxGlideDrop);
         }
         else {
             int32 velocity = this->abilitySpeed;
@@ -5302,7 +4954,7 @@ void Player::State_GlideRight()
 
             this->position.x = storeX;
             if (this->left) {
-                this->state.Set(&Player::State_GlideLeft);
+                this->state.Set(&Player::State_KnuxGlideLeft);
 
                 if (this->spriteType == ManiaSprites) {
                     switch (globals->gravityDir) {
@@ -5322,7 +4974,7 @@ void Player::State_GlideRight()
                     this->timer          = 0;
 
                     if (highPos == lowPos) {
-                        this->state.Set(&Player::State_WallClimb);
+                        this->state.Set(&Player::State_KnuxWallClimb);
                         this->velocity.x     = 0;
                         this->velocity.y     = 0;
                         this->outtaHereTimer = 0;
@@ -5339,7 +4991,7 @@ void Player::State_GlideRight()
                         }
 
                         this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-                        this->state.Set(&Player::State_GlideDrop);
+                        this->state.Set(&Player::State_KnuxGlideDrop);
                     }
                 }
                 else if (collidedHigh) {
@@ -5355,14 +5007,14 @@ void Player::State_GlideRight()
 
                     this->abilitySpeed = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-                    this->state.Set(&Player::State_GlideDrop);
+                    this->state.Set(&Player::State_KnuxGlideDrop);
                 }
             }
         }
     }
     else if (this->collisionMode == globals->gravityDir) {
         this->timer = 0;
-        this->state.Set(&Player::State_GlideSlide);
+        this->state.Set(&Player::State_KnuxGlideSlide);
 
         this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_SLIDE, false, 0);
         switch (globals->gravityDir) {
@@ -5402,7 +5054,7 @@ void Player::State_GlideRight()
             break;
     }
 }
-void Player::State_GlideDrop()
+void Player::State_KnuxGlideDrop()
 {
     SET_CURRENT_STATE();
 
@@ -5454,7 +5106,7 @@ void Player::State_GlideDrop()
         Gravity_True();
     }
 }
-void Player::State_GlideSlide()
+void Player::State_KnuxGlideSlide()
 {
     SET_CURRENT_STATE();
 
@@ -5462,7 +5114,7 @@ void Player::State_GlideSlide()
         this->timer          = 0;
         this->outtaHereTimer = 0;
         this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-        this->state.Set(&Player::State_GlideDrop);
+        this->state.Set(&Player::State_KnuxGlideDrop);
     }
     else {
         if (this->groundVel && !Zone::sVars->autoScrollSpeed) {
@@ -5511,7 +5163,7 @@ void Player::State_GlideSlide()
             this->state.Set(&Player::State_Crouch);
     }
 }
-void Player::State_WallClimb()
+void Player::State_KnuxWallClimb()
 {
     SET_CURRENT_STATE();
 
@@ -5722,7 +5374,7 @@ void Player::State_WallClimb()
             else if (collidedHigh) {
                 this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 2);
                 this->velocity.y = 0;
-                this->state.Set(&Player::State_GlideDrop);
+                this->state.Set(&Player::State_KnuxGlideDrop);
             }
             else if (collidedLow) {
                 this->position.y &= 0xFFF00000;
@@ -5733,7 +5385,7 @@ void Player::State_WallClimb()
 
                 this->velocity.y = 0;
                 this->position.x = storeX;
-                this->state.Set(&Player::State_LedgePullUp);
+                this->state.Set(&Player::State_KnuxLedgePullUp);
                 this->timer          = 1;
                 this->tileCollisions = TILECOLLISION_NONE;
                 this->velocity.y     = 0;
@@ -5741,7 +5393,7 @@ void Player::State_WallClimb()
         }
     }
 }
-void Player::State_LedgePullUp()
+void Player::State_KnuxLedgePullUp()
 {
     SET_CURRENT_STATE();
 
@@ -5918,7 +5570,7 @@ void Player::State_LedgePullUp()
             break;
     }
 }
-void Player::State_DrillKick()
+void Player::State_MightyHammerDrop()
 {
     SET_CURRENT_STATE();
 
@@ -6062,7 +5714,7 @@ bool32 Player::CheckMightyUnspin(int32 bounceDistance, bool32 checkHammerDrop, i
         this->velocity.y = bounceDistance * Math::Sin256(angle);
 
         if (checkHammerDrop) {
-            if (this->state.Matches(&Player::State_DrillKick)) {
+            if (this->state.Matches(&Player::State_MightyHammerDrop)) {
                 this->state.Set(&Player::State_Roll);
                 this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
             }
@@ -7063,7 +6715,7 @@ void Player::GetDelayedInput()
     sVars->jumpHoldState |= leader->jumpHold;
     sVars->jumpHoldState &= 0xFFFF;
 
-    if (leader->state.Matches(&Player::State_Carried)) {
+    if (leader->state.Matches(&Player::State_FlyCarried)) {
         sVars->downState <<= 15;
         sVars->leftState <<= 15;
         sVars->rightState <<= 15;
@@ -7257,7 +6909,7 @@ void Player::Input_AI_WaitForP1()
 
     this->timer--;
 
-    if (!this->timer || this->state.Matches(&Player::State_FlyBoss))
+    if (!this->timer)
         this->stateInput.Set(&Player::Input_AI_Follow);
 
     if (CheckP2KeyPress())
@@ -7271,7 +6923,7 @@ void Player::Input_AI_Follow()
     Player *leader = GameObject::Get<Player>(SLOT_PLAYER1);
     GetDelayedInput();
 
-    if ((this->state.Matches(&Player::State_Fly) || this->state.Matches(&Player::State_FlyBoss)) && leader->state.Matches(&Player::State_Carried)) {
+    if (this->state.Matches(&Player::State_TailsFlight) && leader->state.Matches(&Player::State_FlyCarried)) {
         this->up        = leader->up;
         this->down      = leader->down;
         this->left      = leader->left;
@@ -7279,7 +6931,7 @@ void Player::Input_AI_Follow()
         this->jumpHold  = leader->jumpHold;
         this->jumpPress = leader->jumpPress;
     }
-    else if (leader->classID == sVars->classID && !leader->state.Matches(&Player::State_Carried)) {
+    else if (leader->classID == sVars->classID && !leader->state.Matches(&Player::State_FlyCarried)) {
         if (((this->angle + 16) & 0xE0) == (this->angle + (globals->gravityDir << 6))) {
             if (this->left && this->position.x < leader->position.x - 0x80000 && this->velocity.x <= 0)
                 this->left = false;
@@ -7866,10 +7518,10 @@ bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity)
 
         if (this->characterID == ID_KNUCKLES && this->animator.animationID == ANI_GLIDE) {
             this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
-            this->state.Set(&Player::State_GlideDrop);
+            this->state.Set(&Player::State_KnuxGlideDrop);
         }
         else {
-            if (this->state.Matches(&Player::State_DrillKick) || this->state.Matches(&Player::State_RayFly)) {
+            if (this->state.Matches(&Player::State_MightyHammerDrop) || this->state.Matches(&Player::State_RayFly)) {
                 this->state.Set(&Player::State_Air);
                 this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
                 if (this->velocity.y < -0x40000)
