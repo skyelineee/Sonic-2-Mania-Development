@@ -58,9 +58,6 @@ struct FXAniTiles : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void State_Init();
-    void State_Idle();
-
     // ==============================
     // DECLARATION
     // ==============================

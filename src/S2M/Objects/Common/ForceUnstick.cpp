@@ -23,9 +23,9 @@ void ForceUnstick::Update()
         if (player->CheckCollisionTouch(this, &this->hitbox)) {
             player->collisionMode = CMODE_FLOOR;
 
-            if (this->breakClimb && player->state.Matches(&Player::State_WallClimb)) {
+            if (this->breakClimb && player->state.Matches(&Player::State_KnuxWallClimb)) {
                 player->animator.SetAnimation(player->aniFrames, Player::ANI_GLIDE_DROP, false, 2);
-                player->state.Set(&Player::State_GlideDrop);
+                player->state.Set(&Player::State_KnuxGlideDrop);
             }
         }
     }

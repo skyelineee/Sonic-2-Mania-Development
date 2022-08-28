@@ -333,11 +333,11 @@ void Water::SpawnBubble(Player *player, int32 id)
 
     Water *bubble = GameObject::Create<Water>(Water::Bubble, player->position.x, player->position.y);
     if (player->direction) {
-        bubble->position.x -= 0x60000;
+        bubble->position.x -= TO_FIXED(6);
         bubble->angle = 0x100;
     }
     else {
-        bubble->position.x += 0x60000;
+        bubble->position.x += TO_FIXED(6);
     }
 
     bubble->childPtr   = player;
@@ -748,21 +748,21 @@ void Water::BubbleFinishPopBehavior()
 
     this->animator.Process();
 
-    if (this->animator.frameID > 3 || this->animator.animationID == 7) {
+    if (this->animator.frameID >= 13 || this->animator.animationID == 7) {
 
         for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
             if (player->CheckValidState() || player->state.Matches(&Player::State_FlyToPlayer)) {
-                if (player->shield != Shield::Bubble && player->underwater && player->position.x >= this->position.x - 0x100000
-                    && player->position.x <= this->position.x + 0x100000) {
+                if (player->shield != Shield::Bubble && player->underwater && player->position.x >= this->position.x - TO_FIXED(16)
+                    && player->position.x <= this->position.x + TO_FIXED(16)) {
 
                     bool32 inWater = false;
                     if (player->animator.animationID == Player::ANI_FAN) {
-                        if (player->position.y >= this->position.y - 0x100000)
-                            inWater = (player->position.y <= this->position.y + 0x100000);
+                        if (player->position.y >= this->position.y - TO_FIXED(16))
+                            inWater = (player->position.y <= this->position.y + TO_FIXED(16));
                     }
                     else {
                         if (player->position.y > this->position.y)
-                            inWater = (player->position.y <= this->position.y + 0x100000);
+                            inWater = (player->position.y <= this->position.y + TO_FIXED(16));
                     }
 
                     if (inWater) {
@@ -804,11 +804,11 @@ void Water::BubbleFinishPopBehavior()
                                     this->allowBreathe = true;
                             }
 
-                            if (player->state.Matches(&Player::State_Carried)) {
+                            if (player->state.Matches(&Player::State_FlyCarried)) {
                                 player->state.Set(&Player::State_Air);
                                 GameObject::Get<Player>(SLOT_PLAYER2)->flyCarryTimer = 30;
                             }
-                            else if (player->state.Matches(&Player::State_DrillKick)) {
+                            else if (player->state.Matches(&Player::State_MightyHammerDrop)) {
                                 player->state.Set(&Player::State_Air);
                             }
                             // }

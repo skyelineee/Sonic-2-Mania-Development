@@ -17,7 +17,7 @@ struct Player : RSDK::GameObject::Entity {
         ANI_LOOK_UP,
         ANI_CROUCH,
         ANI_WALK,
-        ANI_FALL,
+        ANI_AIR_WALK,
         ANI_JOG,
         ANI_RUN,
         ANI_DASH,
@@ -76,7 +76,6 @@ struct Player : RSDK::GameObject::Entity {
         // Sonic Ability Anim Aliases
         ANI_DROPDASH            = ANI_ABILITY_0,
         ANI_PEELOUT             = ANI_ABILITY_1,
-        ANI_PEELOUT_ANGLED      = ANI_ABILITY_2,
 
         // Tails Ability Anim Aliases
         ANI_FLY                  = ANI_ABILITY_0,
@@ -456,16 +455,15 @@ struct Player : RSDK::GameObject::Entity {
     void State_DeathHold();
     void State_DropDash();
     void State_BubbleBounce();
-    void State_Fly();
-    void State_FlyBoss();
-    void State_Carried();
-    void State_GlideLeft();
-    void State_GlideRight();
-    void State_GlideDrop();
-    void State_GlideSlide();
-    void State_WallClimb();
-    void State_LedgePullUp();
-    void State_DrillKick();
+    void State_TailsFlight();
+    void State_FlyCarried();
+    void State_KnuxGlideLeft();
+    void State_KnuxGlideRight();
+    void State_KnuxGlideDrop();
+    void State_KnuxGlideSlide();
+    void State_KnuxWallClimb();
+    void State_KnuxLedgePullUp();
+    void State_MightyHammerDrop();
     void State_MightyUnspin();
     void SpawnMightyHammerdropDust(int32 speed, RSDK::Hitbox *hitbox);
     void State_RayFly();

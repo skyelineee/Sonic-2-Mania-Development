@@ -50,7 +50,7 @@ void CollapsingPlatform::Update()
                 this->direction = FLIP_NONE;
                 for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
                     if (player->CheckCollisionTouch(this, &this->hitboxTrigger)
-                        && (!this->mightyOnly || (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick)))
+                        && (!this->mightyOnly || (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop)))
                         && !player->sidekick && player->onGround && !player->collisionMode && !this->eventOnly && this->delay < 0xFFFF) {
                         this->stoodPos = player->position.x;
                         if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
@@ -176,7 +176,7 @@ void CollapsingPlatform::Create(void *data)
             this->drawGroup = this->targetLayer.GetTileLayer()->drawGroup[0];
         }
         else {
-            if (this->targetLayer.Loaded()) {
+            if (this->targetLayer.id != 0) {
                 this->targetLayer = Zone::sVars->fgLayer[1];
                 this->drawGroup   = Zone::sVars->objectDrawGroup[1];
             }

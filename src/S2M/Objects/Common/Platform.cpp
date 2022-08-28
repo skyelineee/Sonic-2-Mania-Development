@@ -1578,10 +1578,10 @@ void Platform::Collision_Tiles()
             }
 
             bool32 isClimbing = false;
-            if (player->state.Matches(&Player::State_WallClimb) || player->state.Matches(&Player::State_LedgePullUp)) {
+            if (player->state.Matches(&Player::State_KnuxWallClimb) || player->state.Matches(&Player::State_KnuxLedgePullUp)) {
                 isClimbing = true;
 
-                if (player->state.Matches(&Player::State_LedgePullUp))
+                if (player->state.Matches(&Player::State_KnuxLedgePullUp))
                     hitbox.top -= 16;
 
                 if (player->position.x >= this->position.x) {
@@ -1770,7 +1770,7 @@ void Platform::Collision_Solid_Barrel()
 
         switch (player->CheckCollisionBox(this, solidHitbox)) {
             case C_TOP:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_DrillKick)) {
+                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
                     if (globals->gravityDir == CMODE_FLOOR)
                         HandleStood_Barrel(player, playerID, stoodPlayers);
 
@@ -1821,7 +1821,7 @@ void Platform::Collision_Solid_Barrel()
                 break;
 
             case C_BOTTOM:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_DrillKick)) {
+                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
                     if (globals->gravityDir == CMODE_ROOF)
                         HandleStood_Barrel(player, playerID, stoodPlayers);
 
@@ -1852,13 +1852,13 @@ void Platform::Collision_Solid_Hold()
                 if ((1 << playerID) & stoodPlayers) {
                     if (player->state.Matches(&Player::State_Static)) {
                         player->state.Set(&Player::State_Air);
-                        player->animator.SetAnimation(player->aniFrames, Player::ANI_FALL, false, 0);
+                        player->animator.SetAnimation(player->aniFrames, Player::ANI_AIR_WALK, false, 0);
                     }
                 }
                 break;
 
             case C_TOP:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_DrillKick)) {
+                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
                     if (globals->gravityDir == CMODE_FLOOR)
                         HandleStood_Hold(player, playerID, stoodPlayers);
 
@@ -1910,7 +1910,7 @@ void Platform::Collision_Solid_Hold()
                 break;
 
             case C_BOTTOM:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_DrillKick)) {
+                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
                     if (globals->gravityDir == CMODE_ROOF)
                         HandleStood_Hold(player, playerID, stoodPlayers);
 
@@ -2140,7 +2140,7 @@ void Platform::HandleStood(Player *player, int32 playerID, int32 stoodPlayers)
 {
     this->stood = true;
     if (!((1 << playerID) & stoodPlayers) && !player->sidekick && this->state.Matches(&Platform::State_Fall) && !this->timer) {
-        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
             this->timer = 1;
         else
             this->timer = 30;
@@ -2168,7 +2168,7 @@ void Platform::HandleStood_Tiles(Player *player, int32 playerID)
     if (!player->sidekick) {
         this->stood = true;
         if (this->state.Matches(&Platform::State_Fall) && !this->timer) {
-            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
                 this->timer = 1;
             else
                 this->timer = 30;
@@ -2181,7 +2181,7 @@ void Platform::HandleStood_Tiles(Player *player, int32 playerID)
 }
 void Platform::HandleStood_Hold(Player *player, int32 playerID, int32 stoodPlayers)
 {
-    if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_DrillKick)) {
+    if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
         if (!((1 << playerID) & stoodPlayers)) {
             player->state.Set(&Player::State_Static);
             player->nextGroundState.Set(nullptr);
@@ -2234,7 +2234,7 @@ void Platform::HandleStood_Barrel(Player *player, int32 playerID, int32 stoodPla
         player->direction      = FLIP_NONE;
 
         if (!player->sidekick && this->state.Matches(&Platform::State_Fall) && !this->timer) {
-            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
                 this->timer = 1;
             else
                 this->timer = 30;
@@ -2288,7 +2288,7 @@ void Platform::HandleStood_Sticky(Player *player, int32 playerID, uint8 cSide)
         if (!player->sidekick) {
             this->stood = true;
             if (this->state.Matches(&Platform::State_Fall) && !this->timer) {
-                if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_DrillKick))
+                if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
                     this->timer = 1;
                 else
                     this->timer = 30;
