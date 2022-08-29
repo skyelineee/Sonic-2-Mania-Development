@@ -58,7 +58,6 @@ struct BreakableWall : RSDK::GameObject::Entity {
     RSDK::StateMachine<BreakableWall> stateDraw;
     uint8 type;
     bool32 onlyKnux;
-    bool32 onlyMighty;
     RSDK::Vector2 size;
     RSDK::Tile tileInfo;
     RSDK::SceneLayer targetLayer;

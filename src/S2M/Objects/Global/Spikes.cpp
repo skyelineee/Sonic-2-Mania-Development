@@ -251,22 +251,12 @@ void Spikes::CheckHit(Player *player, int32 playerVelX, int32 playerVelY)
         return;
 
     if (player->characterID == ID_MIGHTY
-        && (player->animator.animationID == Player::ANI_JUMP || player->animator.animationID == Player::ANI_SPINDASH
-            || player->animator.animationID == Player::ANI_HAMMERDROP)) {
+        && (player->animator.animationID == Player::ANI_JUMP || player->animator.animationID == Player::ANI_SPINDASH)) {
 
         if (abs(playerVelX) < 0x20000) {
             switch (this->type) {
                 default: break;
                 case C_TOP:
-                    if (player->animator.animationID != Player::ANI_HAMMERDROP) {
-                        player->velocity.y = -0x48000;
-                        if (!(player->direction & FLIP_X))
-                            player->velocity.x = 0x48000;
-                        else
-                            player->velocity.x = -0x48000;
-                        player->state.Set(&Player::State_Air);
-                    }
-                    else {
                         player->velocity.y = -0x48000;
                         if (!(player->direction & FLIP_X))
                             player->velocity.x = -0x28000;
@@ -274,8 +264,6 @@ void Spikes::CheckHit(Player *player, int32 playerVelX, int32 playerVelY)
                             player->velocity.x = 0x28000;
                         player->blinkTimer = 60;
                         player->state.Set(&Player::State_Hurt);
-                        Player::sVars->sfxMightyDrill.Stop();
-                    }
 
                     player->velocity.x -= player->velocity.x >> 2;
                     break;
@@ -305,13 +293,6 @@ void Spikes::CheckHit(Player *player, int32 playerVelX, int32 playerVelY)
                 player->animator.SetAnimation(player->aniFrames, Player::ANI_HURT, false, 0);
                 sVars->sfxSpike.Play();
             }
-            else {
-                player->animator.SetAnimation(player->aniFrames, Player::ANI_ABILITY_1, false, 0);
-                Player::sVars->sfxMightyUnspin.Play();
-            }
-
-            if (player->animator.animationID != Player::ANI_ABILITY_1)
-                Player::sVars->sfxPimPom.Play();
 
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -319,51 +300,18 @@ void Spikes::CheckHit(Player *player, int32 playerVelX, int32 playerVelY)
             }
         }
         else if (this->type == C_TOP) {
-            if (player->animator.animationID == Player::ANI_HAMMERDROP) {
-                player->velocity.y = -0x48000;
-                if (!(player->direction & FLIP_X))
-                    player->velocity.x = 0x48000;
-                else
-                    player->velocity.x = -0x48000;
-
-                player->state.Set(&Player::State_Air);
-                player->velocity.x -= player->velocity.x >> 2;
-                player->onGround         = false;
-                player->applyJumpCap     = false;
-                player->jumpAbilityState = 0;
-
-                if (player->state.Matches(&Player::State_Hurt)) {
-                    player->animator.SetAnimation(player->aniFrames, Player::ANI_HURT, false, 0);
-                    sVars->sfxSpike.Play();
-                }
-                else {
-                    player->animator.SetAnimation(player->aniFrames, Player::ANI_UNSPIN, false, 0);
-                    Player::sVars->sfxMightyUnspin.Play();
-                }
-
-                if (player->animator.animationID != Player::ANI_UNSPIN)
-                    Player::sVars->sfxPimPom.Play();
-
-                if (player->underwater) {
-                    player->velocity.x >>= 1;
-                    player->velocity.y >>= 1;
-                }
-            }
-            else {
                 if (playerVelY > 0x28000) {
                     player->velocity.y       = -0x20000;
                     player->state.Set(&Player::State_Air);
                     player->onGround         = false;
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
-                    Player::sVars->sfxPimPom.Play();
                 }
 
                 player->groundedStore = true;
                 player->state.Set(&Player::State_Roll);
                 player->nextGroundState.Set(&Player::State_Roll);
                 player->nextAirState.Set(&Player::State_Air);
-            }
         }
         return; // dont do the code below
     }

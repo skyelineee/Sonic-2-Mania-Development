@@ -266,14 +266,14 @@ void Spring::State_Vertical()
                         if (!globals->gravityDir) {
                             if (this->twirl) {
                                 if (player->spriteType) {
-                                    player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_TWIRL, true, 0);
+                                    player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                                 }
                                 else {
                                     player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_CS, true, 0);
                                 }
                             }
                             else {
-                                player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_DIAGONAL, true, 0);
+                                player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                             }
                         }
 
@@ -341,14 +341,14 @@ void Spring::State_Vertical()
                             if (!globals->gravityDir) {
                                 if (this->twirl) {
                                     if (player->spriteType) {
-                                        player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_TWIRL, true, 0);
+                                        player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                                     }
                                     else {
                                         player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_CS, true, 0);
                                     }
                                 }
                                 else {
-                                    player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_DIAGONAL, true, 0);
+                                    player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                                 }
                             }
 
@@ -593,7 +593,7 @@ void Spring::State_Diagonal()
                             player->animationReserve = Player::ANI_WALK;
                             if (anim > Player::ANI_WALK && anim <= Player::ANI_DASH)
                                 player->animationReserve = player->animator.animationID;
-                            player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_DIAGONAL, true, 0);
+                            player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                         }
                     }
 

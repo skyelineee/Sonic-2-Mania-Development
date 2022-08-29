@@ -22,8 +22,8 @@ struct Player : RSDK::GameObject::Entity {
         ANI_RUN,
         ANI_DASH,
         ANI_JUMP,
-        ANI_SPRING_TWIRL,
-        ANI_SPRING_DIAGONAL,
+        ANI_SPRING,
+        ANI_SPRING_CS,
         ANI_SKID,
         ANI_SKID_TURN,
         ANI_SPINDASH,
@@ -33,31 +33,18 @@ struct Player : RSDK::GameObject::Entity {
         ANI_DROWN,
         ANI_BALANCE_1,
         ANI_BALANCE_2,
-        ANI_BALANCE_3,
-        ANI_SPRING_CS,
-        ANI_STAND_CS,
         ANI_FAN,
         ANI_VICTORY,
-        ANI_OUTTA_HERE,
         ANI_HANG,
         ANI_HANG_MOVE,
         ANI_POLE_SWING_H,
         ANI_POLE_SWING_V,
-        ANI_SHAFT_SWING,
-        ANI_TURNTABLE,
-        ANI_TWISTER,
-        ANI_SPIRAL_RUN,
-        ANI_STICK,
-        ANI_PULLEY_HOLD,
         ANI_SHIMMY_IDLE,
         ANI_SHIMMY_MOVE,
         ANI_BREATHE,
-        ANI_BUBBLE,
-        ANI_RIDE,
         ANI_CLING,
-        ANI_BUNGEE,
-        ANI_TWIST_RUN,
         ANI_FLUME,
+        ANI_AIRCURL,
         ANI_TRANSFORM,
         ANI_ABILITY_0,
         ANI_ABILITY_1,
@@ -97,14 +84,6 @@ struct Player : RSDK::GameObject::Entity {
         ANI_CLIMB_UP      = ANI_ABILITY_6,
         ANI_CLIMB_DOWN    = ANI_ABILITY_7,
 
-        // Mighty Ability Anim Aliases
-        ANI_HAMMERDROP = ANI_ABILITY_0,
-        ANI_UNSPIN     = ANI_ABILITY_1,
-
-        // Ray Ability Anim Aliases
-        ANI_HANG2    = ANI_ABILITY_0,
-        ANI_FLY_UP   = ANI_ABILITY_1,
-        ANI_FLY_DOWN = ANI_ABILITY_2,
     };
 
     enum DeathTypes {
@@ -146,14 +125,10 @@ struct Player : RSDK::GameObject::Entity {
         int32 sonicPhysicsTable[64];
         int32 tailsPhysicsTable[64];
         int32 knuxPhysicsTable[64];
-        int32 mightyPhysicsTable[64];
-        int32 rayPhysicsTable[64];
 
         color superSonicPalette[18];
         color superTailsPalette[18];
         color superKnuxPalette[18];
-        color superMightyPalette[18];
-        color superRayPalette[18];
 
         color *activeSuperSonicPalette;
         color *activeSuperSonicPalette_Water;
@@ -163,12 +138,6 @@ struct Player : RSDK::GameObject::Entity {
 
         color *activeSuperKnuxPalette;
         color *activeSuperKnuxPalette_Water;
-
-        color *activeSuperMightyPalette;
-        color *activeSuperMightyPalette_Water;
-
-        color *activeSuperRayPalette;
-        color *activeSuperRayPalette_Water;
 
         float spindashChargeSpeeds[13];
 
@@ -208,8 +177,6 @@ struct Player : RSDK::GameObject::Entity {
         RSDK::SpriteAnimation tailsFrames;
         RSDK::SpriteAnimation tailsTailsFrames;
         RSDK::SpriteAnimation knuxFrames;
-        RSDK::SpriteAnimation mightyFrames;
-        RSDK::SpriteAnimation rayFrames;
 
         RSDK::SoundFX sfxJump;
         RSDK::SoundFX sfxRoll;
@@ -220,7 +187,6 @@ struct Player : RSDK::GameObject::Entity {
         RSDK::SoundFX sfxDropdash;
         RSDK::SoundFX sfxLoseRings;
         RSDK::SoundFX sfxHurt;
-        RSDK::SoundFX sfxPimPom;
         RSDK::SoundFX sfxSkidding;
         RSDK::SoundFX sfxGrab;
         RSDK::SoundFX sfxFlying;
@@ -229,18 +195,9 @@ struct Player : RSDK::GameObject::Entity {
         bool32 playingTiredSFX;
         RSDK::SoundFX sfxLand;
         RSDK::SoundFX sfxSlide;
-        RSDK::SoundFX sfxOuttaHere;
         RSDK::SoundFX sfxTransform2;
         RSDK::SoundFX sfxSwap;
         RSDK::SoundFX sfxSwapFail;
-        RSDK::SoundFX sfxMightyDeflect;
-        RSDK::SoundFX sfxMightyDrill;
-        RSDK::SoundFX sfxMightyLand;
-        RSDK::SoundFX sfxMightyUnspin;
-        RSDK::SoundFX sfxEarthquake;
-        RSDK::SoundFX sfxUnknown;
-        int32 raySwoopTimer;
-        int32 rayDiveTimer;
 
         bool32 gotHit[PLAYER_COUNT];
         RSDK::StateMachine<Player> configureGhostCB;
@@ -284,6 +241,7 @@ struct Player : RSDK::GameObject::Entity {
     RSDK::Hitbox *outerBox;
     RSDK::Hitbox *innerBox;
     int32 characterID;
+    int32 frameCount;
     int32 timer;
     int32 outtaHereTimer;
     int32 abilityTimer;
@@ -420,8 +378,6 @@ struct Player : RSDK::GameObject::Entity {
     void HandleSuperColors_Sonic(bool32 updatePalette);
     void HandleSuperColors_Tails(bool32 updatePalette);
     void HandleSuperColors_Knux(bool32 updatePalette);
-    void HandleSuperColors_Mighty(bool32 updatePalette);
-    void HandleSuperColors_Ray(bool32 updatePalette);
     void HandleSuperForm();
     void DoSuperDash(Player *player);
     void FinishedReturnToPlayer(Player *leader);
@@ -436,8 +392,6 @@ struct Player : RSDK::GameObject::Entity {
     void Action_DblJumpSonic();
     void Action_DblJumpTails();
     void Action_DblJumpKnux();
-    void Action_DblJumpMighty();
-    void Action_DblJumpRay();
     void Action_SuperDash();
 
     // Movement States
@@ -463,10 +417,6 @@ struct Player : RSDK::GameObject::Entity {
     void State_KnuxGlideSlide();
     void State_KnuxWallClimb();
     void State_KnuxLedgePullUp();
-    void State_MightyHammerDrop();
-    void State_MightyUnspin();
-    void SpawnMightyHammerdropDust(int32 speed, RSDK::Hitbox *hitbox);
-    void State_RayFly();
     void State_FlyToPlayer();
     void State_ReturnToPlayer();
     void State_HoldRespawn();

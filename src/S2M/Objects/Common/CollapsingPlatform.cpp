@@ -35,7 +35,7 @@ void CollapsingPlatform::Update()
         if (this->collapseDelay) {
             if (Player::sVars) {
                 for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-                    if (player->CheckCollisionTouch(this, &this->hitboxTrigger) && player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
+                    if (player->CheckCollisionTouch(this, &this->hitboxTrigger)) {
                         runState = true;
                         break;
                     }
@@ -50,13 +50,8 @@ void CollapsingPlatform::Update()
                 this->direction = FLIP_NONE;
                 for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
                     if (player->CheckCollisionTouch(this, &this->hitboxTrigger)
-                        && (!this->mightyOnly || (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop)))
                         && !player->sidekick && player->onGround && !player->collisionMode && !this->eventOnly && this->delay < 0xFFFF) {
                         this->stoodPos = player->position.x;
-                        if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
-                            runState = true;
-                            break;
-                        }
                     }
                 }
             }
@@ -547,7 +542,6 @@ void CollapsingPlatform::Serialize()
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_ENUM, delay);
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_BOOL, eventOnly);
-    RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_BOOL, mightyOnly);
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_INT32, buttonTag);
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_UINT8, shift);
 }

@@ -1383,7 +1383,6 @@ void Platform::Collision_Hurt()
 
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (player->CheckCollisionBox(this, &this->hitbox)) {
-            if (!player->CheckMightyUnspin(0x400, this->type == Platform::Circular, &player->uncurlTimer))
                 player->Hurt(this);
         }
     }
@@ -1457,7 +1456,6 @@ void Platform::Collision_Solid_Hurt_Bottom()
                 if (this->velocity.y >= 0)
                     player->collisionFlagV |= 2;
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
                 break;
 
@@ -1498,10 +1496,6 @@ void Platform::Collision_Solid_Hurt_Sides()
                 break;
 
             case C_LEFT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x >= this->velocity.x) {
                     if (player->onGround && player->right)
                         this->pushPlayersL |= 1 << playerID;
@@ -1518,10 +1512,6 @@ void Platform::Collision_Solid_Hurt_Sides()
                 break;
 
             case C_RIGHT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x <= this->velocity.x) {
                     if (player->onGround && player->left)
                         this->pushPlayersR |= 1 << playerID;
@@ -1662,7 +1652,6 @@ void Platform::Collision_Solid_Hurt_Top()
                 if (globals->gravityDir == CMODE_FLOOR)
                     HandleStood(player, playerID, stoodPlayers);
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
 
                 switch (globals->gravityDir) {
@@ -1769,27 +1758,6 @@ void Platform::Collision_Solid_Barrel()
         player->CheckCollisionPlatform(this, platformHitbox);
 
         switch (player->CheckCollisionBox(this, solidHitbox)) {
-            case C_TOP:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
-                    if (globals->gravityDir == CMODE_FLOOR)
-                        HandleStood_Barrel(player, playerID, stoodPlayers);
-
-                    switch (globals->gravityDir) {
-                        default: break;
-
-                        case CMODE_FLOOR:
-                            if (this->velocity.y <= 0)
-                                player->collisionFlagV |= 1;
-                            break;
-
-                        case CMODE_ROOF:
-                            if (this->velocity.y >= 0)
-                                player->collisionFlagV |= 1;
-                            break;
-                    }
-                }
-                break;
-
             case C_LEFT:
                 if (player->onGround && player->right)
                     this->pushPlayersL |= 1 << playerID;
@@ -1817,16 +1785,6 @@ void Platform::Collision_Solid_Barrel()
                     }
 
                     player->collisionFlagH |= 2;
-                }
-                break;
-
-            case C_BOTTOM:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
-                    if (globals->gravityDir == CMODE_ROOF)
-                        HandleStood_Barrel(player, playerID, stoodPlayers);
-
-                    if (this->velocity.y >= 0)
-                        player->collisionFlagV |= 2;
                 }
                 break;
 
@@ -1857,27 +1815,6 @@ void Platform::Collision_Solid_Hold()
                 }
                 break;
 
-            case C_TOP:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
-                    if (globals->gravityDir == CMODE_FLOOR)
-                        HandleStood_Hold(player, playerID, stoodPlayers);
-
-                    switch (globals->gravityDir) {
-                        default: break;
-
-                        case CMODE_FLOOR:
-                            if (this->velocity.y <= 0)
-                                player->collisionFlagV |= 1;
-                            break;
-
-                        case CMODE_ROOF:
-                            if (this->velocity.y >= 0)
-                                player->collisionFlagV |= 1;
-                            break;
-                    }
-                }
-                break;
-
             case C_LEFT:
                 if (player->onGround && player->right)
                     this->pushPlayersL |= 1 << playerID;
@@ -1908,17 +1845,6 @@ void Platform::Collision_Solid_Hold()
                 }
 
                 break;
-
-            case C_BOTTOM:
-                if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
-                    if (globals->gravityDir == CMODE_ROOF)
-                        HandleStood_Hold(player, playerID, stoodPlayers);
-
-                    if (this->velocity.y >= 0)
-                        player->collisionFlagV |= 2;
-                }
-                break;
-
             default: break;
         }
     }
@@ -1996,7 +1922,6 @@ void Platform::Collision_Solid_Hurt_All()
                 if (globals->gravityDir == CMODE_FLOOR)
                     HandleStood(player, playerID, stoodPlayers);
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
 
                 switch (globals->gravityDir) {
@@ -2015,10 +1940,6 @@ void Platform::Collision_Solid_Hurt_All()
                 break;
 
             case C_LEFT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x >= this->velocity.x) {
                     if (player->onGround && player->right)
                         this->pushPlayersL |= 1 << playerID;
@@ -2035,10 +1956,6 @@ void Platform::Collision_Solid_Hurt_All()
                 break;
 
             case C_RIGHT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x <= this->velocity.x) {
                     if (player->onGround && player->left)
                         this->pushPlayersR |= 1 << playerID;
@@ -2061,7 +1978,6 @@ void Platform::Collision_Solid_Hurt_All()
                 if (this->velocity.y >= 0)
                     player->collisionFlagV |= 2;
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
                 break;
 
@@ -2085,15 +2001,10 @@ void Platform::Collision_Solid_Hurt_NoCrush()
                 if (globals->gravityDir == CMODE_FLOOR)
                     HandleStood(player, playerID, stoodPlayers);
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
                 break;
 
             case C_LEFT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x >= this->velocity.x) {
                     if (player->onGround && player->right)
                         this->pushPlayersL |= 1 << playerID;
@@ -2107,10 +2018,6 @@ void Platform::Collision_Solid_Hurt_NoCrush()
                 break;
 
             case C_RIGHT:
-                if (player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer) || (player->Hurt(this) && this->type == Platform::Fixed)) {
-                    player->velocity.x += this->velocity.x;
-                }
-
                 if (!player->blinkTimer || player->velocity.x <= this->velocity.x) {
                     if (player->onGround && player->left)
                         this->pushPlayersR |= 1 << playerID;
@@ -2127,7 +2034,6 @@ void Platform::Collision_Solid_Hurt_NoCrush()
                 if (globals->gravityDir == CMODE_FLOOR)
                     HandleStood(player, playerID, stoodPlayers);
 
-                if (!player->CheckMightyUnspin(0x400, 0, &player->uncurlTimer))
                     player->Hurt(this);
                 break;
 
@@ -2140,9 +2046,6 @@ void Platform::HandleStood(Player *player, int32 playerID, int32 stoodPlayers)
 {
     this->stood = true;
     if (!((1 << playerID) & stoodPlayers) && !player->sidekick && this->state.Matches(&Platform::State_Fall) && !this->timer) {
-        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-            this->timer = 1;
-        else
             this->timer = 30;
     }
 
@@ -2168,9 +2071,6 @@ void Platform::HandleStood_Tiles(Player *player, int32 playerID)
     if (!player->sidekick) {
         this->stood = true;
         if (this->state.Matches(&Platform::State_Fall) && !this->timer) {
-            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-                this->timer = 1;
-            else
                 this->timer = 30;
         }
     }
@@ -2181,29 +2081,9 @@ void Platform::HandleStood_Tiles(Player *player, int32 playerID)
 }
 void Platform::HandleStood_Hold(Player *player, int32 playerID, int32 stoodPlayers)
 {
-    if (player->characterID != ID_MIGHTY || !player->state.Matches(&Player::State_MightyHammerDrop)) {
-        if (!((1 << playerID) & stoodPlayers)) {
-            player->state.Set(&Player::State_Static);
-            player->nextGroundState.Set(nullptr);
-            player->nextAirState.Set(nullptr);
-            player->stateGravity.Set(&Player::Gravity_NULL);
-            player->velocity.x = 0;
-            player->velocity.y = 0;
-            player->groundVel  = 0;
-
-            if (this->classID == sVars->classID) {
-                int32 prevBottom = player->GetHitbox()->bottom;
-                player->animator.SetAnimation(player->aniFrames, Player::ANI_TWISTER, false, (player->direction << 31 >> 31) & 6);
-
-                player->position.y += (prevBottom - player->GetHitbox()->bottom) << 16;
-            }
-
-            player->animator.speed = 64;
-            player->direction      = FLIP_X;
-        }
-
-        if (globals->gravityDir == CMODE_FLOOR)
+        if (globals->gravityDir == CMODE_FLOOR) {
             HandleStood(player, playerID, stoodPlayers);
+        }
 
         if ((player->position.x ^ this->position.x) & 0xFFFF0000) {
             if (player->position.x >= this->position.x)
@@ -2212,7 +2092,7 @@ void Platform::HandleStood_Hold(Player *player, int32 playerID, int32 stoodPlaye
                 player->position.x += 0x10000;
         }
 
-        if (player->jumpPress)
+        if (player->jumpPress) {
             player->Action_Jump();
     }
 }
@@ -2228,15 +2108,12 @@ void Platform::HandleStood_Barrel(Player *player, int32 playerID, int32 stoodPla
         player->groundVel  = 0;
 
         if (this->classID == sVars->classID)
-            player->animator.SetAnimation(player->aniFrames, Player::ANI_TURNTABLE, false, 0);
+            player->animator.SetAnimation(player->aniFrames, Player::ANI_IDLE, false, 0);
 
         player->animator.speed = 64;
         player->direction      = FLIP_NONE;
 
         if (!player->sidekick && this->state.Matches(&Platform::State_Fall) && !this->timer) {
-            if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-                this->timer = 1;
-            else
                 this->timer = 30;
         }
     }
@@ -2288,9 +2165,6 @@ void Platform::HandleStood_Sticky(Player *player, int32 playerID, uint8 cSide)
         if (!player->sidekick) {
             this->stood = true;
             if (this->state.Matches(&Platform::State_Fall) && !this->timer) {
-                if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-                    this->timer = 1;
-                else
                     this->timer = 30;
             }
         }

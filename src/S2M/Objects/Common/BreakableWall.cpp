@@ -258,7 +258,7 @@ void BreakableWall::State_Wall()
 {
     SET_CURRENT_STATE();
 
-    this->visible = DebugMode::sVars->debugActive || this->useLayerDrawGroup;
+    this->visible = DebugMode::sVars->debugActive | this->useLayerDrawGroup;
 
     CheckBreak_Wall();
 }
@@ -383,7 +383,6 @@ void BreakableWall::State_DrawPiece()
 void BreakableWall::CheckBreak_Wall()
 {
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-        if (!this->onlyMighty || player->characterID == ID_MIGHTY) {
             if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
                 bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == Player::ANI_JUMP;
 
@@ -438,7 +437,6 @@ void BreakableWall::CheckBreak_Wall()
                     }
                 }
             }
-        }
 
         player->CheckCollisionBox(this, &this->hitbox);
     }
@@ -455,7 +453,6 @@ void BreakableWall::CheckBreak_Floor()
         tryBreak &= player->CheckCollisionBox(this, &this->hitbox) == C_TOP;
 
         if (tryBreak) {
-            if (!this->onlyMighty || player->characterID == ID_MIGHTY) {
                 if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
                     bool32 canBreak = player->animator.animationID == Player::ANI_JUMP;
                     canBreak |= player->shield >= Shield::Unknown;
@@ -469,11 +466,6 @@ void BreakableWall::CheckBreak_Floor()
                             break;
 
                         case ID_KNUCKLES: canBreak = true; break;
-
-                        case ID_MIGHTY:
-                            if (!canBreak)
-                                canBreak = player->state.Matches(&Player::State_MightyHammerDrop);
-                            break;
                     }
 
                     if (sVars->disableScoreBonus)
@@ -489,10 +481,7 @@ void BreakableWall::CheckBreak_Floor()
 
                         sVars->sfxLedgeBreak.Play();
 
-                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-                            player->velocity.y = velY - 0x10000;
-                        else
-                            player->velocity.y = -0x30000;
+                        player->velocity.y = -0x30000;
 
                         if (!sVars->disableScoreBonus && !sVars->breakMode)
                             player->GiveScoreBonus(this->position);
@@ -502,7 +491,6 @@ void BreakableWall::CheckBreak_Floor()
                         continue; // skip to next loop, so we dont do the box collision
                     }
                 }
-            }
         }
 
         player->CheckCollisionBox(this, &this->hitbox);
@@ -516,7 +504,6 @@ void BreakableWall::CheckBreak_BurrowFloor()
 
         if (player->CheckCollisionBox(this, &this->hitbox) == C_TOP && !player->sidekick
             && ((player->collisionPlane == 1 && this->type == BreakableWall::BurrowFloor2) || this->type == BreakableWall::BurrowFloor)) {
-            if (!this->onlyMighty || player->characterID == ID_MIGHTY) {
                 if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
                     bool32 canBreak = player->animator.animationID == Player::ANI_JUMP;
 
@@ -529,11 +516,6 @@ void BreakableWall::CheckBreak_BurrowFloor()
                             break;
 
                         case ID_KNUCKLES: canBreak = true; break;
-
-                        case ID_MIGHTY:
-                            if (!canBreak)
-                                canBreak = player->state.Matches(&Player::State_MightyHammerDrop);
-                            break;
                     }
 
                     if (onGround && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
@@ -554,10 +536,7 @@ void BreakableWall::CheckBreak_BurrowFloor()
 
                         player->GiveScoreBonus(this->position);
 
-                        if (player->characterID == ID_MIGHTY && player->state.Matches(&Player::State_MightyHammerDrop))
-                            player->velocity.y = velY - 0x10000;
-                        else
-                            player->velocity.y = 0;
+                        player->velocity.y = 0;
 
                         this->hitbox.top += 8;
                         this->hitbox.bottom -= 8;
@@ -568,7 +547,6 @@ void BreakableWall::CheckBreak_BurrowFloor()
                             this->Destroy();
                     }
                 }
-            }
         }
     }
 }
@@ -577,42 +555,40 @@ void BreakableWall::CheckBreak_BurrowFloorUp()
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         int32 velY = player->velocity.y;
         if (player->CheckCollisionBox(this, &this->hitbox) == C_BOTTOM) {
-            if (!this->onlyMighty || player->characterID == ID_MIGHTY) {
-                if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    if (!player->sidekick) {
-                        Vector2 storePos = this->position;
-                        if (this->state.Matches(&BreakableWall::State_BurrowFloorUp)) {
-                            if (this->size.y >= 3)
-                                this->size.y = 2;
+            if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
+                if (!player->sidekick) {
+                    Vector2 storePos = this->position;
+                    if (this->state.Matches(&BreakableWall::State_BurrowFloorUp)) {
+                        if (this->size.y >= 3)
+                            this->size.y = 2;
                         }
                         else {
                             this->size.y = 1;
                         }
 
-                        Break(2);
-                        player->velocity.y = 0;
-                        this->position     = storePos;
-                        sVars->sfxLedgeBreak.Play();
+                    Break(2);
+                    player->velocity.y = 0;
+                    this->position     = storePos;
+                    sVars->sfxLedgeBreak.Play();
 
-                        if (this->size.y < 2) {
-                            this->hitbox.top += 8;
-                            this->size.y -= 1;
-                            this->hitbox.bottom -= 8;
-                            this->position.y -= 0x80000;
-                        }
-                        else {
-                            this->hitbox.top += 16;
-                            this->size.y -= 2;
-                            this->hitbox.bottom -= 16;
-                            this->position.y -= 0x100000;
-                        }
+                    if (this->size.y < 2) {
+                        this->hitbox.top += 8;
+                        this->size.y -= 1;
+                        this->hitbox.bottom -= 8;
+                        this->position.y -= 0x80000;
+                    }
+                    else {
+                        this->hitbox.top += 16;
+                        this->size.y -= 2;
+                        this->hitbox.bottom -= 16;
+                        this->position.y -= 0x100000;
+                    }
 
-                        player->velocity.y = velY;
+                    player->velocity.y = velY;
 
-                        if (this->size.y <= 0) {
-                            this->Destroy();
-                            break;
-                        }
+                    if (this->size.y <= 0) {
+                        this->Destroy();
+                        break;
                     }
                 }
             }
@@ -624,18 +600,16 @@ void BreakableWall::CheckBreak_Ceiling()
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         int32 velY = player->velocity.y;
         if (player->CheckCollisionBox(this, &this->hitbox) == C_BOTTOM) {
-            if (!this->onlyMighty || player->characterID == ID_MIGHTY) {
-                if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    player->onGround = false;
+            if (!this->onlyKnux || player->characterID == ID_KNUCKLES) {
+                player->onGround = false;
 
-                    Break(2);
+                Break(2);
 
-                    sVars->sfxLedgeBreak.Play();
-                    player->velocity.y = velY;
+                sVars->sfxLedgeBreak.Play();
+                player->velocity.y = velY;
 
-                    this->Destroy();
-                    break;
-                }
+                this->Destroy();
+                break;
             }
         }
     }
@@ -873,7 +847,6 @@ void BreakableWall::Serialize()
 {
     RSDK_EDITABLE_VAR(BreakableWall, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(BreakableWall, VAR_BOOL, onlyKnux);
-    RSDK_EDITABLE_VAR(BreakableWall, VAR_BOOL, onlyMighty);
     RSDK_EDITABLE_VAR(BreakableWall, VAR_INT32, targetLayer.id);
     RSDK_EDITABLE_VAR(BreakableWall, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(BreakableWall, VAR_BOOL, reverseX);

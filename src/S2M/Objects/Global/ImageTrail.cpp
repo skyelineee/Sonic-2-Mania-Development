@@ -22,10 +22,6 @@ void ImageTrail::LateUpdate()
         this->baseAlpha = 0x100;
     }
     else {
-        if (player->state.Matches(&Player::State_MightyHammerDrop)) {
-            this->fadeoutTimer = 0x10;
-        }
-        else {
             if (this->fadeoutTimer <= 0) {
                 if (player->speedShoesTimer < 32) {
                     this->baseAlpha = player->speedShoesTimer;
@@ -41,7 +37,6 @@ void ImageTrail::LateUpdate()
                 if (this->baseAlpha == 0)
                     this->Destroy();
             }
-        }
     }
 
     // Update recordings

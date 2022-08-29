@@ -126,11 +126,6 @@ void Player::Update()
             }
         }
 
-        if (this->characterID == ID_RAY && !this->state.Matches(&Player::State_RayFly) && !this->isGhost) {
-            sVars->raySwoopTimer = 0;
-            sVars->rayDiveTimer  = 0;
-        }
-
         if (this->uncurlTimer > 0)
             this->uncurlTimer--;
 
@@ -442,15 +437,6 @@ void Player::LateUpdate()
                     }
                     break;
 
-                case ANI_PULLEY_HOLD:
-                    this->tailAnimator.SetAnimation(this->tailFrames, 7, false, 0);
-                    this->tailDirection = this->direction;
-                    if (this->tailDirection & FLIP_X)
-                        this->tailRotation = this->rotation + 32;
-                    else
-                        this->tailRotation = this->rotation - 32;
-                    break;
-
                 case ANI_FLY:
                 case ANI_FLY_TIRED:
                 case ANI_FLY_LIFT:
@@ -537,13 +523,6 @@ void Player::StaticUpdate()
         sVars->playingTiredSFX = false;
     }
 
-    sVars->raySwoopTimer -= 8;
-    if (sVars->raySwoopTimer < 0)
-        sVars->raySwoopTimer = 0;
-
-    sVars->rayDiveTimer -= 16;
-    if (sVars->rayDiveTimer < 0)
-        sVars->rayDiveTimer = 0;
 }
 void Player::Draw()
 {
@@ -699,24 +678,6 @@ void Player::Create(void *data)
                 this->stateAbility.Set(&Player::Action_DblJumpKnux);
                 this->sensorY = 0x140000;
                 break;
-
-            case ID_MIGHTY:
-                this->aniFrames = sVars->mightyFrames;
-                this->tailFrames.Init();
-                this->jumpOffset = 0x50000;
-                this->stateAbility.Set(&Player::Action_DblJumpMighty);
-
-                this->sensorY = 0x140000;
-                break;
-
-            case ID_RAY:
-                this->aniFrames = sVars->mightyFrames;
-                this->tailFrames.Init();
-                this->jumpOffset = 0x50000;
-                this->stateAbility.Set(&Player::Action_DblJumpRay);
-
-                this->sensorY = 0x140000;
-                break;
         }
 
         // Handle Sensor setup
@@ -856,10 +817,7 @@ void Player::StageLoad()
     sVars->sfxTired.Get("Global/Tired.wav");
     sVars->sfxLand.Get("Global/Land.wav");
     sVars->sfxSlide.Get("Global/Slide.wav");
-    sVars->sfxOuttaHere.Get("Global/OuttaHere.wav");
     sVars->sfxTransform2.Get("Global/Transform2.wav");
-    sVars->sfxPimPom.Get("Stage/PimPom.wav");
-    sVars->sfxEarthquake.Get("Global/Earthquake.wav");
 
     sVars->lookUpDelay    = 60;
     sVars->lookUpDistance = 96;
@@ -870,10 +828,6 @@ void Player::StageLoad()
     sVars->activeSuperTailsPalette_Water  = sVars->superTailsPalette;
     sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
     sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
-    sVars->activeSuperMightyPalette       = sVars->superMightyPalette;
-    sVars->activeSuperMightyPalette_Water = sVars->superMightyPalette;
-    sVars->activeSuperRayPalette          = sVars->superRayPalette;
-    sVars->activeSuperRayPalette_Water    = sVars->superRayPalette;
 
     sVars->canSuperCB = nullptr;
 
@@ -966,18 +920,6 @@ void Player::LoadPlayerSprites()
             sVars->knuxFrames.Load("Players/Knux.bin", SCOPE_STAGE);
             this->superColorIndex = 80;
             this->superColorCount = 6;
-            break;
-
-        case ID_MIGHTY:
-            sVars->mightyFrames.Load("Players/Mighty.bin", SCOPE_STAGE);
-            this->superColorIndex = 96;
-            this->superColorCount = 6;
-            break;
-
-        case ID_RAY:
-            sVars->rayFrames.Load("Players/Ray.bin", SCOPE_STAGE);
-            this->superColorIndex = 113;
-            this->superColorCount = 7;
             break;
     }
 
@@ -1344,22 +1286,6 @@ void Player::ChangeCharacter(int32 character)
             this->stateAbility.Set(&Player::Action_DblJumpKnux);
             this->sensorY = 0x140000;
             break;
-
-        case ID_MIGHTY:
-            this->aniFrames = sVars->mightyFrames;
-            this->tailFrames.Init();
-            this->jumpOffset = 0x50000;
-            this->stateAbility.Set(&Player::Action_DblJumpMighty);
-            this->sensorY = 0x140000;
-            break;
-
-        case ID_RAY:
-            this->aniFrames = sVars->rayFrames;
-            this->tailFrames.Init();
-            this->jumpOffset = 0x50000;
-            this->stateAbility.Set(&Player::Action_DblJumpRay);
-            this->sensorY = 0x140000;
-            break;
     }
 
     this->sensorX[0] = 0xA0000;
@@ -1371,8 +1297,7 @@ void Player::ChangeCharacter(int32 character)
     if (this->state.Matches(&Player::State_KnuxWallClimb) || this->state.Matches(&Player::State_DropDash) || this->state.Matches(&Player::State_TailsFlight)
         || this->state.Matches(&Player::State_KnuxGlideDrop) || this->state.Matches(&Player::State_KnuxGlideLeft)
         || this->state.Matches(&Player::State_KnuxGlideRight) || this->state.Matches(&Player::State_KnuxGlideSlide)
-        || this->state.Matches(&Player::State_KnuxLedgePullUp) || this->state.Matches(&Player::State_MightyHammerDrop)
-        || this->state.Matches(&Player::State_RayFly)) {
+        || this->state.Matches(&Player::State_KnuxLedgePullUp)) {
         this->state.Set(&Player::State_Air);
         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
     }
@@ -2086,19 +2011,6 @@ void Player::HandleGroundAnimation()
                     case 0b00000000:
                     default: HandleIdleAnimation(); break;
                 }
-
-                // Wait for ~333 hours to do outta here (sonic is has gotten surprisingly patient since CD...)
-                if (++this->outtaHereTimer >= 72000000) {
-                    this->animator.SetAnimation(this->aniFrames, ANI_OUTTA_HERE, false, 0);
-                    // this->state.Set(&Player::State_OuttaHere);
-                    this->tileCollisions = TILECOLLISION_NONE;
-                    this->interaction    = false;
-                    this->nextAirState.Set(nullptr);
-                    this->nextGroundState.Set(nullptr);
-                    this->velocity.x = 0;
-                    this->velocity.y = 0;
-                    // sVars->sfxOuttahere.Play();
-                }
             }
         }
         else {
@@ -2632,71 +2544,6 @@ void Player::HandleSuperColors_Knux(bool32 updatePalette)
         }
     }
 }
-void Player::HandleSuperColors_Mighty(bool32 updatePalette)
-{
-    if (updatePalette) {
-        paletteBank[0].SetLimitedFade(&sVars->activeSuperMightyPalette[0], &sVars->activeSuperMightyPalette[12], this->superBlendAmount,
-                                      this->superColorIndex, this->superColorCount);
-
-        if (Water::sVars && !Water::sVars->isLightningFlashing) {
-            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperMightyPalette_Water[0],
-                                                                   &sVars->activeSuperMightyPalette_Water[12], this->superBlendAmount,
-                                                                   this->superColorIndex, this->superColorCount);
-        }
-    }
-    else {
-        if (this->superState != Player::SuperStateSuper) {
-            if (this->superBlendAmount <= 0)
-                this->superState = Player::SuperStateNone;
-            else
-                this->superBlendAmount -= 4;
-        }
-        else if (this->superBlendState) {
-            if (this->superBlendAmount <= 0)
-                this->superBlendState = 0;
-            else
-                this->superBlendAmount -= 4;
-        }
-        else {
-            if (this->superBlendAmount >= 256)
-                this->superBlendState = 1;
-            else
-                this->superBlendAmount += 4;
-        }
-    }
-}
-void Player::HandleSuperColors_Ray(bool32 updatePalette)
-{
-    if (updatePalette) {
-        paletteBank[0].SetLimitedFade(&sVars->activeSuperRayPalette[0], &sVars->activeSuperRayPalette[12], this->superBlendAmount,
-                                      this->superColorIndex, this->superColorCount);
-
-        if (Water::sVars && !Water::sVars->isLightningFlashing) {
-            paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperRayPalette_Water[0], &sVars->activeSuperRayPalette_Water[12],
-                                                                   this->superBlendAmount, this->superColorIndex, this->superColorCount);
-        }
-    }
-    else {
-        if (this->superState != Player::SuperStateSuper) {
-            if (this->superBlendAmount <= 0)
-                this->superState = Player::SuperStateNone;
-            else
-                this->superBlendAmount -= 4;
-        }
-        else if (this->superBlendState) {
-            if (this->superBlendAmount <= 0)
-                this->superBlendState = 0;
-            else
-                this->superBlendAmount -= 4;
-        }
-        else {
-            if (this->superBlendAmount >= 256)
-                this->superBlendState = 1;
-            else
-                this->superBlendAmount += 4;
-        }
-    }
-}
 
 void Player::HandleSuperForm()
 {
@@ -2705,8 +2552,6 @@ void Player::HandleSuperForm()
             case ID_SONIC: HandleSuperColors_Sonic(false); break;
             case ID_TAILS: HandleSuperColors_Tails(false); break;
             case ID_KNUCKLES: HandleSuperColors_Knux(false); break;
-            case ID_MIGHTY: HandleSuperColors_Mighty(false); break;
-            case ID_RAY: HandleSuperColors_Ray(false); break;
         }
     }
 
@@ -2734,8 +2579,6 @@ void Player::HandleSuperForm()
             case ID_SONIC: this->stateAbility.Set(&Player::Action_DblJumpSonic); break;
             case ID_TAILS: this->stateAbility.Set(&Player::Action_DblJumpTails); break;
             case ID_KNUCKLES: this->stateAbility.Set(&Player::Action_DblJumpKnux); break;
-            case ID_MIGHTY: this->stateAbility.Set(&Player::Action_DblJumpMighty); break;
-            case ID_RAY: this->stateAbility.Set(&Player::Action_DblJumpRay); break;
             default: break;
         }
 
@@ -3439,94 +3282,6 @@ void Player::Action_DblJumpKnux()
     }
 }
 
-void Player::Action_DblJumpMighty()
-{
-    SET_CURRENT_STATE();
-
-    if (this->jumpAbilityState <= 1) {
-        if (this->jumpPress && this->jumpAbilityState == 1
-            && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE))) {
-            if (!this->invertGravity) {
-                this->velocity.x >>= 1;
-                this->velocity.y       = this->underwater ? 0x80000 : 0xC0000;
-                this->jumpAbilityState = 0;
-                this->animator.SetAnimation(this->aniFrames, ANI_HAMMERDROP, false, 2);
-                this->nextAirState.Set(NULL);
-                this->nextGroundState.Set(NULL);
-                sVars->sfxRelease.Play();
-
-                ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->activePlayerCount * 2);
-                trail->Reset(ImageTrail::sVars->classID, this);
-
-                if (this->camera && !Zone::sVars->autoScrollSpeed) {
-                    this->scrollDelay = 8;
-                    this->camera->state.Set(&Camera::State_FollowX);
-                }
-
-                sVars->sfxMightyDrill.Play(false, 0xFE);
-                this->state.Set(&Player::State_MightyHammerDrop);
-                this->stateGravity.Set(&Player::Gravity_True);
-            }
-        }
-        else if (controllerInfo[this->controllerID].keyY.press) {
-            SaveGame::GetSaveRAM();
-            TryTransform(false, false);
-        }
-    }
-    else if (--this->jumpAbilityState == 1)
-        this->jumpAbilityState = 0;
-}
-void Player::Action_DblJumpRay()
-{
-    SET_CURRENT_STATE();
-
-    if (this->jumpPress && this->jumpAbilityState == 1
-        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE))) {
-        if (!this->invertGravity) {
-            this->jumpAbilityState = 0;
-
-            int32 newXVel = this->velocity.x - (this->velocity.x >> 3);
-            if (this->direction & FLIP_X)
-                this->velocity.x = MIN(newXVel, this->underwater ? -0x18000 : -0x30000);
-            else
-                this->velocity.x = MAX(newXVel, this->underwater ? 0x18000 : 0x30000);
-
-            if ((this->direction || !this->right) && (this->direction != FLIP_X || !this->left)) {
-                if (!this->underwater)
-                    sVars->raySwoopTimer = 256;
-
-                this->animator.SetAnimation(this->aniFrames, ANI_FLY_UP, false, 3);
-                this->rotation = 1;
-
-                this->velocity.x >>= 1;
-                int32 vel          = abs(this->velocity.x);
-                this->abilitySpeed = MIN(-((vel >> 1) + (vel >> 2) + (vel >> 4)) >> (uint8)(this->underwater != 0), 0x40000);
-            }
-            else {
-                if (!this->underwater)
-                    sVars->rayDiveTimer = 256;
-
-                this->animator.SetAnimation(this->aniFrames, ANI_FLY_DOWN, false, 3);
-                this->rotation     = 0;
-                this->abilitySpeed = 0;
-            }
-
-            this->velocity.y >>= 1;
-            this->abilityValue     = 64;
-            this->controlLock      = 0;
-            this->abilityValues[0] = abs(this->velocity.x);
-            this->state.Set(&Player::State_RayFly);
-            this->stateGravity.Set(&Player::Gravity_NULL);
-            this->abilityTimer = 256;
-            this->nextAirState.Set(NULL);
-            this->timer = 0;
-        }
-    }
-    else if (controllerInfo[this->controllerID].keyY.press) {
-        SaveGame::GetSaveRAM();
-        TryTransform(false, false);
-    }
-}
 void Player::Action_SuperDash()
 {
     SET_CURRENT_STATE();
@@ -3660,8 +3415,8 @@ void Player::State_Air()
             this->nextGroundState.Set(&Player::State_Ground);
 
         if ((this->velocity.y > 0 && globals->gravityDir == CMODE_FLOOR) || (this->velocity.y < 0 && globals->gravityDir == CMODE_ROOF)) {
-            if (this->animator.animationID >= ANI_SPRING_TWIRL) {
-                if (this->animator.animationID <= ANI_SPRING_DIAGONAL) {
+            if (this->animator.animationID >= ANI_SPRING) {
+                if (this->animator.animationID <= ANI_SPRING) {
                     this->animator.SetAnimation(this->aniFrames, this->animationReserve, false, 0);
                 }
                 else if ((this->animator.animationID == ANI_SPRING_CS) && !this->animator.frameID) {
@@ -3675,13 +3430,19 @@ void Player::State_Air()
         if (this->animator.animationID != ANI_JUMP) {
             if (globals->gravityDir == CMODE_ROOF) {
                 if (this->velocity.y > 0 && this->jumpPress) {
-                    this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
+                    if (this->animator.frameID == frameCount - 6) {
+                        this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    }
                     this->velocity.y >>= 1;
                 }
             }
             else if (globals->gravityDir == CMODE_FLOOR) {
                 if (this->velocity.y < 0 && this->jumpPress) {
-                    this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
+                    if (this->animator.frameID == frameCount - 6) {
+                        this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    }
                     this->velocity.y >>= 1;
                 }
             }
@@ -3700,6 +3461,27 @@ void Player::State_Air()
             case ANI_SKID_TURN: this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, this->animator.frameID); break;
 
             case ANI_JOG: {
+                int32 speed = this->animator.speed;
+                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.speed = speed;
+                break;
+            }
+            
+            case ANI_RUN: {
+                int32 speed = this->animator.speed;
+                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.speed = speed;
+                break;
+            }
+
+            case ANI_DASH: {
+                int32 speed = this->animator.speed;
+                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.speed = speed;
+                break;
+            }
+
+            case ANI_PEELOUT: {
                 int32 speed = this->animator.speed;
                 this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
                 this->animator.speed = speed;
@@ -5587,345 +5369,6 @@ void Player::State_KnuxLedgePullUp()
             break;
     }
 }
-void Player::State_MightyHammerDrop()
-{
-    SET_CURRENT_STATE();
-
-    if (this->onGround) {
-        this->controlLock = 0;
-        this->onGround    = false;
-
-        int32 dropForce = this->gravityStrength + (this->underwater == 1 ? 0x10000 : 0x20000);
-        int32 groundVel = this->groundVel - (this->groundVel >> 2);
-
-        this->velocity.x = (groundVel * Math::Cos256(this->angle) + dropForce * Math::Sin256(this->angle)) >> 8;
-        this->velocity.y = (groundVel * Math::Sin256(this->angle) - dropForce * Math::Cos256(this->angle)) >> 8;
-
-        // if (this->camera) {
-        //     this->camera->offset.y       = 0x200000;
-        //     this->camera->disableYOffset = true;
-        // }
-
-        this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-
-        this->animator.speed = MIN((abs(this->groundVel) >> 12) + 0x30, 0xF0);
-
-        sVars->sfxMightyDrill.Stop();
-        sVars->sfxMightyLand.Play();
-        Camera::ShakeScreen(this->Slot(), 0, 4, 1, 1);
-
-        Hitbox *hitbox = this->animator.GetHitbox(0);
-        SpawnMightyHammerdropDust(0x10000, hitbox);
-        SpawnMightyHammerdropDust(-0x10000, hitbox);
-        SpawnMightyHammerdropDust(0x18000, hitbox);
-        SpawnMightyHammerdropDust(-0x18000, hitbox);
-        SpawnMightyHammerdropDust(0x20000, hitbox);
-        SpawnMightyHammerdropDust(-0x20000, hitbox);
-
-        this->angle            = 0;
-        this->collisionMode    = CMODE_FLOOR;
-        this->applyJumpCap     = false;
-        this->jumpAbilityState = 3;
-
-        if (this->invincibleTimer > 0) {
-            if (this->invincibleTimer < 8)
-                this->invincibleTimer = 8;
-        }
-        else {
-            this->invincibleTimer = -8;
-        }
-        this->state.Set(&Player::State_Air);
-    }
-    else {
-        HandleAirFriction();
-
-        if (this->velocity.y <= 0x10000) {
-            this->state.Set(&Player::State_Air);
-            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-        }
-    }
-}
-void Player::State_MightyUnspin()
-{
-    SET_CURRENT_STATE();
-
-    HandleAirFriction();
-
-    if (this->onGround) {
-        this->state.Set(&Player::State_Ground);
-        this->stateGravity.Set(&Player::Gravity_False);
-    }
-    else {
-        ++this->blinkTimer;
-
-        this->nextGroundState.Set(&Player::State_Ground);
-        this->stateGravity.Set(&Player::Gravity_True);
-    }
-}
-void Player::SpawnMightyHammerdropDust(int32 speed, RSDK::Hitbox *hitbox)
-{
-    Dust *dust = GameObject::Create<Dust>(this, this->position.x, this->position.y);
-    dust->state.Set(&Dust::State_DustPuff_Collide);
-    if (globals->gravityDir == CMODE_ROOF) {
-        dust->position.y -= hitbox->bottom << 16;
-        dust->direction = this->direction ^ FLIP_X;
-    }
-    else {
-        dust->position.y += hitbox->bottom << 16;
-        dust->direction = this->direction;
-    }
-    dust->drawGroup       = this->drawGroup;
-    dust->collisionPlane  = this->collisionPlane;
-    dust->collisionMode   = 0;
-    dust->collisionLayers = this->collisionLayers;
-    dust->tileCollisions  = TILECOLLISION_DOWN;
-    dust->animator.frameDuration += 4 * (4 - (abs(speed) >> 15));
-    dust->velocity.x = dust->groundVel = this->velocity.x * (Zone::sVars->autoScrollSpeed != 0) + (speed >> this->isChibi);
-    if (this->isChibi) {
-        dust->drawFX |= FX_SCALE;
-        dust->scale.x = 256;
-        dust->scale.y = 256;
-    }
-
-    if (globals->gravityDir == CMODE_ROOF) {
-        if (this->angle == 0x80)
-            dust->TileGrip(dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
-
-        for (int32 i = 0; i < 0x10; ++i) {
-            if (dust->TileGrip(dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 8))
-                break;
-
-            dust->position.y -= 0x80000;
-        }
-    }
-    else {
-        if (!this->angle)
-            dust->TileGrip(dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
-
-        for (int32 i = 0; i < 0x10; ++i) {
-            if (dust->TileGrip(dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 8))
-                break;
-
-            dust->position.y += 0x80000;
-        }
-    }
-}
-bool32 Player::CheckMightyUnspin(int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer)
-{
-    if (this->characterID != ID_MIGHTY)
-        return false;
-
-    if (this->state.Matches(&Player::State_Hurt) || this->state.Matches(&Player::State_Death) || this->state.Matches(&Player::State_Drown)
-        || this->invincibleTimer || this->blinkTimer > 0) {
-        return false;
-    }
-
-    int32 anim = this->animator.animationID;
-    if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_HAMMERDROP) {
-        int32 angle = Math::ATan2(this->position.x - this->position.x, this->position.y - this->position.y);
-        if (this->animator.animationID != ANI_UNSPIN) {
-            this->velocity.x = bounceDistance * Math::Cos256(angle);
-            this->groundVel  = this->velocity.x;
-        }
-
-        this->velocity.y = bounceDistance * Math::Sin256(angle);
-
-        if (checkHammerDrop) {
-            if (this->state.Matches(&Player::State_MightyHammerDrop)) {
-                this->state.Set(&Player::State_Roll);
-                this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-            }
-
-            if (this->animator.animationID == ANI_SPINDASH) {
-                this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-                if (this->state.Matches(&Player::State_Spindash)) {
-                    if (this->onGround)
-                        this->state.Set(&Player::State_Roll);
-                    else
-                        this->state.Set(&Player::State_Air);
-                }
-            }
-        }
-        else {
-            this->velocity.y = -0x48000;
-
-            if (!(this->direction & FLIP_X))
-                this->velocity.x = -0x28000;
-            else
-                this->velocity.x = 0x28000;
-
-            if (this->underwater) {
-                this->velocity.x >>= 1;
-                this->velocity.y = -0x24000;
-            }
-
-            this->blinkTimer = 121;
-            this->visible    = true;
-            this->animator.SetAnimation(this->aniFrames, ANI_UNSPIN, false, 0);
-            sVars->sfxMightyUnspin.Play();
-            this->onGround         = 0;
-            this->applyJumpCap     = false;
-            this->jumpAbilityState = 0;
-            this->state.Set(&Player::State_MightyUnspin);
-            this->stateGravity.Set(&Player::Gravity_True);
-        }
-
-        this->applyJumpCap = false;
-        if (uncurlTimer && !*uncurlTimer) {
-            if (this->animator.animationID != ANI_UNSPIN)
-                sVars->sfxPimPom.Play();
-            *uncurlTimer = 8;
-        }
-
-        return true;
-    }
-
-    if (checkHammerDrop == 2 && anim == ANI_CROUCH) {
-        if (!this->uncurlTimer) {
-            sVars->sfxPimPom.Play();
-            this->uncurlTimer = 30;
-            if (this->position.x > this->position.x)
-                this->groundVel = -0x10000;
-            else
-                this->groundVel = 0x10000;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-void Player::State_RayFly()
-{
-    SET_CURRENT_STATE();
-
-    if (this->rotation) {
-        if (this->abilityValue < 0x70)
-            this->abilityValue += 8;
-    }
-    else {
-        if (this->abilityValue > 0x10)
-            this->abilityValue -= 8;
-    }
-
-    if (this->abilitySpeed) {
-        this->velocity.y += this->abilitySpeed >> (2 - (this->underwater != 0));
-        if (this->velocity.y < this->abilitySpeed) {
-            this->velocity.y   = this->abilitySpeed;
-            this->abilitySpeed = 0;
-        }
-    }
-    else {
-        this->velocity.y += this->gravityStrength * Math::Cos512(this->abilityValue) >> 9;
-    }
-
-    if (this->velocity.y < -0x60000)
-        this->velocity.y = -0x60000;
-
-    if (this->rotation == 1) {
-        if (this->velocity.y > 0x10000)
-            this->velocity.y = this->velocity.y - (this->velocity.y >> 2);
-    }
-
-    if (this->velocity.y <= 0) {
-        this->abilityValues[0] -= 22 * Math::Sin256(80 - this->abilityValue);
-        if (this->abilityValues[0] < 0x40000)
-            this->abilityValues[0] = 0x40000;
-    }
-    else if (this->velocity.y > this->abilityValues[0]) {
-        this->abilityValues[0] = this->velocity.y - (this->velocity.y >> 6);
-    }
-
-    if (this->velocity.x) {
-        int32 angle = 0x50 - this->abilityValue;
-        if (this->direction) {
-            this->velocity.x -= 22 * Math::Sin256(angle) >> (uint8)(this->underwater != 0);
-
-            if (this->velocity.x > -0x10000)
-                this->velocity.x = -0x10000;
-
-            if (this->velocity.x < -this->abilityValues[0])
-                this->velocity.x = -this->abilityValues[0];
-        }
-        else {
-            this->velocity.x += 22 * Math::Sin256(angle) >> (uint8)(this->underwater != 0);
-
-            if (this->velocity.x < 0x10000)
-                this->velocity.x = 0x10000;
-
-            if (this->velocity.x > this->abilityValues[0]) {
-                this->velocity.x = this->abilityValues[0];
-            }
-        }
-    }
-
-    if (this->controlLock) {
-        this->controlLock--;
-    }
-    else if ((!this->right || this->abilityValue != 16) && this->direction == FLIP_X) {
-        if (this->left && this->abilityValue == 112 && this->rotation == 1) {
-            this->abilitySpeed = 0;
-            this->rotation     = 0;
-            this->animator.SetAnimation(this->aniFrames, ANI_FLY_DOWN, false, 0);
-        }
-    }
-    else if ((!this->left || this->abilityValue != 16) && this->direction == FLIP_NONE) {
-        if (this->right && this->abilityValue == 112 && this->rotation == 1) {
-            this->abilitySpeed = 0;
-            this->rotation     = 0;
-            this->animator.SetAnimation(this->aniFrames, ANI_FLY_DOWN, false, 0);
-        }
-    }
-    else if (!this->rotation) {
-        this->rotation = 1;
-
-        if (this->velocity.y > 0x28000 || this->abilityTimer == 256 || (this->underwater && this->velocity.y > 0x18000)) {
-            int32 xVel = abs(this->velocity.x);
-
-            this->abilitySpeed = -(this->abilityTimer * ((xVel >> 1) + (xVel >> 2) + (xVel >> 4)) >> 8);
-            if (this->underwater)
-                this->abilitySpeed = (this->abilitySpeed >> 1) + (this->abilitySpeed >> 3);
-            if (this->abilityTimer > 16)
-                this->abilityTimer = this->abilityTimer - 32;
-            if (this->abilitySpeed < -0x60000)
-                this->abilitySpeed = -0x60000;
-        }
-        this->animator.SetAnimation(this->aniFrames, ANI_FLY_UP, false, 0);
-    }
-
-    if (!this->isGhost && !this->underwater) {
-        if (this->animator.animationID == ANI_FLY_DOWN)
-            sVars->rayDiveTimer = 256;
-        else if (this->animator.animationID == ANI_FLY_UP)
-            sVars->raySwoopTimer = 256;
-    }
-
-    if (this->onGround) {
-        if (abs(this->groundVel) < 0x20000)
-            this->groundVel <<= 1;
-
-        this->state.Set(&Player::State_Ground);
-        this->stateGravity.Set(&Player::Gravity_False);
-
-        this->skidding     = 0;
-        this->abilityValue = 0;
-    }
-    else {
-        if (!this->jumpHold || this->position.y < Zone::sVars->playerBoundsT[this->playerID] + 0x100000) {
-            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-            this->state.Set(&Player::State_Air);
-            this->stateGravity.Set(&Player::Gravity_True);
-        }
-        else if (abs(this->velocity.x) < 0x10000) {
-            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-            this->state.Set(&Player::State_Air);
-            this->stateGravity.Set(&Player::Gravity_True);
-        }
-    }
-
-    if (this->TileCollision(this->collisionLayers, CMODE_ROOF, this->collisionPlane, 0, -0x100000, false))
-        this->abilitySpeed = 0;
-}
 
 void Player::State_FlyToPlayer()
 {
@@ -7537,14 +6980,6 @@ bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity)
             this->animator.SetAnimation(this->aniFrames, ANI_GLIDE_DROP, false, 0);
             this->state.Set(&Player::State_KnuxGlideDrop);
         }
-        else {
-            if (this->state.Matches(&Player::State_MightyHammerDrop) || this->state.Matches(&Player::State_RayFly)) {
-                this->state.Set(&Player::State_Air);
-                this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-                if (this->velocity.y < -0x40000)
-                    this->velocity.y = -0x40000;
-            }
-        }
 
         return true;
     }
@@ -7649,42 +7084,18 @@ void Player::StaticLoad(Static *sVars)
         0xC0000, 0x01800, 0x03000, 0x00C00, 0x08000, 0x00600, 0x60000, -0x40000, 
         0x60000, 0x00C00, 0x01800, 0x00600, 0x08000, 0x00300, 0x30000, -0x20000 
     };
-
-    int32 mightyPhysicsTable[] = { 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x08000,  0x00600, 0x68000, -0x40000, 
-        0x30000, 0x00600, 0x00C00, 0x00300, 0x04000,  0x00300, 0x38000, -0x20000, 
-        0xA0000, 0x03000, 0x06000, 0x01800, 0x10000,  0x00600, 0x80000, -0x40000, 
-        0x50000, 0x01800, 0x03000, 0x00C00, 0x08000,  0x00300, 0x38000, -0x20000, 
-        0xC0000, 0x01800, 0x03000, 0x00C00, 0x08000,  0x00600, 0x68000, -0x40000, 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x04000,  0x00300, 0x38000, -0x20000, 
-        0xC0000, 0x01800, 0x03000, 0x00C00, 0x08000, 0x00600,  0x80000, -0x40000, 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x04000, 0x00300,  0x38000, -0x20000 
-    };
-
-    int32 rayPhysicsTable[] = { 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x08000, 0x00600, 0x68000, -0x40000, 
-        0x30000, 0x00600, 0x00C00, 0x00300, 0x04000, 0x00300, 0x38000, -0x20000, 
-        0xA0000, 0x03000, 0x06000, 0x01800, 0x10000, 0x00600, 0x80000, -0x40000, 
-        0x50000, 0x01800, 0x03000, 0x00C00, 0x08000, 0x00300, 0x38000, -0x20000, 
-        0xC0000, 0x01800, 0x03000, 0x00C00, 0x08000, 0x00600, 0x68000, -0x40000, 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x04000, 0x00300, 0x38000, -0x20000, 
-        0xC0000, 0x01800, 0x03000, 0x00C00, 0x08000, 0x00600, 0x80000, -0x40000, 
-        0x60000, 0x00C00, 0x01800, 0x00600, 0x04000, 0x00300, 0x38000, -0x20000 
-    };
     // clang-format on
 
     memcpy(sVars->sonicPhysicsTable, sonicPhysicsTable, sizeof(sonicPhysicsTable));
     memcpy(sVars->tailsPhysicsTable, tailsPhysicsTable, sizeof(tailsPhysicsTable));
     memcpy(sVars->knuxPhysicsTable, knuxPhysicsTable, sizeof(knuxPhysicsTable));
-    memcpy(sVars->mightyPhysicsTable, mightyPhysicsTable, sizeof(mightyPhysicsTable));
-    memcpy(sVars->rayPhysicsTable, rayPhysicsTable, sizeof(rayPhysicsTable));
 
     // ---------------
     // SUPER SONIC
     // ---------------
 
-    color superSonicPalette[] = { 0x000080, 0x0038C0, 0x0068F0, 0x1888F0, 0x30A0F0, 0x68D0F0, 0xF0C001, 0xF0D028, 0xF0E040,
-                                  0xF0E860, 0xF0E898, 0xF0E8D0, 0xF0D898, 0xF0E0B0, 0xF0E8C0, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 };
+    color superSonicPalette[] = { 0x11004F, 0x0F16AD, 0x1D2EE2, 0x225BF1, 0x4281F7, 0x48B9F7, 0xF0C001, 0xF0D028, 0xF0E040,
+                                  0xF94100, 0xFF7700, 0xFF9A00, 0xFFBE00, 0xFFD300, 0xFFE821, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 };
 
     memcpy(sVars->superSonicPalette, superSonicPalette, sizeof(superSonicPalette));
 
@@ -7692,7 +7103,7 @@ void Player::StaticLoad(Static *sVars)
     // SUPER TAILS
     // ---------------
 
-    color superTailsPalette[] = { 0x800801, 0xB01801, 0xD05001, 0xE07808, 0xE89008, 0xF0A801, 0xF03830, 0xF06848, 0xF09860,
+    color superTailsPalette[] = { 0x560020, 0x8F001B, 0xC61800, 0xE24F05, 0xFD7300, 0xFFA001, 0xF03830, 0xF06848, 0xF09860,
                                   0xF0B868, 0xF0C870, 0xF0D870, 0xF03830, 0xF06848, 0xF09860, 0xF0B868, 0xF0C870, 0xF0D870 };
 
     memcpy(sVars->superTailsPalette, superTailsPalette, sizeof(superTailsPalette));
@@ -7701,28 +7112,10 @@ void Player::StaticLoad(Static *sVars)
     // SUPER KNUCKLES
     // ---------------
 
-    color superKnuxPalette[] = { 0x580818, 0x980130, 0xD00840, 0xE82858, 0xF06080, 0xF08088, 0xF05878, 0xF06090, 0xF080A0,
-                                 0xF098B0, 0xF0B0C8, 0xF0C0C8, 0xF05878, 0xF06090, 0xF080A0, 0xF098B0, 0xF0B0C8, 0xF0C0C8 };
+    color superKnuxPalette[] = { 0x400015, 0x7D0025, 0xD00840, 0xE82858, 0xFD4C21, 0xF5924D, 0xF05878, 0xF06090, 0xF080A0,
+                                 0xF098B0, 0xF0B0C8, 0xB30626, 0xE12808, 0xF06090, 0xF080A0, 0xF098B0, 0xF0B0C8, 0xF0C0C8 };
 
     memcpy(sVars->superKnuxPalette, superKnuxPalette, sizeof(superKnuxPalette));
-
-    // ---------------
-    // SUPER MIGHTY
-    // ---------------
-
-    color superMightyPalette[] = { 0x501010, 0x882020, 0xA83030, 0xC84040, 0xE06868, 0xF09098, 0x701010, 0xD84040, 0xF05858,
-                                   0xF07878, 0xF0B8B8, 0xF0E0E8, 0x701010, 0xD84040, 0xF05858, 0xF07878, 0xF0B8B8, 0xF0E0E8 };
-
-    memcpy(sVars->superMightyPalette, superMightyPalette, sizeof(superMightyPalette));
-
-    // ---------------
-    // SUPER RAY
-    // ---------------
-
-    color superRayPalette[] = { 0xA06800, 0xB88810, 0xD0A810, 0xE0C020, 0xE8D038, 0xF0E078, 0xE0A801, 0xF0C820, 0xF0E820,
-                                0xF0F040, 0xF0F068, 0xF0F0B8, 0xE0A801, 0xF0C820, 0xF0E820, 0xF0F040, 0xF0F068, 0xF0F0B8 };
-
-    memcpy(sVars->superRayPalette, superRayPalette, sizeof(superRayPalette));
 
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };
     memcpy(sVars->spindashChargeSpeeds, chargeSpeeds, sizeof(chargeSpeeds));
@@ -7746,8 +7139,6 @@ void Player::StaticLoad(Static *sVars)
     sVars->tailsFrames.Init();
     sVars->tailsTailsFrames.Init();
     sVars->knuxFrames.Init();
-    sVars->mightyFrames.Init();
-    sVars->rayFrames.Init();
 
     sVars->sfxJump.Init();
     sVars->sfxRoll.Init();
@@ -7758,23 +7149,15 @@ void Player::StaticLoad(Static *sVars)
     sVars->sfxDropdash.Init();
     sVars->sfxLoseRings.Init();
     sVars->sfxHurt.Init();
-    sVars->sfxPimPom.Init();
     sVars->sfxSkidding.Init();
     sVars->sfxGrab.Init();
     sVars->sfxFlying.Init();
     sVars->sfxTired.Init();
     sVars->sfxLand.Init();
     sVars->sfxSlide.Init();
-    sVars->sfxOuttaHere.Init();
     sVars->sfxTransform2.Init();
     sVars->sfxSwap.Init();
     sVars->sfxSwapFail.Init();
-    sVars->sfxMightyDeflect.Init();
-    sVars->sfxMightyDrill.Init();
-    sVars->sfxMightyLand.Init();
-    sVars->sfxMightyUnspin.Init();
-    sVars->sfxEarthquake.Init();
-    sVars->sfxUnknown.Init();
 }
 #endif
 

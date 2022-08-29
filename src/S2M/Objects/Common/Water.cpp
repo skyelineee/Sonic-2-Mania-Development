@@ -798,7 +798,7 @@ void Water::BubbleFinishPopBehavior()
                             }
 
                             if (canBreathe && (anim != Player::ANI_FAN && anim != Player::ANI_CLING)) {
-                                player->animator.SetAnimation(player->aniFrames, Player::ANI_BUBBLE, false, 0);
+                                player->animator.SetAnimation(player->aniFrames, Player::ANI_BREATHE, false, 0);
 
                                 if (!player->sidekick)
                                     this->allowBreathe = true;
@@ -807,9 +807,6 @@ void Water::BubbleFinishPopBehavior()
                             if (player->state.Matches(&Player::State_FlyCarried)) {
                                 player->state.Set(&Player::State_Air);
                                 GameObject::Get<Player>(SLOT_PLAYER2)->flyCarryTimer = 30;
-                            }
-                            else if (player->state.Matches(&Player::State_MightyHammerDrop)) {
-                                player->state.Set(&Player::State_Air);
                             }
                             // }
 
@@ -851,7 +848,7 @@ void Water::State_BubbleBreathed()
 
     if (this->scale.x > 0) {
         if (this->allowBreathe)
-            player->animator.SetAnimation(player->aniFrames, Player::ANI_BUBBLE, false, 0);
+            player->animator.SetAnimation(player->aniFrames, Player::ANI_BREATHE, false, 0);
     }
     else {
         this->scale.x = 0;

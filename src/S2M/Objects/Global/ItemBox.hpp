@@ -28,8 +28,6 @@ struct ItemBox : RSDK::GameObject::Entity {
         Swap,
         Random,
         Super,
-        ExtraLife_Mighty,
-        ExtraLife_Ray,
         Coin,
         Stock,
         Banana,

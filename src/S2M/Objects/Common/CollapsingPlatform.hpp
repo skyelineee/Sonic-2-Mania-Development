@@ -47,7 +47,6 @@ struct CollapsingPlatform : RSDK::GameObject::Entity {
     uint8 type;
     int32 delay;
     bool32 eventOnly;
-    bool32 mightyOnly;
     int32 buttonTag;
     uint8 shift;
     int32 unused1;

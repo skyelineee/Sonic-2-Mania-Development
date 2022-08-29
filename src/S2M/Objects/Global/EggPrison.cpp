@@ -86,7 +86,7 @@ void EggPrison::Update()
                             player->state.Set(&Player::State_Air);
                             player->onGround   = false;
                             player->velocity.y = -0xA0000;
-                            player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING_TWIRL, true, 0);
+                            player->animator.SetAnimation(player->aniFrames, Player::ANI_SPRING, true, 0);
                             sVars->sfxSpring.Play();
                         }
                         else {

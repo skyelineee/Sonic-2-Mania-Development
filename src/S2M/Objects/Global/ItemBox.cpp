@@ -102,8 +102,6 @@ void ItemBox::Create(void *data)
             case ItemBox::ExtraLife_Sonic:
             case ItemBox::ExtraLife_Tails:
             case ItemBox::ExtraLife_Knux:
-            case ItemBox::ExtraLife_Mighty:
-            case ItemBox::ExtraLife_Ray:
                 if (globals->gameMode == MODE_TIMEATTACK) {
                     this->type = ItemBox::Ring;
                 }
@@ -115,8 +113,6 @@ void ItemBox::Create(void *data)
                         case ID_SONIC: this->type = ItemBox::ExtraLife_Sonic; break;
                         case ID_TAILS: this->type = ItemBox::ExtraLife_Tails; break;
                         case ID_KNUCKLES: this->type = ItemBox::ExtraLife_Knux; break;
-                        case ID_MIGHTY: this->type = ItemBox::ExtraLife_Mighty; break;
-                        case ID_RAY: this->type = ItemBox::ExtraLife_Ray; break;
                         default: break;
                     }
                 }
@@ -364,29 +360,6 @@ void ItemBox::CheckHit()
     {
         if (this->planeFilter <= 0 || player->collisionPlane == (((uint8)this->planeFilter - 1) & 1)) {
 
-            if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1 && !this->parent) {
-                if (player->CheckCollisionTouchCircle(TO_FIXED(256), this, TO_FIXED(16))) {
-                    switch (globals->gravityDir) {
-                        default: break;
-                        case CMODE_FLOOR:
-                            if (this->position.y - TO_FIXED(128) < player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
-                                this->active = ACTIVE_NORMAL;
-                                this->state.Set(&ItemBox::State_Falling);
-                                this->velocity.y = -TO_FIXED(2);
-                            }
-                            break;
-
-                        case CMODE_ROOF:
-                            if (this->position.y + TO_FIXED(128) > player->position.y && !this->state.Matches(&ItemBox::State_Falling)) {
-                                this->active = ACTIVE_NORMAL;
-                                this->state.Set(&ItemBox::State_Falling);
-                                this->velocity.y = TO_FIXED(2);
-                            }
-                            break;
-                    }
-                }
-            }
-
             int32 anim = player->animator.animationID;
             bool32 attacking = false;
 
@@ -403,7 +376,6 @@ void ItemBox::CheckHit()
             switch (player->characterID) {
                 case ID_SONIC: attacking |= anim == Player::ANI_DROPDASH; break;
                 case ID_KNUCKLES: attacking |= anim == Player::ANI_GLIDE || anim == Player::ANI_GLIDE_SLIDE; break;
-                case ID_MIGHTY: attacking |= anim == Player::ANI_HAMMERDROP || player->jumpAbilityState > 1; break;
             }
 
             if (attacking && !player->sidekick) {
@@ -516,8 +488,6 @@ void ItemBox::GivePowerup()
         case ItemBox::ExtraLife_Sonic:
         case ItemBox::ExtraLife_Tails:
         case ItemBox::ExtraLife_Knux:
-        case ItemBox::ExtraLife_Mighty:
-        case ItemBox::ExtraLife_Ray:
             player->GiveLife();
             break;
 
@@ -751,8 +721,6 @@ void ItemBox::GivePowerup()
                         case 0: player->ChangeCharacter(ID_SONIC); break;
                         case 1: player->ChangeCharacter(ID_TAILS); break;
                         case 2: player->ChangeCharacter(ID_KNUCKLES); break;
-                        case 3: player->ChangeCharacter(ID_MIGHTY); break;
-                        case 4: player->ChangeCharacter(ID_RAY); break;
                         default: break;
                     }
 
@@ -790,16 +758,10 @@ void ItemBox::Break(Player *player)
         default: break;
 
         case CMODE_FLOOR:
-            if (player->characterID == ID_MIGHTY && player->animator.animationID == Player::ANI_HAMMERDROP)
-                player->velocity.y -= 0x10000;
-            else
                 player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
             break;
 
         case CMODE_ROOF:
-            if (player->characterID == ID_MIGHTY && player->animator.animationID == Player::ANI_HAMMERDROP)
-                player->velocity.y += 0x10000;
-            else
                 player->velocity.y = player->velocity.y + 2 * player->gravityStrength;
             break;
     }
@@ -879,8 +841,6 @@ void ItemBox::Break(Player *player)
                             case ID_SONIC: this->type = ItemBox::ExtraLife_Sonic; break;
                             case ID_TAILS: this->type = ItemBox::ExtraLife_Tails; break;
                             case ID_KNUCKLES: this->type = ItemBox::ExtraLife_Knux; break;
-                            case ID_MIGHTY: this->type = ItemBox::ExtraLife_Mighty; break;
-                            case ID_RAY: this->type = ItemBox::ExtraLife_Ray; break;
                             default: break;
                         }
                         this->contentsAnimator.frameID = this->type;
@@ -888,8 +848,6 @@ void ItemBox::Break(Player *player)
 
                     case ItemBox::ExtraLife_Tails:
                     case ItemBox::ExtraLife_Knux:
-                    case ItemBox::ExtraLife_Mighty:
-                    case ItemBox::ExtraLife_Ray:
                         continue;
 
                     case ItemBox::Swap:
@@ -1136,8 +1094,6 @@ void ItemBox::EditorLoad()
     RSDK_ENUM_VAR("Swap");
     RSDK_ENUM_VAR("Random");
     RSDK_ENUM_VAR("Super");
-    RSDK_ENUM_VAR("1UP Mighty");
-    RSDK_ENUM_VAR("1UP Ray");
     RSDK_ENUM_VAR("Change");
 
     RSDK_ACTIVE_VAR(sVars, isFalling);
