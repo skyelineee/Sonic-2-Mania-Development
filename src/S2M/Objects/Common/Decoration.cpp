@@ -84,6 +84,9 @@ void Decoration::Create(void *data)
 
         if (ScreenWrap::CheckCompetitionWrap())
             this->active = ACTIVE_NORMAL;
+
+        if (this->overrideDrawGroup)
+            this->drawGroup = this->overrideDrawGroup;
     }
 }
 
@@ -187,6 +190,7 @@ void Decoration::Serialize()
     RSDK_EDITABLE_VAR(Decoration, VAR_INT32, alpha);
     RSDK_EDITABLE_VAR(Decoration, VAR_BOOL, reverseX);
     RSDK_EDITABLE_VAR(Decoration, VAR_BOOL, reverseY);
+    RSDK_EDITABLE_VAR(Decoration, VAR_UINT8, overrideDrawGroup);
 }
 
 } // namespace GameLogic

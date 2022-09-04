@@ -21,8 +21,6 @@ struct SignPost : RSDK::GameObject::Entity {
         AniSonic,
         AniTails,
         AniKnux,
-        AniMighty,
-        AniRay,
         AniEggman,
         AniPost,
         AniSpin,

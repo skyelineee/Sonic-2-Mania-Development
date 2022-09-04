@@ -107,10 +107,7 @@ void ActClear::Draw()
         drawPos.y = this->playerNamePos.y;
         this->playerNameAnimator.DrawSprite(&drawPos, true);
 
-        if ((GET_CHARACTER_ID(1)) == ID_MIGHTY)
-            this->gotThroughAnimator.frameID = 2;
-        else
-            this->gotThroughAnimator.frameID = 0;
+        this->gotThroughAnimator.frameID = 0;
         this->gotThroughAnimator.DrawSprite(&drawPos, true);
 
         drawPos.x                        = this->gotThroughPos.x + center;
@@ -364,8 +361,6 @@ void ActClear::Create(void *data)
                 break;
 
             case ID_KNUCKLES: this->playerNameAnimator.SetAnimation(sVars->aniFrames, 3, true, 2); break;
-            case ID_MIGHTY: this->playerNameAnimator.SetAnimation(sVars->aniFrames, 3, true, 3); break;
-            case ID_RAY: this->playerNameAnimator.SetAnimation(sVars->aniFrames, 3, true, 4); break;
         }
 
         this->gotThroughAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);

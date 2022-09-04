@@ -49,11 +49,7 @@ void ItemBox::Update()
     }
 }
 void ItemBox::LateUpdate() {}
-void ItemBox::StaticUpdate()
-{
-    paletteBank[0].Rotate(60, 63, true);
-    paletteBank[1].Rotate(60, 63, true);
-}
+void ItemBox::StaticUpdate() {}
 void ItemBox::Draw()
 {
     if (!this->hidden) {
@@ -174,12 +170,12 @@ void ItemBox::StageLoad()
     sVars->aniFrames.Load("Global/ItemBox.bin", SCOPE_STAGE);
 
     sVars->hitboxItemBox.left   = -15;
-    sVars->hitboxItemBox.top    = -16;
+    sVars->hitboxItemBox.top    = -14;
     sVars->hitboxItemBox.right  = 15;
     sVars->hitboxItemBox.bottom = 16;
 
     sVars->hitboxHidden.left   = -15;
-    sVars->hitboxHidden.top    = -24;
+    sVars->hitboxHidden.top    = -22;
     sVars->hitboxHidden.right  = 15;
     sVars->hitboxHidden.bottom = 16;
 

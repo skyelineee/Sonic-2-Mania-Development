@@ -3431,7 +3431,8 @@ void Player::State_Air()
             if (globals->gravityDir == CMODE_ROOF) {
                 if (this->velocity.y > 0 && this->jumpPress) {
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.frameID == frameCount - 6) {
+                    if (this->animator.animationID = ANI_AIRCURL) {
+                        this->animator.frameID == frameCount - 6;
                         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
                     }
                     this->velocity.y >>= 1;
@@ -3467,24 +3468,18 @@ void Player::State_Air()
                 break;
             }
             
-            case ANI_RUN: {
-                int32 speed = this->animator.speed;
+            case ANI_RUN: {           
                 this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
-                this->animator.speed = speed;
                 break;
             }
 
             case ANI_DASH: {
-                int32 speed = this->animator.speed;
                 this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
-                this->animator.speed = speed;
                 break;
             }
 
             case ANI_PEELOUT: {
-                int32 speed = this->animator.speed;
                 this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
-                this->animator.speed = speed;
                 break;
             }
 

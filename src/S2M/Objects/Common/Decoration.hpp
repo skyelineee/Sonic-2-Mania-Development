@@ -29,6 +29,7 @@ struct Decoration : RSDK::GameObject::Entity {
     uint8 type;
     uint8 subtype;
     int32 rotSpeed;
+    uint8 overrideDrawGroup;
     RSDK::Vector2 repeatTimes;
     RSDK::Vector2 repeatSpacing;
     bool32 reverseX;

@@ -103,8 +103,6 @@ void SignPost::Create(void *data)
                 case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
                 case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
                 case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                case ID_MIGHTY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniMighty, true, 0); break;
-                case ID_RAY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniRay, true, 0); break;
             }
             this->postTopAnimator.SetAnimation(sVars->aniFrames, SignPost::AniPost, true, 0);
             this->sidebarAnimator.SetAnimation(sVars->aniFrames, SignPost::AniPost, true, 1);
@@ -219,13 +217,13 @@ void SignPost::DebugSpawn()
 
 void SignPost::DebugDraw()
 {
-    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 6, true, 0);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 4, true, 0);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
 
-    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 5, true, 0);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 3, true, 0);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
 
-    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 6, true, 2);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 4, true, 2);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
@@ -504,8 +502,6 @@ void SignPost::CheckTouch()
                                      case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
                                      case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
                                      case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                                     case ID_MIGHTY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniMighty, true, 0); break;
-                                     case ID_RAY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniRay, true, 0); break;
                                  }
                                  sVars->sfxSignPost2P.Play();
                              }
@@ -522,8 +518,6 @@ void SignPost::CheckTouch()
                                      case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
                                      case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
                                      case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                                     case ID_MIGHTY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniMighty, true, 0); break;
-                                     case ID_RAY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniRay, true, 0); break;
                                  }
                              }
 
@@ -626,8 +620,6 @@ void SignPost::State_Falling()
                 case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
                 case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
                 case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                case ID_MIGHTY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniMighty, true, 0); break;
-                case ID_RAY: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniRay, true, 0); break;
             }
         }
     }
@@ -748,9 +740,9 @@ void SignPost::State_Landed_Classic()
 #if RETRO_INCLUDE_EDITOR
 void SignPost::EditorDraw()
 {
-    this->eggPlateAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
-    this->postTopAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
-    this->standAnimator.SetAnimation(sVars->aniFrames, 6, true, 2);
+    this->eggPlateAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
+    this->postTopAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
+    this->standAnimator.SetAnimation(sVars->aniFrames, 4, true, 2);
 
     this->postTopAnimator.DrawSprite(nullptr, false);
     this->eggPlateAnimator.DrawSprite(nullptr, false);

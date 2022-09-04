@@ -175,7 +175,7 @@ void Music::PlayJingle(uint8 trackID)
             break;
 
         case TRACK_1UP:
-            entity->timer         = 224;
+            entity->timer         = 300;
             entity->trackPriority = Priority1UP;
             break;
 
