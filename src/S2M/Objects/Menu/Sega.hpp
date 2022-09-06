@@ -11,6 +11,7 @@ struct Sega : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX sfxSega;
     };
 
     int32 listID;
@@ -18,6 +19,9 @@ struct Sega : RSDK::GameObject::Entity {
     int32 fadeValue;
     int32 timer;
     int32 direction;
+    int32 variable1;
+    uint8 activeCategory;
+    RSDK::Vector2 segaPosition;
     RSDK::Vector2 trailPos;
     RSDK::StateMachine<Sega> state;
     RSDK::Animator animator;

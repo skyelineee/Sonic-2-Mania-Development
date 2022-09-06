@@ -36,7 +36,6 @@ void LogoSetup::Create(void *data)
 
 void LogoSetup::StageLoad()
 {
-    sVars->sfxSega.Get("Stage/Sega.wav");
     GameObject::Reset(0, sVars->classID, NULL);
     sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
 }
@@ -64,7 +63,6 @@ void LogoSetup::State_ShowLogos()
 {
     if (this->timer <= 0) {
         if (!screenInfo->position.y)
-            sVars->sfxSega.Play();
 
         this->timer = 0;
         this->state.Set(&LogoSetup::State_FadeToNextLogos);
