@@ -26,6 +26,9 @@
     <Filter Include="Source Files\Objects\Menu">
       <UniqueIdentifier>{031b3d2b-baea-4b33-b745-bddbbe2cbc70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\EHZ">
+      <UniqueIdentifier>{b865a73a-1cdb-4e80-8049-81d35d6d169c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -252,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIPicture.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\EHZ\EHZSetup.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="Objects\Menu\UIPicture.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\EHZSetup.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,10 +19,10 @@ void Sega::StaticUpdate() {}
 void Sega::Draw() { 
     this->animator.DrawSprite(NULL, false);
     Graphics::DrawRect(0, 0, screenInfo->size.x, screenInfo->size.y, 0xFF, 0xFF, INK_NONE, true);
-    
+
     switch (this->activeCategory) {
         default: break;
-        case 0: 
+        case 0:
             variable1 = this->trailPos.x;
             variable1 += screenInfo->center.x;
             //i genuinely have no idea rn how to deal with the drawspritescreen stuff so this is prob all wrong
@@ -57,7 +57,6 @@ void Sega::State_Setup()
     this->alpha     = 0;
     this->inkEffect = INK_ALPHA;
     this->timer     = 320;
-    Graphics::FillScreen(0, 0, 0, 0);
     this->state.Set(&Sega::State_Setup);
 
 }
