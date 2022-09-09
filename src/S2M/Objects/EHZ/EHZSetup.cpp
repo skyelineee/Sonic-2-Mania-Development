@@ -1,3 +1,9 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic 2 Mania
+// Object Description: EHZSetup Object
+// Object Author: AChickMcNuggie
+// ---------------------------------------------------------------------
+
 #include "S2M.hpp"
 #include "EHZSetup.hpp"
 #include "Helpers/CutsceneRules.hpp"
@@ -16,6 +22,9 @@ void EHZSetup::LateUpdate() {}
 
 void EHZSetup::StaticUpdate()
 {
+    if (!(Zone::sVars->timer & 7)) {
+        ++sVars->background->deformationOffset;
+    }
     sVars->paletteTimer += 42;
     if (sVars->paletteTimer >= 256) {
         sVars->paletteTimer -= 256;
@@ -42,23 +51,40 @@ void EHZSetup::StageLoad()
             Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
         }
     }
+    sVars->background = SceneLayer::GetTileLayer(0);
+    for (int32 i = 0; i < 1024; ++i) {
+        sVars->background->deformationData[i] = sVars->deformation[i & 63];
+    }
 }
 
 void EHZSetup::StageFinish_EndAct1()
 {
-    Zone::StoreEntities(Vector2(TO_FIXED(15792), TO_FIXED(1588)));
+    Zone::StoreEntities(Vector2(TO_FIXED(10880), TO_FIXED(822)));
     Stage::LoadScene();
 }
 
 void EHZSetup::HandleActTransition()
 { 
+    Vector2 storePos;
+
     Zone::sVars->cameraBoundsL[0] = 256 - screenInfo->center.x;
     Zone::sVars->cameraBoundsB[0] = 1412;
 
-    this->storePos.x = TO_FIXED(256);
-    this->storePos.y = TO_FIXED(1412);
+    storePos.x = TO_FIXED(256);
+    storePos.y = TO_FIXED(690);
 
     Zone::ReloadEntities(storePos, true);
+}
+
+void EHZSetup::StaticLoad(Static* sVars)
+{
+    RSDK_INIT_STATIC_VARS(EHZSetup);
+
+    int32 deformation[] = { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
+                            1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
+
+    memcpy(sVars->deformation, deformation, sizeof(deformation));
+
 }
 
 #if RETRO_INCLUDE_EDITOR

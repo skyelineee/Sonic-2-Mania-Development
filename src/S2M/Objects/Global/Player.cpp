@@ -839,8 +839,6 @@ void Player::LoadSprites()
 {
     for (auto spawn : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
         int32 playerID = GET_CHARACTER_ID(1);
-        if (playerID == ID_MIGHTY || playerID == ID_RAY)
-            playerID = ID_SONIC;
 
         if (spawn->characterID & playerID) {
             spawn->characterID = GET_CHARACTER_ID(1);
@@ -1843,34 +1841,6 @@ void Player::HandleIdleAnimation()
             }
             break;
 
-        case ID_MIGHTY:
-            if (this->timer < 240) {
-                this->timer++;
-                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
-            }
-            else if (this->animator.animationID == ANI_BORED_1) {
-                if (this->animator.frameID == 35)
-                    this->timer = 0;
-            }
-            else {
-                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
-            }
-            break;
-
-        case ID_RAY:
-            if (this->timer < 240) {
-                this->timer++;
-                this->animator.SetAnimation(this->aniFrames, ANI_IDLE, false, 0);
-            }
-            else if (this->animator.animationID == ANI_BORED_1) {
-                if (this->animator.frameID == 55)
-                    this->timer = 0;
-            }
-            else {
-                this->animator.SetAnimation(this->aniFrames, ANI_BORED_1, false, 0);
-            }
-            break;
-
         default: break;
     }
 }
@@ -2654,8 +2624,6 @@ void Player::DoSuperDash(Player *player)
             player->animator.SetAnimation(this->aniFrames, ANI_GLIDE, false, 6);
             player->animator.rotationStyle = Animator::RotateFull;
             break;
-        case ID_MIGHTY: player->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 0); break;
-        case ID_RAY: player->animator.SetAnimation(this->aniFrames, ANI_RUN, false, 0); break;
     }
 
     player->state.Set(&Player::State_SuperFlying);
@@ -5382,8 +5350,6 @@ void Player::State_FlyToPlayer()
     switch (this->characterID) {
         default:
         case ID_SONIC:
-        case ID_MIGHTY:
-        case ID_RAY: this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0); break;
 
         case ID_TAILS:
             if (Water::sVars && this->position.y > Water::sVars->waterLevel)
@@ -5660,8 +5626,16 @@ void Player::State_Victory()
 {
     SET_CURRENT_STATE();
 
+    this->applyJumpCap = false;
+    this->drownTimer   = 0;
+
+    if (!this->onGround) {
+        Player::HandleAirFriction();
+    }
+
     if (this->onGround) {
         if (this->groundedStore) {
+            this->groundVel = 0;
             sVars->sfxFlying.Stop();
             this->animator.SetAnimation(this->aniFrames, ANI_VICTORY, false, 0);
         }
@@ -6329,7 +6303,7 @@ void Player::Input_NULL()
         // TEMP: TODO REMOVE
         else if (controllerInfo[1].keySelect.press) {
             this->characterID <<= 1;
-            if (this->characterID > ID_RAY)
+            if (this->characterID > ID_KNUCKLES)
                 this->characterID = ID_SONIC;
 
             ChangeCharacter(this->characterID);

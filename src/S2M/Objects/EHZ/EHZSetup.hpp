@@ -8,9 +8,9 @@ struct EHZSetup : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         int32 paletteTimer;
+        RSDK::TileLayer *background;
+        int32 deformation[64];
     };
-
-    RSDK::Vector2 storePos;
 
     // ==============================
     // EVENTS
@@ -22,6 +22,9 @@ struct EHZSetup : RSDK::GameObject::Entity {
     void LateUpdate();
 
     static void StaticUpdate();
+#if RETRO_REV0U
+    static void StaticLoad(Static *sVars);
+#endif
     static void StageLoad();
     static void Serialize();
 #if RETRO_INCLUDE_EDITOR

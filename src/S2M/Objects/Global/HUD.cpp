@@ -385,6 +385,7 @@ void HUD::Create(void *data)
         this->thumbsUpIconAnimator.SetAnimation(sVars->aniFrames, 10, true, 2);
         this->replayClapAnimator.SetAnimation(sVars->aniFrames, 10, true, 1);
         this->superIconAnimator.SetAnimation(sVars->superButtonFrames, 0, true, 0);
+        this->showMilliseconds = true;
 
         HUD::GetActionButtonFrames();
 
