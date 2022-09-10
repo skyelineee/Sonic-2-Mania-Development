@@ -9,7 +9,8 @@
   "Positions": null,
   "ObjectHashes": [
     "FXAniTiles",
-    "EHZSetup"
+    "EHZSetup",
+    "Buzzer"
   ],
   "AttributeHashes": [
     "tileID",

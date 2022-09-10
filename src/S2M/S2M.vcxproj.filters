@@ -259,6 +259,9 @@
     <ClCompile Include="Objects\EHZ\EHZSetup.cpp">
       <Filter>Source Files\Objects\EHZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\EHZ\Buzzer.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -493,6 +496,9 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\EHZ\EHZSetup.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\Buzzer.hpp">
       <Filter>Source Files\Objects\EHZ</Filter>
     </ClInclude>
   </ItemGroup>

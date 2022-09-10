@@ -188,6 +188,7 @@
     <ClCompile Include="Objects\Common\ScreenWrap.cpp" />
     <ClCompile Include="Objects\Common\TilePlatform.cpp" />
     <ClCompile Include="Objects\Common\Water.cpp" />
+    <ClCompile Include="Objects\EHZ\Buzzer.cpp" />
     <ClCompile Include="Objects\EHZ\EHZSetup.cpp" />
     <ClCompile Include="Objects\Global\ActClear.cpp" />
     <ClCompile Include="Objects\Global\Animals.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Objects\Common\ScreenWrap.hpp" />
     <ClInclude Include="Objects\Common\TilePlatform.hpp" />
     <ClInclude Include="Objects\Common\Water.hpp" />
+    <ClInclude Include="Objects\EHZ\Buzzer.hpp" />
     <ClInclude Include="Objects\EHZ\EHZSetup.hpp" />
     <ClInclude Include="Objects\Global\ActClear.hpp" />
     <ClInclude Include="Objects\Global\Animals.hpp" />

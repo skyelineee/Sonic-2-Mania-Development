@@ -48,6 +48,7 @@ void EHZSetup::StageLoad()
         }
 
         if (CutsceneRules::CheckAct1()) {
+            Zone::sVars->shouldRecoverPlayers = true;
             Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
         }
     }
@@ -68,7 +69,7 @@ void EHZSetup::HandleActTransition()
     Vector2 storePos;
 
     Zone::sVars->cameraBoundsL[0] = 256 - screenInfo->center.x;
-    Zone::sVars->cameraBoundsB[0] = 1412;
+    Zone::sVars->cameraBoundsB[0] = 690;
 
     storePos.x = TO_FIXED(256);
     storePos.y = TO_FIXED(690);
