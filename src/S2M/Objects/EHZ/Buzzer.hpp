@@ -4,7 +4,7 @@
 namespace GameLogic
 {
 
-enum Anims { Flying, Shooting, Invisible };
+enum Anims { Idle, Flying, Shooting, Invisible };
 
 struct Buzzer : RSDK::GameObject::Entity {
 
@@ -24,9 +24,9 @@ struct Buzzer : RSDK::GameObject::Entity {
     uint8 startDir;
     RSDK::GameObject::Entity *projectile;
     RSDK::Animator animator;
-    RSDK::Animator thrustAnimator;
     RSDK::Hitbox hitboxRange;
     int32 shootTimer;
+    int32 temp0;
 
     // EVENTS //
 
@@ -48,7 +48,6 @@ struct Buzzer : RSDK::GameObject::Entity {
     void DebugDraw();
     void DebugSpawn();
 
-    void CheckOffScreen();
     void CheckPlayerCollisions();
 
     // STATES //
@@ -57,6 +56,7 @@ struct Buzzer : RSDK::GameObject::Entity {
     void State_Flying();
     void State_Idle();
     void State_Shooting();
+    void State_Invisible();
 
     // PROJECTILE STATES //
     void State_ProjectileCharge();

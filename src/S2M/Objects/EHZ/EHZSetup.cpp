@@ -38,13 +38,17 @@ void EHZSetup::Create(void *data) {}
 void EHZSetup::StageLoad()
 {
     Animals::sVars->animalTypes[0] = Animals::Flicky;
-    Animals::sVars->animalTypes[1] = Animals::Pocky;
+    Animals::sVars->animalTypes[1] = Animals::Ricky;
 
     if (Zone::sVars->actID) {
 
         if (globals->atlEnabled) {
             if (!CutsceneRules::CheckStageReload())
                 &EHZSetup::HandleActTransition;
+        }
+
+        if (CutsceneRules::CheckAct2()) {
+            Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct2);
         }
 
         if (CutsceneRules::CheckAct1()) {
@@ -76,6 +80,8 @@ void EHZSetup::HandleActTransition()
 
     Zone::ReloadEntities(storePos, true);
 }
+
+void EHZSetup::StageFinish_EndAct2() {}
 
 void EHZSetup::StaticLoad(Static* sVars)
 {

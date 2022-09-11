@@ -28,7 +28,7 @@ void Sega::Draw() {
             //i genuinely have no idea rn how to deal with the drawspritescreen stuff so this is prob all wrong
             this->animator.SetAnimation(sVars->aniFrames, 2, false, 0);
             this->animator.DrawSprite(&this->segaPosition, true);
-            this->drawFX = FX_FLIP;
+            this->direction & FLIP_NONE;
             break;
     }
     
@@ -43,6 +43,7 @@ void Sega::Create(void *data)
         this->active    = ACTIVE_NORMAL;
         this->visible   = true;
         this->drawGroup = 2;
+        this->drawFX |= FX_FLIP;
     }
 }
 

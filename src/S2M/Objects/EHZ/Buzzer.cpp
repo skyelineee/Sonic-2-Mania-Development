@@ -9,6 +9,7 @@
 #include "Global/Zone.hpp"
 #include "Global/DebugMode.hpp"
 #include "Helpers/DrawHelpers.hpp"
+#include "Global/Player.hpp"
 
 using namespace RSDK;
 
@@ -16,7 +17,9 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(Buzzer);
 
-void Buzzer::Update() { this->state.Run(this); }
+void Buzzer::Update() { 
+    this->state.Run(this); 
+}
 
 void Buzzer::LateUpdate() {}
 
@@ -25,7 +28,6 @@ void Buzzer::StaticUpdate() {}
 void Buzzer::Draw()
 {
     this->animator.DrawSprite(NULL, false);
-    this->thrustAnimator.DrawSprite(NULL, false);
 }
 
 void Buzzer::Create(void *data)
@@ -50,18 +52,21 @@ void Buzzer::Create(void *data)
 
     if (data) {
         this->active = ACTIVE_NORMAL;
-        this->updateRange.x = 2;
-        this->updateRange.y = 2;
-        this->animator.SetAnimation(sVars->aniFrames, 3, true, 0);
-        this->thrustAnimator.SetAnimation(sVars->aniFrames, -1, true, 0);
+        this->animator.SetAnimation(sVars->aniFrames, 4, true, 0);
+        this->state.Set(&Buzzer::State_ProjectileCharge);
     }
     else {
         this->active        = ACTIVE_BOUNDS;
-        this->updateRange.x = 8;
-        this->updateRange.y = 8;
         this->animator.SetAnimation(sVars->aniFrames, Flying, true, 0);
-        this->thrustAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
         this->state.Set(&Buzzer::State_Init);
+    }
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+        if (this->state.Matches(&Buzzer::State_Flying)) {
+            if (this->hasShot = false) {
+                this->state.Set(&Buzzer::State_Shooting);
+                this->animator.SetAnimation(&sVars->aniFrames, Shooting, true, 0);
+            }
+        }
     }
 }
 
@@ -97,17 +102,51 @@ void Buzzer::DebugSpawn()
     buzzer->startDir  = this->startDir;
 }
 
+void Buzzer::CheckPlayerCollisions()
+{
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+        if (player->CheckBadnikTouch(this, &sVars->hitboxBadnik)) {
+            if (player->CheckBadnikBreak(this, true)) {
+                if (this->projectile) {
+                    projectile->Destroy();
+                }
+            }
+        }
+        else if (this->state.Matches(&Buzzer::State_Flying) && !this->hasShot) {
+            if (player->CheckCollisionBox(this, &this->hitboxRange)) {
+                this->hasShot = true;
+                this->timer   = 90;
+                this->state.Set(&Buzzer::State_Shooting);
+            }
+        }
+    }
+}
+
 void Buzzer::State_Init()
 {
-    this->active = ACTIVE_NORMAL;
-    if (!(this->direction & FLIP_X)) {
-        this->velocity.x = -0x10000;
+    if (this->CheckOnScreen(&this->updateRange)) {
+        temp0            = this->position.x;
+        this->position.x = this->startPos.x;
+        if (this->shootTimer = 1) {
+            this->state.Set(&Buzzer::State_Invisible);
+        }
+        if (this->CheckOnScreen(&this->updateRange)) {
+            this->position.x = this->startPos.x;
+            if (this->direction & FLIP_X) {
+                this->velocity.x = 0x10000;
+            }
+            else {
+                this->velocity.x = -0x10000;
+            }
+        }
+        this->timer = 0;
+        this->animator.SetAnimation(&sVars->aniFrames, Flying, false, 0);
+        this->active = ACTIVE_BOUNDS;
+        this->state.Set(&Buzzer::State_Flying);
     }
     else {
-        this->velocity.x = 0x10000;
+        this->position.x = temp0;
     }
-
-    this->state.Set(&Buzzer::State_Flying);
 }
 
 void Buzzer::State_Flying()
@@ -120,9 +159,11 @@ void Buzzer::State_Flying()
     else {
         this->timer = 0;
         this->state.Set(&Buzzer::State_Idle);
-        this->animator.SetAnimation(&sVars->aniFrames, Flying, true, 0);
-        this->direction ^= 1;
+        this->animator.SetAnimation(&sVars->aniFrames, Idle, true, 0);
+        this->velocity.x = -this->velocity.x;
+        this->direction ^= FLIP_X;
     }
+    Buzzer::CheckPlayerCollisions();
 }
 
 void Buzzer::State_Idle()
@@ -133,9 +174,10 @@ void Buzzer::State_Idle()
     else {
         this->shootTimer = 0;
         this->state.Set(&Buzzer::State_Flying);
-        this->animator.SetAnimation(&sVars->aniFrames, Flying, true, 0);
+        this->animator.SetAnimation(&sVars->aniFrames, Flying, false, 0);
         this->hasShot = false;
     }
+    Buzzer::CheckPlayerCollisions();
 }
 
 void Buzzer::State_Shooting()
@@ -145,7 +187,7 @@ void Buzzer::State_Shooting()
         if (this->shootTimer == 30) {
             Buzzer *projectile    = GameObject::Create<Buzzer>(nullptr, this->position.x, this->position.y);
             projectile->direction = this->direction;
-            if (this->direction == 0) {
+            if (this->direction = FLIP_NONE) {
                 projectile->position.x += 0xD0000;
                 projectile->velocity.x = -0x18000;
             }
@@ -163,6 +205,36 @@ void Buzzer::State_Shooting()
             this->hasShot = true;
         }
     }
+    Buzzer::CheckPlayerCollisions();
+}
+
+void Buzzer::State_Invisible()
+{
+    this->animator.SetAnimation(&sVars->aniFrames, Invisible, true, 0);
+}
+
+void Buzzer::State_ProjectileCharge()
+{
+    this->animator.Process();
+
+    if (this->animator.frameID = 6) {
+        this->state.Set(&Buzzer::State_ProjectileShot);
+        Buzzer *shot = (Buzzer *)this->projectile;
+        shot->projectile = NULL;
+    }
+}
+
+void Buzzer::State_ProjectileShot()
+{
+    this->position.x += this->velocity.x;
+    this->position.y += this->velocity.y;
+
+    if (this->CheckOnScreen(&this->updateRange)) {
+        this->animator.Process();
+    }
+    else {
+        this->Destroy();
+    }
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -177,6 +249,7 @@ void Buzzer::EditorDraw(void)
         this->hitboxRange.bottom = 256;
 
         DrawHelpers::DrawHitboxOutline(this->position.x, this->position.y, &this->hitboxRange, FLIP_NONE, 0xFF0000);
+        this->animator.SetAnimation(&sVars->aniFrames, Flying, false, 0);
 
         RSDK_DRAWING_OVERLAY(false);
     }
@@ -196,5 +269,6 @@ void Buzzer::EditorLoad(void)
 void Buzzer::Serialize()
 {
     RSDK_EDITABLE_VAR(Buzzer, VAR_UINT8, direction);
+    RSDK_EDITABLE_VAR(Buzzer, VAR_UINT8, shotRange);
 }
 } // namespace GameLogic
