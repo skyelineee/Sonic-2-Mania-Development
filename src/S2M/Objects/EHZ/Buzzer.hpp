@@ -17,13 +17,14 @@ struct Buzzer : RSDK::GameObject::Entity {
     RSDK::StateMachine<Buzzer> state;
     uint8 shotRange;
     int32 timer;
-    int32 hasShot;
+    int32 shootTimer;
+    uint8 detectedPlayer;
+    uint8 hasShot;
     RSDK::Vector2 startPos;
     uint8 startDir;
     RSDK::GameObject::Entity *projectile;
     RSDK::Animator animator;
     RSDK::Hitbox hitboxRange;
-    int32 shootTimer;
     int32 temp0;
 
     // EVENTS //

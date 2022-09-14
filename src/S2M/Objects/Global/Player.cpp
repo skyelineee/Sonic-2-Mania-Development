@@ -1623,7 +1623,7 @@ void Player::HandleGroundAnimation_Classic()
                         if (this->animator.frameID == 9)
                             this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 9);
                     }
-                    else if (this->animator.animationID == ANI_AIR_WALK) {
+                    else if (this->animator.animationID == ANI_FALL) {
                         this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, this->animator.frameID);
                     }
                     else {
@@ -1900,7 +1900,7 @@ void Player::HandleGroundAnimation()
                         if (this->animator.frameID == 9)
                             this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 9);
                     }
-                    else if (this->animator.animationID == ANI_AIR_WALK) {
+                    else if (this->animator.animationID == ANI_FALL) {
                         this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, this->animator.frameID);
                     }
                     else {
@@ -3388,7 +3388,7 @@ void Player::State_Air()
                     this->animator.SetAnimation(this->aniFrames, this->animationReserve, false, 0);
                 }
                 else if ((this->animator.animationID == ANI_SPRING_CS) && !this->animator.frameID) {
-                    this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                    this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 }
             }
         }
@@ -3422,32 +3422,32 @@ void Player::State_Air()
             case ANI_WALK:
                 if (this->animator.speed < 64)
                     this->animator.speed = 64;
-                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, this->animator.frameID);
+                this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, this->animator.frameID);
                 break;
 
             case ANI_LOOK_UP:
             case ANI_CROUCH:
-            case ANI_SKID_TURN: this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, this->animator.frameID); break;
+            case ANI_SKID_TURN: this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, this->animator.frameID); break;
 
             case ANI_JOG: {
                 int32 speed = this->animator.speed;
-                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 this->animator.speed = speed;
                 break;
             }
             
             case ANI_RUN: {           
-                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 break;
             }
 
             case ANI_DASH: {
-                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 break;
             }
 
             case ANI_PEELOUT: {
-                this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, 0);
+                this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 break;
             }
 
@@ -3464,7 +3464,7 @@ void Player::State_Air()
 
             case ANI_SKID:
                 if (this->skidding <= 0)
-                    return this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, false, this->animator.frameID);
+                    return this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, this->animator.frameID);
                 else
                     this->skidding--;
                 break;
@@ -3756,7 +3756,7 @@ void Player::State_Peelout()
                 if (this->animator.frameID == 9)
                     this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 9);
             }
-            else if (this->animator.animationID == ANI_AIR_WALK) {
+            else if (this->animator.animationID == ANI_FALL) {
                 this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, this->animator.frameID);
             }
             else {
@@ -3768,7 +3768,7 @@ void Player::State_Peelout()
                 if (this->animator.frameID == 9)
                     this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, 9);
             }
-            else if (this->animator.animationID == ANI_AIR_WALK) {
+            else if (this->animator.animationID == ANI_FALL) {
                 this->animator.SetAnimation(this->aniFrames, ANI_WALK, false, this->animator.frameID);
             }
             else {
@@ -6283,7 +6283,7 @@ void Player::Input_NULL()
             this->velocity.y = 0;
             this->groundVel  = 0;
             this->drawGroup  = Zone::sVars->playerDrawGroup[1];
-            this->animator.SetAnimation(this->aniFrames, ANI_AIR_WALK, true, 0);
+            this->animator.SetAnimation(this->aniFrames, ANI_FALL, true, 0);
             Stage::SetEngineState(ENGINESTATE_REGULAR);
             this->jumpPress = false;
             this->jumpHold  = false;

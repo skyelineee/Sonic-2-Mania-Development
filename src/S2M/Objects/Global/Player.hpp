@@ -17,7 +17,7 @@ struct Player : RSDK::GameObject::Entity {
         ANI_LOOK_UP,
         ANI_CROUCH,
         ANI_WALK,
-        ANI_AIR_WALK,
+        ANI_FALL,
         ANI_JOG,
         ANI_RUN,
         ANI_DASH,

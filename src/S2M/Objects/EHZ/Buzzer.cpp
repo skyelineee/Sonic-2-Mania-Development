@@ -19,6 +19,7 @@ RSDK_REGISTER_OBJECT(Buzzer);
 
 void Buzzer::Update() { 
     this->state.Run(this); 
+    this->animator.Process();
 }
 
 void Buzzer::LateUpdate() {}
@@ -39,15 +40,16 @@ void Buzzer::Create(void *data)
     this->startPos.y     = this->position.y;
     this->startDir       = this->direction;
     this->timer          = 128;
-    this->shootTimer     = 0;
+    this->shootTimer     = 128;
+    this->detectedPlayer = false;
     this->hasShot        = false;
     this->projectile     = NULL;
 
     if (!this->shotRange)
-        this->shotRange = 96;
+        this->shotRange = 32;
 
-    this->hitboxRange.right = this->shotRange;
-    this->hitboxRange.left = this->shotRange;
+    this->hitboxRange.right = -this->shotRange;
+    this->hitboxRange.left = -this->shotRange;
     this->hitboxRange.top = -256;
     this->hitboxRange.bottom = 256;
 
@@ -82,7 +84,7 @@ void Buzzer::StageLoad()
     sVars->hitboxProjectile.right  = 6;
     sVars->hitboxProjectile.bottom = 6;
 
-    DebugMode::AddObject(sVars->classID, &Buzzer::DebugDraw, &Buzzer::DebugSpawn);
+    DebugMode::AddObject(sVars->classID, &Buzzer::DebugSpawn, &Buzzer::DebugDraw);
 
 }
 
@@ -111,9 +113,9 @@ void Buzzer::CheckPlayerCollisions()
         }
         else if (this->state.Matches(&Buzzer::State_Flying)) {
             if (player->CheckCollisionTouch(this, &this->hitboxRange)) {
-                if (this->hasShot = false) {
+                if (this->detectedPlayer = true) {
+                    this->shootTimer = 60;
                     this->state.Set(&Buzzer::State_Shooting);
-                    this->animator.SetAnimation(&sVars->aniFrames, Shooting, true, 0);
                 }
             }
         }
@@ -159,7 +161,6 @@ void Buzzer::State_Flying()
         this->state.Set(&Buzzer::State_Idle);
         this->animator.SetAnimation(&sVars->aniFrames, Idle, true, 0);
         this->velocity.x = -this->velocity.x;
-        this->hasShot = false;
         this->direction ^= FLIP_X;
     }
     Buzzer::CheckPlayerCollisions();
@@ -174,23 +175,22 @@ void Buzzer::State_Idle()
         this->shootTimer = 0;
         this->state.Set(&Buzzer::State_Flying);
         this->animator.SetAnimation(&sVars->aniFrames, Flying, false, 0);
-        this->hasShot = false;
+        this->hasShot        = false;
     }
     Buzzer::CheckPlayerCollisions();
 }
 
 void Buzzer::State_Shooting()
 {
-    this->animator.Process();
-
-    if (this->shootTimer < 50) {
-        this->shootTimer++;
-        if (this->shootTimer == 30) {
-            Buzzer *projectile    = GameObject::Create<Buzzer>(nullptr, this->position.x, this->position.y);
-            projectile->direction = this->direction;
-            if (this->direction = FLIP_NONE) {
-                projectile->position.x += 0xD0000;
-                projectile->velocity.x = -0x18000;
+    this->shootTimer--;
+    if (this->shootTimer == 50) {
+        this->animator.SetAnimation(&sVars->aniFrames, Shooting, false, 0);
+    }
+    else if (this->shootTimer == 30) {
+        Buzzer *projectile    = GameObject::Create<Buzzer>(INT_TO_VOID(true), this->position.x, this->position.y);
+            if (this->direction) {
+                projectile->position.x -= 0xD0000;
+                projectile->velocity.x = 0x18000;
             }
             else {
                 projectile->position.x += 0xD0000;
@@ -199,17 +199,16 @@ void Buzzer::State_Shooting()
             projectile->position.y += 0x180000;
             projectile->velocity.y = 0x18000;
             projectile->groundVel  = 0;
-            projectile->projectile = (Buzzer *)this;
             projectile->direction = this->direction;
+            projectile->projectile = (Buzzer *)this;
             projectile->active     = ACTIVE_NORMAL;
             this->projectile       = (Buzzer *)projectile;
-        }
-        else {
-            this->shootTimer = 0;
+    }
+    else if (!this->shootTimer) {
+            this->shootTimer = 128;
             this->state.Set(&Buzzer::State_Flying);
-            this->animator.SetAnimation(&sVars->aniFrames, Flying, true, 0);
+            this->animator.SetAnimation(&sVars->aniFrames, Flying, false, 0);
             this->hasShot = true;
-        }
     }
     Buzzer::CheckPlayerCollisions();
 }
@@ -255,7 +254,7 @@ void Buzzer::EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        this->hitboxRange.right  = this->shotRange;
+        this->hitboxRange.right  = -this->shotRange;
         this->hitboxRange.left   = -this->shotRange;
         this->hitboxRange.top    = -256;
         this->hitboxRange.bottom = 256;
