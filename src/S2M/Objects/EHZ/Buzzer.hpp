@@ -18,7 +18,6 @@ struct Buzzer : RSDK::GameObject::Entity {
     uint8 shotRange;
     int32 timer;
     int32 shootTimer;
-    uint8 detectedPlayer;
     uint8 hasShot;
     RSDK::Vector2 startPos;
     uint8 startDir;

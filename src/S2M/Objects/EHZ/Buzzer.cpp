@@ -41,7 +41,6 @@ void Buzzer::Create(void *data)
     this->startDir       = this->direction;
     this->timer          = 128;
     this->shootTimer     = 128;
-    this->detectedPlayer = false;
     this->hasShot        = false;
     this->projectile     = NULL;
 
@@ -113,7 +112,7 @@ void Buzzer::CheckPlayerCollisions()
         }
         else if (this->state.Matches(&Buzzer::State_Flying)) {
             if (player->CheckCollisionTouch(this, &this->hitboxRange)) {
-                if (this->detectedPlayer = true) {
+                if (this->hasShot == false) {
                     this->shootTimer = 60;
                     this->state.Set(&Buzzer::State_Shooting);
                 }
