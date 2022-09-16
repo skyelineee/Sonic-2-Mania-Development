@@ -4,17 +4,120 @@
 
 // Enums
 
-enum S2MGameCheats {
-    SECRET_REGIONSWAP       = 1 << 2,
-    SECRET_CAMERATRACKING   = 1 << 3,
-    SECRET_PENPENMODE       = 1 << 4,
-    SECRET_RANDOMITEMS      = 1 << 5,
-    SECRET_BLUESHIELDMODE   = 1 << 6,
-    SECRET_NOITEMS          = 1 << 7,
+enum GameModes {
+    MODE_NOSAVE,
+    MODE_MANIA,
+    MODE_ENCORE,
+    MODE_TIMEATTACK,
+    MODE_COMPETITION,
 };
 
-enum S2MMedalMods {
-    MEDAL_NOLIVES  = 1 << 6,
+enum PlayerIDs {
+    ID_NONE     = 0 << 0,
+    ID_SONIC    = 1 << 0,
+    ID_TAILS    = 1 << 1,
+    ID_KNUCKLES = 1 << 2,
+    ID_MIGHTY   = 1 << 3,
+    ID_RAY      = 1 << 4,
+
+    ID_TAILS_ASSIST    = ID_TAILS << 8,
+    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, // custom-added, can be used to check if "& knux" is active
+    ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
+};
+
+#define GET_CHARACTER_ID(playerNum)            (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
+#define CHECK_CHARACTER_ID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
+
+enum SaveSlots { NO_SAVE_SLOT = 255 };
+
+enum PlaneFilterTypes {
+    PLANEFILTER_NONE,
+    PLANEFILTER_AL, // - Plane A, Low Layer
+    PLANEFILTER_BL, // - Plane B, Low Layer
+    PLANEFILTER_AH, // - Plane A, High Layer
+    PLANEFILTER_BH, // - Plane B, High Layer
+};
+
+enum ReservedEntities {
+    SLOT_PLAYER1     = 0,
+    SLOT_PLAYER2     = 1,
+    SLOT_PLAYER3     = 2,
+    SLOT_PLAYER4     = 3,
+    SLOT_POWERUP1    = 4,
+    SLOT_POWERUP2    = 5,
+    SLOT_POWERUP3    = 6,
+    SLOT_POWERUP4    = 7,
+    SLOT_POWERUP1_2  = 8,
+    SLOT_POWERUP2_2  = 9,
+    SLOT_POWERUP3_2  = 10,
+    SLOT_POWERUP4_2  = 11,
+    SLOT_BSS_SETUP   = 8,
+    SLOT_PBL_SETUP   = 8,
+    SLOT_UFO_SETUP   = 8,
+    SLOT_MUSIC       = 9,
+    SLOT_BSS_HUD     = 10,
+    SLOT_UFO_CAMERA  = 10,
+    SLOT_PBL_CAMERA  = 10,
+    SLOT_BSS_MESSAGE = 11,
+    SLOT_UFO_HUD     = 11,
+    SLOT_ZONE        = 12,
+    // 13 = ???
+    // 14 = ???
+    SLOT_CUTSCENESEQ             = 15,
+    SLOT_PAUSEMENU               = 16,
+    SLOT_GAMEOVER                = 16,
+    SLOT_ACTCLEAR                = 16,
+    SLOT_PAUSEMENU_UICONTROL     = 17,
+    SLOT_PAUSEMENU_BUTTON1       = 18,
+    SLOT_PAUSEMENU_BUTTON2       = 19,
+    SLOT_PAUSEMENU_BUTTON3       = 20,
+    SLOT_DIALOG                  = 21,
+    SLOT_DIALOG_UICONTROL        = 22,
+    SLOT_DIALOG_BUTTONS          = 23,
+    SLOT_DIALOG_BUTTON2          = 24,
+    SLOT_DIALOG_BUTTON3          = 25,
+    SLOT_POPOVER                 = 26,
+    SLOT_POPOVER_UICONTROL       = 27,
+    SLOT_POPOVER_BUTTONS         = 28,
+    SLOT_POPOVER_BUTTON2         = 29,
+    SLOT_POPOVER_BUTTON3         = 30,
+    SLOT_POPOVER_BUTTON4         = 31,
+    SLOT_BIGBUBBLE_P1            = 32,
+    SLOT_BIGBUBBLE_P2            = 33,
+    SLOT_BIGBUBBLE_P3            = 34,
+    SLOT_BIGBUBBLE_P4            = 36,
+    SLOT_BSS_HORIZON             = 32,
+    SLOT_UFO_SPEEDLINES          = 34,
+    SLOT_UFO_PLASMA              = 36,
+    SLOT_REPLAYRECORDER_PLAYBACK = 36,
+    SLOT_REPLAYRECORDER_RECORD   = 37,
+    SLOT_MUSICSTACK_START        = 40,
+    //[41-47] are part of the music stack
+    SLOT_MUSICSTACK_END = 48,
+    SLOT_CAMERA1        = 60,
+    SLOT_CAMERA2        = 61,
+    SLOT_CAMERA3        = 62,
+    SLOT_CAMERA4        = 63,
+};
+
+enum GameCheats {
+    SECRET_RICKYMODE      = 1 << 0,
+    SECRET_SUPERDASH      = 1 << 1,
+    SECRET_REGIONSWAP     = 1 << 2,
+    SECRET_CAMERATRACKING = 1 << 3,
+    SECRET_RANDOMITEMS    = 1 << 4,
+    SECRET_BLUESHIELDMODE = 1 << 5,
+    SECRET_NOITEMS        = 1 << 6,
+};
+
+enum MedalMods {
+    MEDAL_DEBUGMODE   = 1 << 0,
+    MEDAL_ANDKNUCKLES = 1 << 1,
+    MEDAL_PEELOUT     = 1 << 2,
+    MEDAL_INSTASHIELD = 1 << 3,
+    MEDAL_NODROPDASH  = 1 << 4,
+    MEDAL_NOTIMEOVER  = 1 << 5,
+    MEDAL_NOLIVES     = 1 << 6,
 };
 
 enum GameTypes {
@@ -120,3 +223,7 @@ struct GlobalVariables {
     RSDK::Vector2 atlCameraPos[PLAYER_COUNT];
     RSDK::Vector2 atlOffset;
 };
+
+// Game Helpers
+
+#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
