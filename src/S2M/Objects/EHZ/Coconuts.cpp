@@ -59,23 +59,9 @@ void Coconuts::Create(void* data)
         this->state.Set(&Coconuts::State_Coconut);
     }
     else {
-        if (this->CheckOnScreen(&this->updateRange)) {
-            temp0 = this->position.x;
-            temp1 = this->position.y;
-            this->position.x = this->startPos.x;
-            this->position.y = this->startPos.y;
-
-            if (this->CheckOnScreen(&this->updateRange)) {
-                this->targetDelay = 0;
-                this->timer       = 16;
-                this->state.Set(&Coconuts::State_AwaitPlayer);
-                this->active = ACTIVE_BOUNDS;
-            }
-            else {
-                this->position.x = temp0;
-                this->position.y = temp1;
-            }
-        }
+        this->active = ACTIVE_BOUNDS;
+        this->animator.SetAnimation(sVars->aniFrames, Idle, true, 0);
+        this->state.Set(&Coconuts::State_Init);
     }
 }
 
@@ -85,9 +71,9 @@ void Coconuts::StageLoad()
         sVars->aniFrames.Load("EHZ/Coconuts.bin", SCOPE_STAGE);
     }
 
-    sVars->hitboxBadnik.left   = -12;
+    sVars->hitboxBadnik.left   = -8;
     sVars->hitboxBadnik.top    = -16;
-    sVars->hitboxBadnik.right  = 12;
+    sVars->hitboxBadnik.right  = 16;
     sVars->hitboxBadnik.bottom = 16;
 
     sVars->hitboxCoconut.left   = -8;
@@ -122,6 +108,27 @@ void Coconuts::CheckPlayerCollisions()
                     coconut->Destroy();
                 }
             }
+        }
+    }
+}
+
+void Coconuts::State_Init()
+{
+    if (this->CheckOnScreen(&this->updateRange)) {
+        temp0            = this->position.x;
+        temp1            = this->position.y;
+        this->position.x = this->startPos.x;
+        this->position.y = this->startPos.y;
+
+        if (this->CheckOnScreen(&this->updateRange)) {
+            this->targetDelay = 0;
+            this->timer       = 16;
+            this->state.Set(&Coconuts::State_AwaitPlayer);
+            this->active = ACTIVE_BOUNDS;
+        }
+        else {
+            this->position.x = temp0;
+            this->position.y = temp1;
         }
     }
 }

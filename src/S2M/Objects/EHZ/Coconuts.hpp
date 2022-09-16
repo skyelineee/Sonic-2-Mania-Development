@@ -56,6 +56,7 @@ struct Coconuts : RSDK::GameObject::Entity {
 
     // STATES //
 
+    void State_Init();
     void State_AwaitPlayer();
     void State_Moving();
     void State_Throwing();

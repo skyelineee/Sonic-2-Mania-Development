@@ -3400,7 +3400,7 @@ void Player::State_Air()
                 if (this->velocity.y > 0 && this->jumpPress) {
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
                     if (this->animator.animationID = ANI_AIRCURL) {
-                        this->animator.frameID = this->animator.frameCount - 6;
+                        this->animator.frameID = this->animator.frameCount - 5;
                         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
                     }
                     this->velocity.y >>= 1;
@@ -3409,7 +3409,7 @@ void Player::State_Air()
             else if (globals->gravityDir == CMODE_FLOOR) {
                 if (this->velocity.y < 0 && this->jumpPress) {
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.frameID == this->animator.frameCount - 6) {
+                    if (this->animator.frameID == this->animator.frameCount - 5) {
                         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
                     }
                     this->velocity.y >>= 1;
