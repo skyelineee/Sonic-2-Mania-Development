@@ -271,8 +271,8 @@ void Buzzer::EditorLoad(void)
         sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, direction);
-    RSDK_ENUM_VAR("Left", FLIP_NONE);
-    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Right");
 }
 #endif
 
