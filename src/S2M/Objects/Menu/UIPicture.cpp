@@ -18,7 +18,7 @@ void UIPicture::LateUpdate() {}
 void UIPicture::StaticUpdate() {}
 void UIPicture::Draw()
 {
-    if (this->zonePalette);
+    if (this->zonePalette)
         paletteBank[0].Copy((zonePalette >> 3) + 1, 32 * zonePalette, 224, 32);
 
     this->animator.DrawSprite(NULL, false);

@@ -241,7 +241,6 @@ struct Player : RSDK::GameObject::Entity {
     RSDK::Hitbox *outerBox;
     RSDK::Hitbox *innerBox;
     int32 characterID;
-    int32 frameCount;
     int32 timer;
     int32 outtaHereTimer;
     int32 abilityTimer;
