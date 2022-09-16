@@ -17,8 +17,6 @@ enum PlayerIDs {
     ID_SONIC    = 1 << 0,
     ID_TAILS    = 1 << 1,
     ID_KNUCKLES = 1 << 2,
-    ID_MIGHTY   = 1 << 3,
-    ID_RAY      = 1 << 4,
 
     ID_TAILS_ASSIST    = ID_TAILS << 8,
     ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, // custom-added, can be used to check if "& knux" is active
