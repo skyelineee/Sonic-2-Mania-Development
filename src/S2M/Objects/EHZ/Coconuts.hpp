@@ -23,8 +23,6 @@ struct Coconuts : RSDK::GameObject::Entity {
     Player* targetPlayer;
     int32 targetDelay;
     int32 targetDistance;
-    int32 temp0;
-    int32 temp1;
     RSDK::GameObject::Entity *coconut;
     RSDK::Animator animator;
     RSDK::StateMachine<Coconuts> state;

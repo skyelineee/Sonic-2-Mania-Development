@@ -11,7 +11,8 @@
     "FXAniTiles",
     "EHZSetup",
     "Buzzer",
-    "Coconuts"
+    "Coconuts",
+    "Masher"
   ],
   "AttributeHashes": [
     "tileID",

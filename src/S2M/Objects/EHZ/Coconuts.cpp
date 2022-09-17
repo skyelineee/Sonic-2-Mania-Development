@@ -115,10 +115,8 @@ void Coconuts::CheckPlayerCollisions()
 void Coconuts::State_Init()
 {
     if (this->CheckOnScreen(&this->updateRange)) {
-        temp0            = this->position.x;
-        temp1            = this->position.y;
-        this->position.x = this->startPos.x;
-        this->position.y = this->startPos.y;
+        Vector2 storePos = this->position;
+        this->position = this->startPos;
 
         if (this->CheckOnScreen(&this->updateRange)) {
             this->targetDelay = 0;
@@ -127,8 +125,7 @@ void Coconuts::State_Init()
             this->active = ACTIVE_BOUNDS;
         }
         else {
-            this->position.x = temp0;
-            this->position.y = temp1;
+            this->position = storePos;
         }
     }
 }
@@ -139,23 +136,23 @@ void Coconuts::State_AwaitPlayer()
     this->targetDistance = 0x7FFFFFFF;
     this->targetPlayer   = 0;
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-        temp0 = player->position.x;
-        temp0 -= this->position.x;
-        if (temp0 < 0) {
-            temp1 = 0;
-            temp0 = -temp0;
+        int32 dir = FLIP_NONE;
+        int32 targetPos = player->position.x - this->position.x;
+        if (targetPos < 0) {
+            dir = FLIP_NONE;
+            targetPos = -targetPos;
         }
         else {
-            temp1 = 1;
+            dir = FLIP_X;
         }
-        if (temp0 < this->targetDistance) {
-            this->targetDistance = temp0;
+        if (targetPos < this->targetDistance) {
+            this->targetDistance = targetPos;
             this->targetPlayer   = player;
-            this->direction      = temp1;
+            this->direction      = dir;
         }
     }
 
-    temp0 = false;
+    bool32 throwing = false;
     if (this->targetDelay == 0) {
         if (this->targetDistance > -0x600000) {
             if (this->targetDistance < 0x600000) {
@@ -163,7 +160,7 @@ void Coconuts::State_AwaitPlayer()
                 this->targetDelay = 32;
                 this->animator.SetAnimation(&sVars->aniFrames, Throw, false, 0);
                 this->state.Set(&Coconuts::State_Throwing);
-                temp0 = true;
+                throwing = true;
             }
         }
     }
@@ -171,11 +168,11 @@ void Coconuts::State_AwaitPlayer()
         this->targetDelay--;
     }
 
-    if (temp0 == false) {
+    if (throwing == false) {
         this->timer--;
         if (this->timer < 0) {
-            temp0 = GET_BIT(this->throwID, 0);
-            if (temp0 == 0) {
+            int32 dir = GET_BIT(this->throwID, 0);
+            if (dir == FLIP_NONE) {
                 this->velocity.y = -0x10000;
             }
             else {
@@ -237,8 +234,8 @@ void Coconuts::State_HasThrown()
 {
     this->timer--;
     if (this->timer < 0) {
-        temp0 = GET_BIT(this->throwID, 0);
-        if (temp0 == 0) {
+        int32 dir = GET_BIT(this->throwID, 0);
+        if (dir == 0) {
             this->velocity.y = -0x10000;
         }
         else {

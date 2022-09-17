@@ -191,6 +191,7 @@
     <ClCompile Include="Objects\EHZ\Buzzer.cpp" />
     <ClCompile Include="Objects\EHZ\Coconuts.cpp" />
     <ClCompile Include="Objects\EHZ\EHZSetup.cpp" />
+    <ClCompile Include="Objects\EHZ\Masher.cpp" />
     <ClCompile Include="Objects\Global\ActClear.cpp" />
     <ClCompile Include="Objects\Global\Animals.cpp" />
     <ClCompile Include="Objects\Global\Announcer.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Objects\EHZ\Buzzer.hpp" />
     <ClInclude Include="Objects\EHZ\Coconuts.hpp" />
     <ClInclude Include="Objects\EHZ\EHZSetup.hpp" />
+    <ClInclude Include="Objects\EHZ\Masher.hpp" />
     <ClInclude Include="Objects\Global\ActClear.hpp" />
     <ClInclude Include="Objects\Global\Animals.hpp" />
     <ClInclude Include="Objects\Global\Announcer.hpp" />
