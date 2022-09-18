@@ -31,11 +31,13 @@ void Masher::Draw() { this->animator.DrawSprite(NULL, false); }
 void Masher::Create(void* data)
 {
     this->visible    = true;
+    this->drawFX    |= FX_FLIP;
     this->active     = ACTIVE_NORMAL;
-    this->drawGroup  = Zone::sVars->objectDrawGroup[0];
+    this->drawGroup  = Zone::sVars->objectDrawGroup[1];
     this->startPos.x = this->position.x;
     this->startPos.y = this->position.y;
     this->velocity.y = -0x50000;
+    this->direction  = FLIP_NONE;
     this->state.Set(&Masher::State_Jumping);
 }
 
@@ -84,9 +86,13 @@ void Masher::State_Jumping()
     }
 
     if (this->velocity.y < 0) {
+        this->drawGroup = Zone::sVars->objectDrawGroup[1];
+        this->direction = FLIP_NONE;
         this->animator.SetAnimation(&sVars->aniFrames, Biting, false, 0);
     }
     else {
+        this->drawGroup = Zone::sVars->objectDrawGroup[0];
+        this->direction = FLIP_Y;
         this->animator.SetAnimation(&sVars->aniFrames, Idle, false, 0);
     }
     

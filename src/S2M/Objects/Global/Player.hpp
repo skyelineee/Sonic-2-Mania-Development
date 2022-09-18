@@ -93,6 +93,14 @@ struct Player : RSDK::GameObject::Entity {
         DeathDrown,
     };
 
+    enum ShieldTypes {
+        Shield_None,
+        Shield_Blue,
+        Shield_Bubble,
+        Shield_Fire,
+        Shield_Lightning,
+    };
+
     enum HurtTypes {
         HurtNone,
         HurtShield,
