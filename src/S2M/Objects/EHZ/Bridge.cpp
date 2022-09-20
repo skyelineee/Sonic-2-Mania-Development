@@ -100,6 +100,10 @@ void Bridge::Create(void *data)
     this->stoodEntity   = (Entity *)-1;
     this->burnOffset    = 0xFF;
     this->animator.SetAnimation(&sVars->aniFrames, 0, true, 0);
+
+    if (data) {
+        this->length = VOID_TO_INT(data) - 1;
+    }
 }
 
 void Bridge::StageLoad()
@@ -113,9 +117,8 @@ void Bridge::StageLoad()
 
 void Bridge::DebugDraw()
 {
-    int32 startDebugID = 0;
-    int32 len = DebugMode::sVars->itemCount;
-    len -= startDebugID;
+    DebugMode::sVars->itemTypeCount = 19;
+    int32 len = DebugMode::sVars->itemType;
     int32 temp2 = len;
     len <<= 19;
     len = -len;
@@ -142,10 +145,9 @@ void Bridge::DebugDraw()
 
 void Bridge::DebugSpawn()
 {
-    int32 startDebugID = 0;
-    int32 len          = DebugMode::sVars->itemCount;
-    len -= startDebugID;
-    Bridge *bridge  = GameObject::Create<Bridge>(0, this->position.x, this->position.y);
+    Bridge *bridge  = GameObject::Create<Bridge>(1 + DebugMode::sVars->itemType, this->position.x, this->position.y);
+    DebugMode::sVars->itemTypeCount = 19;
+    int32 len = DebugMode::sVars->itemType;
 
     bridge->startPos = len;
     bridge->startPos <<= 19;
