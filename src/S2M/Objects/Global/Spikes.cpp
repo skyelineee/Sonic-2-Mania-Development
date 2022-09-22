@@ -337,6 +337,12 @@ void Spikes::EditorLoad()
     sVars->verticalAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
     sVars->horizontalAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
 
+    RSDK_ACTIVE_VAR(sVars, type);
+    RSDK_ENUM_VAR("Up");
+    RSDK_ENUM_VAR("Down");
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Right");
+
     RSDK_ACTIVE_VAR(sVars, planeFilter);
     RSDK_ENUM_VAR("All");
     RSDK_ENUM_VAR("AL");

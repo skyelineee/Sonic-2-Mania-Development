@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game.hpp"
+#include "S2M.hpp"
 #include "S2M.hpp"
 
 namespace GameLogic

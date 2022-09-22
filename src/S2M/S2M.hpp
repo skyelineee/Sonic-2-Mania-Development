@@ -96,6 +96,11 @@ enum ReservedEntities {
     SLOT_CAMERA2        = 61,
     SLOT_CAMERA3        = 62,
     SLOT_CAMERA4        = 63,
+
+    SLOT_HP_HALFPIPE = 0,
+    SLOT_HP_BG       = 1,
+    SLOT_HP_PLAYER1  = 2,
+    SLOT_HP_PLAYER2  = 3,
 };
 
 enum GameCheats {
@@ -224,4 +229,4 @@ struct GlobalVariables {
 
 // Game Helpers
 
-#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
+// #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)

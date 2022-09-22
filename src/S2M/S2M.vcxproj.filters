@@ -29,6 +29,9 @@
     <Filter Include="Source Files\Objects\EHZ">
       <UniqueIdentifier>{b865a73a-1cdb-4e80-8049-81d35d6d169c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Special">
+      <UniqueIdentifier>{9ac6363e-0380-4bf0-a957-86cdf116e305}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -270,6 +273,39 @@
     </ClCompile>
     <ClCompile Include="Objects\EHZ\Bridge.cpp">
       <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Setup.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Halfpipe.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Background.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Player.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_HUD.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Ring.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Bomb.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Checkpoint.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_SpecialClear.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Message.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Special\HP_Emerald.cpp">
+      <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -518,6 +554,39 @@
     </ClInclude>
     <ClInclude Include="Objects\EHZ\Bridge.hpp">
       <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Setup.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Halfpipe.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Background.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Player.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_HUD.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Ring.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Bomb.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Checkpoint.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_SpecialClear.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Message.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Special\HP_Emerald.hpp">
+      <Filter>Source Files\Objects\Special</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

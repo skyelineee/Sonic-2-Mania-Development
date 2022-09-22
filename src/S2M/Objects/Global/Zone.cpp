@@ -83,24 +83,27 @@ void Zone::LateUpdate()
         sceneInfo->seconds      = 59;
         sceneInfo->milliseconds = 99;
         sceneInfo->timeEnabled  = false;
-        Player::sVars->sfxHurt.Play();
 
-        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-            if (!player->sidekick)
-                player->deathType = Player::DeathDie_Sfx;
+        if (Player::sVars) {
+            Player::sVars->sfxHurt.Play();
+
+            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+                if (!player->sidekick)
+                    player->deathType = Player::DeathDie_Sfx;
+            }
+
+            sVars->gotTimeOver = true;
+            sVars->timeOverCallback.Run(this);
         }
-
-        sVars->gotTimeOver = true;
-        sVars->timeOverCallback.Run(this);
     }
 
     // You took an hour to beat the stage... no time bonus for you!
-    if ((sceneInfo->minutes == 59 && sceneInfo->seconds == 59))
+    if (ActClear::sVars && (sceneInfo->minutes == 59 && sceneInfo->seconds == 59))
         ActClear::sVars->disableTimeBonus = true;
 
     // Player Draw order sorting
     // Ensure P1 is always on top
-    if (Player::sVars->playerCount > 0) {
+    if (Player::sVars && Player::sVars->playerCount > 0) {
         Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
         if ((!sidekick->state.Matches(&Player::State_FlyToPlayer) && !sidekick->state.Matches(&Player::State_ReturnToPlayer))
             || sidekick->characterID == ID_TAILS || sidekick->scale.x == 0x200) {
