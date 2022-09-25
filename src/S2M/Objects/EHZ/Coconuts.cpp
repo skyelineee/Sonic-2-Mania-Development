@@ -84,6 +84,7 @@ void Coconuts::StageLoad()
     sVars->sfxDrop.Get("Stage/Drop.wav");
 
     DebugMode::AddObject(sVars->classID, &Coconuts::DebugSpawn, &Coconuts::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Coconuts::DebugDraw()

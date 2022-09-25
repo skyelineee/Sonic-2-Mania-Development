@@ -79,7 +79,7 @@ void Spikes::Update()
                         if (this->moveOffset == 0x80000)
                             player->onGround = false;
 
-                        if (player->field_3D0.y != player->velocity.y >= 0 || this->stateMove == Spikes::MoveAppear) {
+                        if (player->spikeDir.y != player->velocity.y >= 0 || this->stateMove == Spikes::MoveAppear) {
                             player->position.x += this->collisionOffset.x;
                             player->position.y += this->collisionOffset.y;
                             if (this->type == C_TOP)
@@ -89,18 +89,18 @@ void Spikes::Update()
 
                     case C_LEFT:
                         player->collisionFlagH |= 1;
-                        if ((player->field_3D0.x != player->velocity.x >= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_LEFT)
+                        if ((player->spikeDir.x != player->velocity.x >= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_LEFT)
                             CheckHit(player, velocity.x, velocity.y);
                         break;
 
                     case C_RIGHT:
                         player->collisionFlagH |= 2;
-                        if ((player->field_3D0.x != player->velocity.x <= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_RIGHT)
+                        if ((player->spikeDir.x != player->velocity.x <= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_RIGHT)
                             CheckHit(player, velocity.x, velocity.y);
                         break;
                     case C_BOTTOM:
                         player->collisionFlagV |= 2;
-                        if ((player->field_3D0.y != player->velocity.y <= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_BOTTOM)
+                        if ((player->spikeDir.y != player->velocity.y <= 0 || this->stateMove == Spikes::MoveAppear) && this->type == C_BOTTOM)
                             CheckHit(player, velocity.x, velocity.y);
                         break;
                 }

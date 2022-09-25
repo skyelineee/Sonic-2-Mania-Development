@@ -375,7 +375,180 @@ void SaveGame::SaveGameState()
     }
 }
 
-bool32 SaveGame::AllChaosEmeralds() {return sVars->saveRAM->collectedEmeralds == 0b01111111; }
+bool32 SaveGame::GetEmeralds(EmeraldCheckTypes type)
+{
+    if (type > SaveGame::EmeraldAny2)
+        return false;
+
+    SaveGame *saveRAM = GetSaveRAM();
+
+    int32 totalCount = 0;
+    switch (type) {
+        case SaveGame::EmeraldNone:
+        case SaveGame::EmeraldChaosOnly:
+        case SaveGame::EmeraldSuperOnly:
+        case SaveGame::EmeraldUnused:
+        case SaveGame::EmeraldUnused2:
+        case SaveGame::EmeraldBoth:
+        case SaveGame::EmeraldSuper:
+        case SaveGame::EmeraldAny: totalCount = 7; break;
+
+        case SaveGame::EmeraldChaosOnly2:
+        case SaveGame::EmeraldSuperOnly2:
+        case SaveGame::EmeraldBoth2:
+        case SaveGame::EmeraldSuper2:
+        case SaveGame::EmeraldAny2: totalCount = 8; break;
+    }
+
+    uint32 emeralds = saveRAM->collectedEmeralds;
+    switch (type) {
+        case SaveGame::EmeraldNone: return emeralds == 0;
+
+        case SaveGame::EmeraldChaosOnly:
+        case SaveGame::EmeraldChaosOnly2: {
+            int32 emeraldCount = 0;
+            for (int32 e = 0; e < totalCount; ++e) {
+                uint32 emerald = emeralds >> e;
+                // check if we have the chaos AND NOT the super emerald
+                if ((emerald & 1) && !(emerald & 0x100))
+                    emeraldCount++;
+            }
+
+            return emeraldCount == totalCount;
+        }
+
+        case SaveGame::EmeraldSuperOnly:
+        case SaveGame::EmeraldSuperOnly2: {
+            int32 emeraldCount = 0;
+            for (int32 e = 0; e < totalCount; ++e) {
+                uint32 emerald = emeralds >> e;
+                // check if we DONT'T have the chaos AND DO have the super emerald
+                if (!(emerald & 1) && (emerald & 0x100))
+                    emeraldCount++;
+            }
+            return emeraldCount == totalCount;
+        }
+
+        case SaveGame::EmeraldBoth:
+        case SaveGame::EmeraldBoth2: {
+            int32 emeraldCount = 0;
+            for (int32 e = 0; e < totalCount; ++e) {
+                uint32 emerald = emeralds >> e;
+
+                // check if we have the chaos AND super emerald
+                if ((emerald & 1) && (emerald & 0x100))
+                    emeraldCount++;
+            }
+            return emeraldCount == totalCount;
+        }
+
+        case SaveGame::EmeraldSuper:
+        case SaveGame::EmeraldSuper2: {
+            int32 emeraldCount = 0;
+            for (int32 e = 0; e < totalCount; ++e) {
+                uint32 emerald = emeralds >> e;
+
+                // check if we have the super emerald (doesn't care about chaos emerald)
+                if ((emerald & 0x100))
+                    emeraldCount++;
+            }
+
+            return emeraldCount == totalCount;
+        }
+
+        case SaveGame::EmeraldAny:
+        case SaveGame::EmeraldAny2: {
+            int32 emeraldCount = 0;
+            for (int32 e = 0; e < totalCount; ++e) {
+                // check if we have the chaos OR super emerald
+                if (((emeralds >> e) & 1) || ((emeralds >> e) & 0x100))
+                    ++emeraldCount;
+            }
+            return emeraldCount == totalCount;
+        }
+
+        default: break;
+    }
+
+    return false;
+}
+
+void SaveGame::SetEmeralds(EmeraldCheckTypes type)
+{
+    if (type > SaveGame::EmeraldAny2)
+        return;
+
+    SaveGame *saveRAM = GetSaveRAM();
+
+    int32 totalCount = 0;
+    switch (type) {
+        case SaveGame::EmeraldNone:
+        case SaveGame::EmeraldChaosOnly:
+        case SaveGame::EmeraldSuperOnly:
+        case SaveGame::EmeraldUnused:
+        case SaveGame::EmeraldUnused2:
+        case SaveGame::EmeraldBoth:
+        case SaveGame::EmeraldSuper:
+        case SaveGame::EmeraldAny: totalCount = 7; break;
+
+        case SaveGame::EmeraldChaosOnly2:
+        case SaveGame::EmeraldSuperOnly2:
+        case SaveGame::EmeraldBoth2:
+        case SaveGame::EmeraldSuper2:
+        case SaveGame::EmeraldAny2: totalCount = 8; break;
+    }
+
+    switch (type) {
+        case SaveGame::EmeraldNone: saveRAM->collectedEmeralds = 0; break;
+
+        case SaveGame::EmeraldChaosOnly:
+        case SaveGame::EmeraldChaosOnly2: {
+            uint32 emeralds = saveRAM->collectedEmeralds;
+
+            // give all chaos emeralds, remove all super emeralds
+            for (int32 e = 0; e < totalCount; ++e) {
+                emeralds |= (1 << e) & ~(0x100 << e);
+            }
+
+            saveRAM->collectedEmeralds = emeralds;
+            break;
+        }
+
+        case SaveGame::EmeraldSuperOnly:
+        case SaveGame::EmeraldSuperOnly2:
+        case SaveGame::EmeraldUnused:
+        case SaveGame::EmeraldUnused2: {
+            uint32 emeralds = saveRAM->collectedEmeralds;
+
+            // give all super emeralds, remove all chaos emeralds
+            for (int32 e = 0; e < totalCount; ++e) {
+                emeralds |= (0x100 << e) & ~(1 << e);
+            }
+
+            saveRAM->collectedEmeralds = emeralds;
+            break;
+        }
+
+        case SaveGame::EmeraldBoth:
+        case SaveGame::EmeraldBoth2:
+        case SaveGame::EmeraldSuper:
+        case SaveGame::EmeraldSuper2:
+        case SaveGame::EmeraldAny:
+        case SaveGame::EmeraldAny2: {
+            uint32 emeralds = saveRAM->collectedEmeralds;
+
+            // give all chaos emeralds, give all super emeralds
+            for (int32 e = 0; e < totalCount; ++e) {
+                emeralds |= (1 << e) | (0x100 << e);
+            }
+
+            saveRAM->collectedEmeralds = emeralds;
+            break;
+        }
+
+        default: break;
+    }
+}
 
 bool32 SaveGame::GetEmerald(uint8 emerald) { return (sVars->saveRAM->collectedEmeralds >> emerald) & 1; }
 

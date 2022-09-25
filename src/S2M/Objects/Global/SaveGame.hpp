@@ -25,10 +25,23 @@ struct SaveGame : RSDK::GameObject::Entity {
         EmeraldAny2,
     };
 
+    enum EmeraldBits {
+        ChaosEmerald       = 0,
+        SuperEmerald       = 8,
+        AllowSuperEmeralds = 16, // set when you reach MHZ or later I think
+        VisitedHPZ         = 17, // set when you finish visit HPZ after a special stage
+    };
+
     enum RecallStates {
         RecallNormal,
         RecallDisabled,
         RecallBrokenItemBox,
+    };
+
+    enum SaveStates {
+        SaveEmpty,
+        SaveActive,
+        SaveCompleted,
     };
 
     // ==============================
@@ -45,7 +58,6 @@ struct SaveGame : RSDK::GameObject::Entity {
         void *saveEntityPtr;
         void (*saveCallback)(bool32 success);
         SaveGame *saveRAM;
-        void *unknown;
     };
 
     // ==============================
@@ -98,7 +110,8 @@ struct SaveGame : RSDK::GameObject::Entity {
     static void SavePlayerState();
     static void LoadGameState();
     static void SaveGameState();
-    static bool32 AllChaosEmeralds();
+    static bool32 GetEmeralds(EmeraldCheckTypes type);
+    static void SetEmeralds(EmeraldCheckTypes type);
     static bool32 GetEmerald(uint8 emerald);
     static void SetEmerald(uint8 emeraldID);
     static void ClearCollectedSpecialRings();

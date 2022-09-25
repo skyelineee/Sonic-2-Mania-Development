@@ -24,17 +24,19 @@ void SpecialRing::LateUpdate() {}
 void SpecialRing::StaticUpdate() {}
 void SpecialRing::Draw()
 {
-
     if (this->state.Matches(&SpecialRing::State_Flash)) {
         this->direction = this->warpAnimator.frameID > 8;
         this->warpAnimator.DrawSprite(NULL, false);
     }
     else {
+        if (!this->disableHPZ || this->super) {
+            // do super colors
+        }
+
+        auto type = this->enabled ? Graphics::Scene3D::SolidColor_Shaded_Blended : Graphics::Scene3D::Wireframe_Shaded;
+
         sVars->sceneIndex.Prepare();
-        if (this->enabled)
-            sVars->sceneIndex.AddModel(sVars->modelIndex, Graphics::Scene3D::SolidColor_Shaded_Blended, &this->matWorld, &this->matNormal, 0xF0F000);
-        else
-            sVars->sceneIndex.AddModel(sVars->modelIndex, Graphics::Scene3D::Wireframe_Shaded, &this->matWorld, &this->matNormal, 0x609090);
+        sVars->sceneIndex.AddModel(sVars->modelIndex, type, &this->matWorld, &this->matNormal, this->ringColor);
         sVars->sceneIndex.Draw();
     }
 }
@@ -42,10 +44,31 @@ void SpecialRing::Draw()
 void SpecialRing::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
+        this->disableHPZ = true;
+
+        if (SaveGame::GetEmerald(SaveGame::AllowSuperEmeralds)) {
+            this->super = true;
+
+            if (SaveGame::GetEmeralds(SaveGame::EmeraldAny)) {
+                this->super      = false;
+                this->disableHPZ = false;
+            }
+
+            if (this->super) {
+                if (!SaveGame::GetEmerald(SaveGame::VisitedHPZ))
+                    this->disableHPZ = false;
+            }
+        }
+
+        if (this->enabled)
+            this->ringColor = 0xF0F000;
+        else
+            this->ringColor = 0x609090;
+
         this->active        = ACTIVE_BOUNDS;
         this->visible       = true;
-        this->updateRange.x = (144 << 16);
-        this->updateRange.y = (144 << 16);
+        this->updateRange.x = TO_FIXED(144);
+        this->updateRange.y = TO_FIXED(144);
         this->drawFX        = FX_FLIP;
         if (this->planeFilter > 0 && ((uint8)this->planeFilter - 1) & 2)
             this->drawGroup = Zone::sVars->objectDrawGroup[1];
@@ -162,21 +185,22 @@ void SpecialRing::State_Idle()
                     this->state.Set(&SpecialRing::State_Flash);
 
                     SaveGame *saveRAM = SaveGame::GetSaveRAM();
+
+                    if (this->id >= 1) {
+                        globals->specialRingID = this->id;
+                        SaveGame::SetCollectedSpecialRing(this->id);
+                    }
+
                     // rings spawned via debug mode give you 50 rings, always
-                    if (!SaveGame::AllChaosEmeralds() && this->id) {
+                    if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)
+                        || (SaveGame::GetEmeralds(SaveGame::EmeraldAny) && !SaveGame::GetEmerald(SaveGame::AllowSuperEmeralds)
+                            && !SaveGame::GetEmerald(SaveGame::VisitedHPZ))) {
+                        player->GiveRings(50, true);
+                    }
+                    else {
                         player->visible        = false;
                         player->active         = ACTIVE_NEVER;
                         sceneInfo->timeEnabled = false;
-                    }
-                    else {
-                        player->GiveRings(50, true);
-                    }
-
-                    if (this->id > 0) {
-                        if (!SaveGame::AllChaosEmeralds())
-                            globals->specialRingID = this->id;
-
-                        SaveGame::SetCollectedSpecialRing(this->id);
                     }
 
                     sVars->sfxSpecialRing.Play(false, 0xFE);
@@ -217,10 +241,7 @@ void SpecialRing::State_Flash()
         this->sparkleRadius -= (8 << 16);
     }
 
-    if (SaveGame::AllChaosEmeralds() || !this->id) {
-        this->Destroy();
-    }
-    else if (this->warpAnimator.frameID == this->warpAnimator.frameCount - 1) {
+    if (this->warpAnimator.frameID == this->warpAnimator.frameCount - 1) {
         this->warpTimer = 0;
         this->visible   = false;
         this->state.Set(&SpecialRing::State_Warp);
@@ -238,10 +259,19 @@ void SpecialRing::State_Warp()
 
         SaveGame *saveRAM      = SaveGame::GetSaveRAM();
         saveRAM->storedStageID = sceneInfo->listPos;
-        Stage::SetScene("Special Stage", "");
-        sceneInfo->listPos += saveRAM->nextSpecialStage;
-        if (globals->gameMode == MODE_ENCORE)
-            sceneInfo->listPos += 7;
+        if (this->disableHPZ) {
+            Stage::SetScene("Special Stage", "");
+            sceneInfo->listPos += saveRAM->nextSpecialStage;
+
+            if (globals->gameMode == MODE_ENCORE)
+                sceneInfo->listPos += 7;
+        }
+        else {
+            // Stage::SetScene("Mania Mode", "Hidden Palace Zone");
+            Stage::SetScene("Special Stage", "");
+            sceneInfo->listPos += 7 + saveRAM->nextSpecialStage;
+        }
+
         Zone::StartFadeOut(10, 0xF0F0F0);
         Music::Stop();
     }

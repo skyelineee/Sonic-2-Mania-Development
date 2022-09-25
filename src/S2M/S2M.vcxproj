@@ -248,6 +248,10 @@
     <ClCompile Include="Objects\Global\Spikes.cpp" />
     <ClCompile Include="Objects\Global\Spring.cpp" />
     <ClCompile Include="Objects\Global\StarPost.cpp" />
+    <ClCompile Include="Objects\Global\SuperFlicky.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Objects\Global\SuperSparkle.cpp" />
     <ClCompile Include="Objects\Global\TitleCard.cpp" />
     <ClCompile Include="Objects\Global\Zone.cpp" />
@@ -372,6 +376,10 @@
     <ClInclude Include="Objects\Global\Spikes.hpp" />
     <ClInclude Include="Objects\Global\Spring.hpp" />
     <ClInclude Include="Objects\Global\StarPost.hpp" />
+    <ClInclude Include="Objects\Global\SuperFlicky.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Objects\Global\SuperSparkle.hpp" />
     <ClInclude Include="Objects\Global\TitleCard.hpp" />
     <ClInclude Include="Objects\Global\Zone.hpp" />

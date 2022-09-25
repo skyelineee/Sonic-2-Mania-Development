@@ -357,6 +357,20 @@ void Zone::HandlePlayerBounds()
     }
 }
 
+void Zone::AddToHyperList(uint16 classID, bool32 hyperDashTarget, bool32 hyperSlamTarget, bool32 superFlickyTarget)
+{
+    for (int32 i = 0; i < 0x80; ++i) {
+        if (!sVars->hyperList[i].classID) {
+            sVars->hyperList[i].classID           = classID;
+            sVars->hyperList[i].hyperDashTarget   = hyperDashTarget;
+            sVars->hyperList[i].hyperSlamTarget   = hyperSlamTarget;
+            sVars->hyperList[i].superFlickyTarget = superFlickyTarget;
+            ++sVars->hyperListCount;
+            break;
+        }
+    }
+}
+
 void Zone::StoreEntities(RSDK::Vector2 offset)
 {
     // "Normalize" the positions of players, signposts & itemboxes when we store them

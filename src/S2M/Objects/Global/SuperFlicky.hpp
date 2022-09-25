@@ -4,7 +4,7 @@
 namespace GameLogic
 {
 
-struct SpecialRing : RSDK::GameObject::Entity {
+struct SuperFlicky : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -17,34 +17,30 @@ struct SpecialRing : RSDK::GameObject::Entity {
     // ==============================
     // STATIC VARS
     // ==============================
+
     struct Static : RSDK::GameObject::Static {
-        RSDK::SpriteAnimation aniFrames;
+        uint16 state;
+        int32 targetPlayerID;
+        int32 activeFlickyCount;
         RSDK::Hitbox hitbox;
-        RSDK::SoundFX sfxSpecialRing;
-        RSDK::SoundFX sfxSpecialWarp;
-        RSDK::Graphics::Mesh modelIndex;
-        RSDK::Graphics::Scene3D sceneIndex;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
-    RSDK::StateMachine<SpecialRing> state;
-    int32 id;
-    int32 planeFilter;
-    bool32 super;
-    int32 warpTimer;
-    int32 sparkleRadius;
-    RSDK::Animator warpAnimator;
-    int32 angleZ;
-    int32 angleY;
-    bool32 enabled;
-    RSDK::Matrix matTempRot;
-    RSDK::Matrix matTransform;
-    RSDK::Matrix matWorld;
-    RSDK::Matrix matNormal;
-    bool32 disableHPZ;
-    color ringColor;
+    RSDK::StateMachine<SuperFlicky> state;
+    RSDK::StateMachine<SuperFlicky> stateStored;
+    RSDK::Animator animator;
+    RSDK::Vector2 startPos;
+    int32 targetSlot;
+    int32 flickyID;
+    RSDK::Vector2 targetVelocity;
+    RSDK::Vector2 targetPosition;
+    int32 attackDelay;
+    int32 attackListPos;
+    int32 superBlendMode;
+    int32 superBlendTimer;
+    uint8 superPaletteIndex;
 
     // ==============================
     // EVENTS
@@ -71,18 +67,19 @@ struct SpecialRing : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void DebugSpawn();
-    void DebugDraw();
+    void HandleSuperColors(bool32 updatePalette);
+    void HandleAttack();
 
-    // States
-    void State_Idle();
-    void State_Flash();
-    void State_Warp();
+    void State_Init();
+    void State_Active();
+    void State_Restore();
+    void State_Drop();
+    void State_FlyAway();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(SpecialRing);
+    RSDK_DECLARE(SuperFlicky);
 };
 } // namespace GameLogic

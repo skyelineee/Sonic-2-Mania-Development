@@ -83,7 +83,7 @@ void Buzzer::StageLoad()
     sVars->hitboxProjectile.bottom = 6;
 
     DebugMode::AddObject(sVars->classID, &Buzzer::DebugSpawn, &Buzzer::DebugDraw);
-
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Buzzer::DebugDraw()

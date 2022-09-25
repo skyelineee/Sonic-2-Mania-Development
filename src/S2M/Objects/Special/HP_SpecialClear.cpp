@@ -109,7 +109,7 @@ void HP_SpecialClear::State_FadeIn()
             if (Zone::sVars->actID != HP_Setup::ActNone)
                 SaveGame::SetEmerald(Zone::sVars->actID);
 
-            if (SaveGame::AllChaosEmeralds()) {
+            if (SaveGame::GetEmeralds(SaveGame::EmeraldAny)) {
                 this->resultsTextTop = HP_SpecialClear::MessageAllEmeralds;
                 this->resultsTextMid = HP_SpecialClear::MessageAllEmeralds;
                 this->messageAnimator.SetAnimation(sVars->aniFrames, 4 + (5 * HUD::CharacterIndexFromID(GET_CHARACTER_ID(1))), true, 0);
@@ -257,10 +257,10 @@ void HP_SpecialClear::State_TallyScore()
         SaveGame *saveRAM = SaveGame::GetSaveRAM();
         this->state.Set(&HP_SpecialClear::State_Failed);
         if (HP_Setup::sVars->gotEmerald) {
-            if (saveRAM->collectedEmeralds == 0x3FFF) { // hyper !!!
+            if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)) { // hyper !!!
                 this->state.Set(&HP_SpecialClear::State_WinShowReward);
             }
-            else if (SaveGame::AllChaosEmeralds()) {
+            else if (SaveGame::GetEmeralds(SaveGame::EmeraldAny)) {
                 switch (GET_CHARACTER_ID(1)) {
                     default:
                     case ID_SONIC:
@@ -324,10 +324,10 @@ void HP_SpecialClear::State_ExitResults()
 
         this->state.Set(&HP_SpecialClear::State_Failed);
         if (HP_Setup::sVars->gotEmerald) {
-            if (saveRAM->collectedEmeralds == 0x3FFF) { // hyper !!!
+            if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)) { // hyper !!!
                 // cool ok
             }
-            else if (SaveGame::AllChaosEmeralds() && sVars->hiddenPalaceEnabled) {
+            else if (SaveGame::GetEmeralds(SaveGame::EmeraldAny) && sVars->hiddenPalaceEnabled) {
                 Stage::SetScene("Mania Mode", "Hidden Palace Zone");
             }
         }

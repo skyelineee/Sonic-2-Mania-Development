@@ -21,6 +21,7 @@
 #include "Animals.hpp"
 #include "ScoreBonus.hpp"
 #include "SuperSparkle.hpp"
+#include "SuperFlicky.hpp"
 #include "ImageTrail.hpp"
 #include "BoundsMarker.hpp"
 #include "GameOver.hpp"
@@ -213,7 +214,7 @@ void Player::LateUpdate()
     }
 
     if (this->superState == Player::SuperStateFadeIn && !this->state.Matches(&Player::State_Transform))
-        TryTransform(false, false);
+        TryTransform(false, Player::TransformEmeralds);
 
     if (this->state.Matches(&Player::State_FlyCarried)) {
         this->flyCarryLeaderPos.x = this->position.x >> 0x10 << 0x10;
@@ -257,7 +258,7 @@ void Player::LateUpdate()
         this->underwater     = false;
         UpdatePhysicsState();
 
-        GameObject::Get<Shield>(sVars->activePlayerCount + this->Slot())->Destroy();
+        GameObject::Get<Shield>(sVars->maxPlayerCount + this->Slot())->Destroy();
 
         switch (this->deathType) {
             default: break;
@@ -339,7 +340,7 @@ void Player::LateUpdate()
 
     if (this->onGround) {
         if (!this->nextGroundState.Matches(nullptr)) {
-            Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->playerID);
+            Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
             if (shield->classID == Shield::sVars->classID && shield->state.Matches(&Shield::State_Insta)) {
                 shield->shieldAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniInsta, true, shield->shieldAnimator.frameCount - 1);
                 this->invincibleTimer = 0;
@@ -378,6 +379,17 @@ void Player::LateUpdate()
         this->disableGravity = false;
     else
         this->stateGravity.Run(this);
+
+    int32 state = this->hyperAbilityState - 2;
+    switch (state) {
+        case Player::HyperStateNone:
+        case Player::HyperStateActive: this->hyperAbilityState = Player::HyperStateActive; break;
+
+        case Player::HyperStateHyperDash:
+        case Player::HyperStateHyperSlam: this->hyperAbilityState = Player::HyperStateHyperDash; break;
+
+        default: break;
+    }
 
     if (!this->tailFrames.Matches(nullptr)) {
         if (this->velocity.x && this->state.Matches(&Player::State_TransportTube)) {
@@ -772,7 +784,7 @@ void Player::StageLoad()
     }
 
     sVars->playerCount       = 0;
-    sVars->activePlayerCount = 4;
+    sVars->maxPlayerCount = 4;
     sVars->active            = ACTIVE_ALWAYS;
 
     // Sprite loading & characterID management
@@ -818,12 +830,15 @@ void Player::StageLoad()
     sVars->sfxLand.Get("Global/Land.wav");
     sVars->sfxSlide.Get("Global/Slide.wav");
     sVars->sfxTransform2.Get("Global/Transform2.wav");
+    sVars->sfxEarthquake.Get("Global/Earthquake.wav"); // TODO: add this to the gameconfig for it to load
 
     sVars->lookUpDelay    = 60;
     sVars->lookUpDistance = 96;
 
     sVars->activeSuperSonicPalette        = sVars->superSonicPalette;
     sVars->activeSuperSonicPalette_Water  = sVars->superSonicPalette;
+    sVars->activeHyperSonicPalette        = sVars->hyperSonicPalette;
+    sVars->activeHyperSonicPalette_Water  = sVars->hyperSonicPalette;
     sVars->activeSuperTailsPalette        = sVars->superTailsPalette;
     sVars->activeSuperTailsPalette_Water  = sVars->superTailsPalette;
     sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
@@ -1223,7 +1238,7 @@ void Player::ApplyShield()
 
     if (player->shield) {
         if (player->superState != Player::SuperStateSuper && player->invincibleTimer <= 0) {
-            Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + player->Slot());
+            Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + player->Slot());
             int32 frameID  = shield->shieldAnimator.frameID;
             int32 animID   = shield->shieldAnimator.animationID;
             int32 type     = shield->type;
@@ -1233,7 +1248,7 @@ void Player::ApplyShield()
         }
     }
     else {
-        Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + player->Slot());
+        Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + player->Slot());
         if (shield->classID == Shield::sVars->classID) {
             if (!shield->state.Matches(&Shield::State_Insta))
                 shield->Destroy();
@@ -1305,7 +1320,7 @@ void Player::ChangeCharacter(int32 character)
 
     if (this->superState != Player::SuperStateNone) {
         if (this->superState == Player::SuperStateSuper)
-            TryTransform(true, true);
+            TryTransform(true, this->isHyper ? Player::TransformHyper : Player::TransformSuper);
     }
 
     UpdatePhysicsState();
@@ -1365,8 +1380,15 @@ void Player::InvertGravity()
     }
 }
 
-bool32 Player::TryTransform(bool32 fastTransform, bool32 force)
+bool32 Player::TryTransform(bool32 fastTransform, TransformModes transformMode)
 {
+    if (transformMode == TransformAuto) {
+        if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth))
+            transformMode = TransformHyper;
+        else
+            transformMode = TransformSuper;
+    }
+
     if (!sceneInfo->timeEnabled)
         return false;
 
@@ -1375,11 +1397,12 @@ bool32 Player::TryTransform(bool32 fastTransform, bool32 force)
             return false;
     }
 
-    if (this->superState <= Player::SuperStateFadeIn) {
-        if (!force && (!fastTransform || this->rings < 50))
+    if (this->superState <= Player::SuperStateFadeIn
+        && (SaveGame::GetEmeralds(SaveGame::EmeraldChaosOnly) || SaveGame::GetEmeralds(SaveGame::EmeraldBoth))) {
+        if (transformMode == TransformEmeralds && (!fastTransform || this->rings < 50))
             return false;
     }
-    else if (!force) {
+    else if (transformMode == TransformEmeralds) {
         return false;
     }
 
@@ -1389,21 +1412,40 @@ bool32 Player::TryTransform(bool32 fastTransform, bool32 force)
         this->aniFrames = sVars->superFrames;
 
     if (fastTransform) {
-        this->superState = Player::SuperStateSuper;
+        this->superState        = Player::SuperStateSuper;
+        this->hyperAbilityState = SaveGame::GetEmeralds(SaveGame::EmeraldBoth);
+        if (this->hyperAbilityState != Player::HyperStateNone)
+            this->isHyper = true;
+
+        if (transformMode == TransformHyper) {
+            this->hyperAbilityState = Player::HyperStateActive;
+            this->isHyper           = true;
+        }
+        else if (transformMode == TransformSuper) {
+            this->hyperAbilityState = Player::HyperStateNone;
+            this->isHyper           = false;
+        }
 
         UpdatePhysicsState();
 
-        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->activePlayerCount);
-        sparkle->Reset(SuperSparkle::sVars->classID, this);
-        sparkle->canSpawnSparkle = true;
+        if (this->hyperAbilityState == Player::HyperStateNone) {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
 
-        if (globals->useManiaBehavior) {
-            ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->activePlayerCount * 2);
+            if (globals->useManiaBehavior) {
+                ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
+                trail->Reset(ImageTrail::sVars->classID, this);
+            }
+        }
+        else {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
+
+            ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
             trail->Reset(ImageTrail::sVars->classID, this);
         }
     }
     else {
-
         if (this->isChibi)
             this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
         else
@@ -1428,9 +1470,27 @@ bool32 Player::TryTransform(bool32 fastTransform, bool32 force)
         }
         this->jumpAbilityState = 0;
 
+        this->hyperAbilityState = SaveGame::GetEmeralds(SaveGame::EmeraldBoth);
+        if (this->hyperAbilityState != Player::HyperStateNone)
+            this->isHyper = true;
+
+        if (transformMode == TransformHyper) {
+            this->hyperAbilityState = Player::HyperStateActive;
+            this->isHyper           = true;
+        }
+        else if (transformMode == TransformSuper) {
+            this->hyperAbilityState = Player::HyperStateNone;
+            this->isHyper           = false;
+        }
+
         this->superState = Player::SuperStateFadeIn;
     }
 
+    this->superRingLossTimer = 60;
+    this->superBlendAmount   = 0;
+    this->superBlendState    = 0;
+    this->timer              = 0;
+    this->outtaHereTimer     = 0;
     this->superRingLossTimer = 60;
     this->superBlendAmount   = 0;
     this->superBlendState    = 0;
@@ -2395,24 +2455,50 @@ void Player::CheckStartFlyCarry(Player *leader)
 void Player::HandleSuperColors_Sonic(bool32 updatePalette)
 {
     if (updatePalette) {
-        if (this->superBlendState & 2) {
-            paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[6], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
-                                          this->superColorIndex, this->superColorCount);
+        if (this->isHyper) {
+            // TODO: make this not a clone of super maybe ?
 
-            if (Water::sVars && !Water::sVars->isLightningFlashing) {
-                paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[6],
-                                                                       &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
-                                                                       this->superColorIndex, this->superColorCount);
+            if (this->superBlendState & 2) {
+                paletteBank[0].SetLimitedFade(&sVars->activeHyperSonicPalette[6], &sVars->activeHyperSonicPalette[12], this->superBlendAmount,
+                                              this->superColorIndex, this->superColorCount);
+
+                if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                    paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeHyperSonicPalette_Water[6],
+                                                                           &sVars->activeHyperSonicPalette_Water[12], this->superBlendAmount,
+                                                                           this->superColorIndex, this->superColorCount);
+                }
+            }
+            else {
+                paletteBank[0].SetLimitedFade(&sVars->activeHyperSonicPalette[0], &sVars->activeHyperSonicPalette[12], this->superBlendAmount,
+                                              this->superColorIndex, this->superColorCount);
+
+                if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                    paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeHyperSonicPalette_Water[0],
+                                                                           &sVars->activeHyperSonicPalette_Water[12], this->superBlendAmount,
+                                                                           this->superColorIndex, this->superColorCount);
+                }
             }
         }
         else {
-            paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[0], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
-                                          this->superColorIndex, this->superColorCount);
+            if (this->superBlendState & 2) {
+                paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[6], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
+                                              this->superColorIndex, this->superColorCount);
 
-            if (Water::sVars && !Water::sVars->isLightningFlashing) {
-                paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[0],
-                                                                       &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
-                                                                       this->superColorIndex, this->superColorCount);
+                if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                    paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[6],
+                                                                           &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
+                                                                           this->superColorIndex, this->superColorCount);
+                }
+            }
+            else {
+                paletteBank[0].SetLimitedFade(&sVars->activeSuperSonicPalette[0], &sVars->activeSuperSonicPalette[12], this->superBlendAmount,
+                                              this->superColorIndex, this->superColorCount);
+
+                if (Water::sVars && !Water::sVars->isLightningFlashing) {
+                    paletteBank[Water::sVars->waterPalette].SetLimitedFade(&sVars->activeSuperSonicPalette_Water[0],
+                                                                           &sVars->activeSuperSonicPalette_Water[12], this->superBlendAmount,
+                                                                           this->superColorIndex, this->superColorCount);
+                }
             }
         }
     }
@@ -2538,7 +2624,8 @@ void Player::HandleSuperForm()
                 this->superRingLossTimer = 60;
                 if (--this->rings <= 0) {
                     this->rings      = 0;
-                    this->superState = Player::SuperStateFadeOut;
+                    this->superState        = Player::SuperStateFadeOut;
+                    this->hyperAbilityState = Player::HyperStateNone;
                 }
             }
         }
@@ -3042,16 +3129,74 @@ void Player::Action_DblJumpSonic()
     if (this->shield != Shield::None && !this->sidekick && this->up && this->superState != Player::SuperStateSuper)
         return;
 
-    bool32 dropdashAllowed = false;
+    bool32 dropdashDisabled = this->jumpAbilityState <= 1;
 
     if (this->jumpAbilityState == 1) {
         if (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE)) {
             if (this->jumpPress) {
-                Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->Slot());
+                Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->Slot());
                 if (this->invincibleTimer) {
                     if (shield->classID != Shield::sVars->classID || shield->shieldAnimator.animationID != Shield::AniInsta) {
                         if (!(globals->medalMods & MEDAL_NODROPDASH))
                             ++this->jumpAbilityState;
+
+                        if (this->hyperAbilityState != Player::HyperStateNone && this->jumpHold) {
+                            this->jumpAbilityState = 0;
+
+                            if (this->up || this->down || this->left || this->right) {
+                                this->velocity.x = 0;
+                                this->velocity.y = 0;
+                            }
+                            else {
+                                if (globals->tileCollisionMode == TILECOLLISION_DOWN) {
+                                    if (this->direction & FLIP_X)
+                                        this->velocity.x = -TO_FIXED(8);
+                                    else
+                                        this->velocity.x = TO_FIXED(8);
+                                }
+                                else {
+                                    if (this->direction & FLIP_X)
+                                        this->velocity.x = TO_FIXED(8);
+                                    else
+                                        this->velocity.x = -TO_FIXED(8);
+                                }
+                            }
+
+                            if (this->up) {
+                                if (globals->tileCollisionMode == TILECOLLISION_DOWN)
+                                    this->velocity.y = -TO_FIXED(8);
+                                else
+                                    this->velocity.y = TO_FIXED(8);
+                            }
+
+                            if (this->down) {
+                                if (globals->tileCollisionMode == TILECOLLISION_DOWN)
+                                    this->velocity.y = TO_FIXED(8);
+                                else
+                                    this->velocity.y = -TO_FIXED(8);
+                            }
+
+                            if (this->left)
+                                this->velocity.x = -TO_FIXED(8);
+
+                            if (this->right)
+                                this->velocity.x = TO_FIXED(8);
+
+                            if (this->camera && !Zone::sVars->autoScrollSpeed) {
+                                this->scrollDelay = 15;
+                                this->camera->state.Set(&Camera::State_FollowY);
+                            }
+                            this->hyperAbilityState = Player::HyperStateStartHyperDash;
+
+                            if (FXFade::sVars) {
+                                FXFade *fade   = GameObject::Create<FXFade>(0xFFFFFF, this->position.x, this->position.y);
+                                fade->speedIn  = 0x30;
+                                fade->speedOut = 0x200;
+                                fade->state.Set(&FXFade::State_FadeOut);
+                            }
+                            sVars->sfxRelease.Play();
+                            Shield::SpawnLightningSparks(this, SuperSparkle::sVars->aniFrames, 3);
+                        }
                     }
                 }
                 else {
@@ -3132,16 +3277,17 @@ void Player::Action_DblJumpSonic()
             else {
                 if (controllerInfo[this->controllerID].keyY.press) {
                     SaveGame::GetSaveRAM();
-                    TryTransform(false, false);
+                    TryTransform(false, Player::TransformEmeralds);
                 }
             }
             return;
         }
 
-        dropdashAllowed = true;
+        dropdashDisabled = true;
     }
 
-    if ((this->jumpAbilityState >= 2 || dropdashAllowed) && this->jumpHold) {
+    if (!dropdashDisabled && this->jumpHold
+        && (this->hyperAbilityState == Player::HyperStateNone || (!this->up && !this->down && !this->left && !this->right))) {
         if (++this->jumpAbilityState >= 22) {
             this->state.Set(&Player::State_DropDash);
             this->nextGroundState.Set(nullptr);
@@ -3174,7 +3320,7 @@ void Player::Action_DblJumpTails()
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
         SaveGame::GetSaveRAM();
-        TryTransform(false, false);
+        TryTransform(false, Player::TransformEmeralds);
     }
 }
 void Player::Action_DblJumpKnux()
@@ -3246,7 +3392,7 @@ void Player::Action_DblJumpKnux()
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
         SaveGame::GetSaveRAM();
-        TryTransform(false, false);
+        TryTransform(false, Player::TransformEmeralds);
     }
 }
 
@@ -4147,7 +4293,7 @@ void Player::State_BubbleBounce()
             this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
             this->animator.speed = (abs(this->groundVel) >> 12) + 0x30;
 
-            Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->playerID);
+            Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
             if (globals->useManiaBehavior) {
                 shield->fxAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniBubbleAttackUp, true, 0);
                 shield->shieldAnimator.SetAnimation(nullptr, 0, true, 0);
@@ -4511,6 +4657,12 @@ void Player::State_KnuxGlideLeft()
                     this->timer          = 0;
 
                     if (highPos == lowPos) {
+                        if (velocity >= 0x45555 && this->hyperAbilityState != Player::HyperStateNone) {
+                            this->hyperAbilityState = Player::HyperStateStartHyperSlam;
+                            Camera::ShakeScreen(0, 8, 0, 1, 1);
+                            sVars->sfxEarthquake.Play();
+                        }
+
                         this->state.Set(&Player::State_KnuxWallClimb);
                         this->velocity.x     = 0;
                         this->velocity.y     = 0;
@@ -4736,6 +4888,12 @@ void Player::State_KnuxGlideRight()
                     this->timer          = 0;
 
                     if (highPos == lowPos) {
+                        if (velocity >= 0x45555 && this->hyperAbilityState != Player::HyperStateNone) {
+                            this->hyperAbilityState = Player::HyperStateStartHyperSlam;
+                            Camera::ShakeScreen(0, 8, 0, 1, 1);
+                            sVars->sfxEarthquake.Play();
+                        }
+
                         this->state.Set(&Player::State_KnuxWallClimb);
                         this->velocity.x     = 0;
                         this->velocity.y     = 0;
@@ -5767,14 +5925,25 @@ void Player::State_Transform()
         this->abilityValues[7] = 0;
         this->abilityValues[5] = true;
 
-        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->activePlayerCount);
-        sparkle->Reset(SuperSparkle::sVars->classID, this);
-        sparkle->timer = 13;
+        if (this->hyperAbilityState == Player::HyperStateNone) {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
+            sparkle->timer = 13;
 
-        if (globals->useManiaBehavior) {
-            ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->activePlayerCount * 2);
+            if (globals->useManiaBehavior) {
+                ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
+                trail->Reset(ImageTrail::sVars->classID, this);
+            }
+        }
+        else {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
+            sparkle->timer = 13;
+
+            ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
             trail->Reset(ImageTrail::sVars->classID, this);
         }
+
     }
 
     bool32 done = false;
@@ -5840,7 +6009,7 @@ void Player::State_StartSuper()
 
     this->superState = Player::SuperStateSuper;
 
-    GameObject::Get(this->playerID + sVars->activePlayerCount)->Destroy();
+    GameObject::Get(this->playerID + sVars->maxPlayerCount)->Destroy();
     this->invincibleTimer = 60;
     this->superState      = Player::SuperStateSuper;
     this->UpdatePhysicsState();
@@ -6710,7 +6879,7 @@ void Player::Hit(bool32 forceKill)
         hurtType = Player::HurtShield;
     }
     else {
-        Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->Slot());
+        Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->Slot());
         if (shield->classID == Shield::sVars->classID) {
             this->shield = Shield::None;
             shield->Destroy();
@@ -6846,14 +7015,14 @@ bool32 Player::CheckAttacking(RSDK::GameObject::Entity *entity)
     return attacking;
 }
 
-bool32 Player::CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox)
+bool32 Player::CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox, bool32 enableHyperList)
 {
     if (this->isGhost)
         return false;
 
     Hitbox *playerHitbox = this->GetHitbox();
 
-    Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->playerID);
+    Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
     if (shield->classID == Shield::sVars->classID && shield->state.Matches(&Shield::State_Insta)) {
         Hitbox tempHitbox = sVars->instaShieldHitbox;
 
@@ -6864,6 +7033,92 @@ bool32 Player::CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *
             tempHitbox.bottom = (playerHitbox->bottom << 1) - (playerHitbox->bottom >> 1);
         }
         playerHitbox = &tempHitbox;
+    }
+
+    if (enableHyperList && (this->hyperAbilityState != Player::HyperStateNone || (Water::sVars && Water::sVars->isLightningFlashing))) {
+        Vector2 range = { 0, 0 };
+
+        if (entity->position.CheckOnScreen(&range)) {
+            for (int32 i = 0; i < Zone::sVars->hyperListCount; ++i) {
+                if (Zone::sVars->hyperList[i].classID == entity->classID) {
+                    if (Zone::sVars->hyperList[i].hyperSlamTarget && this->hyperAbilityState == Player::HyperStateHyperSlam)
+                        return true;
+                    else if (Zone::sVars->hyperList[i].hyperDashTarget && this->hyperAbilityState == Player::HyperStateHyperDash)
+                        return true;
+
+                    if (Zone::sVars->hyperList[i].superFlickyTarget) {
+                        uint16 slot = entity->Slot();
+
+                        for (int32 i = 0; i < 0x80; ++i) {
+                            if (Zone::sVars->flickyAttackList[i].slotID == slot) {
+                                if (Zone::sVars->flickyAttackList[i].classID == entity->classID) {
+                                    if (Zone::sVars->flickyAttackList[i].isTargeted) {
+                                        Zone::sVars->flickyAttackList[i].hitbox   = *entityHitbox;
+                                        Zone::sVars->flickyAttackList[i].position = entity->position;
+                                        Zone::sVars->flickyAttackList[i].timer    = 8;
+                                        Zone::sVars->flickyAttackList[i].slotID   = slot;
+                                        Zone::sVars->flickyAttackList[i].classID  = entity->classID;
+                                        break;
+                                    }
+                                }
+                                else {
+                                    Zone::sVars->flickyAttackList[i].slotID        = -1;
+                                    Zone::sVars->flickyAttackList[i].classID       = TYPE_NONE;
+                                    Zone::sVars->flickyAttackList[i].isTargeted    = 0;
+                                    Zone::sVars->flickyAttackList[i].hitbox.left   = 0;
+                                    Zone::sVars->flickyAttackList[i].hitbox.top    = 0;
+                                    Zone::sVars->flickyAttackList[i].hitbox.right  = 0;
+                                    Zone::sVars->flickyAttackList[i].hitbox.bottom = 0;
+                                    Zone::sVars->flickyAttackList[i].position.x    = 0;
+                                    Zone::sVars->flickyAttackList[i].position.y    = 0;
+                                    Zone::sVars->flickyAttackList[i].timer         = -1;
+                                }
+                            }
+
+                            if (Zone::sVars->flickyAttackList[i].slotID == -1) {
+                                Zone::sVars->flickyAttackList[i].slotID     = slot;
+                                Zone::sVars->flickyAttackList[i].classID    = entity->classID;
+                                Zone::sVars->flickyAttackList[i].isTargeted = false;
+                                Zone::sVars->flickyAttackList[i].hitbox     = *entityHitbox;
+                                Zone::sVars->flickyAttackList[i].position   = entity->position;
+                                Zone::sVars->flickyAttackList[i].timer      = 8;
+                                break;
+                            }
+                        }
+
+                        for (auto flicky : GameObject::GetEntities<SuperFlicky>(FOR_ACTIVE_ENTITIES)) {
+                            if (flicky->state.Matches(&SuperFlicky::State_Active) && !flicky->attackDelay) {
+                                if (flicky->attackListPos != -1) {
+                                    if (Zone::sVars->flickyAttackList[flicky->attackListPos].isTargeted) {
+                                        Entity *target = GameObject::Get(Zone::sVars->flickyAttackList[flicky->attackListPos].slotID);
+
+                                        if (target->classID == Zone::sVars->flickyAttackList[flicky->attackListPos].classID) {
+                                            if (flicky->CheckCollisionTouchBox(&SuperFlicky::sVars->hitbox, entity,
+                                                                               &Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox))
+                                                return true;
+                                        }
+                                        else {
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].slotID        = -1;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].classID       = TYPE_NONE;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].isTargeted    = false;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.left   = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.top    = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.right  = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.bottom = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].position.x    = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].position.y    = 0;
+                                            Zone::sVars->flickyAttackList[flicky->attackListPos].timer         = -1;
+                                            flicky->attackDelay                                                = 120;
+                                            flicky->attackListPos                                              = -1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return entity->CheckCollisionTouchBox(entityHitbox, this, playerHitbox);
@@ -6938,8 +7193,52 @@ bool32 Player::CheckBadnikBreak(RSDK::GameObject::Entity *badnik, bool32 destroy
 
     return false;
 }
-bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity)
+bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity, bool32 enableHyperList)
 {
+    if (enableHyperList && this->hyperAbilityState != Player::HyperStateNone) {
+        for (int32 i = 0; i < Zone::sVars->hyperListCount; ++i) {
+            if (Zone::sVars->hyperList[i].classID == entity->classID) {
+                if (Zone::sVars->hyperList[i].hyperSlamTarget && this->hyperAbilityState == Player::HyperStateHyperSlam)
+                    return true;
+                else if (Zone::sVars->hyperList[i].hyperDashTarget && this->hyperAbilityState == Player::HyperStateHyperDash)
+                    return true;
+
+                if (Zone::sVars->hyperList[i].superFlickyTarget) {
+                    for (auto flicky : GameObject::GetEntities<SuperFlicky>(FOR_ACTIVE_ENTITIES)) {
+                        if (flicky->state.Matches(&SuperFlicky::State_Active) && !flicky->attackDelay) {
+                            if (flicky->attackListPos != -1) {
+                                if (Zone::sVars->flickyAttackList[flicky->attackListPos].isTargeted) {
+                                    Entity *target = GameObject::Get(Zone::sVars->flickyAttackList[flicky->attackListPos].slotID);
+
+                                    if (target->classID == Zone::sVars->flickyAttackList[flicky->attackListPos].classID) {
+                                        if (flicky->CheckCollisionTouchBox(&SuperFlicky::sVars->hitbox, entity,
+                                                                           &Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox))
+                                            return true;
+                                    }
+                                    else {
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].slotID        = -1;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].classID       = TYPE_NONE;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].isTargeted    = false;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.left   = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.top    = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.right  = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].hitbox.bottom = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].position.x    = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].position.y    = 0;
+                                        Zone::sVars->flickyAttackList[flicky->attackListPos].timer         = -1;
+                                        flicky->attackDelay                                                = 120;
+                                        flicky->attackListPos                                              = -1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     if (CheckAttacking(entity)) {
         this->groundVel  = -this->groundVel;
         this->velocity.x = -this->velocity.x;
@@ -6960,7 +7259,7 @@ bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity)
 }
 bool32 Player::ProjectileHurt(RSDK::GameObject::Entity *entity)
 {
-    Shield *shield = GameObject::Get<Shield>(sVars->activePlayerCount + this->playerID);
+    Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
     int32 anim     = this->animator.animationID;
 
     bool32 deflected = false;
@@ -7127,6 +7426,7 @@ void Player::StaticLoad(Static *sVars)
     sVars->sfxTransform2.Init();
     sVars->sfxSwap.Init();
     sVars->sfxSwapFail.Init();
+    sVars->sfxEarthquake.Init();
 }
 #endif
 

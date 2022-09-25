@@ -301,6 +301,9 @@
     <ClCompile Include="Objects\Special\HP_Message.cpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Global\SuperFlicky.cpp">
+      <Filter>Source Files\Objects\Global</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -575,6 +578,9 @@
     </ClInclude>
     <ClInclude Include="Objects\Special\HP_Message.hpp">
       <Filter>Source Files\Objects\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Global\SuperFlicky.hpp">
+      <Filter>Source Files\Objects\Global</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

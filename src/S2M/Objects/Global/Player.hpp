@@ -108,6 +108,15 @@ struct Player : RSDK::GameObject::Entity {
         HurtDie,
     };
 
+    enum HyperAbilityStates {
+        HyperStateNone,
+        HyperStateActive,
+        HyperStateHyperDash,
+        HyperStateHyperSlam,
+        HyperStateStartHyperDash,
+        HyperStateStartHyperSlam,
+    };
+
     enum SuperStates {
         SuperStateNone,
         SuperStateFadeIn,
@@ -119,6 +128,13 @@ struct Player : RSDK::GameObject::Entity {
     enum SpriteTypes {
         ClassicSprites,
         ManiaSprites,
+    };
+
+    enum TransformModes {
+        TransformEmeralds, // Use emeralds to decide
+        TransformSuper,    // force transform to super
+        TransformHyper,    // force transform to hyper
+        TransformAuto,     // force transform to super/hyper depending on emeralds
     };
 
     // ==============================
@@ -138,8 +154,13 @@ struct Player : RSDK::GameObject::Entity {
         color superTailsPalette[18];
         color superKnuxPalette[18];
 
+        color hyperSonicPalette[18];
+
         color *activeSuperSonicPalette;
         color *activeSuperSonicPalette_Water;
+
+        color *activeHyperSonicPalette;
+        color *activeHyperSonicPalette_Water;
 
         color *activeSuperTailsPalette;
         color *activeSuperTailsPalette_Water;
@@ -154,7 +175,7 @@ struct Player : RSDK::GameObject::Entity {
 
         int32 cantSwap;
         int32 playerCount;
-        int32 activePlayerCount;
+        int32 maxPlayerCount;
 
         uint16 upState;
         uint16 downState;
@@ -206,6 +227,7 @@ struct Player : RSDK::GameObject::Entity {
         RSDK::SoundFX sfxTransform2;
         RSDK::SoundFX sfxSwap;
         RSDK::SoundFX sfxSwapFail;
+        RSDK::SoundFX sfxEarthquake;
 
         bool32 gotHit[PLAYER_COUNT];
         RSDK::StateMachine<Player> configureGhostCB;
@@ -323,7 +345,9 @@ struct Player : RSDK::GameObject::Entity {
     int32 spriteType;
     bool32 disableGroundAnims;
     RSDK::StateMachine<Player> storedStateInput;
-    RSDK::Vector2 field_3D0;
+    RSDK::Vector2 spikeDir;
+    int32 hyperAbilityState;
+    bool32 isHyper;
     bool32 disableTileCollisions;
 
     // ==============================
@@ -368,7 +392,7 @@ struct Player : RSDK::GameObject::Entity {
     void ApplyShield();
     void ChangeCharacter(int32 character);
     void InvertGravity();
-    bool32 TryTransform(bool32 fastTransform, bool32 force);
+    bool32 TryTransform(bool32 fastTransform, TransformModes transformMode);
 
     static Player *GetNearestPlayerX();
     static Player *GetNearestPlayerXY();
@@ -472,9 +496,9 @@ struct Player : RSDK::GameObject::Entity {
     bool32 Hurt(RSDK::GameObject::Entity *entity, bool32 forceKill = false);
     bool32 FireHurt(RSDK::GameObject::Entity *entity);
     bool32 CheckAttacking(RSDK::GameObject::Entity *entity);
-    bool32 CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox);
+    bool32 CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox, bool32 enableHyperList = true);
     bool32 CheckBadnikBreak(RSDK::GameObject::Entity *badnik, bool32 destroy);
-    bool32 CheckBossHit(RSDK::GameObject::Entity *entity);
+    bool32 CheckBossHit(RSDK::GameObject::Entity *entity, bool32 enableHyperList = false);
     bool32 LightningHurt(RSDK::GameObject::Entity *entity);
     bool32 ProjectileHurt(RSDK::GameObject::Entity *entity);
 

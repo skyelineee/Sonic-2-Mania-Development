@@ -506,7 +506,7 @@ void Water::State_Water()
                 }
                 else {
                     if (player->invincibleTimer <= 0) {
-                        Shield *shield = GameObject::Get<Shield>(Player::sVars->activePlayerCount + player->Slot());
+                        Shield *shield = GameObject::Get<Shield>(Player::sVars->maxPlayerCount + player->Slot());
 
                         if (player->shield == Shield::Fire) {
                             // fire underwater! puff out this shield!

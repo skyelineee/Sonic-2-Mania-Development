@@ -239,4 +239,4 @@ struct GlobalVariables {
 
 // Game Helpers
 
-// #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
+#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)

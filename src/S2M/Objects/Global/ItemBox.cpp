@@ -457,7 +457,7 @@ void ItemBox::GivePowerup()
 
         case ItemBox::Invincible:
             if (player->superState == Player::SuperStateNone) {
-                InvincibleStars *invincibleStars = GameObject::Get<InvincibleStars>(Player::sVars->activePlayerCount + player->Slot());
+                InvincibleStars *invincibleStars = GameObject::Get<InvincibleStars>(Player::sVars->maxPlayerCount + player->Slot());
                 invincibleStars->Reset(InvincibleStars::sVars->classID, player);
                 player->invincibleTimer = 1260;
                 Music::PlayJingle(Music::TRACK_INVINCIBLE);
@@ -475,7 +475,7 @@ void ItemBox::GivePowerup()
                     Music::sVars->musicSpeedUp.Run(nullptr);
 
                 if (globals->useManiaBehavior) {
-                    ImageTrail *powerup = GameObject::Get<ImageTrail>(2 * Player::sVars->activePlayerCount + player->Slot());
+                    ImageTrail *powerup = GameObject::Get<ImageTrail>(2 * Player::sVars->maxPlayerCount + player->Slot());
                     powerup->Reset(ImageTrail::sVars->classID, player);
                 }
             }
@@ -631,7 +631,7 @@ void ItemBox::GivePowerup()
 
         case ItemBox::Super:
             player->GiveRings(50, false);
-            player->TryTransform(false, true);
+            player->TryTransform(false, Player::TransformAuto);
             break;
 
         case ItemBox::Stock: {

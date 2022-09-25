@@ -53,6 +53,7 @@ void Masher::StageLoad()
     sVars->hitboxBadnik.bottom = 14;
 
     DebugMode::AddObject(sVars->classID, &Masher::DebugSpawn, &Masher::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Masher::DebugDraw()

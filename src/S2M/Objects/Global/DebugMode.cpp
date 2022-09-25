@@ -89,7 +89,7 @@ void DebugMode::Update()
             else
                 player->drawGroup = 1;
 
-            for (int32 p = 0; p < Player::sVars->activePlayerCount; ++p) {
+            for (int32 p = 0; p < Player::sVars->maxPlayerCount; ++p) {
                 Player *playerPtr = GameObject::Get<Player>(p);
                 playerPtr->drawGroup = player->drawGroup;
                 if (playerPtr->sidekick)

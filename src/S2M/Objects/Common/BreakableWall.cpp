@@ -387,7 +387,7 @@ void BreakableWall::CheckBreak_Wall()
                 bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == Player::ANI_JUMP;
 
                 if (player->shield == Shield::Fire) {
-                    Shield *shield = GameObject::Get<Shield>(Player::sVars->activePlayerCount + player->Slot());
+                    Shield *shield = GameObject::Get<Shield>(Player::sVars->maxPlayerCount + player->Slot());
                     canBreak |= shield->shieldAnimator.animationID == Shield::AniFireAttack;
                 }
 

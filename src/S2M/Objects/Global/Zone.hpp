@@ -87,6 +87,21 @@ struct Zone : RSDK::GameObject::Entity {
     // ==============================
     // STRUCTS
     // ==============================
+    struct HyperListEntry {
+        uint16 classID;
+        bool32 hyperDashTarget;
+        bool32 hyperSlamTarget;
+        bool32 superFlickyTarget;
+    };
+
+    struct FlickyAttackEntry {
+        int32 slotID;
+        uint16 classID;
+        bool32 isTargeted;
+        RSDK::Hitbox hitbox;
+        RSDK::Vector2 position;
+        int16 timer;
+    };
 
     // ==============================
     // STATIC VARS
@@ -140,6 +155,9 @@ struct Zone : RSDK::GameObject::Entity {
         int32 randSeed;
         uint16 folderListPos;
         bool32 useFolderIDs;
+        uint16 hyperListCount;
+        HyperListEntry hyperList[128];
+        FlickyAttackEntry flickyAttackList[128];
     };
 
     // ==============================
@@ -178,6 +196,8 @@ struct Zone : RSDK::GameObject::Entity {
     // ==============================
 
     void HandlePlayerBounds();
+
+    static void AddToHyperList(uint16 classID, bool32 hyperDashTarget, bool32 hyperSlamTarget, bool32 superFlickyTarget);
 
     static void StoreEntities(RSDK::Vector2 offset);
     static void ReloadEntities(RSDK::Vector2 offset, bool32 setATLBounds);
