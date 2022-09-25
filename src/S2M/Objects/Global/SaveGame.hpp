@@ -57,7 +57,7 @@ struct SaveGame : RSDK::GameObject::Entity {
     int32 lives;
     int32 score;
     int32 score1UP;
-    int32 chaosEmeralds;
+    int32 collectedEmeralds;
     int32 continues;
     int32 storedStageID;
     uint16 nextSpecialStage;
@@ -91,16 +91,19 @@ struct SaveGame : RSDK::GameObject::Entity {
     static void LoadFile(void (*callback)(bool32 success));
     static void SaveFile(void (*callback)(bool32 success));
     static void SaveProgress();
-    static void ClearCollectedSpecialRings();
     static void ClearNoSave();
     static void ClearSaveSlot(uint8 slotID, void (*callback)(bool32 success));
     static void ClearRestartData();
     static void StoreStageState();
     static void SavePlayerState();
-    static bool32 GetEmerald(uint8 emerald);
-    static void GiveEmerald(uint8 emeraldID);
     static void LoadGameState();
     static void SaveGameState();
+    static bool32 AllChaosEmeralds();
+    static bool32 GetEmerald(uint8 emerald);
+    static void SetEmerald(uint8 emeraldID);
+    static void ClearCollectedSpecialRings();
+    static bool32 GetCollectedSpecialRing(uint8 id);
+    static void SetCollectedSpecialRing(uint8 id);
 
     // ==============================
     // DECLARATION

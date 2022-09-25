@@ -583,9 +583,13 @@ void Music::State_PlayOnFade()
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Music::EditorDraw() {}
+void Music::EditorDraw()
+{
+    this->animator.SetAnimation(sVars->aniFrames, 0, true, 1);
+    this->animator.DrawSprite(nullptr, false);
+}
 
-void Music::EditorLoad() {}
+void Music::EditorLoad() { sVars->aniFrames.Load("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 #if RETRO_REV0U

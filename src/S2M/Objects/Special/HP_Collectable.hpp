@@ -4,11 +4,19 @@
 namespace GameLogic
 {
 
-struct HP_Checkpoint : RSDK::GameObject::Entity {
+struct HP_Collectable : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
+    enum Types {
+        Ring,
+        Bomb,
+        Emerald,
+        RingSparkle,
+        Explosion,
+        EditorIcons,
+    };
 
     // ==============================
     // STRUCTS
@@ -20,28 +28,29 @@ struct HP_Checkpoint : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
-        RSDK::SoundFX sfxStarPost;
-        RSDK::SoundFX sfxFail;
+        RSDK::SoundFX sfxRing;
+        RSDK::SoundFX sfxBomb;
+        RSDK::SoundFX sfxEmerald;
+        int32 pan;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
-    RSDK::StateMachine<HP_Checkpoint> state;
-    RSDK::StateMachine<HP_Checkpoint> stateDraw;
-    RSDK::Animator iconAnimator;
-    RSDK::Animator emblemAnimator;
-    RSDK::Animator ringAnimator;
-    int32 ringCountSonic;
-    int32 ringCountKnux;
-    int32 ringCount2P;
+    RSDK::StateMachine<HP_Collectable> state;
+    RSDK::StateMachine<HP_Collectable> stateDraw;
+    RSDK::Animator animator;
+    RSDK::Animator shadowAnimator;
+    uint8 type;
     int32 timer;
-    bool32 thumbPos;
-    bool32 failed;
     Vector3 localPos;
     Vector3 localShadowPos;
     Vector3 worldPos;
     Vector3 worldShadowPos;
+    bool32 shadowsEnabled;
+    int32 gravityStrength;
+    bool32 notEnoughRings;
+    RSDK::Vector2 emeraldPos;
 
     // ==============================
     // EVENTS
@@ -69,24 +78,28 @@ struct HP_Checkpoint : RSDK::GameObject::Entity {
     // ==============================
 
     // States
-    void State_Init();
-    void State_AwaitPlayer();
-    void State_ShowResults();
-    void State_ExitMessage();
-    void State_ShowNewRingTarget();
-    void State_FadeOut();
-    void State_GoToResults();
+    void State_Ring();
+    void State_Bomb();
+    void State_EmeraldTrigger();
+    void State_EmeraldTryCollect();
+    void State_EmeraldHandleFinish();
+    void State_Sparkle();
+    void State_Lost();
+    void State_Explosion();
 
-    // Draw Stuff
-    void DrawRings();
-    void Draw_Results();
-    void Draw_Fade();
-    void Draw_Exit();
+    // Drawing
+    void Draw_Ring();
+    void Draw_Bomb();
+    void Draw_Emerald();
+    void Draw_LostRing();
+
+    // Misc
+    static void LoseRings(RSDK::Vector2 *position, int32 lossAngle, int32 rings, uint8 drawGroup);
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(HP_Checkpoint);
+    RSDK_DECLARE(HP_Collectable);
 };
 } // namespace GameLogic

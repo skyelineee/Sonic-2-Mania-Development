@@ -269,6 +269,9 @@ void Zone::StageLoad()
 
 void Zone::HandlePlayerBounds()
 {
+    if (!Player::sVars)
+        return;
+
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         int32 playerID = SLOT_PLAYER1;
         if (!player->sidekick)

@@ -9,6 +9,16 @@ struct HP_Setup : RSDK::GameObject::Entity {
     // ==============================
     // ENUMS
     // ==============================
+    enum ActIDs {
+        Act1,
+        Act2,
+        Act3,
+        Act4,
+        Act5,
+        Act6,
+        Act7,
+        ActNone,
+    };
 
     // ==============================
     // STRUCTS
@@ -21,11 +31,26 @@ struct HP_Setup : RSDK::GameObject::Entity {
     struct Static : RSDK::GameObject::Static {
         color stageColor1;
         color stageColor2;
+        color arrowColor;
+        color railEdgeColor;
+        RSDK::SceneLayer controlLayer;
+        uint8 checkpointID;
+        uint8 paletteTimer;
+        uint8 paletteIndex1;
+        uint8 paletteIndex2;
+        bool32 gotEmerald;
+        int32 *ringCounts;
+        int32 ringCountSonic[3];
+        int32 ringCountKnux[3];
+        int32 ringCount2P[3];
+        color starPalCycle[16];
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
+    uint8 stageID;
+    uint8 paletteID;
 
     // ==============================
     // EVENTS

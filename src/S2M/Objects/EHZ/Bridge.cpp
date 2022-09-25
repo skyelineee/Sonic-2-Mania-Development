@@ -101,9 +101,8 @@ void Bridge::Create(void *data)
     this->burnOffset    = 0xFF;
     this->animator.SetAnimation(&sVars->aniFrames, 0, true, 0);
 
-    if (data) {
-        this->length = VOID_TO_INT(data) - 1;
-    }
+    if (data) 
+        this->length = (uint8)VOID_TO_INT(data) - 1;
 }
 
 void Bridge::StageLoad()

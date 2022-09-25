@@ -289,10 +289,7 @@
     <ClCompile Include="Objects\Special\HP_HUD.cpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Ring.cpp">
-      <Filter>Source Files\Objects\Special</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Bomb.cpp">
+    <ClCompile Include="Objects\Special\HP_Collectable.cpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Special\HP_Checkpoint.cpp">
@@ -302,9 +299,6 @@
       <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Special\HP_Message.cpp">
-      <Filter>Source Files\Objects\Special</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Emerald.cpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClCompile>
   </ItemGroup>
@@ -570,10 +564,7 @@
     <ClInclude Include="Objects\Special\HP_HUD.hpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Ring.hpp">
-      <Filter>Source Files\Objects\Special</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Bomb.hpp">
+    <ClInclude Include="Objects\Special\HP_Collectable.hpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Special\HP_Checkpoint.hpp">
@@ -583,9 +574,6 @@
       <Filter>Source Files\Objects\Special</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Special\HP_Message.hpp">
-      <Filter>Source Files\Objects\Special</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Emerald.hpp">
       <Filter>Source Files\Objects\Special</Filter>
     </ClInclude>
   </ItemGroup>

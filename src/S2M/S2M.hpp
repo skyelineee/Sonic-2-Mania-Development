@@ -2,6 +2,13 @@
 
 #include "Game.hpp"
 
+// Structs
+struct Vector3 {
+    int32 x;
+    int32 y;
+    int32 z;
+};
+
 // Enums
 
 enum GameModes {
@@ -97,10 +104,13 @@ enum ReservedEntities {
     SLOT_CAMERA3        = 62,
     SLOT_CAMERA4        = 63,
 
-    SLOT_HP_HALFPIPE = 0,
-    SLOT_HP_BG       = 1,
-    SLOT_HP_PLAYER1  = 2,
-    SLOT_HP_PLAYER2  = 3,
+    SLOT_HP_HALFPIPE     = 0,
+    SLOT_HP_BG           = 1,
+    SLOT_HP_PLAYER1      = 2,
+    SLOT_HP_PLAYER2      = 3,
+    SLOT_HP_HUD          = 10,
+    SLOT_HP_MESSAGE      = 11,
+    SLOT_HP_SPECIALCLEAR = 20,
 };
 
 enum GameCheats {

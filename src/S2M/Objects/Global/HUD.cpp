@@ -43,7 +43,7 @@ void HUD::LateUpdate()
         Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
 
         if (sceneInfo->timeEnabled && player->rings >= 50 && player->superState < Player::SuperStateSuper
-            && SaveGame::GetSaveRAM()->chaosEmeralds >= 0b01111111) {
+            && SaveGame::GetSaveRAM()->collectedEmeralds >= 0b01111111) {
             if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_SWITCH || SKU->platform == PLATFORM_DEV)
                 HUD::GetActionButtonFrames();
 

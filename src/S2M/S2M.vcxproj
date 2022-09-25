@@ -276,15 +276,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Bomb.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Objects\Special\HP_Checkpoint.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Emerald.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -304,7 +296,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Objects\Special\HP_Ring.cpp">
+    <ClCompile Include="Objects\Special\HP_Collectable.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -408,15 +400,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Bomb.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Objects\Special\HP_Checkpoint.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Emerald.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -436,7 +420,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Objects\Special\HP_Ring.hpp">
+    <ClInclude Include="Objects\Special\HP_Collectable.hpp">
       <SubType>
       </SubType>
     </ClInclude>

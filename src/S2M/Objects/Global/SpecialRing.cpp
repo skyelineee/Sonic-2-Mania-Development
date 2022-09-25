@@ -52,6 +52,8 @@ void SpecialRing::Create(void *data)
         else
             this->drawGroup = Zone::sVars->objectDrawGroup[0];
         this->state.Set(&SpecialRing::State_Idle);
+
+        this->warpAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
     }
 }
 
@@ -84,7 +86,7 @@ void SpecialRing::StageLoad()
             ring->enabled = false;
         }
         else {
-            ring->enabled = !(SaveGame::sVars->saveRAM->collectedSpecialRings & (1 << ((16 * Zone::sVars->actID) + ring->id - 1)));
+            ring->enabled = !SaveGame::GetCollectedSpecialRing(ring->id);
             if (globals->specialRingID == ring->id) {
                 for (int32 p = 0; p < Player::sVars->playerCount; ++p) {
                     Player *player = GameObject::Get<Player>(p);
@@ -161,7 +163,7 @@ void SpecialRing::State_Idle()
 
                     SaveGame *saveRAM = SaveGame::GetSaveRAM();
                     // rings spawned via debug mode give you 50 rings, always
-                    if (saveRAM->chaosEmeralds != 0b01111111 && this->id) {
+                    if (!SaveGame::AllChaosEmeralds() && this->id) {
                         player->visible        = false;
                         player->active         = ACTIVE_NEVER;
                         sceneInfo->timeEnabled = false;
@@ -171,10 +173,10 @@ void SpecialRing::State_Idle()
                     }
 
                     if (this->id > 0) {
-                        if (saveRAM->chaosEmeralds != 0b01111111)
+                        if (!SaveGame::AllChaosEmeralds())
                             globals->specialRingID = this->id;
 
-                        saveRAM->collectedSpecialRings |= 1 << (16 * Zone::sVars->actID - 1 + this->id);
+                        SaveGame::SetCollectedSpecialRing(this->id);
                     }
 
                     sVars->sfxSpecialRing.Play(false, 0xFE);
@@ -215,7 +217,7 @@ void SpecialRing::State_Flash()
         this->sparkleRadius -= (8 << 16);
     }
 
-    if (SaveGame::GetSaveRAM()->chaosEmeralds == 0b01111111 || !this->id) {
+    if (SaveGame::AllChaosEmeralds() || !this->id) {
         this->Destroy();
     }
     else if (this->warpAnimator.frameID == this->warpAnimator.frameCount - 1) {

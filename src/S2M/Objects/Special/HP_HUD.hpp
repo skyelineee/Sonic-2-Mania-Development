@@ -19,11 +19,16 @@ struct HP_HUD : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
+        RSDK::SpriteAnimation aniFrames;
+        bool32 setupDebugFlags;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
+    RSDK::Animator hudElementsAnimator;
+    RSDK::Animator numbersAnimator;
+    RSDK::Animator tagAnimator;
 
     // ==============================
     // EVENTS
@@ -49,6 +54,8 @@ struct HP_HUD : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
+
+    void DrawRingCount(uint16 playerSlot, RSDK::Vector2 *drawPos);
 
     // ==============================
     // DECLARATION

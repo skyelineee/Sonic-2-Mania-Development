@@ -258,8 +258,6 @@ void SaveGame::SaveProgress()
 
 }
 
-void SaveGame::ClearCollectedSpecialRings() { sVars->saveRAM->collectedSpecialRings = 0; }
-
 void SaveGame::ClearNoSave()
 {
     memset(globals->noSaveSlot, 0, sizeof(globals->noSaveSlot));
@@ -377,9 +375,15 @@ void SaveGame::SaveGameState()
     }
 }
 
-bool32 SaveGame::GetEmerald(uint8 emerald) { return (sVars->saveRAM->chaosEmeralds >> emerald) & 1; }
+bool32 SaveGame::AllChaosEmeralds() {return sVars->saveRAM->collectedEmeralds == 0b01111111; }
 
-void SaveGame::GiveEmerald(uint8 emeraldID) { sVars->saveRAM->chaosEmeralds |= 1 << emeraldID; }
+bool32 SaveGame::GetEmerald(uint8 emerald) { return (sVars->saveRAM->collectedEmeralds >> emerald) & 1; }
+
+void SaveGame::SetEmerald(uint8 emeraldID) { sVars->saveRAM->collectedEmeralds |= 1 << emeraldID; }
+
+void SaveGame::ClearCollectedSpecialRings() { sVars->saveRAM->collectedSpecialRings = 0; }
+bool32 SaveGame::GetCollectedSpecialRing(uint8 id) { return sVars->saveRAM->collectedSpecialRings & (1 << (16 * Zone::sVars->actID - 1 + id)); }
+void SaveGame::SetCollectedSpecialRing(uint8 id) { sVars->saveRAM->collectedSpecialRings |= 1 << (16 * Zone::sVars->actID - 1 + id); }
 
 #if RETRO_REV0U
 void SaveGame::StaticLoad(Static *sVars) { RSDK_INIT_STATIC_VARS(SaveGame); }
