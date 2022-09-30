@@ -47,12 +47,12 @@ void HUD::LateUpdate()
             if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_SWITCH || SKU->platform == PLATFORM_DEV)
                 HUD::GetActionButtonFrames();
 
-            if (this->superButtonPos < 0x180000)
-                this->superButtonPos += 0x80000;
+            if (this->superButtonPos < TO_FIXED(24))
+                this->superButtonPos += TO_FIXED(8);
         }
         else {
-            if (this->superButtonPos > -0x200000)
-                this->superButtonPos -= 0x80000;
+            if (this->superButtonPos > -TO_FIXED(32))
+                this->superButtonPos -= TO_FIXED(8);
         }
     }
     else if (globals->gameMode == MODE_TIMEATTACK) {
@@ -63,12 +63,12 @@ void HUD::LateUpdate()
                 HUD::GetButtonFrame(&this->thumbsUpButtonAnimator, KeyStart);
             }
 
-            if (this->superButtonPos < 0x180000)
-                this->superButtonPos += 0x80000;
+            if (this->superButtonPos < TO_FIXED(24))
+                this->superButtonPos += TO_FIXED(8);
         }
         else {
-            if (this->superButtonPos > -0x400000)
-                this->superButtonPos -= 0x80000;
+            if (this->superButtonPos > -TO_FIXED(64))
+                this->superButtonPos -= TO_FIXED(8);
         }
     }
 }
@@ -129,8 +129,8 @@ void HUD::Draw()
         this->hudElementsAnimator.DrawSprite(&scoreOffset, true);
 
         // Draw Score
-        lifePos.x = scoreOffset.x + 0x630000;
-        lifePos.y = scoreOffset.y + 0xB0000;
+        lifePos.x = scoreOffset.x + TO_FIXED(97);
+        lifePos.y = scoreOffset.y + TO_FIXED(14);
         DrawNumbersBase10(&lifePos, player->score, 0);
 
         // Draw "Time"
@@ -139,8 +139,8 @@ void HUD::Draw()
 
         if (!this->enableTimeFlash || globals->persistentTimer & 8) {
             // Draw ":"
-            lifePos.x                         = timeOffset.x;
-            lifePos.y                         = timeOffset.y;
+            lifePos.x                         = timeOffset.x + TO_FIXED(52);
+            lifePos.y                         = timeOffset.y - TO_FIXED(2);
             this->hudElementsAnimator.frameID = this->showMilliseconds ? 12 : 20;
             this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
@@ -148,10 +148,10 @@ void HUD::Draw()
             lifePos.y                     = timeOffset.y + (this->numbersAnimator.GetFrame(sVars->aniFrames)->height << 16);
             if (this->showMilliseconds) {
                 // Draw Milliseconds
-                lifePos.x = timeOffset.x + 0x630000;
+                lifePos.x = timeOffset.x + TO_FIXED(97);
                 DrawNumbersBase10(&lifePos, sceneInfo->milliseconds, 2);
 
-                lifePos.x -= 0x80000;
+                lifePos.x -= TO_FIXED(8);
             }
             else {
                 lifePos.x = timeOffset.x + 0x4B0000;
@@ -160,7 +160,7 @@ void HUD::Draw()
             if (sceneInfo->minutes > 9) {
                 // Draw Seconds
                 DrawNumbersBase10(&lifePos, 59, 2);
-                lifePos.x -= 0x80000;
+                lifePos.x -= TO_FIXED(9);
 
                 // Draw Minutes
                 DrawNumbersBase10(&lifePos, 9, 1);
@@ -168,7 +168,7 @@ void HUD::Draw()
             else {
                 // Draw Seconds
                 DrawNumbersBase10(&lifePos, sceneInfo->seconds, 2);
-                lifePos.x -= 0x80000;
+                lifePos.x -= TO_FIXED(9);
 
                 // Draw Minutes
                 if (globals->medalMods & MEDAL_NOTIMEOVER)
@@ -185,7 +185,7 @@ void HUD::Draw()
         if (!this->enableRingFlash || globals->persistentTimer & 8) {
             // Draw Rings
             this->numbersAnimator.frameID = 0;
-            lifePos.x                     = ringsOffset.x + (this->showMilliseconds ? 0x630000 : 0x4B0000);
+            lifePos.x                     = ringsOffset.x + (this->showMilliseconds ? TO_FIXED(97) : TO_FIXED(14));
             lifePos.y                     = ringsOffset.y + (this->numbersAnimator.GetFrame(sVars->aniFrames)->height << 16);
             if (player->hyperRing)
                 DrawNumbersHyperRing(&lifePos, player->rings);
@@ -197,35 +197,35 @@ void HUD::Draw()
             if (player->camera) {
                 // Draw Camera YPos
                 lifePos.x = (screenInfo[player->camera->screenID].size.x - 16) << 16;
-                lifePos.y = 0x180000;
+                lifePos.y = TO_FIXED(24);
                 DrawNumbersBase16(&lifePos, screenInfo[player->camera->screenID].position.y);
 
                 // Draw Camera XPos
-                lifePos.x -= 0x110000;
+                lifePos.x -= TO_FIXED(9);
                 DrawNumbersBase16(&lifePos, screenInfo[player->camera->screenID].position.x);
 
                 // Draw Player YPos
                 lifePos.x = (screenInfo[player->camera->screenID].size.x - 16) << 16;
-                lifePos.y += 0x100000;
+                lifePos.y += TO_FIXED(16);
                 DrawNumbersBase16(&lifePos, player->position.y >> 0x10);
 
                 // Draw Player XPos
-                lifePos.x -= 0x110000;
+                lifePos.x -= TO_FIXED(9);
                 DrawNumbersBase16(&lifePos, player->position.x >> 0x10);
             }
         }
-        else if (this->superButtonPos > -0x400000 && globals->gameMode == MODE_TIMEATTACK) {
+        else if (this->superButtonPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
             // RIP replay buttons
             lifePos.x = (screenInfo[sceneInfo->currentScreenID].size.x << 16) - this->superButtonPos;
-            lifePos.y = 0x140000;
+            lifePos.y = TO_FIXED(20);
         }
-        else if (this->superButtonPos > -0x200000) {
+        else if (this->superButtonPos > -TO_FIXED(32)) {
             // Draw Super Icon
             lifePos.x = (screenInfo[sceneInfo->currentScreenID].size.x << 16) - this->superButtonPos;
-            lifePos.y = 0x140000;
+            lifePos.y = TO_FIXED(20);
             this->superIconAnimator.DrawSprite(&lifePos, true);
 
-            lifePos.x -= 0x140000;
+            lifePos.x -= TO_FIXED(20);
             bool32 canSuper = true;
 
             if (Player::sVars->canSuperCB)
@@ -276,7 +276,7 @@ void HUD::Draw()
                     sVars->stockFlashTimers[p]--;
             }
 
-            lifePos.x += 0x140000;
+            lifePos.x += TO_FIXED(20);
             Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
             if (sidekick->classID) {
                 // Draw Buddy Icon
@@ -293,7 +293,7 @@ void HUD::Draw()
                 }
 
                 // Draw Stock Icons
-                lifePos.x += 0x140000;
+                lifePos.x += TO_FIXED(20);
                 this->lifeIconAnimator.SetAnimation(sVars->aniFrames, 12, true, 0);
                 for (int32 i = 0; i < 3; ++i) {
                     stockFrameID = -1;
@@ -307,7 +307,7 @@ void HUD::Draw()
                     if (stockFrameID >= 0 && !(sVars->stockFlashTimers[i + 1] & 4))
                         this->lifeIconAnimator.DrawSprite(&lifePos, true);
 
-                    lifePos.x += 0x100000;
+                    lifePos.x += TO_FIXED(16);
                 }
 
                 this->lifeIconAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
@@ -320,9 +320,9 @@ void HUD::Draw()
                 this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
                 // Draw Lives
-                lifePos.x += 0x300000;
+                lifePos.x += TO_FIXED(48);
                 if (player->lives < 10)
-                    lifePos.x -= 0x80000;
+                    lifePos.x -= TO_FIXED(8);
 
                 DrawLifeNumbers(&lifePos, lifeCount, 0);
             }
@@ -350,15 +350,15 @@ void HUD::Create(void *data)
         this->visible   = true;
         this->drawGroup = Zone::sVars->hudDrawGroup;
 
-        this->scoreOffset.x  = 0x100000;
-        this->scoreOffset.y  = 0x90000;
-        this->timeOffset.x   = 0x100000;
-        this->timeOffset.y   = 0x190000;
-        this->ringsOffset.x  = 0x100000;
-        this->ringsOffset.y  = 0x290000;
-        this->lifeOffset.x   = 0x100000;
-        this->lifeOffset.y   = (screenInfo->size.y - 8) << 16;
-        this->superButtonPos = -0x200000;
+        this->scoreOffset.x  = TO_FIXED(16);
+        this->scoreOffset.y  = TO_FIXED(12);
+        this->timeOffset.x   = TO_FIXED(16);
+        this->timeOffset.y   = TO_FIXED(28);
+        this->ringsOffset.x  = TO_FIXED(16);
+        this->ringsOffset.y  = TO_FIXED(44);
+        this->lifeOffset.x   = TO_FIXED(16);
+        this->lifeOffset.y   = (screenInfo->size.y - 12) << 16;
+        this->superButtonPos = -TO_FIXED(32);
 
         for (int32 p = 0; p < PLAYER_COUNT; ++p) {
             this->vsScoreOffsets[p].x = this->scoreOffset.x;
@@ -428,7 +428,7 @@ void HUD::DrawLifeNumbers(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
         this->lifeNumbersAnimator.frameID = value / digit % 10;
         this->lifeNumbersAnimator.DrawSprite(drawPos, true);
         digit *= 10;
-        drawPos->x -= this->lifeNumbersAnimator.GetFrame(sVars->aniFrames)->width << 16;
+        drawPos->x -= this->lifeNumbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
     }
 }
 void HUD::DrawNumbersBase10(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
@@ -450,7 +450,7 @@ void HUD::DrawNumbersBase10(RSDK::Vector2 *drawPos, int32 value, int32 digitCoun
         this->numbersAnimator.frameID = value / digit % 10;
         this->numbersAnimator.DrawSprite(drawPos, true);
         digit *= 10;
-        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 16;
+        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
     }
 }
 void HUD::DrawNumbersBase16(RSDK::Vector2 *drawPos, int32 value)
@@ -459,7 +459,7 @@ void HUD::DrawNumbersBase16(RSDK::Vector2 *drawPos, int32 value)
     for (int32 i = 4; i; --i) {
         this->numbersAnimator.frameID = value / mult & 0xF;
         this->numbersAnimator.DrawSprite(drawPos, true);
-        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 16;
+        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
         mult *= 16;
     }
 }
@@ -484,14 +484,14 @@ void HUD::DrawNumbersHyperRing(RSDK::Vector2 *drawPos, int32 value)
         while (cnt--) {
             this->hyperNumbersAnimator.frameID = value / mult % 10;
             this->hyperNumbersAnimator.DrawSprite(drawPos, true);
-            drawPos->x -= 0x80000;
+            drawPos->x -= TO_FIXED(8);
             mult = 10 * mult2;
             mult2 *= 10;
         }
     }
 
     this->hyperNumbersAnimator.frameID = 10;
-    drawPos->x -= 0x40000;
+    drawPos->x -= TO_FIXED(4);
     hyperNumbersAnimator.DrawSprite(drawPos, true);
 }
 
@@ -559,16 +559,16 @@ void HUD::State_MoveIn()
     }
 
     if (scoreOffset->x < *max)
-        scoreOffset->x += 0x80000;
+        scoreOffset->x += TO_FIXED(8);
 
     if (timeOffset->x < *max)
-        timeOffset->x += 0x80000;
+        timeOffset->x += TO_FIXED(8);
 
     if (ringsOffset->x < *max)
-        ringsOffset->x += 0x80000;
+        ringsOffset->x += TO_FIXED(8);
 
     if (lifeOffset->x < *max)
-        lifeOffset->x += 0x80000;
+        lifeOffset->x += TO_FIXED(8);
     else
         state->Set(nullptr);
 }
@@ -594,17 +594,17 @@ void HUD::State_MoveOut()
         lifeOffset  = &this->lifeOffset;
     }
 
-    scoreOffset->x -= 0x80000;
-    if (timeOffset->x - scoreOffset->x > 0x100000)
-        timeOffset->x -= 0x80000;
+    scoreOffset->x -= TO_FIXED(8);
+    if (timeOffset->x - scoreOffset->x > TO_FIXED(16))
+        timeOffset->x -= TO_FIXED(8);
 
-    if (ringsOffset->x - timeOffset->x > 0x100000)
-        ringsOffset->x -= 0x80000;
+    if (ringsOffset->x - timeOffset->x > TO_FIXED(16))
+        ringsOffset->x -= TO_FIXED(8);
 
-    if (lifeOffset->x - ringsOffset->x > 0x100000)
-        lifeOffset->x -= 0x80000;
+    if (lifeOffset->x - ringsOffset->x > TO_FIXED(16))
+        lifeOffset->x -= TO_FIXED(8);
 
-    if (lifeOffset->x < -0x500000) {
+    if (lifeOffset->x < -TO_FIXED(80)) {
         if (globals->gameMode == MODE_COMPETITION) {
             state->Set(nullptr);
         }
@@ -634,10 +634,10 @@ int32 HUD::CharacterIndexFromID(int32 characterID)
 void HUD::MoveIn()
 {
     this->maxOffset = this->scoreOffset.x;
-    this->scoreOffset.x -= 0x1000000;
-    this->timeOffset.x -= 0x1200000;
-    this->ringsOffset.x -= 0x1400000;
-    this->lifeOffset.x -= 0x1600000;
+    this->scoreOffset.x -= TO_FIXED(0x100);
+    this->timeOffset.x -= TO_FIXED(0x110);
+    this->ringsOffset.x -= TO_FIXED(0x120);
+    this->lifeOffset.x -= TO_FIXED(0x130);
 
     this->state.Set(&HUD::State_MoveIn);
 }

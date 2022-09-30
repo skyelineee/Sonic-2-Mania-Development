@@ -7363,7 +7363,7 @@ void Player::StaticLoad(Static *sVars)
     // ---------------
 
     color superSonicPalette[] = { 0x11004F, 0x0F16AD, 0x1D2EE2, 0x225BF1, 0x4281F7, 0x48B9F7, 0xF0C001, 0xF0D028, 0xF0E040,
-                                  0xF94100, 0xFF7700, 0xFF9A00, 0xFFBE00, 0xFFD300, 0xFFE821, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 };
+                                  0xF0E860, 0xF0E898, 0xF0E8D0, 0xF0D898, 0xF0E0B0, 0xF0E8C0, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 };
 
     memcpy(sVars->superSonicPalette, superSonicPalette, sizeof(superSonicPalette));
 
