@@ -428,7 +428,7 @@ void HUD::DrawLifeNumbers(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
         this->lifeNumbersAnimator.frameID = value / digit % 10;
         this->lifeNumbersAnimator.DrawSprite(drawPos, true);
         digit *= 10;
-        drawPos->x -= this->lifeNumbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
+        drawPos->x -= TO_FIXED(8);
     }
 }
 void HUD::DrawNumbersBase10(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
@@ -450,7 +450,7 @@ void HUD::DrawNumbersBase10(RSDK::Vector2 *drawPos, int32 value, int32 digitCoun
         this->numbersAnimator.frameID = value / digit % 10;
         this->numbersAnimator.DrawSprite(drawPos, true);
         digit *= 10;
-        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
+        drawPos->x -= TO_FIXED(8);
     }
 }
 void HUD::DrawNumbersBase16(RSDK::Vector2 *drawPos, int32 value)
@@ -459,7 +459,7 @@ void HUD::DrawNumbersBase16(RSDK::Vector2 *drawPos, int32 value)
     for (int32 i = 4; i; --i) {
         this->numbersAnimator.frameID = value / mult & 0xF;
         this->numbersAnimator.DrawSprite(drawPos, true);
-        drawPos->x -= this->numbersAnimator.GetFrame(sVars->aniFrames)->width << 8;
+        drawPos->x -= TO_FIXED(8);
         mult *= 16;
     }
 }
