@@ -29,14 +29,8 @@ struct GameOver : RSDK::GameObject::Entity {
     RSDK::StateMachine<GameOver> state;
     int32 timer;
     int32 playerID;
-    RSDK::Vector2 barPos;
-    RSDK::Vector2 verts[4];
-    RSDK::Vector2 letterPositions[8];
-    RSDK::Vector2 finalOffsets[8];
-    RSDK::Vector2 letterPosMove[8];
-    int32 letterBounceCount[8];
-    int32 letterRotations[8];
-    int32 letterRotateSpeed[8];
+    int32 targetPos;
+    RSDK::Vector2 gameOverPos;
     RSDK::Animator animator;
 
     // ==============================
@@ -64,10 +58,10 @@ struct GameOver : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void State_MoveIn_Mania();
-    void State_WaitComp_Mania();
-    void State_Wait_Mania();
-    void State_MoveOut_Mania();
+    void State_MoveIn();
+    void State_WaitComp();
+    void State_Wait();
+    void State_MoveOut();
 
     // ==============================
     // DECLARATION

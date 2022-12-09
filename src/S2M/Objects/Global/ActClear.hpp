@@ -66,9 +66,12 @@ struct ActClear : RSDK::GameObject::Entity {
     RSDK::Animator hudElementsAnimator;
     RSDK::Animator numbersAnimator;
     RSDK::Animator playerNameAnimator;
+    RSDK::Animator playerNameCardAnimator;
     RSDK::Animator gotThroughAnimator;
     RSDK::Animator actNumAnimator;
+    RSDK::Animator actNumCardAnimator;
     RSDK::Animator timeElementsAnimator;
+    RSDK::Animator scoreNumCardAnimator;
     int32 listPos;
 
     // ==============================

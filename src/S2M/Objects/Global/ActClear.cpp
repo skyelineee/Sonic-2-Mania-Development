@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------
 // RSDK Project: Sonic 2 Mania
 // Object Description: ActClear Object
-// Object Author: Ducky
+// Object Author: Ducky + AChickMcNuggie
 // ---------------------------------------------------------------------
 
 #include "ActClear.hpp"
@@ -32,7 +32,6 @@ void ActClear::StaticUpdate()
 void ActClear::Draw()
 {
     Vector2 drawPos;
-    Vector2 verts[4];
     int32 milliseconds = 0;
     int32 seconds      = 0;
     int32 minutes      = 0;
@@ -40,34 +39,18 @@ void ActClear::Draw()
 
     drawPos.x  = this->gotThroughPos.x;
     drawPos.y  = this->gotThroughPos.y;
-    verts[0].y = drawPos.y - TO_FIXED(20);
-    verts[1].y = drawPos.y - TO_FIXED(20);
-    verts[2].y = drawPos.y - TO_FIXED(4);
-    verts[3].y = drawPos.y - TO_FIXED(4);
+
     if ((GET_CHARACTER_ID(1)) == ID_KNUCKLES) {
         int32 center = TO_FIXED(screenInfo->center.x + 16);
 
         drawPos.x  = 2 * this->gotThroughPos.x + center;
-        verts[0].x = drawPos.x - TO_FIXED(145);
-        verts[1].x = drawPos.x + TO_FIXED(52);
-        verts[2].x = drawPos.x + TO_FIXED(68);
-        verts[3].x = drawPos.x - TO_FIXED(129);
-        Graphics::DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * this->playerNamePos.x + center;
         drawPos.y  = this->playerNamePos.y;
-        verts[0].x = drawPos.x - TO_FIXED(124);
-        verts[0].y = drawPos.y + TO_FIXED(28);
-        verts[1].x = drawPos.x + TO_FIXED(80);
-        verts[2].x = drawPos.x + TO_FIXED(96);
-        verts[3].x = drawPos.x - TO_FIXED(108);
-        verts[1].y = drawPos.y + TO_FIXED(28);
-        verts[2].y = drawPos.y + TO_FIXED(44);
-        verts[3].y = drawPos.y + TO_FIXED(44);
-        Graphics::DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = this->playerNamePos.x + center;
         drawPos.y = this->playerNamePos.y;
+        this->playerNameCardAnimator.DrawSprite(&drawPos, true);
         this->playerNameAnimator.DrawSprite(&drawPos, true);
 
         this->gotThroughAnimator.frameID = 2;
@@ -77,6 +60,7 @@ void ActClear::Draw()
         drawPos.y                        = this->gotThroughPos.y;
         this->gotThroughAnimator.frameID = 3;
         this->gotThroughAnimator.DrawSprite(&drawPos, true);
+        this->actNumCardAnimator.DrawSprite(&drawPos, true);
         this->actNumAnimator.DrawSprite(&drawPos, true);
 
         offset = center - TO_FIXED(10);
@@ -85,26 +69,13 @@ void ActClear::Draw()
         int32 center = TO_FIXED(screenInfo->center.x + 16);
 
         drawPos.x  = 2 * this->gotThroughPos.x + center;
-        verts[0].x = drawPos.x - TO_FIXED(109);
-        verts[1].x = drawPos.x + TO_FIXED(52);
-        verts[2].x = drawPos.x + TO_FIXED(68);
-        verts[3].x = drawPos.x - TO_FIXED(93);
-        Graphics::DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x  = 2 * this->playerNamePos.x + center;
         drawPos.y  = this->playerNamePos.y;
-        verts[0].x = drawPos.x - TO_FIXED(88);
-        verts[0].y = drawPos.y + TO_FIXED(28);
-        verts[1].x = drawPos.x + TO_FIXED(80);
-        verts[2].x = drawPos.x + TO_FIXED(96);
-        verts[3].x = drawPos.x - TO_FIXED(72);
-        verts[1].y = drawPos.y + TO_FIXED(28);
-        verts[2].y = drawPos.y + TO_FIXED(44);
-        verts[3].y = drawPos.y + TO_FIXED(44);
-        Graphics::DrawFace(verts, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
 
         drawPos.x = this->playerNamePos.x + center;
         drawPos.y = this->playerNamePos.y;
+        this->playerNameCardAnimator.DrawSprite(&drawPos, true);
         this->playerNameAnimator.DrawSprite(&drawPos, true);
 
         this->gotThroughAnimator.frameID = 0;
@@ -113,6 +84,7 @@ void ActClear::Draw()
         drawPos.x                        = this->gotThroughPos.x + center;
         drawPos.y                        = this->gotThroughPos.y;
         this->gotThroughAnimator.frameID = 1;
+        this->actNumCardAnimator.DrawSprite(&drawPos, true);
         this->gotThroughAnimator.DrawSprite(&drawPos, true);
         this->actNumAnimator.DrawSprite(&drawPos, true);
 
@@ -120,7 +92,7 @@ void ActClear::Draw()
     }
 
     // Draw "Time" Bonus Sprite
-    drawPos.x                         = offset + this->timeBonusPos.x - TO_FIXED(92);
+    drawPos.x                         = offset + this->timeBonusPos.x - TO_FIXED(100);
     drawPos.y                         = this->timeBonusPos.y;
     this->hudElementsAnimator.frameID = 1;
     this->hudElementsAnimator.DrawSprite(&drawPos, true);
@@ -134,7 +106,8 @@ void ActClear::Draw()
 
     // Draw Time Bonus BG thingy
     this->hudElementsAnimator.frameID = 10;
-    drawPos.x += TO_FIXED(52);
+    drawPos.x += TO_FIXED(62);
+    this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
     this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
     drawPos.x += TO_FIXED(67);
@@ -151,7 +124,7 @@ void ActClear::Draw()
     }
 
     // Draw Ring Bonus
-    drawPos.x = offset + this->ringBonusPos.x - TO_FIXED(92);
+    drawPos.x = offset + this->ringBonusPos.x - TO_FIXED(100);
     drawPos.y = this->ringBonusPos.y;
     if (globals->gameMode == MODE_TIMEATTACK)
         this->hudElementsAnimator.frameID = 17; // "Best"
@@ -173,7 +146,8 @@ void ActClear::Draw()
 
     // Draw Ring Bonus BG thingy
     this->hudElementsAnimator.frameID = 10;
-    drawPos.x += TO_FIXED(52);
+    drawPos.x += TO_FIXED(62);
+    this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
     this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
     drawPos.x += TO_FIXED(67);
@@ -190,7 +164,7 @@ void ActClear::Draw()
     }
 
     if (this->showCoolBonus) { // Draw Cool Bonus
-        drawPos.x = offset + this->coolBonusPos.x - TO_FIXED(92);
+        drawPos.x = offset + this->coolBonusPos.x - TO_FIXED(100);
         drawPos.y = this->coolBonusPos.y;
         if (globals->gameMode == MODE_TIMEATTACK)
             this->hudElementsAnimator.frameID = 18; // "Rank"
@@ -206,7 +180,8 @@ void ActClear::Draw()
 
         // Draw Cool Bonus BG thingy
         this->hudElementsAnimator.frameID = 10;
-        drawPos.x += TO_FIXED(52);
+        drawPos.x += TO_FIXED(62);
+        this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
         drawPos.x += TO_FIXED(67);
@@ -266,6 +241,7 @@ void ActClear::Draw()
         // Draw Total Score BG thingy
         this->hudElementsAnimator.frameID = 10;
         drawPos.x += TO_FIXED(52);
+        this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
         // Draw Total Score
@@ -286,6 +262,8 @@ void ActClear::Create(void *data)
         this->state.Set(&ActClear::State_EnterText);
         this->stageFinishTimer = 0;
         this->newRecordTimer   = 0;
+        Music::ClearMusicStack();
+        Music::PlayTrack(Music::TRACK_ACTCLEAR);
 
         Player *player1    = GameObject::Get<Player>(SLOT_PLAYER1);
         this->targetPlayer = player1;
@@ -364,6 +342,10 @@ void ActClear::Create(void *data)
         }
 
         this->gotThroughAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
+        this->actNumCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 5);
+        this->playerNameCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 6);
+        this->scoreNumCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 7);
+
 
         // Used in cases like OOZ1 outro where the act clear actually happens in AIZ2
         if (sVars->displayedActID <= 0)
@@ -378,7 +360,12 @@ void ActClear::Create(void *data)
 
 void ActClear::StageLoad()
 {
-    sVars->aniFrames.Load("Global/HUD.bin", SCOPE_STAGE);
+    switch GET_CHARACTER_ID(1) {
+            default: break;
+            case ID_SONIC: sVars->aniFrames.Load("Global/HUDSonic.bin", SCOPE_STAGE); break;
+            case ID_TAILS: sVars->aniFrames.Load("Global/HUDTails.bin", SCOPE_STAGE); break;
+            case ID_KNUCKLES: sVars->aniFrames.Load("Global/HUDKnux.bin", SCOPE_STAGE); break;
+        }
 
     sVars->sfxScoreAdd.Get("Global/ScoreAdd.wav");
     sVars->sfxScoreTotal.Get("Global/ScoreTotal.wav");
@@ -806,7 +793,7 @@ void ActClear::DrawNumbers(RSDK::Vector2 *drawPos, int32 value, int32 digitCount
                 this->numbersAnimator.frameID = value / digit % 10;
                 this->numbersAnimator.DrawSprite(drawPos, true);
 
-                drawPos->x -= TO_FIXED(9);
+                drawPos->x -= TO_FIXED(8);
                 digit *= 10;
             }
         }
@@ -816,7 +803,7 @@ void ActClear::DrawNumbers(RSDK::Vector2 *drawPos, int32 value, int32 digitCount
             this->numbersAnimator.frameID = 16;
             this->numbersAnimator.DrawSprite(drawPos, true);
 
-            drawPos->x -= TO_FIXED(9);
+            drawPos->x -= TO_FIXED(8);
         }
     }
 }

@@ -280,6 +280,7 @@ struct Player : RSDK::GameObject::Entity {
     int32 invincibleTimer;
     int32 speedShoesTimer;
     int32 blinkTimer;
+    int32 airCurlTimer;
     int32 scrollDelay;
     int32 skidding;
     int32 pushing;

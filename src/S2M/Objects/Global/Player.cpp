@@ -3544,19 +3544,32 @@ void Player::State_Air()
         if (this->animator.animationID != ANI_JUMP) {
             if (globals->gravityDir == CMODE_ROOF) {
                 if (this->velocity.y > 0 && this->jumpPress) {
+                    this->airCurlTimer = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.animationID = ANI_AIRCURL) {
-                        this->animator.frameID = this->animator.frameCount - 5;
-                        this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    if (this->animator.animationID == ANI_AIRCURL) {
+                        if (this->airCurlTimer >= 60) {
+                            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                            this->airCurlTimer = 0;
+                        }
+                        else {
+                            this->airCurlTimer += 1;
+                        }
                     }
                     this->velocity.y >>= 1;
                 }
             }
             else if (globals->gravityDir == CMODE_FLOOR) {
                 if (this->velocity.y < 0 && this->jumpPress) {
+                    this->airCurlTimer = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.frameID == this->animator.frameCount - 5) {
-                        this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                    if (this->animator.animationID == ANI_AIRCURL) {
+                        if (this->airCurlTimer >= 60) {
+                            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+                            this->airCurlTimer = 0;
+                        }
+                        else {
+                            this->airCurlTimer += 1;
+                        }
                     }
                     this->velocity.y >>= 1;
                 }

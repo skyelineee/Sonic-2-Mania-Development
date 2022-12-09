@@ -32,40 +32,28 @@ struct TitleCard : RSDK::GameObject::Entity {
     RSDK::StateMachine<TitleCard> state;
     RSDK::StateMachine<TitleCard> stateDraw;
     int32 actionTimer;
+    int32 moveTimer;
+    int32 moveTimer1;
+    int32 moveTimer2;
     int32 timer;
-    RSDK::Vector2 decorationPos;
-    int32 stripPos[4];
-    RSDK::Vector2 vertMovePos[2];
-    RSDK::Vector2 vertTargetPos[2];
-    RSDK::Vector2 word2DecorVerts[4];
-    RSDK::Vector2 word1DecorVerts[4];
-    RSDK::Vector2 zoneDecorVerts[4];
-    RSDK::Vector2 stripVertsBlue[4];  
-    RSDK::Vector2 stripVertsRed[4];   
-    RSDK::Vector2 stripVertsOrange[4];
-    RSDK::Vector2 stripVertsGreen[4]; 
-    RSDK::Vector2 bgLCurtainVerts[4];
-    RSDK::Vector2 bgRCurtainVerts[4];
-    RSDK::String zoneName;
-    int32 zoneCharPos[4];
-    int32 zoneCharVel[4];
-    int32 zoneXPos;
-    RSDK::Vector2 charPos[20];
-    int32 charVel[20];
-    int32 titleCardWord2;
-    int32 word1Width;
-    int32 word2Width;
-    int32 word1XPos;
-    int32 word2XPos;
-    uint8 actID;
-    int32 actNumScale;
-    RSDK::Vector2 actNumPos;
     bool32 enableIntro;
+    RSDK::String zoneName;
+    RSDK::Vector2 decorationPos;
+    RSDK::Vector2 bluePiecePos;
+    RSDK::Vector2 yellowPiecePos;
+    RSDK::Vector2 redPiecePos;
+    RSDK::Vector2 zonePos;
+    RSDK::Vector2 zoneNamePos;
+    RSDK::Vector2 actNumPos;
     RSDK::Animator decorationAnimator;
-    RSDK::Animator nameLetterAnimator;
-    RSDK::Animator zoneLetterAnimator;
+    RSDK::Animator zoneNameAnimator;
     RSDK::Animator actNumbersAnimator;
-    color colors[5];
+    RSDK::Animator bluePieceAnimator;
+    RSDK::Animator yellowPieceAnimator;
+    RSDK::Animator redPieceAnimator;
+    RSDK::Animator zoneAnimator;
+    uint8 actID;
+    uint8 decorationFrame;
 
     // ==============================
     // EVENTS
@@ -91,11 +79,8 @@ struct TitleCard : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
-    void SetupColors();
-    void SetupVertices();
+    void ChangeTitleColors();
     void SetupTitleWords();
-    void HandleWordMovement();
-    void HandleZoneCharMovement();
     void HandleCamera();
 
     // States
