@@ -33,8 +33,6 @@ struct TitleCard : RSDK::GameObject::Entity {
     RSDK::StateMachine<TitleCard> stateDraw;
     int32 actionTimer;
     int32 moveTimer;
-    int32 moveTimer1;
-    int32 moveTimer2;
     int32 timer;
     bool32 enableIntro;
     RSDK::String zoneName;
@@ -82,6 +80,7 @@ struct TitleCard : RSDK::GameObject::Entity {
     void ChangeTitleColors();
     void SetupTitleWords();
     void HandleCamera();
+    void PiecePositions();
 
     // States
     void State_SetupBGElements();

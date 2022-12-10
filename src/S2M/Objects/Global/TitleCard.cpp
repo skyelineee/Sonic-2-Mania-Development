@@ -57,13 +57,15 @@ void TitleCard::Create(void *data)
     SetupTitleWords();
     ChangeTitleColors();
 
+    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
+
     this->bluePiecePos.x   = TO_FIXED(40);
     this->bluePiecePos.y   = TO_FIXED(-20);
     this->decorationPos.x  = TO_FIXED(185);
     this->decorationPos.y  = TO_FIXED(120);
-    this->yellowPiecePos.x = 424;
+    this->yellowPiecePos.x = screen->size.x;
     this->yellowPiecePos.y = TO_FIXED(178);
-    this->redPiecePos.x    = -430;
+    this->redPiecePos.x    = TO_FIXED(0);
     this->redPiecePos.y    = TO_FIXED(0);
     this->zoneNamePos.x    = TO_FIXED(400);
     this->zoneNamePos.y    = TO_FIXED(75);
@@ -131,6 +133,38 @@ void TitleCard::SetupTitleWords()
     this->zoneName.SetSpriteString(sVars->aniFrames, 1);
 }
 
+void TitleCard::PiecePositions()
+{
+    Vector2 piecePos;
+
+    piecePos.x = this->bluePiecePos.x;
+    piecePos.y = this->bluePiecePos.y - TO_FIXED(240);
+    this->bluePieceAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->decorationPos.x + TO_FIXED(400);
+    piecePos.y = this->decorationPos.y;
+    this->decorationAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->yellowPiecePos.x + TO_FIXED(400);
+    piecePos.y = this->yellowPiecePos.y;
+    this->yellowPieceAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->redPiecePos.x - TO_FIXED(300);
+    piecePos.y = this->redPiecePos.y;
+    this->redPieceAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->zonePos.x - TO_FIXED(400);
+    piecePos.y = this->zonePos.y;
+    this->zoneAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->actNumPos.x - TO_FIXED(400);
+    piecePos.y = this->actNumPos.y;
+    this->actNumbersAnimator.DrawSprite(&piecePos, true);
+
+    piecePos.x = this->zoneNamePos.x + TO_FIXED(300);
+    piecePos.y = this->zoneNamePos.y;
+    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, 0, nullptr, true);
+}
 
 // States
 void TitleCard::State_SetupBGElements()
@@ -276,37 +310,11 @@ void TitleCard::Draw_SlideIn()
 {
     SET_CURRENT_STATE();
 
-    Graphics::DrawRect(0, 0, 424, 240, 0x000000, 0xFF, INK_NONE, true);
+    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
-    Vector2 piecePos;
+    Graphics::DrawRect(0, 0, screen->size.x, screen->size.y, 0x000000, 0xFF, INK_NONE, true);
 
-    piecePos.x = this->bluePiecePos.x;
-    piecePos.y = this->bluePiecePos.y - TO_FIXED(240);
-    this->bluePieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->decorationPos.x + TO_FIXED(400);
-    piecePos.y = this->decorationPos.y;
-    this->decorationAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->yellowPiecePos.x + TO_FIXED(400);
-    piecePos.y = this->yellowPiecePos.y;
-    this->yellowPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->redPiecePos.x - TO_FIXED(300);
-    piecePos.y = this->redPiecePos.y;
-    this->redPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zonePos.x - TO_FIXED(400);
-    piecePos.y = this->zonePos.y;
-    this->zoneAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->actNumPos.x - TO_FIXED(400);
-    piecePos.y = this->actNumPos.y;
-    this->actNumbersAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zoneNamePos.x + TO_FIXED(300);
-    piecePos.y = this->zoneNamePos.y;
-    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, 0, nullptr, true);
+    PiecePositions();
 
     if (this->bluePiecePos.y < TO_FIXED(220))
         this->bluePiecePos.y += TO_FIXED(16);
@@ -317,7 +325,7 @@ void TitleCard::Draw_SlideIn()
     if (this->yellowPiecePos.x > TO_FIXED(-424))
         this->yellowPiecePos.x -= TO_FIXED(16);
 
-    if (this->redPiecePos.x < TO_FIXED(290))
+    if (this->redPiecePos.x < TO_FIXED(300))
         this->redPiecePos.x += TO_FIXED(10);
 
     if (this->zonePos.x < TO_FIXED(680))
@@ -329,31 +337,15 @@ void TitleCard::Draw_SlideIn()
     if (this->zoneNamePos.x > TO_FIXED(100))
         this->zoneNamePos.x -= TO_FIXED(16);
 
-    if (this->zonePos.x < TO_FIXED(800))
+    if (this->actNumPos.x < TO_FIXED(870))
         if (this->moveTimer >= 4) {
             this->zonePos.x += TO_FIXED(1);
+            this->actNumPos.x += TO_FIXED(1);
+            this->zoneNamePos.x -= TO_FIXED(1);
             this->moveTimer = 0;
         }
         else {
             this->moveTimer += 2;
-        }
-
-    if (this->actNumPos.x < TO_FIXED(870))
-        if (this->moveTimer1 >= 4) {
-            this->actNumPos.x += TO_FIXED(1);
-            this->moveTimer1 = 0;
-        }
-        else {
-            this->moveTimer1 += 2;
-        }
-
-    if (this->zoneNamePos.x > TO_FIXED(32))
-        if (this->moveTimer2 >= 4) {
-            this->zoneNamePos.x -= TO_FIXED(1);
-            this->moveTimer2 = 0;
-        }
-        else {
-            this->moveTimer2 += 2;
         }
 }
 
@@ -365,97 +357,27 @@ void TitleCard::Draw_ShowTitleCard()
 
     Graphics::SetClipBounds(sceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 
-    Vector2 piecePos;
+    PiecePositions();
 
-    piecePos.x = this->bluePiecePos.x;
-    piecePos.y = this->bluePiecePos.y - TO_FIXED(240);
-    this->bluePieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->decorationPos.x + TO_FIXED(400);
-    piecePos.y = this->decorationPos.y;
-    this->decorationAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->yellowPiecePos.x + TO_FIXED(400);
-    piecePos.y = this->yellowPiecePos.y;
-    this->yellowPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->redPiecePos.x - TO_FIXED(300);
-    piecePos.y = this->redPiecePos.y;
-    this->redPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zonePos.x - TO_FIXED(400);
-    piecePos.y = this->zonePos.y;
-    this->zoneAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->actNumPos.x - TO_FIXED(400);
-    piecePos.y = this->actNumPos.y;
-    this->actNumbersAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zoneNamePos.x + TO_FIXED(300);
-    piecePos.y = this->zoneNamePos.y;
-    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, 0, nullptr, true);
-
-    if (this->zonePos.x < TO_FIXED(800))
+    if (this->actNumPos.x < TO_FIXED(870))
         if (this->moveTimer >= 4) {
             this->zonePos.x += TO_FIXED(1);
+            this->actNumPos.x += TO_FIXED(1);
+            this->zoneNamePos.x -= TO_FIXED(1);
             this->moveTimer = 0;
         }
         else {
             this->moveTimer += 2;
         }
 
-    if (this->actNumPos.x < TO_FIXED(870))
-        if (this->moveTimer1 >= 4) {
-            this->actNumPos.x += TO_FIXED(1);
-            this->moveTimer1 = 0;
-        }
-        else {
-            this->moveTimer1 += 2;
-        }
 
-    if (this->zoneNamePos.x > TO_FIXED(32))
-        if (this->moveTimer2 >= 4) {
-            this->zoneNamePos.x -= TO_FIXED(1);
-            this->moveTimer2 = 0;
-        }
-        else {
-            this->moveTimer2 += 2;
-        }
 }
 
 void TitleCard::Draw_SlideAway()
 {
     SET_CURRENT_STATE();
 
-    Vector2 piecePos;
-
-    piecePos.x = this->bluePiecePos.x;
-    piecePos.y = this->bluePiecePos.y - TO_FIXED(240);
-    this->bluePieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->decorationPos.x + TO_FIXED(400);
-    piecePos.y = this->decorationPos.y;
-    this->decorationAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->yellowPiecePos.x + TO_FIXED(400);
-    piecePos.y = this->yellowPiecePos.y;
-    this->yellowPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->redPiecePos.x - TO_FIXED(300);
-    piecePos.y = this->redPiecePos.y;
-    this->redPieceAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zonePos.x - TO_FIXED(400);
-    piecePos.y = this->zonePos.y;
-    this->zoneAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->actNumPos.x - TO_FIXED(400);
-    piecePos.y = this->actNumPos.y;
-    this->actNumbersAnimator.DrawSprite(&piecePos, true);
-
-    piecePos.x = this->zoneNamePos.x + TO_FIXED(300);
-    piecePos.y = this->zoneNamePos.y;
-    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, 0, nullptr, true);
+    PiecePositions();
 
      if (this->bluePiecePos.y <= TO_FIXED(220))
         this->bluePiecePos.y -= TO_FIXED(16);
