@@ -72,7 +72,7 @@ void TitleCard::Create(void *data)
     this->zonePos.x        = TO_FIXED(310);
     this->zonePos.y        = TO_FIXED(100);
     this->actNumPos.x      = TO_FIXED(380);
-    this->actNumPos.y      = TO_FIXED(100);
+    this->actNumPos.y      = TO_FIXED(101);
 
     this->bluePieceAnimator.SetAnimation(&sVars->aniFrames, 5, false, 0);
     this->decorationAnimator.SetAnimation(&sVars->aniFrames, 0, false, 0);

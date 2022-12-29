@@ -353,8 +353,6 @@ void ActClear::Create(void *data)
         else
             this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, sVars->displayedActID - 1);
 
-        if (GET_CHARACTER_ID(1) == ID_KNUCKLES)
-            this->actNumAnimator.frameID += 2;
     }
 }
 
