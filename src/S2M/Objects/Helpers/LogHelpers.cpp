@@ -17,6 +17,13 @@ void LogHelpers::PrintText(const char *message)
     if (!sceneInfo->inEditor)
         Dev::Print(Dev::PRINT_NORMAL, message);
 }
+
+void LogHelpers::PrintString(String *message)
+{
+    if (!sceneInfo->inEditor)
+        Dev::PrintString(Dev::PRINT_NORMAL, message);
+}
+
 void LogHelpers::PrintInt32(const char *message, int32 value)
 {
     if (!sceneInfo->inEditor)

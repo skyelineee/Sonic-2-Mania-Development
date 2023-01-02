@@ -274,8 +274,16 @@
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="Objects\Menu\LogoSetup.cpp" />
+    <ClCompile Include="Objects\Menu\MainMenu.cpp" />
     <ClCompile Include="Objects\Menu\Sega.cpp" />
+    <ClCompile Include="Objects\Menu\UIButton.cpp" />
+    <ClCompile Include="Objects\Menu\UIButtonPrompt.cpp" />
+    <ClCompile Include="Objects\Menu\UIChoice.cpp" />
+    <ClCompile Include="Objects\Menu\UIControl.cpp" />
+    <ClCompile Include="Objects\Menu\UIHeading.cpp" />
+    <ClCompile Include="Objects\Menu\UIKeyBinder.cpp" />
     <ClCompile Include="Objects\Menu\UIPicture.cpp" />
+    <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Special\HP_Background.cpp">
       <SubType>
       </SubType>
@@ -402,8 +410,16 @@
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\Menu\LogoSetup.hpp" />
+    <ClInclude Include="Objects\Menu\MainMenu.hpp" />
     <ClInclude Include="Objects\Menu\Sega.hpp" />
+    <ClInclude Include="Objects\Menu\UIButton.hpp" />
+    <ClInclude Include="Objects\Menu\UIButtonPrompt.hpp" />
+    <ClInclude Include="Objects\Menu\UIChoice.hpp" />
+    <ClInclude Include="Objects\Menu\UIControl.hpp" />
+    <ClInclude Include="Objects\Menu\UIHeading.hpp" />
+    <ClInclude Include="Objects\Menu\UIKeyBinder.hpp" />
     <ClInclude Include="Objects\Menu\UIPicture.hpp" />
+    <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Special\HP_Background.hpp">
       <SubType>
       </SubType>
