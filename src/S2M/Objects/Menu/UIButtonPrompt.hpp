@@ -43,10 +43,6 @@ struct UIButtonPrompt : RSDK::GameObject::Entity {
         UIBUTTONPROMPT_BUTTON_SELECT,
     };
 
-    enum UIButtonPromptTypes {
-
-    };
-
     // ==============================
     // STRUCTS
     // ==============================

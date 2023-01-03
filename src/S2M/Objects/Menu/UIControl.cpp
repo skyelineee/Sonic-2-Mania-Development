@@ -11,6 +11,8 @@
 #include "UIButtonPrompt.hpp"
 #include "UIKeyBinder.hpp"
 #include "UIChoice.hpp"
+#include "UICarousel.hpp"
+#include "UIShifter.hpp"
 
 using namespace RSDK;
 
@@ -506,7 +508,7 @@ void UIControl::SetupButtons()
         }
     }
 
-    /*if (UIShifter::sVars && slotID != SLOT_DIALOG_UICONTROL) {
+    if (UIShifter::sVars && slotID != SLOT_DIALOG_UICONTROL) {
         for (auto shifter : GameObject::GetEntities<UIShifter>(FOR_ALL_ENTITIES))
         {
             int32 x            = this->startPos.x - this->cameraOffset.x;
@@ -538,7 +540,7 @@ void UIControl::SetupButtons()
                 carousel->parent = this;
             }
         }
-    }*/
+    }
 
     for (int32 i = 0; i < SCENEENTITY_COUNT; ++i) {
         UIButton *button = GameObject::Get<UIButton>(i);

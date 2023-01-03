@@ -3,6 +3,8 @@
 #include "UIButton.hpp"
 #include "UIHeading.hpp"
 #include "UIButtonPrompt.hpp"
+#include "UICarousel.hpp"
+#include "UIShifter.hpp"
 
 namespace GameLogic
 {
@@ -83,6 +85,8 @@ struct UIControl : RSDK::GameObject::Entity {
     int32 storedButtonID;
     int32 lastButtonID;
     UIHeading *heading;
+    UIShifter *shifter;
+    UICarousel *carousel;
     UIButtonPrompt *prompts[UICONTROL_PROMPT_COUNT];
     UIButton *buttons[UICONTROL_BUTTON_COUNT];
     RSDK::Action<bool32> backPressCB;

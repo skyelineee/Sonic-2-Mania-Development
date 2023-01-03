@@ -328,6 +328,12 @@
     <ClCompile Include="Objects\Menu\UIChoice.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\UICarousel.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIShifter.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -628,6 +634,12 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\UIChoice.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UICarousel.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIShifter.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>

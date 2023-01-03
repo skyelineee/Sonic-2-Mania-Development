@@ -52,7 +52,6 @@ struct UIKeyBinder : RSDK::GameObject::Entity {
     };
 
     S2M_UI_ITEM_BASE(UIKeyBinder);
-    RSDK::StateMachine<UIKeyBinder> state;
     uint8 type;
     uint8 inputID;
     int32 listID;
