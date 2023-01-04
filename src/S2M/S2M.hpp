@@ -338,7 +338,7 @@ template <typename R> struct Action
 #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
 
 #define S2M_UI_ITEM_BASE(type)                                                                                                                       \
-    RSDK::StateMachine<void> state;                                                                                                                  \
+    RSDK::StateMachine<type> state;                                                                                                                  \
     RSDK::Action<void> processButtonCB;                                                                                                              \
     RSDK::Action<bool32> touchCB;                                                                                                                    \
     RSDK::Action<void> actionCB;                                                                                                                     \
