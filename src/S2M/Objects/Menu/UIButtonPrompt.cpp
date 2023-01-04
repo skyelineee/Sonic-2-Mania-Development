@@ -344,8 +344,8 @@ bool32 UIButtonPrompt::CheckTouch()
 
             bool32 wasTouched = false;
             for (int32 i = 0; i < touchInfo->count; ++i) {
-                int32 x = screenX - ((touchInfo->x[i] * screenInfo->size.x) * -65536.0f);
-                int32 y = screenY - ((touchInfo->y[i] * screenInfo->size.y) * -65536.0f);
+                int32 x = screenX - (int32)((touchInfo->x[i] * screenInfo->size.x) * -65536.0f);
+                int32 y = screenY - (int32)((touchInfo->y[i] * screenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(this->touchPos.x + this->position.x - x);
                 int32 touchY = abs(this->touchPos.y + this->position.y - y);
@@ -426,19 +426,19 @@ void UIButtonPrompt::EditorLoad(void)
     sVars->aniFrames.Load("UI/Buttons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, buttonID);
-    RSDK_ENUM_VAR("A", UIBUTTONPROMPT_BUTTON_A);
-    RSDK_ENUM_VAR("B", UIBUTTONPROMPT_BUTTON_B);
-    RSDK_ENUM_VAR("X", UIBUTTONPROMPT_BUTTON_X);
-    RSDK_ENUM_VAR("Y", UIBUTTONPROMPT_BUTTON_Y);
-    RSDK_ENUM_VAR("Start", UIBUTTONPROMPT_BUTTON_START);
-    RSDK_ENUM_VAR("Select", UIBUTTONPROMPT_BUTTON_SELECT);
+    RSDK_ENUM_VAR("A");
+    RSDK_ENUM_VAR("B");
+    RSDK_ENUM_VAR("X");
+    RSDK_ENUM_VAR("Y");
+    RSDK_ENUM_VAR("Start");
+    RSDK_ENUM_VAR("Select");
 
     RSDK_ACTIVE_VAR(sVars, headingAnchor);
-    RSDK_ENUM_VAR("None", UIBUTTONPROMPT_ANCHOR_NONE);
-    RSDK_ENUM_VAR("Top-Left", UIBUTTONPROMPT_ANCHOR_TOPLEFT);
-    RSDK_ENUM_VAR("Top-Right", UIBUTTONPROMPT_ANCHOR_TOPRIGHT);
-    RSDK_ENUM_VAR("Bottom-Right", UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT);
-    RSDK_ENUM_VAR("Bottom-Left", UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT);
+    RSDK_ENUM_VAR("None");
+    RSDK_ENUM_VAR("Top-Left");
+    RSDK_ENUM_VAR("Top-Right");
+    RSDK_ENUM_VAR("Bottom-Right");
+    RSDK_ENUM_VAR("Bottom-Left");
 }
 #endif
 

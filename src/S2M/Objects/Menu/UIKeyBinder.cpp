@@ -41,9 +41,9 @@ void UIKeyBinder::Update()
     if (this->lasyKeyMap == keyMap) {
         keyMapChanged = false;
     }
-    else if (keyMap == Input::KEYMAP_AUTO_MAPPING) {
+    else if (keyMap == KEYMAP_AUTO_MAPPING) {
         this->keyAnimator.SetAnimation(&sVars->aniFrames, UIKeyBinder::GetButtonListID(), true, 0);
-        this->lasyKeyMap = Input::KEYMAP_AUTO_MAPPING;
+        this->lasyKeyMap = KEYMAP_AUTO_MAPPING;
         keyMapChanged    = false;
     }
     else {
@@ -71,8 +71,8 @@ void UIKeyBinder::Update()
                     if (str != -1)
                         Localization::GetString(&string, str);
 
-                    UIKeyBinder::SetMappings(this->type, inputID, Input::KEYMAP_NO_MAPPING);
-                    this->lasyKeyMap = Input::KEYMAP_NO_MAPPING;
+                    UIKeyBinder::SetMappings(this->type, inputID, KEYMAP_NO_MAPPING);
+                    this->lasyKeyMap = KEYMAP_NO_MAPPING;
                     keyMapChanged = false;
                 }
             }
@@ -104,7 +104,7 @@ void UIKeyBinder::Update()
 
             int32 frame = UIButtonPrompt::MappingsToFrame(this->lasyKeyMap);
             this->keyAnimator.SetAnimation(sVars->aniFrames, UIKeyBinder::GetButtonListID(), true, frame);
-            UIKeyBinder::SetMappings(inputID, this->type, Input::KEYMAP_AUTO_MAPPING);
+            UIKeyBinder::SetMappings(inputID, this->type, KEYMAP_AUTO_MAPPING);
 
             sVars->sfxFail.Play(false, 255);
         }
@@ -201,7 +201,7 @@ int32 UIKeyBinder::GetMappings(int32 input, int32 button)
         default: break;
     }
 
-    return Input::KEYMAP_NO_MAPPING;
+    return KEYMAP_NO_MAPPING;
 }
 
 void UIKeyBinder::SetMappings(int32 input, int32 button, int32 keyMap)
@@ -304,7 +304,7 @@ void UIKeyBinder::SelectedCB()
 
         UIWidgets::sVars->sfxAccept.Play(false, 255);
 
-        UIKeyBinder::SetMappings(this->inputID + 1, this->type, Input::KEYMAP_AUTO_MAPPING);
+        UIKeyBinder::SetMappings(this->inputID + 1, this->type, KEYMAP_AUTO_MAPPING);
     }
 }
 
@@ -375,9 +375,9 @@ void UIKeyBinder::MoveKeyToActionCB_No()
     UIKeyBinder *binder = sVars->activeBinder;
 
     if (binder->state.Set(&UIKeyBinder::State_Selected)) {
-        UIKeyBinder::SetMappings(binder->inputID + 1, binder->type, Input::KEYMAP_AUTO_MAPPING);
-        sVars->activeInputID  = Input::KEYMAP_AUTO_MAPPING;
-        sVars->activeButtonID = Input::KEYMAP_AUTO_MAPPING;
+        UIKeyBinder::SetMappings(binder->inputID + 1, binder->type, KEYMAP_AUTO_MAPPING);
+        sVars->activeInputID  = KEYMAP_AUTO_MAPPING;
+        sVars->activeButtonID = KEYMAP_AUTO_MAPPING;
     }
 }
 
@@ -390,7 +390,7 @@ void UIKeyBinder::MoveKeyToActionCB_Yes()
         int32 keyMap = UIKeyBinder::GetMappings(sVars->activeInputID, sVars->activeButtonID);
 
         // Remove other button's keyMap
-        UIKeyBinder::SetMappings(sVars->activeInputID, sVars->activeButtonID, Input::KEYMAP_NO_MAPPING);
+        UIKeyBinder::SetMappings(sVars->activeInputID, sVars->activeButtonID, KEYMAP_NO_MAPPING);
 
         // Give the keyMap to the new button
         UIKeyBinder::SetMappings(binder->inputID + 1, binder->type, keyMap);
@@ -405,8 +405,8 @@ void UIKeyBinder::MoveKeyToActionCB_Yes()
         sVars->activeBinder = NULL;
 
         RSDKTable->SetVideoSetting(VIDEOSETTING_CHANGED, false);
-        sVars->activeInputID  = Input::KEYMAP_AUTO_MAPPING;
-        sVars->activeButtonID = Input::KEYMAP_AUTO_MAPPING;
+        sVars->activeInputID  = KEYMAP_AUTO_MAPPING;
+        sVars->activeButtonID = KEYMAP_AUTO_MAPPING;
     }
 }
 
@@ -422,15 +422,15 @@ void UIKeyBinder::EditorLoad()
     sVars->aniFrames.Load("UI/Buttons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, type);
-    RSDK_ENUM_VAR("Up", UIKEYBINDER_UP);
-    RSDK_ENUM_VAR("Down", UIKEYBINDER_DOWN);
-    RSDK_ENUM_VAR("Left", UIKEYBINDER_LEFT);
-    RSDK_ENUM_VAR("Right", UIKEYBINDER_RIGHT);
-    RSDK_ENUM_VAR("A", UIKEYBINDER_A);
-    RSDK_ENUM_VAR("B", UIKEYBINDER_B);
-    RSDK_ENUM_VAR("X", UIKEYBINDER_X);
-    RSDK_ENUM_VAR("Y", UIKEYBINDER_Y);
-    RSDK_ENUM_VAR("Start", UIKEYBINDER_START);
+    RSDK_ENUM_VAR("Up");
+    RSDK_ENUM_VAR("Down");
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Right");
+    RSDK_ENUM_VAR("A");
+    RSDK_ENUM_VAR("B");
+    RSDK_ENUM_VAR("X");
+    RSDK_ENUM_VAR("Y");
+    RSDK_ENUM_VAR("Start");
 }
 #endif
 

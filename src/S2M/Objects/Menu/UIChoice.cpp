@@ -228,8 +228,8 @@ bool32 UIChoice::CheckTouch()
             int32 sizeY = touchStart[i].y >> 1;
 
             for (int32 t = 0; t < touchInfo->count; ++t) {
-                int32 x = (screenInfo->position.x << 16) - ((touchInfo->x[t] * screenInfo->size.x) * -65536.0f);
-                int32 y = (screenInfo->position.y << 16) - ((touchInfo->y[t] * screenInfo->size.y) * -65536.0f);
+                int32 x = (screenInfo->position.x << 16) - (int32)((touchInfo->x[t] * screenInfo->size.x) * -65536.0f);
+                int32 y = (screenInfo->position.y << 16) - (int32)((touchInfo->y[t] * screenInfo->size.y) * -65536.0f);
 
                 int32 touchX = abs(touchEnd[i].x + this->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + this->position.y - y);

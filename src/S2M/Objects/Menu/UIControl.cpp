@@ -242,7 +242,7 @@ void UIControl::ProcessInputs()
             UIControl::sVars->anyBackPress = controllerInfo->keyB.press;
         }
 
-        UIControl::sVars->anyBackPress |= Unknown_pausePress;
+        UIControl::sVars->anyBackPress |= unknownInfo->pausePress;
         UIControl::sVars->anyBackPress |= UIControl::sVars->forceBackPress;
 
         if (UIControl::sVars->anyBackPress) {

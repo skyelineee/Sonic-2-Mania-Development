@@ -86,14 +86,14 @@ void UIHeading::EditorLoad()
     sVars->textFrames.Load("UI/HeadingsEN.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, headingID);
-    RSDK_ENUM_VAR("Main Menu", UIHEADING_MAINMENU);
-    RSDK_ENUM_VAR("Save Select", UIHEADING_SAVESELECT);
-    RSDK_ENUM_VAR("Time Attack", UIHEADING_TIMEATTACK);
-    RSDK_ENUM_VAR("Results", UIHEADING_RESULTS);
-    RSDK_ENUM_VAR("Options", UIHEADING_OPTIONS);
-    RSDK_ENUM_VAR("Extras", UIHEADING_EXTRAS);
-    RSDK_ENUM_VAR("Player Select", UIHEADING_PLAYERSEL);
-    RSDK_ENUM_VAR("Zone Select", UIHEADING_ZONESEL);
+    RSDK_ENUM_VAR("Main Menu");
+    RSDK_ENUM_VAR("Save Select");
+    RSDK_ENUM_VAR("Time Attack");
+    RSDK_ENUM_VAR("Results");
+    RSDK_ENUM_VAR("Options");
+    RSDK_ENUM_VAR("Extras");
+    RSDK_ENUM_VAR("Player Select");
+    RSDK_ENUM_VAR("Zone Select");
 }
 #endif
 

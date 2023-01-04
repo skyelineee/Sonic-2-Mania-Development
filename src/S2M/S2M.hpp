@@ -239,7 +239,14 @@ struct GlobalVariables {
 
 // Game Helpers
 
-namespace RSDK {
+namespace RSDK
+{
+
+// just the default keymappings for rn, these should be added to game api input.hpp but I cba
+enum KeyMappings {
+    KEYMAP_AUTO_MAPPING = -1,
+    KEYMAP_NO_MAPPING   = 0,
+};
 
 template <typename R> struct Action
 {
@@ -283,7 +290,7 @@ template <typename R> struct Action
         if (applied)
             return Run(self);
 
-        return {};
+        return R();
     }
 
     template <typename T> inline R SetAndRun(R (*action)(), void *self = nullptr)
@@ -293,7 +300,7 @@ template <typename R> struct Action
         if (applied)
             return Run(self);
 
-        return {};
+        return R();
     }
 
     inline R Run(void *self)
@@ -303,7 +310,7 @@ template <typename R> struct Action
         	return (((Action *)self)->*action)();
         }
 
-        return {};
+        return R();
     }
 
     template <typename T> inline bool Matches(void *other)
