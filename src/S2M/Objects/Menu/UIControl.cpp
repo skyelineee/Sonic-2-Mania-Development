@@ -140,7 +140,7 @@ void UIControl::StageLoad()
     UIControl::sVars->isProcessingInput = false;
 }
 
-UIControl *GetUIControl()
+UIControl *UIControl::GetUIControl()
 {
     for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         if (control->active == ACTIVE_ALWAYS) {

@@ -14,6 +14,10 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(UIButton);
 
+// ==============================
+// GAME EVENTS
+// ==============================
+
 void UIButton::Update()
 {
     this->touchPosSizeS.x   = this->size.x;
@@ -55,6 +59,114 @@ void UIButton::Draw() {}
 void UIButton::Create(void *data) {}
 
 void UIButton::StageLoad() {}
+
+// ==============================
+// FUNCTIONS
+// ==============================
+
+void UIButton::ManageChoices(UIButton *button)
+{
+    // TODO
+}
+
+UIButton *UIButton::GetChoicePtr(UIButton *button, int32 selection)
+{
+    // TODO
+    return nullptr;
+}
+
+void UIButton::SetChoiceSelectionWithCB(UIButton *button, int32 selection)
+{
+    // TODO
+}
+
+void UIButton::SetChoiceSelection(UIButton *button, int32 selection)
+{
+    // TODO
+}
+
+void *UIButton::GetActionCB()
+{
+    // TODO
+    return nullptr;
+}
+
+void UIButton::FailCB()
+{
+    // TODO
+}
+
+void UIButton::ProcessButtonCB_Scroll()
+{
+    // TODO
+}
+
+bool32 UIButton::ProcessTouchCB_Multi()
+{
+    // TODO
+    return false;
+}
+
+bool32 UIButton::ProcessTouchCB_Single()
+{
+    // TODO
+    return false;
+}
+
+void UIButton::ProcessButtonCB()
+{
+    // TODO
+}
+
+bool32 UIButton::CheckButtonEnterCB()
+{
+    // TODO
+    return false;
+}
+
+bool32 UIButton::CheckSelectedCB()
+{
+    // TODO
+    return false;
+}
+
+void UIButton::ButtonEnterCB()
+{
+    // TODO
+}
+
+void UIButton::ButtonLeaveCB()
+{
+    // TODO
+}
+
+void UIButton::SelectedCB()
+{
+    // TODO
+}
+
+// ==============================
+// STATES
+// ==============================
+
+void UIButton::State_HandleButtonLeave()
+{
+    // TODO
+}
+
+void UIButton::State_HandleButtonEnter()
+{
+    // TODO
+}
+
+void UIButton::State_Selected()
+{ 
+    // TODO
+}
+
+// ==============================
+// EDITOR EVENTS
+// ==============================
 
 #if RETRO_INCLUDE_EDITOR
 void UIButton::EditorDraw() {}
