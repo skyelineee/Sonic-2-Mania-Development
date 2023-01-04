@@ -2,12 +2,16 @@
 #include "S2M.hpp"
 #include "UIButton.hpp"
 #include "UIHeading.hpp"
-#include "UIButtonPrompt.hpp"
-#include "UICarousel.hpp"
-#include "UIShifter.hpp"
 
 namespace GameLogic
 {
+
+// Forward declarations
+// these tell the compiler these classes exist but not what they are
+// can only be used for ptrs, including these files creates a circular dependency so dont do that :3
+struct UIButtonPrompt;
+struct UICarousel;
+struct UIShifter;
 
 #define UICONTROL_BUTTON_COUNT (64)
 
