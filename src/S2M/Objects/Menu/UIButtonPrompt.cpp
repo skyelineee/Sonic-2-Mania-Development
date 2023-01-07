@@ -309,7 +309,7 @@ uint8 UIButtonPrompt::MappingsToFrame(int32 mappings)
     return 0;
 }
 
-void UIButtonPrompt::SetButtonSprites(void)
+void UIButtonPrompt::SetButtonSprites()
 {
     if (sceneInfo->inEditor) {
         this->buttonAnimator.SetAnimation(&sVars->aniFrames, UIBUTTONPROMPT_XBOX, true, this->buttonID);

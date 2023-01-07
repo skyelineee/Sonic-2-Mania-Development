@@ -1,13 +1,10 @@
 #pragma once
 #include "S2M.hpp"
-#include "UIControl.hpp"
-#include "UIDiorama.hpp"
-#include "UIButtonPrompt.hpp"
 
 namespace GameLogic
 {
 
-struct MainMenu : RSDK::GameObject::Entity {
+struct UILoadingIcon : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -22,10 +19,15 @@ struct MainMenu : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        UIControl *menuControl;
-        UIButtonPrompt *confirmPrompt;
-        UIDiorama *diorama;
+        RSDK::SpriteAnimation aniFrames;
+        int32 timer;
+        UILoadingIcon *activeSpinner;
     };
+
+    RSDK::StateMachine<UILoadingIcon> state;
+    int32 timer;
+    bool32 fadedIn;
+    RSDK::Animator animator;
 
     // ==============================
     // EVENTS
@@ -49,19 +51,19 @@ struct MainMenu : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static void Initialize();
-    static bool32 BackPressCB_ReturnToTitle();
-    static void ExitGame();
-    static void ExitButton_ActionCB();
-    static void StartExitGame();
-    void MenuButton_ActionCB();
-    static void SetupActions();
-    static void MenuSetupCB();
+    static void StartWait();
+    static void FinishWait();
+    void State_Show();
+    void State_Hide();
+
+    // ==============================
+    // STATES
+    // ==============================
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(MainMenu);
+    RSDK_DECLARE(UILoadingIcon);
 };
 } // namespace GameLogic

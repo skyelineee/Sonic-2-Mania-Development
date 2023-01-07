@@ -28,6 +28,9 @@ struct Localization : RSDK::GameObject::Entity {
         KeyAlreadyBoundP2,
         ApplyChangedSettings,
         VideoChangesApplied,
+        RPC_Menu,
+        Default,
+        QuitWarning,
         StringCount,
     };
 

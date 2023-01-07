@@ -4,7 +4,7 @@
 namespace GameLogic
 {
 
-struct UIChoice : RSDK::GameObject::Entity {
+struct UIWinSize : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -22,30 +22,25 @@ struct UIChoice : RSDK::GameObject::Entity {
         RSDK::SpriteAnimation aniFrames;
     };
 
-    S2M_UI_ITEM_BASE(UIChoice)
+    S2M_UI_ITEM_BASE(UIWinSize);
     RSDK::Vector2 size;
-    int32 listID;
-    int32 frameID;
-    bool32 noText;
-    bool32 auxIcon;
-    int32 auxListID;
-    int32 auxFrameID;
     int32 align;
     int32 arrowWidth;
-    bool32 isDisabled;
+    int32 selection;
+    int32 prevSelection;
     int32 bgEdgeSize;
     int32 textBounceOffset;
     int32 buttonBounceOffset;
     int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
-    bool32 clearParentState;
+    RSDK::String text;
     int32 touchID;
-    RSDK::Animator labelAnimator;
-    RSDK::Animator iconAnimator;
-    RSDK::Animator leftArrowAnimator;
-    RSDK::Animator rightArrowAnimator;
-    RSDK::SpriteAnimation aniFrames;
+    int32 maxScale;
+    RSDK::Animator unusedAnimator;
+    RSDK::Animator textAnimator;
+    RSDK::Animator arrowAnimatorL;
+    RSDK::Animator arrowAnimatorR;
 
     // ==============================
     // INSTANCE VARS
@@ -73,11 +68,14 @@ struct UIChoice : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static void SetChoiceActive(UIChoice *choice);
-    static void SetChoiceInactive(UIChoice *choice);
+    void SetupText(UIWinSize *entityPtr);
+    void ApplySettings();
+    void ProcessButtonCB();
+    bool32 ProcessTouchCB();
     void TouchedCB_Left();
     void TouchedCB_Right();
-    bool32 CheckTouch();
+    static void SetChoiceActive(UIWinSize *entity);
+    static void SetChoiceInactive(UIWinSize *entity);
 
     // ==============================
     // STATES
@@ -90,6 +88,7 @@ struct UIChoice : RSDK::GameObject::Entity {
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(UIChoice);
+    RSDK_DECLARE(UIWinSize);
 };
 } // namespace GameLogic
+#pragma once

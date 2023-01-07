@@ -143,6 +143,14 @@ enum GameTypes {
     GAME_SK,
 };
 
+enum PresenceTypes {
+    PRESENCE_GENERIC,
+    PRESENCE_MENU,
+    PRESENCE_MANIA,
+    PRESENCE_TA,
+    PRESENCE_TITLE,
+};
+
 // Global Variables
 
 // forward declare

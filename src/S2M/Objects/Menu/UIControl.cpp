@@ -389,7 +389,7 @@ void UIControl::MenuChangeButtonInit(UIControl *control)
 
 
                     if (entity->visible)
-                        RSDKTable->AddDrawListRef(entity->drawGroup, slot);
+                        Graphics::AddDrawListRef(entity->drawGroup, slot);
 
                     sceneInfo->entity = storeEntity;
                 }
@@ -419,8 +419,8 @@ void UIControl::SetActiveMenu(UIControl *entity)
         entity->buttonID = entity->startingID;
     }
 
-    RSDKTable->ClearCameras();
-    RSDKTable->AddCamera(&entity->position, screenInfo->size.x << 16, screenInfo->size.y << 16, true);
+    Graphics::ClearCameras();
+    Graphics::AddCamera(&entity->position, screenInfo->size.x << 16, screenInfo->size.y << 16, true);
 
     UIControl::MenuChangeButtonInit(entity);
 
@@ -547,9 +547,9 @@ void UIControl::SetupButtons()
 
         if (button) {
             int32 classID = button->classID;
-            /*if (classID != UIButton::sVars->classID && (!UIModeButton || classID != UIModeButton->classID) && (!UISaveSlot || classID != UISaveSlot->classID)
-                && (!UICharButton || classID != UICharButton->classID) && (!UITAZoneModule || classID != UITAZoneModule->classID)
-                && (!UISlider || classID != UISlider->classID) && (!UIKeyBinder || classID != UIKeyBinder->classID)) {
+            if (classID != UIButton::sVars->classID //&& (!UISaveSlot || classID != UISaveSlot::sVars->classID)
+                //&& (!UICharButton || classID != UICharButton->classID) && (!UITAZoneModule || classID != UITAZoneModule->classID)
+                /*&& (!UISlider || classID != UISlider->classID)*/ && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }
             else {
                 int32 x            = this->startPos.x - this->cameraOffset.x;
@@ -567,7 +567,7 @@ void UIControl::SetupButtons()
                         this->buttons[this->buttonCount++] = button;
                     }
                 }
-            }*/
+            }
         }
     }
 }
@@ -592,11 +592,12 @@ bool32 UIControl::isMoving(UIControl *entity)
 void UIControl::MatchMenuTag(const char *text)
 {
     String string;
+    string.Init(nullptr);
 
-    RSDKTable->SetString(&string, text);
+    string.Set(text);
     for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
     {
-        if (entity->active == ACTIVE_ALWAYS || !RSDKTable->CompareStrings(&string, &entity->tag, false))
+        if (entity->active == ACTIVE_ALWAYS || !string.Compare(&string, &entity->tag, false))
             entity->SetInactiveMenu(entity);
         else
             UIControl::SetActiveMenu(entity);
@@ -608,7 +609,7 @@ void UIControl::HandleMenuChange(String *newMenuTag)
     if (newMenuTag->length) {
         for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
         {
-            if (entity->active == ACTIVE_ALWAYS || !RSDKTable->CompareStrings(newMenuTag, &entity->tag, false))
+            if (entity->active == ACTIVE_ALWAYS || !newMenuTag->Compare(newMenuTag, &entity->tag, false))
                 entity->SetInactiveMenu(entity);
             else
                 UIControl::SetActiveMenu(entity);

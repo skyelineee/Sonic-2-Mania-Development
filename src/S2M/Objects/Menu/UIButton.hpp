@@ -81,7 +81,7 @@ struct UIButton : RSDK::GameObject::Entity {
     static UIButton *GetChoicePtr(UIButton *button, int32 selection);
     static void SetChoiceSelectionWithCB(UIButton *button, int32 selection);
     static void SetChoiceSelection(UIButton *button, int32 selection);
-    void *GetActionCB();
+    RSDK::Action<void> *GetActionCB();
     static void FailCB();
     void ProcessButtonCB_Scroll();
     bool32 ProcessTouchCB_Multi();

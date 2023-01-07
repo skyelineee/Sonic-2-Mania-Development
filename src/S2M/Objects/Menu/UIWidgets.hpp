@@ -63,6 +63,17 @@ struct UIWidgets : RSDK::GameObject::Entity {
     // ==============================
 
     static void ApplyLanguage();
+
+    static void DrawRectOutline_Black(int32 x, int32 y, int32 width, int32 height);
+    static void DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 height);
+    static void DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height);
+    static void DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
+    static void DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeMode, int32 red, int32 green, int32 blue, RSDK::InkEffects ink);
+    static void DrawParallelogram(int32 x, int32 y, int32 width, int32 height, int32 edgeSize, int32 red, int32 green, int32 blue);
+    static void DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
+    static void DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
+    static RSDK::Vector2 DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor);
+
     static void DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 
     // ==============================
