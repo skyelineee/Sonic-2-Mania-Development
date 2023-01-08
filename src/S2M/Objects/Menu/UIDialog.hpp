@@ -90,13 +90,13 @@ struct UIDialog : RSDK::GameObject::Entity {
             dialog->callbacks[dialog->buttonCount].Set(&callback);
             dialog->closeOnSelect[dialog->buttonCount] = closeOnSelect;
 
-            GameObject::Reset(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton::sVars->classID, nullptr);
+            RSDK::GameObject::Reset(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton::sVars->classID, nullptr);
 
-            UIButton *button   = GameObject::Get<UIButton>(SLOT_DIALOG_BUTTONS + dialog->buttonCount);
-            button->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
-            button->position.y = (screenInfo->position.y + screenInfo->center.y) << 16;
-            button->animator.SetAnimation(&UIWidgets::sVars->textFrames, 9, true, frame);
-            button->textFrames = UIWidgets::sVars->textFrames;
+            UIButton *button   = RSDK::GameObject::Get<UIButton>(SLOT_DIALOG_BUTTONS + dialog->buttonCount);
+            button->position.x = (RSDK::screenInfo->position.x + RSDK::screenInfo->center.x) << 16;
+            button->position.y = (RSDK::screenInfo->position.y + RSDK::screenInfo->center.y) << 16;
+            button->animator.SetAnimation(&RSDK::GameObject::UIWidgets::sVars->textFrames, 9, true, frame);
+            button->textFrames = RSDK::GameObject::UIWidgets::sVars->textFrames;
 
             if (frame == DIALOG_CONTINUE)
                 button->size.x = 0x640000;
@@ -106,7 +106,7 @@ struct UIDialog : RSDK::GameObject::Entity {
             button->actionCB.Set(&UIDialog::ButtonActionCB);
             button->bgEdgeSize                     = 24;
             button->align                          = UIButton::ALIGN_CENTER;
-            button->active                         = ACTIVE_ALWAYS;
+            button->active                         = RSDK::GameObject::ACTIVE_ALWAYS;
             button->drawGroup                      = dialog->drawGroup;
             dialog->buttons[dialog->buttonCount++] = button;
 

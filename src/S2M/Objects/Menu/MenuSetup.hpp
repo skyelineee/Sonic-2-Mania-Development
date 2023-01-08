@@ -68,9 +68,9 @@ struct MenuSetup : RSDK::GameObject::Entity {
 
     template <typename T> static inline void StartTransition(void (T::*callback)(), int32 delay)
     {
-        MenuSetup *menuSetup = GameObject::Create<MenuSetup>(nullptr, -0x100000, -0x100000);
+        MenuSetup *menuSetup = RSDK::GameObject::Create<MenuSetup>(nullptr, -0x100000, -0x100000);
 
-        menuSetup->active    = ACTIVE_ALWAYS;
+        menuSetup->active    = RSDK::GameObject::ACTIVE_ALWAYS;
         menuSetup->fadeColor = 0x000000;
         menuSetup->fadeShift = 5;
         menuSetup->delay     = delay;
