@@ -194,8 +194,8 @@ bool32 UIResPicker::ProcessTouchCB()
             int32 sizeY = touchStart[i].y >> 1;
 
             for (int32 t = 0; t < touchInfo->count; ++t) {
-                int32 x = (screenInfo->position.x << 16) - ((touchInfo->x[t] * screenInfo->size.x) * -65536.0f);
-                int32 y = (screenInfo->position.y << 16) - ((touchInfo->y[t] * screenInfo->size.y) * -65536.0f);
+                int32 x = (int32)((screenInfo->position.x << 16) - ((touchInfo->x[t] * screenInfo->size.x) * -65536.0f));
+                int32 y = (int32)((screenInfo->position.y << 16) - ((touchInfo->y[t] * screenInfo->size.y) * -65536.0f));
 
                 int32 touchX = abs(touchEnd[i].x + this->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + this->position.y - y);
@@ -346,9 +346,9 @@ void UIResPicker::EditorDraw()
 void UIResPicker::EditorLoad()
 {
     RSDK_ACTIVE_VAR(sVars, align);
-    RSDK_ENUM_VAR("Left", UIBUTTON_ALIGN_LEFT);
-    RSDK_ENUM_VAR("Center", UIBUTTON_ALIGN_CENTER);
-    RSDK_ENUM_VAR("Right", UIBUTTON_ALIGN_RIGHT);
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Center");
+    RSDK_ENUM_VAR("Right");
 }
 #endif
 

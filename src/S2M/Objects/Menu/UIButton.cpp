@@ -410,7 +410,7 @@ bool32 UIButton::ProcessTouchCB_Multi()
                 if (x < x1 && y < y1) {
                     touched = true;
 
-                    if ((touchPosSize.x >> 16) * (touchPosSize.y >> 16) < lastTouchDist) {
+                    if ((uint32)((touchPosSize.x >> 16) * (touchPosSize.y >> 16)) < lastTouchDist) {
                         lastTouchDist = (touchPosSize.x >> 16) * (touchPosSize.y >> 16);
                         lastTouchID   = i;
                     }
@@ -445,8 +445,8 @@ bool32 UIButton::ProcessTouchCB_Single()
             int32 sizeY   = this->touchPosSizeS.y >> 1;
 
             for (int32 i = 0; i < touchInfo->count; ++i) {
-                int32 x = screenX - ((touchInfo->x[i] * screenInfo->size.x) * -65536.0f);
-                int32 y = screenY - ((touchInfo->y[i] * screenInfo->size.y) * -65536.0f);
+                int32 x = (int32)(screenX - ((touchInfo->x[i] * screenInfo->size.x) * -65536.0f));
+                int32 y = (int32)(screenY - ((touchInfo->y[i] * screenInfo->size.y) * -65536.0f));
 
                 int32 touchX = abs(this->touchPosOffsetS.x + this->position.x - x);
                 int32 touchY = abs(this->touchPosOffsetS.y + this->position.y - y);
@@ -873,9 +873,9 @@ void UIButton::EditorDraw()
 void UIButton::EditorLoad()
 {
     RSDK_ACTIVE_VAR(sVars, align);
-    RSDK_ENUM_VAR("Left", UIBUTTON_ALIGN_LEFT);
-    RSDK_ENUM_VAR("Center", UIBUTTON_ALIGN_CENTER);
-    RSDK_ENUM_VAR("Right", UIBUTTON_ALIGN_RIGHT);
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Center");
+    RSDK_ENUM_VAR("Right");
 }
 #endif
 
