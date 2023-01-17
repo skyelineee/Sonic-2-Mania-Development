@@ -37,7 +37,7 @@ struct MenuSetup : RSDK::GameObject::Entity {
     };
 
     RSDK::StateMachine<MenuSetup> state;
-    RSDK::StateMachine<MenuSetup> callback;
+    void (*callback)();
     int32 timer;
     int32 delay;
     int32 fadeShift;
@@ -66,17 +66,7 @@ struct MenuSetup : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    template <typename T> static inline void StartTransition(void (T::*callback)(), int32 delay)
-    {
-        MenuSetup *menuSetup = RSDK::GameObject::Create<MenuSetup>(nullptr, -0x100000, -0x100000);
-
-        menuSetup->active    = RSDK::GameObject::ACTIVE_ALWAYS;
-        menuSetup->fadeColor = 0x000000;
-        menuSetup->fadeShift = 5;
-        menuSetup->delay     = delay;
-        // menuSetup->state.Set(&ManiaModeMenu::State_HandleTransition);
-        menuSetup->callback.Set(&callback);
-    }
+    static void StartTransition(void (*callback)(), int32 delay);
 
     static void SaveFileCB(bool32 success);
 

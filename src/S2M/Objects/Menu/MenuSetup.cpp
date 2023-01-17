@@ -23,7 +23,9 @@ void MenuSetup::Update()
     this->state.Run(this);
 
     if (this->timer >= this->delay) {
-        this->callback.Run(this);
+        if (this->callback)
+            this->callback();
+
         this->Destroy();
     }
     else {
@@ -137,6 +139,17 @@ void MenuSetup::StageLoad()
     for (auto fade : GameObject::GetEntities<FXFade>(FOR_ALL_ENTITIES)) {
         MenuSetup::sVars->fxFade = fade;
     }
+}
+
+void MenuSetup::StartTransition(void (*callback)(), int32 delay)
+{
+    MenuSetup *menuSetup = GameObject::Create<MenuSetup>(nullptr, -0x100000, -0x100000);
+
+    menuSetup->active    = ACTIVE_ALWAYS;
+    menuSetup->fadeColor = 0x000000;
+    menuSetup->fadeShift = 5;
+    menuSetup->delay     = delay;
+    menuSetup->callback  = callback;
 }
 
 void MenuSetup::SaveFileCB(bool32 success)

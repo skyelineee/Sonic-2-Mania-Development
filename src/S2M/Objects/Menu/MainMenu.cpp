@@ -208,9 +208,13 @@ void MainMenu::ExitButton_ActionCB()
     String msg;
     Localization::GetString(&msg, Localization::QuitWarning);
 
-    UIDialog *dialog;
+    Action<void> callbackYes = {};
+    callbackYes.Set(&MainMenu::StartExitGame);
 
-    UIDialog::CreateDialogYesNo(&msg, &MainMenu::StartExitGame, dialog->state.Set(nullptr), true, true);
+    Action<void> callbackNo = {};
+    callbackNo.Set(nullptr);
+
+    UIDialog::CreateDialogYesNo(&msg, callbackYes, callbackNo, true, true);
 }
 
 void MainMenu::StartExitGame()
@@ -218,14 +222,15 @@ void MainMenu::StartExitGame()
     if (UIControl::GetUIControl())
         UIControl::GetUIControl()->state.Set(nullptr);
 
-    Music::FadeOut(0.02);
+    Music::FadeOut(0.02f);
 
     MenuSetup::StartTransition(MainMenu::ExitGame, 64);
 }
 
 void MainMenu::MenuButton_ActionCB()
 {
-    UIButton *button;
+    // sneaky and stupid
+    UIButton *button = (UIButton *)this;
 
     switch (button->frameID) {
         case 0: // Mania Mode

@@ -95,7 +95,7 @@ void UIDialog::Create(void *data)
     this->visible   = true;
 
     if (data)
-        UIDialog::SetupText(this, data);
+        UIDialog::SetupText(this, (String *)data);
 
     this->buttonCount = 0;
 }
@@ -120,9 +120,9 @@ UIDialog *UIDialog::CreateActiveDialog(String *msg)
         else {
             GameObject::Reset(SLOT_DIALOG, UIDialog::sVars->classID, msg);
 
-            UIDialog *dialog = GameObject::Get<UIDialog>(SLOT_DIALOG);
-            dialog->position.x     = (screenInfo->position.x + screenInfo->center.x) << 16;
-            dialog->position.y     = (screenInfo->position.y + screenInfo->center.y) << 16;
+            UIDialog *dialog              = GameObject::Get<UIDialog>(SLOT_DIALOG);
+            dialog->position.x            = (screenInfo->position.x + screenInfo->center.x) << 16;
+            dialog->position.y            = (screenInfo->position.y + screenInfo->center.y) << 16;
             UIDialog::sVars->activeDialog = dialog;
 
             return dialog;
@@ -153,6 +153,44 @@ void UIDialog::SetupText(UIDialog *dialog, String *text)
     }
 }
 
+void UIDialog::AddButton(uint8 frame, UIDialog *dialog, RSDK::Action<void> callback, bool32 closeOnSelect)
+{
+    int32 id = dialog->buttonCount;
+
+    if (dialog->buttonCount < UIDIALOG_OPTION_COUNT) {
+        dialog->buttonFrames[dialog->buttonCount] = frame;
+        dialog->callbacks[dialog->buttonCount].Copy(&callback);
+        dialog->closeOnSelect[dialog->buttonCount] = closeOnSelect;
+
+        GameObject::Reset(SLOT_DIALOG_BUTTONS + dialog->buttonCount, UIButton::sVars->classID, nullptr);
+
+        UIButton *button   = GameObject::Get<UIButton>(SLOT_DIALOG_BUTTONS + dialog->buttonCount);
+        button->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
+        button->position.y = (screenInfo->position.y + screenInfo->center.y) << 16;
+        button->animator.SetAnimation(&UIWidgets::sVars->textFrames, 9, true, frame);
+        button->textFrames = UIWidgets::sVars->textFrames;
+
+        if (frame == DIALOG_CONTINUE)
+            button->size.x = 0x640000;
+        else
+            button->size.x = 0x320000;
+        button->size.y = 0x180000;
+        button->actionCB.Set(&UIDialog::ButtonActionCB);
+        button->bgEdgeSize                     = 24;
+        button->align                          = UIButton::ALIGN_CENTER;
+        button->active                         = ACTIVE_ALWAYS;
+        button->drawGroup                      = dialog->drawGroup;
+        dialog->buttons[dialog->buttonCount++] = button;
+
+        UIControl *parent = dialog->parent;
+        if (parent) {
+            button->parent      = (Entity *)parent;
+            parent->buttons[id] = button;
+            parent->buttonCount = dialog->buttonCount;
+        }
+    }
+}
+
 void UIDialog::Setup(UIDialog *dialog)
 {
     if (dialog) {
@@ -161,24 +199,23 @@ void UIDialog::Setup(UIDialog *dialog)
         Vector2 size;
         size.x = screenInfo->size.x << 16;
         size.y = screenInfo->size.y << 16;
-        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-        {
+        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
             if (control->active == ACTIVE_ALWAYS) {
-                tookFocus                   = true;
-                control->dialogHasFocus     = true;
-                UIDialog::sVars->controlStore      = control;
-                UIDialog::sVars->controlStateStore.Copy((StateMachine<UIDialog> *)&control->state);
+                tookFocus                     = true;
+                control->dialogHasFocus       = true;
+                UIDialog::sVars->controlStore = control;
+                UIDialog::sVars->controlStateStore.Copy(&control->state);
 
-                control                            = nullptr;
+                control = nullptr;
                 GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
 
-                control                    = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
-                control->menuWasSetup      = true;
-                control->position.x        = (screenInfo->position.x + screenInfo->center.x) << 16;
-                control->position.y        = (screenInfo->position.y + screenInfo->center.y) << 16;
-                control->rowCount          = 1;
-                control->columnCount       = dialog->buttonCount;
-                control->buttonID          = 0;
+                control               = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
+                control->menuWasSetup = true;
+                control->position.x   = (screenInfo->position.x + screenInfo->center.x) << 16;
+                control->position.y   = (screenInfo->position.y + screenInfo->center.y) << 16;
+                control->rowCount     = 1;
+                control->columnCount  = dialog->buttonCount;
+                control->buttonID     = 0;
                 control->backPressCB.Set(&UIDialog::HandleAutoClose);
                 control->selectionDisabled = true;
 
@@ -203,18 +240,27 @@ void UIDialog::Setup(UIDialog *dialog)
                 break;
             }
         }
+    }
+}
 
+void UIDialog::CloseOnSel_HandleSelection(UIDialog *dialog, RSDK::Action<void> callback)
+{
+    if (dialog && !dialog->state.Matches(&UIDialog::State_Close)) {
+        dialog->parent->selectionDisabled = true;
+        dialog->timer                     = 0;
+        dialog->state.Set(&UIDialog::State_Close);
+        dialog->closeCB.Copy(&callback);
     }
 }
 
 void UIDialog::DrawBGShapes()
 {
     Graphics::DrawRect(((screenInfo->position.x + screenInfo->center.x) << 16) - (this->bgRectSize.x >> 1),
-                  ((screenInfo->position.y + screenInfo->center.y) << 16) - (this->bgRectSize.y >> 1), this->bgRectSize.x, this->bgRectSize.y,
-                  this->useAltColor ? 0x282028 : 0x000000, 0xFF, INK_NONE, false);
+                       ((screenInfo->position.y + screenInfo->center.y) << 16) - (this->bgRectSize.y >> 1), this->bgRectSize.x, this->bgRectSize.y,
+                       this->useAltColor ? 0x282028 : 0x000000, 0xFF, INK_NONE, false);
 
     UIWidgets::DrawParallelogram(this->dialogPos.x + ((screenInfo->position.x + screenInfo->center.x) << 16),
-                                this->dialogPos.y + ((screenInfo->position.y + screenInfo->center.y) << 16), 0xC8, 0x8F, 0x8F, 0x30, 0xA0, 0xF0);
+                                 this->dialogPos.y + ((screenInfo->position.y + screenInfo->center.y) << 16), 0xC8, 0x8F, 0x8F, 0x30, 0xA0, 0xF0);
 }
 
 void UIDialog::HandleButtonPositions()
@@ -229,11 +275,11 @@ void UIDialog::HandleButtonPositions()
         if (!this->buttons[i])
             break;
 
-        UIButton *button = this->buttons[i];
-        button->startPos.x     = x;
-        button->startPos.y     = y;
-        button->position.x     = x;
-        button->position.y     = y;
+        UIButton *button   = this->buttons[i];
+        button->startPos.x = x;
+        button->startPos.y = y;
+        button->position.x = x;
+        button->position.y = y;
 
         x += offset;
     }
@@ -260,9 +306,9 @@ void UIDialog::Close()
         storedControl->dialogHasFocus = false;
     }
 
-    sVars->controlStore      = nullptr;
+    sVars->controlStore = nullptr;
     sVars->controlStateStore.Set(nullptr);
-    sVars->activeDialog      = nullptr;
+    sVars->activeDialog = nullptr;
 
     this->closeCB.Run(this);
     this->Destroy();
@@ -375,7 +421,7 @@ void UIDialog::State_Close()
             this->dialogPos.x = (screenInfo->size.x + 64) << 16;
             this->dialogPos.y = 0;
             MathHelpers::Lerp2Sin1024(&this->bgRectSize, MAX(((this->timer - 8) << 8) / 8, 0), screenInfo->size.x << 16, 0x900000,
-                                     screenInfo->size.x << 16, 0);
+                                      screenInfo->size.x << 16, 0);
 
             ++this->timer;
         }
@@ -387,6 +433,50 @@ void UIDialog::State_Close()
 
         ++this->timer;
     }
+}
+
+// ==============================
+// HELPERS
+// ==============================
+
+UIDialog *UIDialog::CreateDialogOk(RSDK::String *text, RSDK::Action<void> callback, bool32 closeOnSelect)
+{
+    UIDialog *dialog = UIDialog::CreateActiveDialog(text);
+
+    if (dialog) {
+        UIDialog::AddButton(DIALOG_OK, dialog, callback, closeOnSelect);
+        UIDialog::Setup(dialog);
+    }
+
+    return dialog;
+}
+
+UIDialog *UIDialog::CreateDialogYesNo(RSDK::String *text, RSDK::Action<void> callbackYes, RSDK::Action<void> callbackNo, bool32 closeOnSelect_Yes,
+                                      bool32 closeOnSelect_No)
+{
+    UIDialog *dialog = UIDialog::CreateActiveDialog(text);
+
+    if (dialog) {
+        UIDialog::AddButton(DIALOG_NO, dialog, callbackNo, closeOnSelect_No);
+        UIDialog::AddButton(DIALOG_YES, dialog, callbackYes, closeOnSelect_Yes);
+        UIDialog::Setup(dialog);
+    }
+
+    return dialog;
+}
+
+UIDialog *UIDialog::CreateDialogOkCancel(RSDK::String *text, RSDK::Action<void> callbackOk, RSDK::Action<void> callbackCancel,
+                                         bool32 closeOnSelect_Ok, bool32 closeOnSelect_Cancel)
+{
+    UIDialog *dialog = UIDialog::CreateActiveDialog(text);
+
+    if (dialog) {
+        UIDialog::AddButton(DIALOG_OK, dialog, callbackOk, closeOnSelect_Ok);
+        UIDialog::AddButton(DIALOG_CANCEL, dialog, callbackCancel, closeOnSelect_Cancel);
+        UIDialog::Setup(dialog);
+    }
+
+    return dialog;
 }
 
 #if RETRO_INCLUDE_EDITOR
