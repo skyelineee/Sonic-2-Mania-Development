@@ -25,7 +25,7 @@ void UIControl::Update()
     if (this->buttonID >= 0 && this->buttonID != this->lastButtonID)
         this->lastButtonID = this->buttonID;
 
-    if (!UIControl::sVars->hasTouchInput && this->buttonID == -1)
+    if (!sVars->hasTouchInput && this->buttonID == -1)
         this->buttonID = this->lastButtonID;
 
     this->state.Run(this);
@@ -36,6 +36,7 @@ void UIControl::Update()
     this->menuUpdateCB.Run(this);
 }
 void UIControl::LateUpdate() {}
+
 void UIControl::StaticUpdate()
 {
     if (sVars->lockInput) {
@@ -46,10 +47,10 @@ void UIControl::StaticUpdate()
         sVars->inputLocked = false;
     }
 
-    UIControl::sVars->forceBackPress = false;
+    sVars->forceBackPress = false;
 
-    ++UIControl::sVars->timer;
-    UIControl::sVars->timer &= 0x7FFF;
+    ++sVars->timer;
+    sVars->timer &= 0x7FFF;
 }
 
 void UIControl::Draw()
@@ -134,10 +135,10 @@ void UIControl::Create(void *data)
 
 void UIControl::StageLoad()
 {
-    UIControl::sVars->inputLocked       = false;
-    UIControl::sVars->lockInput         = false;
-    UIControl::sVars->active            = ACTIVE_ALWAYS;
-    UIControl::sVars->isProcessingInput = false;
+    sVars->inputLocked       = false;
+    sVars->lockInput         = false;
+    sVars->active            = ACTIVE_ALWAYS;
+    sVars->isProcessingInput = false;
 }
 
 UIControl *UIControl::GetUIControl()
@@ -148,128 +149,127 @@ UIControl *UIControl::GetUIControl()
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void UIControl::ClearInputs(uint8 buttonID)
 {
     for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-        UIControl::sVars->upPress[i]      = false;
-        UIControl::sVars->downPress[i] = false;
-        UIControl::sVars->leftPress[i]    = false;
-        UIControl::sVars->rightPress[i]   = false;
-        UIControl::sVars->yPress[i]       = false;
-        UIControl::sVars->xPress[i]       = false;
-        UIControl::sVars->backPress[i]    = false;
-        UIControl::sVars->confirmPress[i] = false;
-        UIControl::sVars->startPress[i]          = false;
+        sVars->upPress[i]      = false;
+        sVars->downPress[i]    = false;
+        sVars->leftPress[i]    = false;
+        sVars->rightPress[i]   = false;
+        sVars->yPress[i]       = false;
+        sVars->xPress[i]       = false;
+        sVars->backPress[i]    = false;
+        sVars->confirmPress[i] = false;
+        sVars->startPress[i]   = false;
     }
 
-    UIControl::sVars->anyUpPress = false;
-    UIControl::sVars->anyDownPress = false;
-    UIControl::sVars->anyLeftPress = false;
-    UIControl::sVars->anyRightPress = false;
-    UIControl::sVars->anyYPress     = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_Y;
-    UIControl::sVars->anyXPress     = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_X;
-    UIControl::sVars->anyStartPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_SELECT;
+    sVars->anyUpPress    = false;
+    sVars->anyDownPress  = false;
+    sVars->anyLeftPress  = false;
+    sVars->anyRightPress = false;
+    sVars->anyYPress     = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_Y;
+    sVars->anyXPress     = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_X;
+    sVars->anyStartPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_SELECT;
 
     if (API::GetConfirmButtonFlip()) {
-        UIControl::sVars->anyConfirmPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
-        UIControl::sVars->anyBackPress    = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
-        UIControl::sVars->forceBackPress  = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
+        sVars->anyConfirmPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
+        sVars->anyBackPress    = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
+        sVars->forceBackPress  = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
     }
     else {
-        UIControl::sVars->anyConfirmPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
-        UIControl::sVars->anyBackPress    = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
-        UIControl::sVars->forceBackPress  = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
+        sVars->anyConfirmPress = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_A;
+        sVars->anyBackPress    = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
+        sVars->forceBackPress  = buttonID == UIButtonPrompt::UIBUTTONPROMPT_BUTTON_B;
     }
 
-    UIControl::sVars->lockInput = true;
-    UIControl::sVars->inputLocked = true;
+    sVars->lockInput   = true;
+    sVars->inputLocked = true;
 }
 
 void UIControl::ProcessInputs()
 {
     UIControl::HandlePosition();
 
-    if (!UIControl::sVars->inputLocked) {
+    if (!sVars->inputLocked) {
         for (int32 i = 0; i < PLAYER_COUNT; ++i) {
-            UIControl::sVars->upPress[i]    = controllerInfo[Input::CONT_P1 + i].keyUp.press || analogStickInfoL[Input::CONT_P1 + i].keyUp.press;
-            UIControl::sVars->downPress[i]  = controllerInfo[Input::CONT_P1 + i].keyDown.press || analogStickInfoL[Input::CONT_P1 + i].keyDown.press;
-            UIControl::sVars->leftPress[i]  = controllerInfo[Input::CONT_P1 + i].keyLeft.press || analogStickInfoL[Input::CONT_P1 + i].keyLeft.press;
-            UIControl::sVars->rightPress[i] = controllerInfo[Input::CONT_P1 + i].keyRight.press || analogStickInfoL[Input::CONT_P1 + i].keyRight.press;
+            sVars->upPress[i]    = controllerInfo[Input::CONT_P1 + i].keyUp.press | analogStickInfoL[Input::CONT_P1 + i].keyUp.press;
+            sVars->downPress[i]  = controllerInfo[Input::CONT_P1 + i].keyDown.press | analogStickInfoL[Input::CONT_P1 + i].keyDown.press;
+            sVars->leftPress[i]  = controllerInfo[Input::CONT_P1 + i].keyLeft.press | analogStickInfoL[Input::CONT_P1 + i].keyLeft.press;
+            sVars->rightPress[i] = controllerInfo[Input::CONT_P1 + i].keyRight.press | analogStickInfoL[Input::CONT_P1 + i].keyRight.press;
 
-            if (UIControl::sVars->upPress[i] && UIControl::sVars->downPress[i]) {
-                UIControl::sVars->upPress[i] = false;
-                UIControl::sVars->downPress[i] = false;
+            if (sVars->upPress[i] && sVars->downPress[i]) {
+                sVars->upPress[i] = false;
+                sVars->downPress[i] = false;
             }
 
-            if (UIControl::sVars->leftPress[i] && UIControl::sVars->rightPress[i]) {
-                UIControl::sVars->leftPress[i] = false;
-                UIControl::sVars->rightPress[i] = false;
+            if (sVars->leftPress[i] && sVars->rightPress[i]) {
+                sVars->leftPress[i] = false;
+                sVars->rightPress[i] = false;
             }
 
-            UIControl::sVars->yPress[i] = controllerInfo[Input::CONT_P1 + i].keyY.press;
-            UIControl::sVars->xPress[i] = controllerInfo[Input::CONT_P1 + i].keyX.press;
-            UIControl::sVars->startPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
+            sVars->yPress[i] = controllerInfo[Input::CONT_P1 + i].keyY.press;
+            sVars->xPress[i] = controllerInfo[Input::CONT_P1 + i].keyX.press;
+            sVars->startPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
 
-            UIControl::sVars->confirmPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
+            sVars->confirmPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
             if (API::GetConfirmButtonFlip()) {
-                UIControl::sVars->confirmPress[i] |= controllerInfo[Input::CONT_P1 + i].keyB.press;
-                UIControl::sVars->backPress[i] = controllerInfo[Input::CONT_P1 + i].keyA.press;
+                sVars->confirmPress[i] |= controllerInfo[Input::CONT_P1 + i].keyB.press;
+                sVars->backPress[i] = controllerInfo[Input::CONT_P1 + i].keyA.press;
             }
             else {
-                UIControl::sVars->confirmPress[i] |= controllerInfo[Input::CONT_P1 + i].keyA.press;
-                UIControl::sVars->backPress[i] = controllerInfo[Input::CONT_P1 + i].keyB.press;
+                sVars->confirmPress[i] |= controllerInfo[Input::CONT_P1 + i].keyA.press;
+                sVars->backPress[i] = controllerInfo[Input::CONT_P1 + i].keyB.press;
             }
         }
 
-        UIControl::sVars->anyUpPress = controllerInfo->keyUp.press || analogStickInfoL->keyUp.press;
-        UIControl::sVars->anyDownPress = controllerInfo->keyDown.press || analogStickInfoL->keyDown.press;
-        UIControl::sVars->anyLeftPress = controllerInfo->keyLeft.press || analogStickInfoL->keyLeft.press;
-        UIControl::sVars->anyRightPress = controllerInfo->keyRight.press || analogStickInfoL->keyRight.press;
-        UIControl::sVars->anyYPress     = controllerInfo->keyY.press;
-        UIControl::sVars->anyXPress     = controllerInfo->keyX.press;
-        UIControl::sVars->anyStartPress = controllerInfo->keyStart.press;
+        sVars->anyUpPress    = controllerInfo->keyUp.press | analogStickInfoL->keyUp.press;
+        sVars->anyDownPress  = controllerInfo->keyDown.press | analogStickInfoL->keyDown.press;
+        sVars->anyLeftPress  = controllerInfo->keyLeft.press | analogStickInfoL->keyLeft.press;
+        sVars->anyRightPress = controllerInfo->keyRight.press | analogStickInfoL->keyRight.press;
+        sVars->anyYPress     = controllerInfo->keyY.press;
+        sVars->anyXPress     = controllerInfo->keyX.press;
+        sVars->anyStartPress = controllerInfo->keyStart.press;
 
-        UIControl::sVars->anyConfirmPress = controllerInfo->keyStart.press;
+        sVars->anyConfirmPress = controllerInfo->keyStart.press;
         if (API::GetConfirmButtonFlip()) {
-            UIControl::sVars->anyConfirmPress |= controllerInfo->keyB.press;
-            UIControl::sVars->anyBackPress = controllerInfo->keyA.press;
+            sVars->anyConfirmPress |= controllerInfo->keyB.press;
+            sVars->anyBackPress = controllerInfo->keyA.press;
         }
         else {
-            UIControl::sVars->anyConfirmPress |= controllerInfo->keyA.press;
-            UIControl::sVars->anyBackPress = controllerInfo->keyB.press;
+            sVars->anyConfirmPress |= controllerInfo->keyA.press;
+            sVars->anyBackPress = controllerInfo->keyB.press;
         }
 
-        UIControl::sVars->anyBackPress |= unknownInfo->pausePress;
-        UIControl::sVars->anyBackPress |= UIControl::sVars->forceBackPress;
+        sVars->anyBackPress |= unknownInfo->pausePress;
+        sVars->anyBackPress |= sVars->forceBackPress;
 
-        if (UIControl::sVars->anyBackPress) {
-            UIControl::sVars->anyConfirmPress = false;
-            UIControl::sVars->anyYPress       = false;
+        if (sVars->anyBackPress) {
+            sVars->anyConfirmPress = false;
+            sVars->anyYPress       = false;
         }
 
-        if (UIControl::sVars->anyConfirmPress) {
-            UIControl::sVars->anyYPress = false;
+        if (sVars->anyConfirmPress) {
+            sVars->anyYPress = false;
         }
 
-        UIControl::sVars->inputLocked = true;
+        sVars->inputLocked = true;
     }
 
     if (!this->selectionDisabled) {
         bool32 backPressed = false;
 
-        if (UIControl::sVars->anyBackPress) {
+        if (sVars->anyBackPress) {
             if (!this->childHasFocus && !this->dialogHasFocus
                 && !this->popoverHasFocus
-
                 && this->backoutTimer <= 0) {
                 if (!this->backPressCB.Matches(nullptr)) {
                     backPressed = this->backPressCB.Run(this);
 
                     if (!backPressed) {
-                        UIControl::sVars->anyBackPress = false;
+                        sVars->anyBackPress = false;
                     }
                     else {
                         if (this->buttons[this->buttonID])
@@ -278,7 +278,7 @@ void UIControl::ProcessInputs()
                 }
                 else {
                     if (this->parentTag.length <= 0) {
-                        UIControl::sVars->anyBackPress = false;
+                        sVars->anyBackPress = false;
                     }
                     else {
                         this->selectionDisabled = true;
@@ -309,26 +309,24 @@ void UIControl::ProcessInputs()
             UIControl::ProcessButtonInput();
 
         if (!this->selectionDisabled) {
-            if (UIControl::sVars->anyYPress) {
+            if (sVars->anyYPress) {
                 if (!this->childHasFocus && !this->dialogHasFocus
                     && !this->popoverHasFocus
-
                     && this->backoutTimer <= 0) {
                     this->yPressCB.Run(this);
                 }
 
-                UIControl::sVars->anyYPress = false;
+                sVars->anyYPress = false;
             }
 
-            if (UIControl::sVars->anyXPress) {
+            if (sVars->anyXPress) {
                 if (!this->childHasFocus && !this->dialogHasFocus
                     && !this->popoverHasFocus
-
                     && this->backoutTimer <= 0) {
                     this->xPressCB.Run(this);
                 }
 
-                UIControl::sVars->anyXPress = false;
+                sVars->anyXPress = false;
             }
         }
     }
@@ -387,7 +385,6 @@ void UIControl::MenuChangeButtonInit(UIControl *control)
                         heading->Update();
                     }
 
-
                     if (entity->visible)
                         Graphics::AddDrawListRef(entity->drawGroup, slot);
 
@@ -442,7 +439,11 @@ void UIControl::SetActiveMenu(UIControl *entity)
     if (!entity->menuSetupCB.Matches(nullptr)) {
         Entity *storeEntity = (Entity *)sceneInfo->entity;
         sceneInfo->entity   = (Entity *)entity;
+#if RETRO_USE_MOD_LOADER
         entity->menuSetupCB.Run(entity);
+#else
+        entity->menuSetupCB();
+#endif
         sceneInfo->entity = storeEntity;
     }
 }
@@ -478,7 +479,7 @@ void UIControl::SetMenuLostFocus(UIControl *entity)
 
 void UIControl::SetInactiveMenu(UIControl *control)
 {
-    UIControl::sVars->hasTouchInput = false;
+    sVars->hasTouchInput = false;
     control->active          = ACTIVE_NEVER;
     control->visible         = false;
     control->state.Set(nullptr);
@@ -548,7 +549,7 @@ void UIControl::SetupButtons()
         if (button) {
             int32 classID = button->classID;
             if (classID != UIButton::sVars->classID //&& (!UISaveSlot || classID != UISaveSlot::sVars->classID)
-                //&& (!UICharButton || classID != UICharButton->classID) && (!UITAZoneModule || classID != UITAZoneModule->classID)
+                //&& (!UITAZoneModule || classID != UITAZoneModule->classID)
                 /*&& (!UISlider || classID != UISlider->classID)*/ && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }
             else {
@@ -708,10 +709,10 @@ void UIControl::HandlePosition()
 void UIControl::ProcessButtonInput()
 {
     bool32 allowAction = false;
-    if (touchInfo->count || UIControl::sVars->hasTouchInput) {
+    if (touchInfo->count || sVars->hasTouchInput) {
         UIButton *activeButton = 0;
-        UIControl::sVars->hasTouchInput     = touchInfo->count != 0;
-        UIControl::sVars->isProcessingInput = true;
+        sVars->hasTouchInput     = touchInfo->count != 0;
+        sVars->isProcessingInput = true;
 
         for (int32 i = 0; i < this->buttonCount; ++i) {
             if (this->buttons[i]) {
@@ -763,7 +764,7 @@ void UIControl::ProcessButtonInput()
             }
         }
 
-        UIControl::sVars->isProcessingInput = false;
+        sVars->isProcessingInput = false;
     }
 
     if (this->buttonID >= 0) {

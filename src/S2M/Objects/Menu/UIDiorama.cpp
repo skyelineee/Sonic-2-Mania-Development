@@ -103,13 +103,13 @@ void UIDiorama::StageLoad()
     Palette::SetPaletteMask(0x00FF00);
 
     UIDiorama::sVars->aniFrames.Load("UI/Diorama.bin", SCOPE_STAGE);
-    UIDiorama::sVars->capsuleFrames.Load("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
+    UIDiorama::sVars->capsuleFrames.Load("Global/EggPrison.bin", SCOPE_STAGE);
     UIDiorama::sVars->sonicFrames.Load("Players/Sonic.bin", SCOPE_STAGE);
     UIDiorama::sVars->tailsFrames.Load("Players/Tails.bin", SCOPE_STAGE);
-    UIDiorama::sVars->knuxFramesAIZ.Load("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
-    UIDiorama::sVars->knuxFramesHCZ.Load("Players/KnuxCutsceneHPZ.bin", SCOPE_STAGE);
-    UIDiorama::sVars->mightyFrames.Load("Players/Mighty.bin", SCOPE_STAGE);
-    UIDiorama::sVars->rayFrames.Load("Players/Ray.bin", SCOPE_STAGE);
+    UIDiorama::sVars->knuxFramesAIZ.Load("Players/Knux.bin", SCOPE_STAGE);
+    UIDiorama::sVars->knuxFramesHCZ.Load("Players/Knux.bin", SCOPE_STAGE);
+    UIDiorama::sVars->mightyFrames.Load("Players/Sonic.bin", SCOPE_STAGE);
+    UIDiorama::sVars->rayFrames.Load("Players/Sonic.bin", SCOPE_STAGE);
     UIDiorama::sVars->ringFrames.Load("Global/Ring.bin", SCOPE_STAGE);
     UIDiorama::sVars->speedGateFrames.Load("Global/SpeedGate.bin", SCOPE_STAGE);
     UIDiorama::sVars->bssSonicFrames.Load("SpecialBS/Sonic.bin", SCOPE_STAGE);

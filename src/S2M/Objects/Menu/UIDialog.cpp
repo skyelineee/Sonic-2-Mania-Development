@@ -205,40 +205,40 @@ void UIDialog::Setup(UIDialog *dialog)
                 control->dialogHasFocus       = true;
                 UIDialog::sVars->controlStore = control;
                 UIDialog::sVars->controlStateStore.Copy(&control->state);
-
-                control = nullptr;
-                GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
-
-                control               = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
-                control->menuWasSetup = true;
-                control->position.x   = (screenInfo->position.x + screenInfo->center.x) << 16;
-                control->position.y   = (screenInfo->position.y + screenInfo->center.y) << 16;
-                control->rowCount     = 1;
-                control->columnCount  = dialog->buttonCount;
-                control->buttonID     = 0;
-                control->backPressCB.Set(&UIDialog::HandleAutoClose);
-                control->selectionDisabled = true;
-
-                dialog->parent = control;
-                if (!tookFocus) {
-                    UIDialog::sVars->controlStore = nullptr;
-                    UIDialog::sVars->controlStateStore.Set(nullptr);
-                }
-
-                int32 i = 0;
-                for (; i < UIDIALOG_OPTION_COUNT; ++i) {
-                    if (!dialog->buttons[i])
-                        break;
-
-                    dialog->buttons[i]->parent = (Entity *)control;
-                    control->buttons[i]        = dialog->buttons[i];
-                }
-
-                control->buttonCount = i;
-                dialog->timer        = 0;
-                dialog->state.Set(&UIDialog::State_Appear);
                 break;
             }
+
+            control = nullptr;
+            GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
+
+            control               = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
+            control->menuWasSetup = true;
+            control->position.x   = (screenInfo->position.x + screenInfo->center.x) << 16;
+            control->position.y   = (screenInfo->position.y + screenInfo->center.y) << 16;
+            control->rowCount     = 1;
+            control->columnCount  = dialog->buttonCount;
+            control->buttonID     = 0;
+            control->backPressCB.Set(&UIDialog::HandleAutoClose);
+            control->selectionDisabled = true;
+
+            dialog->parent = control;
+            if (!tookFocus) {
+                UIDialog::sVars->controlStore = nullptr;
+                UIDialog::sVars->controlStateStore.Set(nullptr);
+            }
+
+            int32 i = 0;
+            for (; i < UIDIALOG_OPTION_COUNT; ++i) {
+                if (!dialog->buttons[i])
+                    break;
+
+                dialog->buttons[i]->parent = (Entity *)control;
+                control->buttons[i]        = dialog->buttons[i];
+            }
+
+            control->buttonCount = i;
+            dialog->timer        = 0;
+            dialog->state.Set(&UIDialog::State_Appear);
         }
     }
 }

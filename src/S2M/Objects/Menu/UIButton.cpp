@@ -162,7 +162,7 @@ void UIButton::ManageChoices(UIButton *button)
 UIButton *UIButton::GetChoicePtr(UIButton *button, int32 selection)
 {
     if (button->choiceCount <= 0)
-        return NULL;
+        return nullptr;
 
     UIButton *choice = GameObject::Get<UIButton>(button->Slot() - button->choiceCount + (selection % button->choiceCount));
     if (choice->classID == UIChoice::sVars->classID || choice->classID == UIResPicker::sVars->classID

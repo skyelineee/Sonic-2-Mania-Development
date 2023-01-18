@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------------
 
 #include "MenuSetup.hpp"
-#include "MenuParam.hpp"
+#include "Helpers/MenuParam.hpp"
 #include "UIControl.hpp"
 #include "UILoadingIcon.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -49,18 +49,20 @@ void MenuSetup::StaticUpdate()
             }
         }
 
-        /*if (!ManiaModeMenu::InitAPI()) {
-            control->selectionDisabled = true;
-            return;
-        }
-        else {
-            control->selectionDisabled = false;
-            MenuSetup::sVars->initializedAPI  = true;
+        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
+            /*if (!ManiaModeMenu::InitAPI()) {
+                control->selectionDisabled = true;
+                return;
+            }
+            else {*/
+                control->selectionDisabled       = false;
+                MenuSetup::sVars->initializedAPI = true;
 
-            String message;
-            Localization::GetString(&message, Localization::RPC_Menu);
-            APITable->SetRichPresence(PRESENCE_MENU, &message);
-        }*/
+                String message;
+                Localization::GetString(&message, Localization::RPC_Menu);
+                APITable->SetRichPresence(PRESENCE_MENU, &message);
+            //}
+        }
     }
 
     if (!MenuSetup::sVars->initializedMenu) {
@@ -149,6 +151,7 @@ void MenuSetup::StartTransition(void (*callback)(), int32 delay)
     menuSetup->fadeColor = 0x000000;
     menuSetup->fadeShift = 5;
     menuSetup->delay     = delay;
+    //menuSetup->state.Set(&ManiaModeMenu::State_HandleTransition);
     menuSetup->callback  = callback;
 }
 

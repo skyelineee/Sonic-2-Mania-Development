@@ -10,6 +10,18 @@ struct MenuParam : RSDK::GameObject::Entity {
     // ENUMS
     // ==============================
 
+    enum CreditsSelectionType {
+        CREDITS_SELECTION_NONE,
+        CREDITS_SELECTION_EXTRAS,
+    };
+
+    enum ExtrasSelectionIDs {
+        EXTRAS_SELECTION_BSS,
+        EXTRAS_SELECTION_PUYO,
+        EXTRAS_SELECTION_DAGARDEN,
+        EXTRAS_SELECTION_CREDITS,
+    };
+
     // ==============================
     // STRUCTS
     // ==============================

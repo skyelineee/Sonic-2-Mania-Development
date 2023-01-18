@@ -340,9 +340,6 @@
     <ClCompile Include="Objects\Menu\MenuSetup.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\MenuParam.cpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Menu\UILoadingIcon.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
@@ -667,9 +664,6 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\MenuSetup.hpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Menu\MenuParam.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\UILoadingIcon.hpp">

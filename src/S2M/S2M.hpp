@@ -336,7 +336,13 @@ template <typename R> struct Action
 
     template <typename T> inline bool Matches(R (T::*other)()) { return action == (R (Action::*)())other; }
 
-    inline bool Matches(Action *other) { return action == other->action; }
+    inline bool Matches(Action *other)
+    {
+        if (other == nullptr)
+            return action == nullptr;
+        else
+            return action == other->action;
+    }
 
     inline void Copy(Action *other) { this->action = other->action; }
 

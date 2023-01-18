@@ -147,7 +147,7 @@ struct UIControl : RSDK::GameObject::Entity {
     // ==============================
     // DECLARATION
     // ==============================
-
+    
     RSDK_DECLARE(UIControl);
 };
 } // namespace GameLogic
