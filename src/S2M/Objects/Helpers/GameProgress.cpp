@@ -6,7 +6,7 @@
 
 #include "GameProgress.hpp"
 #include "LogHelpers.hpp"
-
+#include "Global/Localization.hpp"
 #include "Global/SaveGame.hpp"
 
 using namespace RSDK;
@@ -109,6 +109,102 @@ void GameProgress::CollectEmerald(int32 emeraldID)
 
     if (allEmeralds)
         progress->allEmeraldsObtained = true;
+}
+
+int32 GameProgress::GetNotifStringID(int32 type)
+{
+    switch (type) {
+        //case GAMEPROGRESS_UNLOCK_TIMEATTACK: return STR_TAUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_COMPETITION: return STR_COMPUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_PEELOUT: return STR_PEELOUTUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_INSTASHIELD: return STR_INSTASHIELDUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_ANDKNUX: return STR_ANDKNUXUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_DEBUGMODE: return STR_DEBUGMODEUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_MEANBEAN: return STR_MBMUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_DAGARDEN: return STR_DAGARDENUNLOCKED;
+
+        //case GAMEPROGRESS_UNLOCK_BLUESPHERES: return STR_BLUESPHERESUNLOCKED;
+
+        default: return Localization::FeatureUnimplemented;
+    }
+}
+
+int32 GameProgress::CountUnreadNotifs()
+{
+    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+        LogHelpers::Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
+        return 0;
+    }
+    else {
+        int32 unreadCount     = 0;
+        GameProgress *progressRAM = GetProgressRAM();
+        for (int32 i = 0; i < UnlockCount; ++i) {
+            bool32 unlocked = progressRAM->unreadNotifs[i];
+            bool32 notif    = GameProgress::CheckUnlock(i);
+
+            if (!unlocked && notif)
+                unreadCount++;
+        }
+
+        return unreadCount;
+    }
+}
+int32 GameProgress::GetNextNotif()
+{
+    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+        LogHelpers::Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
+        return -1;
+    }
+    else {
+        GameProgress *progressRAM = GetProgressRAM();
+        for (int32 i = 0; i < UnlockCount; ++i) {
+            bool32 unlocked = progressRAM->unreadNotifs[i];
+            bool32 notif    = GameProgress::CheckUnlock(i);
+
+            if (!unlocked && notif)
+                return i;
+        }
+    }
+
+    return -1;
+}
+
+bool32 GameProgress::CheckUnlock(uint8 id)
+{
+    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+        LogHelpers::Print("WARNING GameProgress Attempted to check unlock before loading SaveGame file");
+        return false;
+    }
+    else {
+        GameProgress *progressRAM = GetProgressRAM();
+        /*switch (id) {
+            case GAMEPROGRESS_UNLOCK_TIMEATTACK:
+            case GAMEPROGRESS_UNLOCK_COMPETITION: return progress->zoneCleared[0];
+
+            case GAMEPROGRESS_UNLOCK_PEELOUT: return progress->silverMedalCount >= 1;
+
+            case GAMEPROGRESS_UNLOCK_INSTASHIELD: return progress->silverMedalCount >= 6;
+
+            case GAMEPROGRESS_UNLOCK_ANDKNUX: return progress->silverMedalCount >= 11;
+
+            case GAMEPROGRESS_UNLOCK_DEBUGMODE: return progress->silverMedalCount >= 16;
+
+            case GAMEPROGRESS_UNLOCK_MEANBEAN: return progress->silverMedalCount >= 21;
+
+            case GAMEPROGRESS_UNLOCK_DAGARDEN: return progress->silverMedalCount >= 26;
+
+            case GAMEPROGRESS_UNLOCK_BLUESPHERES: return progress->silverMedalCount >= GAMEPROGRESS_MEDAL_COUNT;
+
+            default: return false;
+        }*/
+    }
 }
 
 #if RETRO_REV0U

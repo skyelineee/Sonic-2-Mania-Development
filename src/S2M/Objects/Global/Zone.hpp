@@ -66,15 +66,19 @@ struct Zone : RSDK::GameObject::Entity {
         CNZ,
         HTZ,
         MCZ,
-        HPZ,
         SSZ,
         OOZ,
         MTZ,
         CCZ,
-        SCZ,
-        WFZ,
-        DEZ
+        SFZ,
+        DEZ,
+        HPZ,
         // nuggie has finished this task.
+
+        // total zone count
+        ZoneCount,
+        // zone count for save files
+        ZoneCountSaveFile = 14,
     };
 
     enum ActIDs {
@@ -195,6 +199,7 @@ struct Zone : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
+    static int32 GetZoneID();
     void HandlePlayerBounds();
 
     static void AddToHyperList(uint16 classID, bool32 hyperDashTarget, bool32 hyperSlamTarget, bool32 superFlickyTarget);

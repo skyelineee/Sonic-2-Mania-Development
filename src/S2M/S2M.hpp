@@ -344,7 +344,13 @@ template <typename R> struct Action
             return action == other->action;
     }
 
-    inline void Copy(Action *other) { this->action = other->action; }
+    inline void Copy(Action *other)
+    { 
+        if (other == nullptr)
+            this->action = nullptr;
+        else
+            this->action = other->action;
+    }
 
     // Equals
     inline void operator=(const Action &rhs) { this->Copy((Action *)&rhs); }

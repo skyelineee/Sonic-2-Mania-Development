@@ -267,6 +267,41 @@ void Zone::StageLoad()
     sVars->sfxFail.Get("Stage/Fail.wav");
 }
 
+int32 Zone::GetZoneID()
+{
+    if (Stage::CheckSceneFolder("OWZ"))
+        return OWZ;
+    if (Stage::CheckSceneFolder("EHZ"))
+        return EHZ;
+    if (Stage::CheckSceneFolder("CPZ"))
+        return CPZ;
+    if (Stage::CheckSceneFolder("ARZ"))
+        return ARZ;
+    if (Stage::CheckSceneFolder("SWZ"))
+        return SWZ;
+    if (Stage::CheckSceneFolder("CNZ"))
+        return CNZ;
+    if (Stage::CheckSceneFolder("HTZ"))
+        return HTZ;
+    if (Stage::CheckSceneFolder("MCZ"))
+        return MCZ;
+    if (Stage::CheckSceneFolder("SSZ"))
+        return SSZ;
+    if (Stage::CheckSceneFolder("OOZ"))
+        return OOZ;
+    if (Stage::CheckSceneFolder("MTZ"))
+        return MTZ;
+    if (Stage::CheckSceneFolder("CCZ"))
+        return CCZ;
+    if (Stage::CheckSceneFolder("SFZ"))
+        return SFZ;
+    if (Stage::CheckSceneFolder("DEZ"))
+        return DEZ;
+    if (Stage::CheckSceneFolder("HPZ"))
+        return HPZ;
+    return Invalid;
+}
+
 void Zone::HandlePlayerBounds()
 {
     if (!Player::sVars)

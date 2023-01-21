@@ -10,6 +10,7 @@
 #include "StarPost.hpp"
 #include "ItemBox.hpp"
 #include "ActClear.hpp"
+#include "Helpers/GameProgress.hpp"
 
 #include "Helpers/LogHelpers.hpp"
 
@@ -228,6 +229,31 @@ void SaveGame::SaveFile(void (*callback)(bool32 success))
         sVars->saveCallback  = callback;
         API::Storage::SaveUserFile("SaveData.bin", globals->saveRAM, sizeof(globals->saveRAM), SaveGame::SaveFileCB, false);
     }
+}
+
+void SaveGame::SaveLoadedCB(bool32 success)
+{
+    LogHelpers::Print("SaveLoadedCB(%d)", success);
+
+    if (success) {
+        /*for (auto entity : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES))
+        {
+            if (!entity->type) {
+                Entity *store = (Entity *)sceneInfo->entity;
+
+                sceneInfo->entity = (Entity *)entity;
+                UISaveSlot::LoadSaveInfo();
+                UISaveSlot::HandleSaveIcons();
+
+                sceneInfo->entity = store;
+            }
+        }*/
+
+        GameProgress::DumpProgress();
+    }
+
+    /*if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
+        TimeAttackData_LoadTimeAttackDB(NULL);*/
 }
 
 void SaveGame::SaveProgress()

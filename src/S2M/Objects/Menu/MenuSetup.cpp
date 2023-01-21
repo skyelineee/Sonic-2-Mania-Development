@@ -8,6 +8,7 @@
 #include "Helpers/MenuParam.hpp"
 #include "UIControl.hpp"
 #include "UILoadingIcon.hpp"
+#include "ManiaModeMenu.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
@@ -50,38 +51,37 @@ void MenuSetup::StaticUpdate()
         }
 
         for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
-            /*if (!ManiaModeMenu::InitAPI()) {
+            if (!ManiaModeMenu::InitAPI()) {
                 control->selectionDisabled = true;
                 return;
             }
-            else {*/
+            else {
                 control->selectionDisabled       = false;
-                MenuSetup::sVars->initializedAPI = true;
+                sVars->initializedAPI = true;
 
                 String message;
                 Localization::GetString(&message, Localization::RPC_Menu);
                 APITable->SetRichPresence(PRESENCE_MENU, &message);
-            //}
+            }
         }
     }
 
-    if (!MenuSetup::sVars->initializedMenu) {
-        // ManiaModeMenu::Initialize();
-        MenuSetup::sVars->initializedMenu = true;
+    if (!sVars->initializedMenu) {
+        ManiaModeMenu::Initialize();
+        sVars->initializedMenu = true;
     }
 
-    if (!MenuSetup::sVars->initializedMenuReturn) {
-        // ManiaModeMenu::HandleMenuReturn();
-        MenuSetup::sVars->initializedMenuReturn = true;
-        // ManiaModeMenu::SetBGColors();
+    if (!sVars->initializedMenuReturn) {
+        ManiaModeMenu::HandleMenuReturn();
+        sVars->initializedMenuReturn = true;
 
         if (!globals->suppressAutoMusic)
-            // ManiaModeMenu::ChangeMenuTrack();
+            ManiaModeMenu::ChangeMenuTrack();
 
             globals->suppressAutoMusic = false;
     }
 
-    MenuSetup::sVars->fxFade->speedOut = 12;
+    sVars->fxFade->speedOut = 12;
     APITable->GetUserAuthStatus();
 }
 
@@ -151,7 +151,7 @@ void MenuSetup::StartTransition(void (*callback)(), int32 delay)
     menuSetup->fadeColor = 0x000000;
     menuSetup->fadeShift = 5;
     menuSetup->delay     = delay;
-    //menuSetup->state.Set(&ManiaModeMenu::State_HandleTransition);
+    menuSetup->state.Set(&ManiaModeMenu::State_HandleTransition);
     menuSetup->callback  = callback;
 }
 

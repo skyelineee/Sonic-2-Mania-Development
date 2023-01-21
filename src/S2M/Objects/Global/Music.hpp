@@ -112,6 +112,7 @@ struct Music : RSDK::GameObject::Entity {
     static void Stop();
     static void Pause();
     static void Resume();
+    static bool32 IsPlaying();
 
     static void PlayJingle(uint8 trackID);
     static void PlayTrack(uint8 trackID);

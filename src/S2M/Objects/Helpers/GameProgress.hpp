@@ -10,6 +10,10 @@ struct GameProgress : RSDK::GameObject::Entity {
     // ENUMS
     // ==============================
 
+    enum GameProgressUnlockIDs {
+        UnlockCount
+    };
+
     // ==============================
     // STRUCTS
     // ==============================
@@ -51,6 +55,10 @@ struct GameProgress : RSDK::GameObject::Entity {
     static void DumpProgress();
     static void MarkZoneCompleted(int32 zoneID);
     static void CollectEmerald(int32 emeraldID);
+    static int32 GetNotifStringID(int32 type);
+    static int32 CountUnreadNotifs();
+    static int32 GetNextNotif();
+    static bool32 CheckUnlock(uint8 id);
 
     // ==============================
     // DECLARATION

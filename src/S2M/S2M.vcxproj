@@ -275,6 +275,7 @@
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="Objects\Menu\LogoSetup.cpp" />
     <ClCompile Include="Objects\Menu\MainMenu.cpp" />
+    <ClCompile Include="Objects\Menu\ManiaModeMenu.cpp" />
     <ClCompile Include="Objects\Menu\MenuSetup.cpp" />
     <ClCompile Include="Objects\Menu\Sega.cpp" />
     <ClCompile Include="Objects\Menu\UIButton.cpp" />
@@ -419,6 +420,7 @@
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\Menu\LogoSetup.hpp" />
     <ClInclude Include="Objects\Menu\MainMenu.hpp" />
+    <ClInclude Include="Objects\Menu\ManiaModeMenu.hpp" />
     <ClInclude Include="Objects\Menu\MenuSetup.hpp" />
     <ClInclude Include="Objects\Menu\Sega.hpp" />
     <ClInclude Include="Objects\Menu\UIButton.hpp" />

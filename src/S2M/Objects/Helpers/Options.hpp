@@ -29,7 +29,7 @@ struct Options : RSDK::GameObject::Entity {
     // ==============================
     // INSTANCE VARS
     // ==============================
-    uint8 padding[0x54];
+    uint8 padding[0x58];
     uint8 language;
     int32 overrideLanguage;
     int32 screenShader;
@@ -59,6 +59,13 @@ struct Options : RSDK::GameObject::Entity {
     static Options* GetOptionsRAM();
     static void Reload();
     static void GetWinSize();
+    static void LoadCallback(bool32 success);
+    static void LoadOptionsBin();
+    static void SaveOptionsBin(void (*callback)(bool32 success));
+    static void SetLanguage(int32 language);
+    static void LoadValuesFromSettings(Options *options);
+    static void LoadOptionsCallback(int32 status);
+    static void SaveOptionsCallback(int32 status);
 
     // ==============================
     // DECLARATION

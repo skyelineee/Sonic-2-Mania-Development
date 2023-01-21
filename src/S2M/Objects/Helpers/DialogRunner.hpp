@@ -36,7 +36,8 @@ struct DialogRunner : RSDK::GameObject::Entity {
     int32 timer;
     int32 unused[20];
     bool32 useGenericText;
-    void(*callback)();
+    RSDK::Action<void> callback;
+    int32 status;
 
     // ==============================
     // EVENTS
@@ -53,6 +54,22 @@ struct DialogRunner : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
+
+    void HandleCallback();
+    static void NotifyAutoSave_CB();
+    void NotifyAutoSave();
+    static void SetNoSaveDisabled();
+    static void SetNoSaveEnabled();
+    void PromptSavePreference_CB();
+    void CheckUserAuth_CB();
+    void ManageNotifs();
+    static void TrackGameProgressCB(bool32 success);
+    static void GetNextNotif();
+    static bool32 CheckUnreadNotifs();
+    static bool32 NotifyAutosave();
+    static void GetUserAuthStatus();
+    static void PromptSavePreference(int32 id);
+    static void CheckUserAuth_OK();
 
     // ==============================
     // DECLARATION

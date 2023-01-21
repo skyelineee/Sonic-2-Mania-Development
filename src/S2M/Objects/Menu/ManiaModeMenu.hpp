@@ -1,13 +1,12 @@
 #pragma once
 #include "S2M.hpp"
 #include "UIControl.hpp"
-#include "UIDiorama.hpp"
 #include "UIButtonPrompt.hpp"
 
 namespace GameLogic
 {
 
-struct MainMenu : RSDK::GameObject::Entity {
+struct ManiaModeMenu : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -22,10 +21,21 @@ struct MainMenu : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        UIControl *menuControl;
-        UIButtonPrompt *confirmPrompt;
-        UIDiorama *diorama;
+        int32 unused;
+        UIControl *saveSelectMenu;
+        UIControl *noSaveMenu;
+        UIControl *secretsMenu;
+        UIButtonPrompt *delSavePrompt;
+        UIControl *encoreSaveSelect;
+        UIButtonPrompt *delSavePrompt_Encore;
+        UIControl *noSaveMenuEncore;
+        bool32 inSecretsMenu;
+        int32 saveSelLastButtonID;
     };
+
+    // ==============================
+    // INSTANCE VARS
+    // ==============================
 
     // ==============================
     // EVENTS
@@ -50,19 +60,26 @@ struct MainMenu : RSDK::GameObject::Entity {
     // ==============================
 
     static void Initialize();
-    static bool32 BackPressCB_ReturnToTitle();
-    static void ExitGame();
-    static void ExitButton_ActionCB();
-    static void StartExitGame();
-    void MenuButton_ActionCB();
+    static bool32 InitAPI();
+    static void InitLocalization(bool32 success);
+    static int32 GetActiveMenu();
+    static void ChangeMenuTrack();
+    static void StartReturnToTitle();
+    static void ReturnToTitle();
     static void HandleUnlocks();
     static void SetupActions();
-    static void MenuSetupCB();
+    static void HandleMenuReturn();
+
+    // ==============================
+    // STATES
+    // ==============================
+
+    void State_HandleTransition();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(MainMenu);
+    RSDK_DECLARE(ManiaModeMenu);
 };
 } // namespace GameLogic

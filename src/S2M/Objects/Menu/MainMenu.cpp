@@ -11,6 +11,7 @@
 #include "UIDiorama.hpp"
 #include "UIDialog.hpp"
 #include "MenuSetup.hpp"
+#include "ManiaModeMenu.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
@@ -196,7 +197,7 @@ void MainMenu::Initialize()
 
 bool32 MainMenu::BackPressCB_ReturnToTitle()
 {
-    //ManiaModeMenu::StartReturnToTitle();
+    ManiaModeMenu::StartReturnToTitle();
 
     return true;
 }
@@ -233,8 +234,8 @@ void MainMenu::MenuButton_ActionCB()
     UIButton *button = (UIButton *)this;
 
     switch (button->frameID) {
-        case 0: // Mania Mode
-            /*if (APITable->GetNoSave()) {
+        case 0: //Mania Mode
+            if (APITable->GetNoSave()) {
                 UIControl::MatchMenuTag("No Save Mode");
             }
             else {
@@ -246,15 +247,15 @@ void MainMenu::MenuButton_ActionCB()
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store     = (Entity *)sceneInfo->entity;
                     sceneInfo->entity = (Entity *)saveSelect->buttons[i];
-                    UISaveSlot::HandleSaveIconChange();
+                    //UISaveSlot::HandleSaveIconChange();
                     sceneInfo->entity = store;
                 }
                 UIControl::MatchMenuTag("Save Select");
-            }*/
+            }
             break;
 
         case 1: // Time Attack
-                /*UIControl *control = TimeAttackMenu->timeAttackControl_Legacy;
+                /*UIControl *control = TimeAttackMenu::sVars->timeAttackControl_Legacy;
                 control->buttonID        = 0;
                 control->menuWasSetup    = false;
                 UIControl::MatchMenuTag("Time Attack Legacy");*/
@@ -295,6 +296,11 @@ void MainMenu::MenuButton_ActionCB()
 
         default: break;
     }
+}
+
+void MainMenu::HandleUnlocks()
+{
+    UIControl *control = MainMenu::sVars->menuControl;
 }
 
 void MainMenu::SetupActions()

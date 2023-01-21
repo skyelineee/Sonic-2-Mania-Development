@@ -322,6 +322,8 @@ bool32 Music::CheckMusicStack_Active()
     return active;
 }
 
+bool32 Music::IsPlaying() { return RSDKTable->ChannelActive(Music::sVars->channelID); }
+
 void Music::GetNextTrackStartPos()
 {
     int32 stackCount = 0;

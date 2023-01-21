@@ -207,7 +207,9 @@ void UIDialog::Setup(UIDialog *dialog)
                 UIDialog::sVars->controlStateStore.Copy(&control->state);
                 break;
             }
+        }
 
+        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
             control = nullptr;
             GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
 

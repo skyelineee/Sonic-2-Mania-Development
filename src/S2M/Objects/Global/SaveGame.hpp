@@ -102,6 +102,7 @@ struct SaveGame : RSDK::GameObject::Entity {
     static SaveGame *GetSaveRAM();
     static void LoadFile(void (*callback)(bool32 success));
     static void SaveFile(void (*callback)(bool32 success));
+    static void SaveLoadedCB(bool32 success);
     static void SaveProgress();
     static void ClearNoSave();
     static void ClearSaveSlot(uint8 slotID, void (*callback)(bool32 success));
