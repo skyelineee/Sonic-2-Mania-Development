@@ -36,9 +36,9 @@ struct EHZSetup : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void StageFinish_EndAct1();
-    void HandleActTransition();
-    void StageFinish_EndAct2();
+    static void StageFinish_EndAct1();
+    static void HandleActTransition();
+    static void StageFinish_EndAct2();
 
     RSDK_DECLARE(EHZSetup);
 };

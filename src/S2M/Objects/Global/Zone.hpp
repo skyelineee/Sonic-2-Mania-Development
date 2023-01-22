@@ -113,7 +113,7 @@ struct Zone : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         int32 actID;
-        RSDK::StateMachine<Zone> stageFinishCallback;
+        RSDK::Action<void> stageFinishCallback;
         bool32 shouldRecoverPlayers;
         RSDK::StateMachine<Zone> vsSwapCB[16];
         int32 vsSwapCBCount;

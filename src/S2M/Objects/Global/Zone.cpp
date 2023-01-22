@@ -19,6 +19,7 @@
 #include "ImageTrail.hpp"
 #include "SuperSparkle.hpp"
 #include "Animals.hpp"
+#include "Common/Decoration.hpp"
 
 using namespace RSDK;
 
@@ -550,44 +551,13 @@ void Zone::ReloadEntities(RSDK::Vector2 offset, bool32 setATLBounds)
             player->shield = storedPlayer->shield;
             player->ApplyShield();
         }
-        else if (storedEntity->classID == Shield::sVars->classID) {
-            Shield *storedShield = (Shield *)storedEntity;
-            Shield *shield       = (Shield *)entity;
-
-            shield->shieldAnimator.SetAnimation(Shield::sVars->aniFrames, storedShield->shieldAnimator.animationID, true,
-                                                storedShield->shieldAnimator.frameID);
-        }
-        else if (storedEntity->classID == SignPost::sVars->classID) {
-            SignPost *storedSignPost = (SignPost *)storedEntity;
-            SignPost *signPost       = (SignPost *)entity;
-
-            signPost->Create(INT_TO_VOID(storedSignPost->type));
-            signPost->drawGroup = sVars->playerDrawGroup[0] - 1;
-        }
-        else if (storedEntity->classID == ItemBox::sVars->classID) {
-            ItemBox *storedItemBox = (ItemBox *)storedEntity;
-            ItemBox *itemBox       = (ItemBox *)entity;
-
-            itemBox->Create(INT_TO_VOID(storedItemBox->type));
-            itemBox->drawGroup = sVars->playerDrawGroup[0] - 1;
-        }
-        else if (storedEntity->classID == EggPrison::sVars->classID) {
-            EggPrison *capsule = (EggPrison *)entity;
-
-            capsule->Create(nullptr);
-            capsule->state.Set(nullptr);
-            capsule->buttonPos = 0x80000;
-            capsule->state.Set(nullptr);
-            capsule->capsuleAnimator.frameID = 1;
-            capsule->drawGroup               = sVars->objectDrawGroup[0];
-            capsule->Update();
-        }
         else {
             GameObject::Copy(entity, storedEntity, false);
         }
 
         entity->position.x = storedEntity->position.x + offset.x;
         entity->position.y = storedEntity->position.y + offset.y;
+
     }
 
     // clear ATL data, we dont wanna do it again
@@ -596,36 +566,19 @@ void Zone::ReloadEntities(RSDK::Vector2 offset, bool32 setATLBounds)
     // if we're allowing the new boundary, update our camera to use ATL bounds instead of the default ones
     sVars->setATLBounds = setATLBounds;
     if (setATLBounds) {
-        Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
-        Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);
-
-        camera->boundsL    = globals->atlCameraBoundsL[0];
-        camera->boundsR    = globals->atlCameraBoundsR[0];
-        camera->boundsT    = globals->atlCameraBoundsT[0];
-        camera->boundsB    = globals->atlCameraBoundsB[0];
-        camera->position.x = globals->atlCameraPos[0].x;
-        camera->position.y = globals->atlCameraPos[0].y;
-
-        camera->boundsL += offset.x >> 16;
-        camera->boundsR += offset.x >> 16;
-        camera->boundsT += offset.y >> 16;
-        camera->boundsB += offset.y >> 16;
-        camera->position.x += offset.x >> 16;
-        camera->position.y += offset.y >> 16;
-
-        sVars->cameraBoundsL[0] = camera->boundsL;
-        sVars->cameraBoundsR[0] = camera->boundsR;
-        sVars->cameraBoundsT[0] = camera->boundsT;
-        sVars->cameraBoundsB[0] = camera->boundsB;
-
-        sVars->playerBoundsL[0] = camera->boundsL << 16;
-        sVars->playerBoundsR[0] = camera->boundsR << 16;
-        sVars->playerBoundsT[0] = camera->boundsT << 16;
-        sVars->playerBoundsB[0] = camera->boundsB << 16;
-        sVars->deathBoundary[0] = camera->boundsB << 16;
-
-        camera->state.Set(&Camera::State_FollowXY);
-        camera->Update();
+        Player *player         = GameObject::Get<Player>(SLOT_PLAYER1);
+        player->camera         = NULL;
+        Camera *camera         = GameObject::Get<Camera>(SLOT_CAMERA1);
+        camera->position.x     = offset.x;
+        camera->position.y     = offset.y;
+        camera->state.Set(nullptr);
+        camera->target         = nullptr;
+        camera->boundsL        = (offset.x >> 16) - screenInfo->center.x;
+        camera->boundsR        = (offset.x >> 16) + screenInfo->center.x;
+        camera->boundsT        = (offset.y >> 16) - screenInfo->size.y;
+        camera->boundsB        = offset.y >> 16;
+        Camera::sVars->centerBounds.x = TO_FIXED(8);
+        Camera::sVars->centerBounds.y = TO_FIXED(4);
     }
 
     Player::sVars->savedLives = globals->restartLives[0];

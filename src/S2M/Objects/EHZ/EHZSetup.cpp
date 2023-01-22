@@ -44,13 +44,15 @@ void EHZSetup::StageLoad()
 
         if (globals->atlEnabled) {
             if (!CutsceneRules::CheckStageReload())
-                &EHZSetup::HandleActTransition;
+                EHZSetup::HandleActTransition();
         }
 
         if (CutsceneRules::CheckAct2()) {
             Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct2);
         }
 
+    }
+    else {
         if (CutsceneRules::CheckAct1()) {
             Zone::sVars->shouldRecoverPlayers = true;
             Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
@@ -64,21 +66,16 @@ void EHZSetup::StageLoad()
 
 void EHZSetup::StageFinish_EndAct1()
 {
-    Zone::StoreEntities(Vector2(TO_FIXED(10880), TO_FIXED(822)));
+    Zone::StoreEntities(Vector2(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0])));
     Stage::LoadScene();
 }
 
 void EHZSetup::HandleActTransition()
 { 
-    Vector2 storePos;
-
     Zone::sVars->cameraBoundsL[0] = 256 - screenInfo->center.x;
-    Zone::sVars->cameraBoundsB[0] = 690;
+    Zone::sVars->cameraBoundsB[0] = 694;
 
-    storePos.x = TO_FIXED(256);
-    storePos.y = TO_FIXED(690);
-
-    Zone::ReloadEntities(storePos, true);
+    Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(694)), true);
 }
 
 void EHZSetup::StageFinish_EndAct2() {}

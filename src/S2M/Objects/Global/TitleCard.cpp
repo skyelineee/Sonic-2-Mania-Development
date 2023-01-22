@@ -9,6 +9,8 @@
 #include "Camera.hpp"
 #include "Zone.hpp"
 #include "ActClear.hpp"
+#include "ImageTrail.hpp"
+#include "InvincibleStars.hpp"
 
 using namespace RSDK;
 
@@ -77,7 +79,10 @@ void TitleCard::Create(void *data)
     this->bluePieceAnimator.SetAnimation(&sVars->aniFrames, 5, false, 0);
     this->decorationAnimator.SetAnimation(&sVars->aniFrames, 0, false, 0);
     this->yellowPieceAnimator.SetAnimation(&sVars->aniFrames, 6, false, 0);
-    this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 4, false, 0);
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
+        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 4, false, 0); }
+    else {
+        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 7, false, 0); }
     this->zoneAnimator.SetAnimation(&sVars->aniFrames, 2, false, 0);
     this->actNumbersAnimator.SetAnimation(&sVars->aniFrames, 3, false, 0);
     this->zoneNameAnimator.SetAnimation(&sVars->aniFrames, 1, false, 0);
@@ -138,7 +143,7 @@ void TitleCard::PiecePositions()
     Vector2 piecePos;
 
     piecePos.x = this->bluePiecePos.x;
-    piecePos.y = this->bluePiecePos.y - TO_FIXED(240);
+    piecePos.y = this->bluePiecePos.y - TO_FIXED(260);
     this->bluePieceAnimator.DrawSprite(&piecePos, true);
 
     piecePos.x = this->decorationPos.x + TO_FIXED(400);
@@ -312,31 +317,35 @@ void TitleCard::Draw_SlideIn()
 
     ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
-    Graphics::DrawRect(0, 0, screen->size.x, screen->size.y, 0x000000, 0xFF, INK_NONE, true);
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
+        Graphics::DrawRect(0, 0, screen->size.x, screen->size.y, 0x000000, 0xFF, INK_NONE, true);
 
+        PiecePositions();
+
+        if (this->bluePiecePos.y < TO_FIXED(240))
+            this->bluePiecePos.y += TO_FIXED(16);
+
+        if (this->decorationPos.x > TO_FIXED(-195))
+            this->decorationPos.x -= TO_FIXED(18);
+    }
+    
     PiecePositions();
-
-    if (this->bluePiecePos.y < TO_FIXED(220))
-        this->bluePiecePos.y += TO_FIXED(16);
-
-    if (this->decorationPos.x > TO_FIXED(-195))
-        this->decorationPos.x -= TO_FIXED(18);
 
     if (this->yellowPiecePos.x > TO_FIXED(-424))
         this->yellowPiecePos.x -= TO_FIXED(16);
-
+    
     if (this->redPiecePos.x < TO_FIXED(300))
         this->redPiecePos.x += TO_FIXED(10);
-
+    
     if (this->zonePos.x < TO_FIXED(680))
         this->zonePos.x += TO_FIXED(16);
-
+    
     if (this->actNumPos.x < TO_FIXED(750))
         this->actNumPos.x += TO_FIXED(16);
-
+    
     if (this->zoneNamePos.x > TO_FIXED(100))
         this->zoneNamePos.x -= TO_FIXED(16);
-
+    
     if (this->actNumPos.x < TO_FIXED(870))
         if (this->moveTimer >= 4) {
             this->zonePos.x += TO_FIXED(1);
@@ -379,11 +388,13 @@ void TitleCard::Draw_SlideAway()
 
     PiecePositions();
 
-     if (this->bluePiecePos.y <= TO_FIXED(220))
-        this->bluePiecePos.y -= TO_FIXED(16);
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
+        if (this->bluePiecePos.y <= TO_FIXED(260))
+            this->bluePiecePos.y -= TO_FIXED(16);
 
-    if (this->decorationPos.x < TO_FIXED(585))
-        this->decorationPos.x -= TO_FIXED(18);
+        if (this->decorationPos.x < TO_FIXED(585))
+            this->decorationPos.x -= TO_FIXED(18);
+    }
 
     if (this->yellowPiecePos.x <= TO_FIXED(100))
         this->yellowPiecePos.x += TO_FIXED(16);

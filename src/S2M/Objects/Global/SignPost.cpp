@@ -109,6 +109,9 @@ void SignPost::Create(void *data)
             this->standAnimator.SetAnimation(sVars->aniFrames, SignPost::AniPost, true, 2);
             this->updateRange.x = 0x400000;
             this->updateRange.y = 0x400000;
+            for (int32 p = 0; p < Player::sVars->playerCount; ++p) {
+                Zone::sVars->playerBoundActiveR[p] = true;
+            }
 
             if (globals->gameMode == MODE_COMPETITION) {
                 int32 left   = this->vsBoundsOffset.x - (this->vsBoundsSize.x >> 1);
