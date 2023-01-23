@@ -56,19 +56,19 @@ bool32 ManiaModeMenu::InitAPI()
     if (!MenuSetup::sVars->initializedAPI)
         MenuSetup::sVars->fxFade->timer = 512;
 
-    int32 authStatus = APITable->GetUserAuthStatus();
+    int32 authStatus = API::Auth::GetUserAuthStatus();
     if (!authStatus) {
-        APITable->TryAuth();
+        API::Auth::TryAuth();
     }
     else if (authStatus != STATUS_CONTINUE) {
         int32 storageStatus = APITable->GetStorageStatus();
         if (!storageStatus) {
-            APITable->TryInitStorage();
+            API::Storage::TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int32 saveStatus = APITable->GetSaveStatus();
+            int32 saveStatus = API::Storage::GetSaveStatus();
 
-            if (!APITable->GetNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+            if (!API::Storage::GetNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (saveStatus != STATUS_CONTINUE) {
                     if (saveStatus != STATUS_FORBIDDEN) {
                         DialogRunner::PromptSavePreference(storageStatus);
@@ -97,7 +97,7 @@ bool32 ManiaModeMenu::InitAPI()
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK //&& globals->replayTableLoaded == STATUS_OK
                 /*&& globals->taTableLoaded == STATUS_OK*/) {
 
-                if (!APITable->GetNoSave() && DialogRunner::NotifyAutosave())
+                if (!API::Storage::GetNoSave() && DialogRunner::NotifyAutosave())
                     return false;
 
                 UILoadingIcon::FinishWait();
@@ -108,14 +108,14 @@ bool32 ManiaModeMenu::InitAPI()
                 return true;
             }
 
-            if (APITable->GetNoSave()) {
+            if (API::Storage::GetNoSave()) {
                 UILoadingIcon::FinishWait();
                 return true;
             }
             else {
                 if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR //|| globals->replayTableLoaded == STATUS_ERROR
                     /*|| globals->taTableLoaded == STATUS_ERROR*/) {
-                    int32 status = APITable->GetSaveStatus();
+                    int32 status = API::Storage::GetSaveStatus();
 
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
@@ -187,7 +187,7 @@ void ManiaModeMenu::ChangeMenuTrack()
     if (!Music::IsPlaying())
         Music::PlayTrack(trackID);
     else if (Music::sVars->activeTrack != trackID)
-        Music::PlayOnFade(trackID, 0.12);
+        Music::PlayOnFade(trackID, 0.12f);
 }
 
 void ManiaModeMenu::StartReturnToTitle()
@@ -196,7 +196,7 @@ void ManiaModeMenu::StartReturnToTitle()
     if (control)
         control->state.Set(nullptr);
 
-    Music::FadeOut(0.05);
+    Music::FadeOut(0.05f);
     MenuSetup::StartTransition(ManiaModeMenu::ReturnToTitle, 32);
 }
 

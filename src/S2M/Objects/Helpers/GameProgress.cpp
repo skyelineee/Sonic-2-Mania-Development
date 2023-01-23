@@ -113,7 +113,7 @@ void GameProgress::CollectEmerald(int32 emeraldID)
 
 int32 GameProgress::GetNotifStringID(int32 type)
 {
-    switch (type) {
+    /*switch (type) {
         //case GAMEPROGRESS_UNLOCK_TIMEATTACK: return STR_TAUNLOCKED;
 
         //case GAMEPROGRESS_UNLOCK_COMPETITION: return STR_COMPUNLOCKED;
@@ -132,13 +132,16 @@ int32 GameProgress::GetNotifStringID(int32 type)
 
         //case GAMEPROGRESS_UNLOCK_BLUESPHERES: return STR_BLUESPHERESUNLOCKED;
 
-        default: return Localization::FeatureUnimplemented;
-    }
+        //default: return Localization::FeatureUnimplemented;
+    }*/
+
+    // Remove this when the above is uncommented
+    return Localization::FeatureUnimplemented;
 }
 
 int32 GameProgress::CountUnreadNotifs()
 {
-    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (sceneInfo->inEditor || API::Storage::GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers::Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
         return 0;
     }
@@ -158,7 +161,7 @@ int32 GameProgress::CountUnreadNotifs()
 }
 int32 GameProgress::GetNextNotif()
 {
-    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (sceneInfo->inEditor || API::Storage::GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers::Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
         return -1;
     }
@@ -178,7 +181,7 @@ int32 GameProgress::GetNextNotif()
 
 bool32 GameProgress::CheckUnlock(uint8 id)
 {
-    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (sceneInfo->inEditor || API::Storage::GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers::Print("WARNING GameProgress Attempted to check unlock before loading SaveGame file");
         return false;
     }
@@ -204,6 +207,8 @@ bool32 GameProgress::CheckUnlock(uint8 id)
 
             default: return false;
         }*/
+
+        return false;
     }
 }
 

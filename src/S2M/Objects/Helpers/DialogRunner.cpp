@@ -111,14 +111,14 @@ void DialogRunner::NotifyAutoSave()
 
 void DialogRunner::SetNoSaveDisabled()
 {
-    APITable->SetSaveStatusForbidden();
-    APITable->SetNoSave(false);
+    API::Storage::SetSaveStatusForbidden();
+    API::Storage::SetNoSave(false);
 }
 
 void DialogRunner::SetNoSaveEnabled()
 {
-    APITable->SetSaveStatusError();
-    APITable->SetNoSave(true);
+    API::Storage::SetSaveStatusError();
+    API::Storage::SetNoSave(true);
 }
 
 void DialogRunner::PromptSavePreference_CB()
@@ -126,7 +126,7 @@ void DialogRunner::PromptSavePreference_CB()
     String string;
     string.Init(nullptr);
 
-    if (APITable->GetSaveStatus() == STATUS_CONTINUE) {
+    if (API::Storage::GetSaveStatus() == STATUS_CONTINUE) {
         if (!UIDialog::sVars->activeDialog) {
             int32 stringID = Localization::SaveLoadFail;
             switch (this->status) {
@@ -244,7 +244,7 @@ void DialogRunner::TrackGameProgressCB(bool32 success) { UILoadingIcon::FinishWa
 
 void DialogRunner::GetNextNotif()
 {
-    if (sceneInfo->inEditor || APITable->GetNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (sceneInfo->inEditor || API::Storage::GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers::Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
@@ -290,7 +290,7 @@ bool32 DialogRunner::NotifyAutosave()
 }
 void DialogRunner::GetUserAuthStatus()
 {
-    if (APITable->GetUserAuthStatus() == STATUS_FORBIDDEN) {
+    if (API::Auth::GetUserAuthStatus() == STATUS_FORBIDDEN) {
         if (sVars->authForbidden)
             return;
 
@@ -304,17 +304,17 @@ void DialogRunner::GetUserAuthStatus()
 }
 void DialogRunner::PromptSavePreference(int32 id)
 {
-    if (APITable->GetNoSave()) {
+    if (API::Storage::GetNoSave()) {
         LogHelpers::Print("PromptSavePreference() returning due to noSave");
         return;
     }
 
     LogHelpers::Print("PromptSavePreference()");
 
-    if (APITable->GetSaveStatus() == STATUS_CONTINUE)
+    if (API::Storage::GetSaveStatus() == STATUS_CONTINUE)
         LogHelpers::Print("WARNING PromptSavePreference() when prompt already in progress.");
 
-    APITable->ClearSaveStatus();
+    API::Storage::ClearSaveStatus();
 
     Action<void> data;
     data.Set(&DialogRunner::PromptSavePreference_CB);

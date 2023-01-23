@@ -109,7 +109,7 @@ void Options::LoadOptionsBin()
                 globals->optionsLoaded = STATUS_CONTINUE;
                 sVars->loadEntityPtr   = (Entity *)sceneInfo->entity;
                 sVars->loadCallback    = Options::LoadCallback;
-                APITable->LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options::LoadOptionsCallback);
+                API::Storage::LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options::LoadOptionsCallback);
             }
         }
     }
@@ -127,7 +127,7 @@ void Options::SaveOptionsBin(void (*callback)(bool32 success))
                 sVars->saveEntityPtr   = (Entity *)sceneInfo->entity;
                 sVars->saveCallback    = callback;
 
-                APITable->SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options::SaveOptionsCallback, false);
+                API::Storage::SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options::SaveOptionsCallback, false);
             }
             else {
                 sVars->changed = false;

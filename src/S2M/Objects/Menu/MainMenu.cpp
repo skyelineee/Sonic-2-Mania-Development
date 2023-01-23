@@ -235,7 +235,7 @@ void MainMenu::MenuButton_ActionCB()
 
     switch (button->frameID) {
         case 0: //Mania Mode
-            if (APITable->GetNoSave()) {
+            if (API::Storage::GetNoSave()) {
                 UIControl::MatchMenuTag("No Save Mode");
             }
             else {
@@ -274,7 +274,7 @@ void MainMenu::MenuButton_ActionCB()
             break;
 
         case 5: // Encore
-            /*if (APITable->GetNoSave()) {
+            /*if (API::Storage::GetNoSave()) {
                 UIControl::MatchMenuTag("No Save Encore");
             }
             else {

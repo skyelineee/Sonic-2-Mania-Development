@@ -61,7 +61,7 @@ void MenuSetup::StaticUpdate()
 
                 String message;
                 Localization::GetString(&message, Localization::RPC_Menu);
-                APITable->SetRichPresence(PRESENCE_MENU, &message);
+                API::RichPresence::Set(PRESENCE_MENU, &message);
             }
         }
     }
@@ -82,7 +82,7 @@ void MenuSetup::StaticUpdate()
     }
 
     sVars->fxFade->speedOut = 12;
-    APITable->GetUserAuthStatus();
+    API::Auth::GetUserAuthStatus();
 }
 
 void MenuSetup::Draw() { Graphics::FillScreen(this->fadeColor, this->fadeTimer, this->fadeTimer - 128, this->fadeTimer - 256); }
