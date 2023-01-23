@@ -105,7 +105,7 @@ void UIWidgets::DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 heigh
 {
     int32 w     = width << 16 >> 1;
     int32 h     = height << 16 >> 1;
-    color color = RSDKTable->GetPaletteEntry(3, (UIWidgets::sVars->timer >> 1) & 0xF);
+    color color = paletteBank[3].GetEntry((UIWidgets::sVars->timer >> 1) & 0xF);
 
     Graphics::DrawRect(x - w, y - h, width << 16, TO_FIXED(3), color, 0xFF, INK_NONE, false);
     Graphics::DrawRect(x - w, y - h, TO_FIXED(3), height << 16, color, 0xFF, INK_NONE, false);

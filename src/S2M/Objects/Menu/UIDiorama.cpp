@@ -50,7 +50,7 @@ void UIDiorama::LateUpdate() {}
 void UIDiorama::StaticUpdate()
 {
     if (!(UIWidgets::sVars->timer & 3))
-        RSDKTable->RotatePalette(0, 60, 63, true);
+        paletteBank[0].Rotate(60, 63, true);
 
     for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES)) {
         Graphics::AddDrawListRef(diorama->drawGroup + 1, diorama->Slot());
@@ -124,7 +124,10 @@ void UIDiorama::ChangeDiorama(uint8 dioramaID)
     int32 ids[] = { 0x00, 0x0C, 0x0C, 0x01, 0x03, 0x0F, 0x0D, 0x0E };
 
     this->lastDioramaID = dioramaID;
-    RSDKTable->CopyPalette(((ids[this->dioramaID] >> 3) + 1), (32 * ids[this->dioramaID]), 0, 224, 32);
+
+    uint8 bankID = 1 + (ids[this->dioramaID] >> 3);
+    paletteBank[0].Copy(bankID, 32 * ids[this->dioramaID], 224, 32);
+
     this->needsSetup = true;
 
     int32 size = sizeof(int32) + sizeof(Vector2) + sizeof(Animator);
@@ -665,7 +668,7 @@ void UIDiorama::Draw_PlusUpsell()
 
             int32 width = -0x8000 * this->texts->GetWidth(UIWidgets::sVars->fontFrames, 0, start, end, 0);
             drawPos.x += width;
-            RSDKTable->DrawText(&info->textAnimator, &drawPos, &this->texts[0], start, end, UIButton::ALIGN_LEFT, 0, nullptr, nullptr, false);
+            info->textAnimator.DrawString(&drawPos, &this->texts[0], start, end, UIButton::ALIGN_LEFT, 0, nullptr, false);
 
             drawPos.x -= width;
             drawPos.y += 0x120000;

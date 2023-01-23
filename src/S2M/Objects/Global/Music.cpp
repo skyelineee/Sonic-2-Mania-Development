@@ -322,7 +322,7 @@ bool32 Music::CheckMusicStack_Active()
     return active;
 }
 
-bool32 Music::IsPlaying() { return RSDKTable->ChannelActive(Music::sVars->channelID); }
+bool32 Music::IsPlaying() { return channels[Music::sVars->channelID].IsActive(); }
 
 void Music::GetNextTrackStartPos()
 {

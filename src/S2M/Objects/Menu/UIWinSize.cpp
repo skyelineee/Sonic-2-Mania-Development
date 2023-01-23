@@ -88,7 +88,7 @@ void UIWinSize::Draw()
         }
 
         drawPos.x -= this->text.GetWidth(UIWidgets::sVars->fontFrames, 0, 0, this->text.length, 0) << 15;
-        RSDKTable->DrawText(&this->textAnimator, &drawPos, &this->text, 0, this->text.length, UIButton::ALIGN_LEFT, 0, 0, 0, false);
+        this->textAnimator.DrawString(&drawPos, &this->text, 0, this->text.length, UIButton::ALIGN_LEFT, 0, nullptr, false);
     }
 }
 
@@ -106,7 +106,7 @@ void UIWinSize::Create(void *data)
         this->size.y     = abs(this->size.y);
 
         this->textVisible = true;
-        RSDKTable->InitString(&this->text, "", 0x100);
+        this->text.Init("", 0x100);
         this->processButtonCB.Set(&UIWinSize::ProcessButtonCB);
         this->touchCB.Set(&UIWinSize::ProcessTouchCB);
 
@@ -134,7 +134,7 @@ void UIWinSize::SetupText(UIWinSize *entityPtr)
         char buffer[0x10];
         sprintf_s(buffer, (int32)sizeof(buffer), "%ix", this->selection);
 
-        RSDKTable->SetString(&entityPtr->text, buffer);
+        entityPtr->text.Set(buffer);
 #if GAME_VERSION != VER_100
         if (Localization->language == LANGUAGE_TC) {
             for (int32 c = 0; c < entityPtr->text.length; ++c) {

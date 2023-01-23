@@ -81,7 +81,7 @@ void UIDialog::Draw()
         this->textInfo.GetWidth(UIWidgets::sVars->fontFrames, 0, start, len, 0);
 
         drawPos.x += offset;
-        RSDKTable->DrawText(&this->animator, &drawPos, &this->textInfo, start, len, 0, 0, nullptr, nullptr, false);
+        this->animator.DrawString(&drawPos, &this->textInfo, start, len, 0, 0, nullptr, false);
 
         drawPos.y += 0x120000;
         drawPos.x = drawPos.x - offset - 0x120000;
@@ -147,7 +147,7 @@ void UIDialog::SetupText(UIDialog *dialog, String *text)
             ++charPos;
         }
 
-        RSDKTable->CopyString(&dialog->textInfo, text);
+        String::Copy(&dialog->textInfo, text);
         dialog->animator.SetAnimation(UIWidgets::sVars->fontFrames, 0, true, 0);
         dialog->textInfo.SetSpriteString(UIWidgets::sVars->fontFrames, 0);
     }

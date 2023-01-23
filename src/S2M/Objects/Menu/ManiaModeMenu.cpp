@@ -241,7 +241,7 @@ void ManiaModeMenu::HandleMenuReturn()
     for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
     {
         if (strcmp(param->menuTag, "") != 0) {
-            RSDKTable->GetCString(buffer, &control->tag);
+            control->tag.CStr(buffer);
 
             if (strcmp((const char *)buffer, param->menuTag) != 0) {
                 control->SetInactiveMenu(control);

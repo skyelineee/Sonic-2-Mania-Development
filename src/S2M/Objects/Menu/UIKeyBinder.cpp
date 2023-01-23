@@ -95,7 +95,8 @@ void UIKeyBinder::Update()
                 sVars->activeBinder = NULL;
                 parent->childHasFocus     = false;
 
-                RSDKTable->SetVideoSetting(VIDEOSETTING_CHANGED, true);
+               
+                Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, true);
                 UIWidgets::sVars->sfxAccept.Play(false, 255);
             }
         }
@@ -404,7 +405,7 @@ void UIKeyBinder::MoveKeyToActionCB_Yes()
         binder->state.Set(&UIKeyBinder::State_HandleButtonEnter);
         sVars->activeBinder = NULL;
 
-        RSDKTable->SetVideoSetting(VIDEOSETTING_CHANGED, false);
+        Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
         sVars->activeInputID  = KEYMAP_AUTO_MAPPING;
         sVars->activeButtonID = KEYMAP_AUTO_MAPPING;
     }

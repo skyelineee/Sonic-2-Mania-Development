@@ -116,16 +116,18 @@ void TitleCard::ChangeTitleColors()
     switch (GET_CHARACTER_ID(1)) {
         default: break;
         case ID_SONIC:  
-            RSDKTable->SetPaletteEntry(0, 3, 0x0F16AD);
-            RSDKTable->SetPaletteEntry(0, 4, 0x1D2EE2);
+            paletteBank[0].SetEntry(3, 0x0F16AD);
+            paletteBank[0].SetEntry(4, 0x1D2EE2);
         break;
+
         case ID_TAILS:
-            RSDKTable->SetPaletteEntry(0, 3, 0xE24F05);
-            RSDKTable->SetPaletteEntry(0, 4, 0xFD7300);
+            paletteBank[0].SetEntry(3, 0xE24F05);
+            paletteBank[0].SetEntry(4, 0xFD7300);
         break;
+
         case ID_KNUCKLES:
-            RSDKTable->SetPaletteEntry(0, 3, 0x057F19);
-            RSDKTable->SetPaletteEntry(0, 4, 0x4CB00A);
+            paletteBank[0].SetEntry(3, 0x057F19);
+            paletteBank[0].SetEntry(4, 0x4CB00A);
         break;
     }
 }
@@ -275,12 +277,12 @@ void TitleCard::State_SlideAway()
         switch (GET_CHARACTER_ID(1)) {
             default: break;
             case ID_TAILS:
-                RSDKTable->SetPaletteEntry(0, 3, 0x0F16AD);
-                RSDKTable->SetPaletteEntry(0, 4, 0x1D2EE2);
+                paletteBank[0].SetEntry(3, 0x0F16AD);
+                paletteBank[0].SetEntry(4, 0x1D2EE2);
                 break;
             case ID_KNUCKLES:
-                RSDKTable->SetPaletteEntry(0, 3, 0x0F16AD);
-                RSDKTable->SetPaletteEntry(0, 4, 0x1D2EE2);
+                paletteBank[0].SetEntry(3, 0x0F16AD);
+                paletteBank[0].SetEntry(4, 0x1D2EE2);
                 break;
         }
         this->Destroy();
