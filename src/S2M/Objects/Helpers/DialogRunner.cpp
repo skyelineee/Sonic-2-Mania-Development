@@ -24,12 +24,16 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(DialogRunner);
 
-void DialogRunner::Update() { this->callback.Run(this); }
+void DialogRunner::Update() 
+{ 
+    this->callback.Run(this); 
+}
+
 void DialogRunner::Create(void *data)
 {
-    this->active         = ACTIVE_ALWAYS;
-    this->visible        = 0;
-    this->callback.Copy((Action<void>*)data);
+    this->active  = ACTIVE_ALWAYS;
+    this->visible = false;
+    this->callback.Copy((Action<void> *)data);
     this->timer          = 0;
     this->useGenericText = false;
 }
@@ -91,14 +95,15 @@ void DialogRunner::NotifyAutoSave_CB()
 
 void DialogRunner::NotifyAutoSave()
 {
-    String string;
-    string.Init(nullptr);
+    String string = {};
 
     if (sVars->isAutoSaving) {
         if (!UIDialog::sVars->activeDialog) {
             Localization::GetString(&string, Localization::AutoSaveNotif);
+
             Action<void> callback;
             callback.Set(&DialogRunner::NotifyAutoSave_CB);
+
             UIDialog *dialog = UIDialog::CreateDialogOk(&string, callback, true);
             dialog->useAltColor    = true;
         }
@@ -278,10 +283,11 @@ bool32 DialogRunner::NotifyAutosave()
         UILoadingIcon::StartWait();
         sVars->isAutoSaving = true;
         globals->notifiedAutosave  = false;
-        LogHelpers::Print("DUMMY NotifyAutosave()");
-        Action<void> data;
-        data.Set(&DialogRunner::NotifyAutoSave);
-        DialogRunner *dialogRunner = GameObject::Create<DialogRunner>(&data, 0, 0);
+
+        Action<void> callback = {};
+        callback.Set(&DialogRunner::NotifyAutoSave);
+
+        DialogRunner *dialogRunner = GameObject::Create<DialogRunner>(&callback, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         sVars->activeCallback     = dialogRunner;
     }

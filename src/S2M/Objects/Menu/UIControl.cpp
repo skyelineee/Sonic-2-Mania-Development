@@ -775,7 +775,7 @@ void UIControl::ProcessButtonInput()
                 Entity *storeEntity = (Entity *)sceneInfo->entity;
                 sceneInfo->entity   = (Entity *)button;
                 if (!button->processButtonCB.Matches(nullptr)) {
-                    if (button->checkSelectedCB.Matches(nullptr) || button->checkSelectedCB.Matches(nullptr)) {
+                    if (button->checkSelectedCB.Matches(nullptr) || !button->checkSelectedCB.Run(this)) {
 #if RETRO_USE_MOD_LOADER
                         button->processButtonCB.Run(button);
 #else

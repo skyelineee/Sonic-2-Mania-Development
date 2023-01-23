@@ -41,28 +41,33 @@ void MenuSetup::StaticUpdate()
     if (!sVars->initializedAPI) {
         sVars->fxFade->speedOut = 0;
 
-        String tag;
-        tag.Init(nullptr);
+        String tag = {};
+        tag.Set("Main Menu");
 
+        UIControl *mainMenu = nullptr; // this will crash if no entities have "Main Menu" as the tag, make sure one does!!!
         for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
-            if (!tag.Compare(&tag, &control->tag, false)) {
-                tag.Set("Main Menu");
+            if (tag.Compare(&tag, &control->tag, false)) {
+                mainMenu = control;
+                break;
             }
         }
 
-        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
+        if (mainMenu) {
             if (!ManiaModeMenu::InitAPI()) {
-                control->selectionDisabled = true;
+                mainMenu->selectionDisabled = true;
                 return;
             }
             else {
-                control->selectionDisabled       = false;
-                sVars->initializedAPI = true;
+                mainMenu->selectionDisabled = false;
+                sVars->initializedAPI       = true;
 
                 String message;
                 Localization::GetString(&message, Localization::RPC_Menu);
                 API::RichPresence::Set(PRESENCE_MENU, &message);
             }
+        }
+        else {
+            Dev::Print(Dev::PRINT_NORMAL, "NO MAIN MENU CONTROL FOUND.\n");
         }
     }
 

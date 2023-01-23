@@ -199,6 +199,8 @@ void UIDialog::Setup(UIDialog *dialog)
         Vector2 size;
         size.x = screenInfo->size.x << 16;
         size.y = screenInfo->size.y << 16;
+
+
         for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
             if (control->active == ACTIVE_ALWAYS) {
                 tookFocus                     = true;
@@ -209,39 +211,36 @@ void UIDialog::Setup(UIDialog *dialog)
             }
         }
 
-        for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
-            control = nullptr;
-            GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
+        GameObject::Reset(SLOT_DIALOG_UICONTROL, UIControl::sVars->classID, &size);
 
-            control               = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
-            control->menuWasSetup = true;
-            control->position.x   = (screenInfo->position.x + screenInfo->center.x) << 16;
-            control->position.y   = (screenInfo->position.y + screenInfo->center.y) << 16;
-            control->rowCount     = 1;
-            control->columnCount  = dialog->buttonCount;
-            control->buttonID     = 0;
-            control->backPressCB.Set(&UIDialog::HandleAutoClose);
-            control->selectionDisabled = true;
+        UIControl *curControl    = GameObject::Get<UIControl>(SLOT_DIALOG_UICONTROL);
+        curControl->menuWasSetup = true;
+        curControl->position.x   = (screenInfo->position.x + screenInfo->center.x) << 16;
+        curControl->position.y   = (screenInfo->position.y + screenInfo->center.y) << 16;
+        curControl->rowCount     = 1;
+        curControl->columnCount  = dialog->buttonCount;
+        curControl->buttonID     = 0;
+        curControl->backPressCB.Set(&UIDialog::HandleAutoClose);
+        curControl->selectionDisabled = true;
 
-            dialog->parent = control;
-            if (!tookFocus) {
-                UIDialog::sVars->controlStore = nullptr;
-                UIDialog::sVars->controlStateStore.Set(nullptr);
-            }
-
-            int32 i = 0;
-            for (; i < UIDIALOG_OPTION_COUNT; ++i) {
-                if (!dialog->buttons[i])
-                    break;
-
-                dialog->buttons[i]->parent = (Entity *)control;
-                control->buttons[i]        = dialog->buttons[i];
-            }
-
-            control->buttonCount = i;
-            dialog->timer        = 0;
-            dialog->state.Set(&UIDialog::State_Appear);
+        dialog->parent = curControl;
+        if (!tookFocus) {
+            UIDialog::sVars->controlStore = nullptr;
+            UIDialog::sVars->controlStateStore.Set(nullptr);
         }
+
+        int32 i = 0;
+        for (; i < UIDIALOG_OPTION_COUNT; ++i) {
+            if (!dialog->buttons[i])
+                break;
+
+            dialog->buttons[i]->parent = (Entity *)curControl;
+            curControl->buttons[i]     = dialog->buttons[i];
+        }
+
+        curControl->buttonCount = i;
+        dialog->timer        = 0;
+        dialog->state.Set(&UIDialog::State_Appear);
     }
 }
 
