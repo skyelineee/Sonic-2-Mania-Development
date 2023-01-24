@@ -263,6 +263,14 @@ void HUD::Draw()
         this->lifeFrameIDs[player->playerID] = lifeIconFrame;
         this->lives[player->playerID]        = player->lives;
 
+        if (GET_CHARACTER_ID(1) == ID_SONIC && player->superState == Player::SuperStateSuper) {
+            lifeIconAnimator.frameID += 3;
+        }
+        
+        if (GET_CHARACTER_ID(1) == ID_SONIC && player->superState == Player::SuperStateDone) {
+            lifeIconAnimator.frameID = 0;
+        }
+
         if ((globals->playerID & 0xFF) == ID_TAILS && (globals->secrets & SECRET_REGIONSWAP))
             this->lifeNamesAnimator.frameID = this->lifeNamesAnimator.frameCount - 1; // miles
 

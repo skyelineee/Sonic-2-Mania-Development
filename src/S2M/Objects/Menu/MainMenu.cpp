@@ -61,8 +61,7 @@ void MainMenu::StageLoad() {}
 
 void MainMenu::Initialize()
 {
-    String text;
-    text.Init(nullptr);
+    String text = {};
 
     for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
     {
