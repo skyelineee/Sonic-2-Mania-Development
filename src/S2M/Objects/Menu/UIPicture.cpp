@@ -13,7 +13,12 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(UIPicture);
 
-void UIPicture::Update() { this->animator.Process(); }
+void UIPicture::Update()
+{
+    this->animator.Process(); 
+
+    this->rotation = (this->rotation + this->rotSpeed) & 0x1FF;
+}
 void UIPicture::LateUpdate() {}
 void UIPicture::StaticUpdate() {}
 void UIPicture::Draw()
@@ -33,6 +38,10 @@ void UIPicture::Create(void *data)
             this->active    = ACTIVE_BOUNDS;
             this->visible   = true;
             this->drawGroup = 2;
+            if (this->rotSpeed) {
+                this->drawFX   = FX_ROTATE | FX_FLIP;
+                this->rotation = this->startRot;
+            }
         }
         else {
             if (Stage::CheckSceneFolder("Logos") || Stage::CheckSceneFolder("Summary"))
@@ -46,7 +55,7 @@ void UIPicture::Create(void *data)
 void UIPicture::StageLoad()
 {
     if (Stage::CheckSceneFolder("Menu"))
-        sVars->aniFrames.Load("UI/Picture.bin", SCOPE_STAGE);
+        sVars->aniFrames.Load("UI/UIPicture.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("Logos"))
         sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
 }
@@ -61,7 +70,7 @@ void UIPicture::EditorDraw()
 void UIPicture::EditorLoad()
 {
     if (Stage::CheckSceneFolder("Menu"))
-        sVars->aniFrames.Load("UI/Picture.bin", SCOPE_STAGE);
+        sVars->aniFrames.Load("UI/UIPicture.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("Logos"))
         sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
 }
@@ -74,5 +83,7 @@ void UIPicture::Serialize()
     RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, tag);
     RSDK_EDITABLE_VAR(UIPicture, VAR_BOOL, zonePalette);
     RSDK_EDITABLE_VAR(UIPicture, VAR_UINT8, zoneID);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_INT32, rotSpeed);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_INT32, startRot);
 }
 } // namespace GameLogic

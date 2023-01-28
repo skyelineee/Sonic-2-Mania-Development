@@ -34,6 +34,7 @@ struct MenuSetup : RSDK::GameObject::Entity {
         int32 unused2;
         int32 unused3;
         FXFade *fxFade;
+        int32 paletteTimer;
     };
 
     RSDK::StateMachine<MenuSetup> state;

@@ -32,8 +32,11 @@ void UIWidgets::StageLoad()
     sVars->active = ACTIVE_ALWAYS;
 
     sVars->uiFrames.Load("UI/UIElements.bin", SCOPE_STAGE);
+    sVars->buttonFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
+    sVars->nameFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
     sVars->saveSelFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
+    sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
 
     UIWidgets::ApplyLanguage();
     sVars->frameAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
@@ -70,11 +73,6 @@ void UIWidgets::ApplyLanguage()
 
     switch (Localization::sVars->language) {
         case LANGUAGE_EN: sVars->textFrames.Load("UI/TextEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: sVars->textFrames.Load("UI/TextFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: sVars->textFrames.Load("UI/TextIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: sVars->textFrames.Load("UI/TextGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: sVars->textFrames.Load("UI/TextSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: sVars->textFrames.Load("UI/TextJP.bin", SCOPE_STAGE); break;
         default: break;
     }
 }

@@ -26,9 +26,12 @@ struct UIWidgets : RSDK::GameObject::Entity {
         RSDK::Animator frameAnimator;
         RSDK::Animator arrowsAnimator;
         RSDK::SpriteAnimation uiFrames;
+        RSDK::SpriteAnimation buttonFrames;
         RSDK::SpriteAnimation saveSelFrames;
         RSDK::SpriteAnimation textFrames;
+        RSDK::SpriteAnimation nameFrames;
         RSDK::SpriteAnimation fontFrames;
+        RSDK::SpriteAnimation descFrames;
         RSDK::SoundFX sfxBleep;
         RSDK::SoundFX sfxAccept;
         RSDK::SoundFX sfxWarp;

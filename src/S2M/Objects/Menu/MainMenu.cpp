@@ -10,6 +10,7 @@
 #include "UIButton.hpp"
 #include "UIDiorama.hpp"
 #include "UIDialog.hpp"
+#include "UIWidgets.hpp"
 #include "MenuSetup.hpp"
 #include "ManiaModeMenu.hpp"
 #include "Helpers/MathHelpers.hpp"
@@ -31,28 +32,55 @@ void MainMenu::StaticUpdate()
     UIControl *control = MainMenu::sVars->menuControl;
 
     if (control && control->active) {
-        UIDiorama *diorama         = MainMenu::sVars->diorama;
-        MainMenu::sVars->confirmPrompt->visible = (control->shifter->shiftOffset.y & 0xFFFF0000) > -0x700000;
-        UIButton *button           = control->buttons[control->lastButtonID];
+        UIDiorama *diorama = MainMenu::sVars->diorama;
+        UIButton *button   = control->buttons[control->lastButtonID];
 
         if (button) {
-            switch (button->frameID) {
-                case 0: diorama->dioramaID = UIDiorama::UIDIORAMA_MANIAMODE; break;
+            int32 selectedID = button->nameFrameID;
+
+            switch (selectedID) {
+                case 0: diorama->dioramaID = UIDiorama::UIDIORAMA_ADVENTURE; break;
                 case 1: diorama->dioramaID = UIDiorama::UIDIORAMA_TIMEATTACK; break;
-                case 2: diorama->dioramaID = UIDiorama::UIDIORAMA_COMPETITION; break;
-                case 3: diorama->dioramaID = UIDiorama::UIDIORAMA_OPTIONS; break;
-                case 4: diorama->dioramaID = UIDiorama::UIDIORAMA_EXTRAS; break;
-                case 5: diorama->dioramaID = UIDiorama::UIDIORAMA_ENCOREMODE; break;
-                case 6: diorama->dioramaID = UIDiorama::UIDIORAMA_PLUSUPSELL; break;
-                case 7: diorama->dioramaID = UIDiorama::UIDIORAMA_EXIT; break;
+                case 2: diorama->dioramaID = UIDiorama::UIDIORAMA_OPTIONS; break;
+                case 3: diorama->dioramaID = UIDiorama::UIDIORAMA_EXTRAS; break;
+                case 4: diorama->dioramaID = UIDiorama::UIDIORAMA_EXIT; break;
                 default: break;
             }
 
             if (button->disabled)
                 diorama->timer = 12;
+
+            for (int i = 0; i < control->buttonCount; ++i) {
+                if (control->buttons[i]) {
+                    UIButton* button = control->buttons[i]; 
+                    if (button->nameFrameID > selectedID) {
+                        button->position.y = button->startPos.y + TO_FIXED(24);
+                        button->buttonFrameID = button->nameFrameID;
+                        button->descriptionListID = 1;
+                        button->buttonListID = 1;
+                        button->nameListID   = 3;
+                    }
+                    else if (button->nameFrameID == selectedID) {
+                        button->buttonListID = 0;
+                        button->position.y = button->startPos.y;
+                        button->buttonFrameID = button->nameFrameID;
+                        button->descriptionListID = 0;
+                        button->nameListID    = 2;
+                        // big boy
+                    }
+                    else {
+                        button->buttonListID = 1;
+                        button->nameListID    = 4;
+                        button->descriptionListID = 1;
+                        button->position.y = button->startPos.y;
+                        button->buttonFrameID = button->nameFrameID + 5;
+                    }
+                }
+            }
         }
     }
 }
+
 void MainMenu::Draw() {}
 
 void MainMenu::Create(void *data) {}
@@ -106,7 +134,7 @@ void MainMenu::Initialize()
         }
     }
 
-    int32 button1Frame = 1; // Time Attack
+    /*int32 button1Frame = 1; // Time Attack
     int32 button2Frame = 2; // Competition
     int32 button3Frame = 3; // Options
     int32 button4Frame = 4; // Extras
@@ -158,9 +186,9 @@ void MainMenu::Initialize()
     UIButton *buttonExit = menuControl->buttons[6];
     buttonExit->frameID        = 7;
     buttonExit->transition     = false;
-    buttonExit->stopMusic      = false;
+    buttonExit->stopMusic      = false;*/
 
-    /*int32 button1Frame = 1; // Time Attack
+    int32 button1Frame = 1; // Time Attack
     int32 button2Frame = 2; // Options
     int32 button3Frame = 3; // Extras
     int32 button4Frame = 4; // Exit
@@ -168,30 +196,34 @@ void MainMenu::Initialize()
     bool32 button2StopMus    = false; // Options button does NOT stop music
 
     UIButton *buttonAdventure = menuControl->buttons[0];
-    buttonAdventure->frameID        = 0;
+    buttonAdventure->nameFrameID        = 0;
+    buttonAdventure->buttonFrameID      = 0;
     buttonAdventure->transition     = true;
     buttonAdventure->stopMusic      = true;
 
     UIButton *buttonTimeAttack = menuControl->buttons[1];
-    buttonTimeAttack->frameID        = button1Frame;
+    buttonTimeAttack->nameFrameID    = button1Frame;
+    buttonTimeAttack->buttonFrameID  = 1;
     buttonTimeAttack->transition     = true;
     buttonTimeAttack->stopMusic      = true;
 
     UIButton *buttonOptions = menuControl->buttons[2];
-    buttonOptions->frameID        = button2Frame;
+    buttonOptions->nameFrameID    = button2Frame;
+    buttonOptions->buttonFrameID  = 2;
     buttonOptions->transition     = true;
     buttonOptions->stopMusic      = false;
 
     UIButton *buttonExtras = menuControl->buttons[3];
-    buttonExtras->frameID        = button3Frame;
+    buttonExtras->nameFrameID    = button3Frame;
+    buttonExtras->buttonFrameID  = 3;
     buttonExtras->transition     = true;
     buttonExtras->stopMusic      = false;
 
     UIButton *buttonExit = menuControl->buttons[4];
-    buttonExit->frameID        = button4Frame;
+    buttonExit->nameFrameID    = button4Frame;
+    buttonExit->buttonFrameID  = 4;
     buttonExit->transition     = false;
-    buttonExit->stopMusic      = false;*/
-
+    buttonExit->stopMusic      = false;
 }
 
 bool32 MainMenu::BackPressCB_ReturnToTitle()
@@ -232,7 +264,7 @@ void MainMenu::MenuButton_ActionCB()
     // sneaky and stupid
     UIButton *button = (UIButton *)this;
 
-    switch (button->frameID) {
+    switch (button->nameFrameID) {
         case 0: //Mania Mode
             if (API::Storage::GetNoSave()) {
                 UIControl::MatchMenuTag("No Save Mode");
@@ -260,37 +292,12 @@ void MainMenu::MenuButton_ActionCB()
                 UIControl::MatchMenuTag("Time Attack Legacy");*/
             break;
 
-        case 2: // Competition
-                UIControl::MatchMenuTag("Competition Legacy");
-            break;
-
-        case 3: // Options
+        case 2: // Options
             UIControl::MatchMenuTag("Options");
             break;
 
-        case 4: // Extras
+        case 3: // Extras
             UIControl::MatchMenuTag("Extras");
-            break;
-
-        case 5: // Encore
-            /*if (API::Storage::GetNoSave()) {
-                UIControl::MatchMenuTag("No Save Encore");
-            }
-            else {
-                UIControl *encoreSaveSel = ManiaModeMenu::sVars->encoreSaveSelect;
-                encoreSaveSel->buttonID        = 1;
-                encoreSaveSel->menuWasSetup    = false;
-                for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
-                    Entity *store     = (Entity *)sceneInfo->entity;
-                    sceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
-                    UISaveSlot::HandleSaveIconChange();
-                    sceneInfo->entity = store;
-                }
-                UIControl::MatchMenuTag("Encore Mode");
-            }*/
-            break;
-
-        case 6: // Buy Plus DLC
             break;
 
         default: break;
@@ -306,8 +313,8 @@ void MainMenu::SetupActions()
 {
     for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES))
     {
-        if (button->listID == 1) {
-            if (button->frameID == 7) {
+        if (button->nameListID == 3) {
+            if (button->nameFrameID == 4) {
                 if (SKU->platform != PLATFORM_PC && SKU->platform != PLATFORM_DEV) {
                     UIControl *control = MainMenu::sVars->menuControl;
 

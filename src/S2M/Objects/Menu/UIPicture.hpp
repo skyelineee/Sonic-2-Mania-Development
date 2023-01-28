@@ -19,6 +19,8 @@ struct UIPicture : RSDK::GameObject::Entity {
     uint8 zonePalette;
     int32 zoneID;
     RSDK::Animator animator;
+    int32 rotSpeed;
+    int32 startRot;
 
     // ==============================
     // EVENTS

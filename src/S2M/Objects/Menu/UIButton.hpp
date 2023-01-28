@@ -29,10 +29,15 @@ struct UIButton : RSDK::GameObject::Entity {
 
     S2M_UI_ITEM_BASE(UIButton);
     RSDK::Vector2 size;
-    int32 listID;
-    int32 frameID;
+    int32 nameListID;
+    int32 nameFrameID;
+    int32 buttonListID;
+    int32 buttonFrameID;
+    int32 descriptionListID;
+    int32 descriptionFrameID;
     int32 align;
     int32 choiceCount;
+    int32 descAngle;
     uint8 choiceDir;
     bool32 invisible;
     bool32 assignsP1;
@@ -41,19 +46,25 @@ struct UIButton : RSDK::GameObject::Entity {
     bool32 stopMusic;
     bool32 isDisabled;
     int32 bgEdgeSize;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
-    int32 textBounceVelocity;
     int32 buttonBounceVelocity;
-    bool32 textVisible;
+    bool32 nameVisible;
     bool32 clearParentState;
     RSDK::Vector2 firstChoicePos;
     int32 selection;
     RSDK::Action<void> choiceChangeCB;
-    RSDK::Animator animator;
-    RSDK::SpriteAnimation textFrames;
-    int32 startListID;
-    int32 startFrameID;
+    RSDK::Animator nameAnimator;
+    RSDK::Animator buttonAnimator;
+    RSDK::Animator descriptionAnimator;
+    RSDK::SpriteAnimation nameFrames;
+    RSDK::SpriteAnimation buttonFrames;
+    RSDK::Vector2 descOffset;
+    int32 startNameListID;
+    int32 startNameFrameID;
+    int32 startButtonListID;
+    int32 startButtonFrameID;
+    int32 startDescriptionListID;
+    int32 startDescriptionFrameID;
 
     // ==============================
     // EVENTS

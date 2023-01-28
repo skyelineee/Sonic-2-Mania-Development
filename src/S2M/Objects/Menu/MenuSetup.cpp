@@ -88,6 +88,15 @@ void MenuSetup::StaticUpdate()
 
     sVars->fxFade->speedOut = 12;
     API::Auth::GetUserAuthStatus();
+    if (sVars->paletteTimer == 4) {
+        paletteBank[1].Rotate(128, 135, true);
+        paletteBank[2].Rotate(128, 135, true);
+        sVars->paletteTimer = 0;
+    }
+    else {
+        sVars->paletteTimer++;
+    }
+    paletteBank[0].SetLimitedFade(1, 2, 40, 128, 135);
 }
 
 void MenuSetup::Draw() { Graphics::FillScreen(this->fadeColor, this->fadeTimer, this->fadeTimer - 128, this->fadeTimer - 256); }
