@@ -143,7 +143,7 @@ void GameOver::State_MoveOut()
             StarPost::sVars->storedMinutes      = 0;
         }
         else {
-            SaveGame *saveRAM = SaveGame::GetSaveRAM();
+            SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 Stage::SetScene("Presentation & Menus", "Menu");
             }

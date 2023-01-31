@@ -19,6 +19,7 @@
 #include "ImageTrail.hpp"
 #include "SuperSparkle.hpp"
 #include "Animals.hpp"
+#include "Helpers/LogHelpers.hpp"
 #include "Common/Decoration.hpp"
 
 using namespace RSDK;
@@ -28,18 +29,18 @@ char GameLogic::dynamicPath[0x40];
 int32 GameLogic::dynamicPathActID;
 int32 GameLogic::dynamicPathUnknown;
 
-// stageFolder, spriteFolder, zoneID, actID, noActID, isSavable, listPos
+// stageFolder, spriteFolder, zoneID, actID, noActID, isSavable, useFolderIDs
 GameLogic::StageFolderInfo GameLogic::stageList[] = {
-    { "LSelect", "LSelect", -1, 0, false, false, false }, { "OWZ", "OWZ", 0, 0, true, false, false },   { "EHZ", "EHZ", 1, 0, false, false, false },
+    { "LSelect", "LSelect", -1, 0, false, false, false }, { "Blueprint", "Blueprint", 0, 0, true, true, false },   { "EHZ", "EHZ", 1, 0, false, false, false },
     { "EHZ", "EHZ", 1, 1, false, true, false },           { "CPZ", "CPZ", 2, 0, false, false, false },  { "CPZ", "CPZ", 2, 1, false, true, false },
     { "ARZ", "ARZ", 3, 0, false, false, false },          { "ARZ", "ARZ", 3, 1, false, true, false },   { "SWZ", "SWZ", 4, 0, false, false, false },
     { "SWZ", "SWZ", 4, 1, false, true, false },           { "CNZ", "CNZ", 5, 0, false, false, false },  { "CNZ", "CNZ", 5, 1, false, true, false },
     { "HTZ", "HTZ", 6, 0, false, false, false },          { "HTZ", "HTZ", 6, 1, false, true, false },   { "MCZ", "MCZ", 7, 0, false, false, false },
-    { "MCZ", "MCZ", 7, 1, false, true, false },           { "HPZ", "HPZ", 8, 0, true, true, false },    { "SSZ", "SSZ", 9, 0, false, false, false },
-    { "SSZ", "SSZ", 9, 1, false, true, false },           { "OOZ", "OOZ", 10, 0, false, false, false }, { "OOZ", "OOZ", 10, 1, false, true, false },
-    { "MTZ", "MTZ", 11, 0, false, false, false },         { "MTZ", "MTZ", 11, 1, false, true, false },  { "CCZ", "CCZ", 12, 0, false, false, false },
-    { "CCZ", "CCZ", 12, 1, false, true, false },          { "SCZ", "SCZ", 13, 0, true, true, false },   { "WFZ", "WFZ", 14, 0, true, true, false },
-    { "DEZ", "DEZ", 15, 0, false, false, false },         { "DEZ", "DEZ", 15, 1, false, true, false }, { "PPZ", "PPZ", 16, 0, true, false, false }
+    { "MCZ", "MCZ", 7, 1, false, true, false },           { "SSZ", "SSZ", 8, 0, false, false, false },  { "SSZ", "SSZ", 8, 1, false, true, false },
+    { "OOZ", "OOZ", 9, 0, false, false, false },          { "OOZ", "OOZ", 9, 1, false, true, false },   { "MTZ", "MTZ", 10, 0, false, false, false },        
+    { "MTZ", "MTZ", 10, 1, false, true, false },          { "CCZ", "CCZ", 11, 0, false, false, false }, { "CCZ", "CCZ", 11, 1, false, true, false },
+    { "SCZ", "SCZ", 12, 0, true, true, false },           { "DEZ", "DEZ", 13, 0, false, false, false }, { "DEZ", "DEZ", 13, 1, false, true, false },        
+    { "HPZ", "HPZ", 14, 0, true, false, false },          { "PPZ", "PPZ", 15, 0, true, false, false }
 };
 
 void GameLogic::StrCopy(char *dest, uint32 destSize, const char *src)
@@ -719,7 +720,7 @@ bool32 Zone::CurrentStageSaveable()
             if (stage->noActID)
                 return stage->isSavable;
 
-            for (i = 0; i < 0x80; ++i) {
+            for (; i < 0x80; ++i) {
                 stage = &stageList[i];
 
                 if (stageID == '1' + stage->actID)
@@ -797,6 +798,33 @@ void Zone::GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, i
         *tile  = tileLow;
         *flags = flagsLow;
     }
+}
+
+int32 Zone::GetZoneListPos(int32 zoneID, int32 act, int32 characterID)
+{
+    int32 listPos = 0;
+    switch (zoneID) {
+        case OWZ: listPos = act * zoneID; break;
+        case EHZ: listPos = act + 1 * zoneID; break;
+        case CPZ: listPos = act + 1 * zoneID + 1; break;
+        case ARZ: listPos = act + 1 * zoneID + 2; break;
+        case SWZ: listPos = act + 1 * zoneID + 3; break;
+        case CNZ: listPos = act + 1 * zoneID + 4; break;
+        case HTZ: listPos = act + 1 * zoneID + 5; break;
+        case MCZ: listPos = act + 1 * zoneID + 6; break;
+        case SSZ: listPos = act + 1 * zoneID + 7; break;
+        case OOZ: listPos = act + 1 * zoneID + 8; break;
+        case MTZ: listPos = act + 1 * zoneID + 9; break;
+        case CCZ: listPos = act + 1 * zoneID + 10; break;
+        case SFZ: listPos = act + 1 * zoneID + 11; break;
+        case DEZ: listPos = act + 1 * zoneID + 12; break;
+        default: break;
+    }
+
+    LogHelpers::Print("playerID = %d, zoneID = %d, act = %d", characterID, zoneID, act);
+    LogHelpers::Print("listPos = %d", listPos);
+
+    return listPos;
 }
 
 #if RETRO_INCLUDE_EDITOR

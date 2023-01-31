@@ -32,6 +32,7 @@ enum PlayerIDs {
 
 #define GET_CHARACTER_ID(playerNum)            (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
 #define CHECK_CHARACTER_ID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
+#define GET_MEDAL_MOD(medal)                   (1 << medal)
 
 enum SaveSlots { NO_SAVE_SLOT = 255 };
 

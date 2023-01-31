@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------------
 
 #include "UIControl.hpp"
+#include "UISaveSlot.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -548,7 +549,7 @@ void UIControl::SetupButtons()
 
         if (button) {
             int32 classID = button->classID;
-            if (classID != UIButton::sVars->classID //&& (!UISaveSlot || classID != UISaveSlot::sVars->classID)
+            if (classID != UIButton::sVars->classID && (!UISaveSlot::sVars || classID != UISaveSlot::sVars->classID)
                 //&& (!UITAZoneModule || classID != UITAZoneModule->classID)
                 /*&& (!UISlider || classID != UISlider->classID)*/ && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }

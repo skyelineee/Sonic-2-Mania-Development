@@ -10,6 +10,7 @@
 #include "StarPost.hpp"
 #include "ItemBox.hpp"
 #include "ActClear.hpp"
+#include "Menu/UISaveSlot.hpp"
 #include "Helpers/GameProgress.hpp"
 
 #include "Helpers/LogHelpers.hpp"
@@ -28,7 +29,7 @@ void SaveGame::LoadSaveData()
 
     sVars->saveRAM = GetSaveDataPtr(slot);
 
-    SaveGame *saveRAM = sVars->saveRAM;
+    SaveRAM *saveRAM = sVars->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;
 
@@ -177,18 +178,18 @@ void SaveGame::SaveFileCB(int32 status)
     }
 }
 
-SaveGame *SaveGame::GetSaveDataPtr(uint8 saveSlot)
+SaveGame::SaveRAM *SaveGame::GetSaveDataPtr(uint8 saveSlot)
 {
     if (saveSlot == NO_SAVE_SLOT)
-        return (SaveGame *)globals->noSaveSlot;
+        return (SaveRAM *)globals->noSaveSlot;
 
-    int32 slot = saveSlot + 7;
+    int32 slot = saveSlot + 8;
     if (saveSlot >= 0)
         slot = saveSlot;
 
     int32 slotPos = saveSlot * 0x100;
 
-    return (SaveGame *)&globals->saveRAM[0x000 + slotPos]; // 0x000 -> 0x800 => 8 save slots
+    return (SaveRAM *)&globals->saveRAM[0x000 + slotPos]; // 0x000 -> 0x800 => 8 save slots
 }
 
 bool32 SaveGame::CheckDisableRestart()
@@ -196,7 +197,7 @@ bool32 SaveGame::CheckDisableRestart()
     return false;
 }
 
-SaveGame *SaveGame::GetSaveRAM() { return sVars->saveRAM; }
+SaveGame::SaveRAM *SaveGame::GetSaveRAM() { return sVars->saveRAM; }
 
 void SaveGame::LoadFile(void (*callback)(bool32 success))
 {
@@ -236,18 +237,17 @@ void SaveGame::SaveLoadedCB(bool32 success)
     LogHelpers::Print("SaveLoadedCB(%d)", success);
 
     if (success) {
-        /*for (auto entity : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES))
+        for (auto entity : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES))
         {
             if (!entity->type) {
                 Entity *store = (Entity *)sceneInfo->entity;
 
-                sceneInfo->entity = (Entity *)entity;
-                UISaveSlot::LoadSaveInfo();
-                UISaveSlot::HandleSaveIcons();
+                entity->LoadSaveInfo();
+                entity->HandleSaveIcons();
 
                 sceneInfo->entity = store;
             }
-        }*/
+        }
 
         GameProgress::DumpProgress();
     }
@@ -258,7 +258,7 @@ void SaveGame::SaveLoadedCB(bool32 success)
 
 void SaveGame::SaveProgress()
 {
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
 
     saveRAM->lives          = Player::sVars->savedLives;
     saveRAM->score          = Player::sVars->savedScore;
@@ -292,7 +292,7 @@ void SaveGame::ClearNoSave()
 
 void SaveGame::ClearSaveSlot(uint8 slotID, void (*callback)(bool32 success))
 {
-    SaveGame *saveSlot = GetSaveDataPtr(slotID);
+    SaveRAM *saveSlot = GetSaveDataPtr(slotID);
     memset(saveSlot, 0, 0x400);
 
     if (sVars->saveRAM && globals->saveLoaded == STATUS_OK) {
@@ -316,7 +316,7 @@ void SaveGame::ClearRestartData()
 
 void SaveGame::StoreStageState() {
 
-    SaveGame *saveRAM        = GetSaveRAM();
+    SaveRAM *saveRAM        = GetSaveRAM();
     globals->recallEntities = true;
 
     for (int32 p = 0; p < PLAYER_COUNT; ++p) {
@@ -362,7 +362,7 @@ void SaveGame::StoreStageState() {
 
 void SaveGame::SavePlayerState()
 {
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
     Player *player1   = GameObject::Get<Player>(SLOT_PLAYER1);
 
     saveRAM->lives           = player1->lives;
@@ -382,12 +382,12 @@ void SaveGame::SavePlayerState()
 
 void SaveGame::LoadGameState()
 {
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
 }
 
 void SaveGame::SaveGameState()
 {
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
 
     if (saveRAM->saveState != 2) {
         Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
@@ -406,7 +406,7 @@ bool32 SaveGame::GetEmeralds(EmeraldCheckTypes type)
     if (type > SaveGame::EmeraldAny2)
         return false;
 
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
 
     int32 totalCount = 0;
     switch (type) {
@@ -504,7 +504,7 @@ void SaveGame::SetEmeralds(EmeraldCheckTypes type)
     if (type > SaveGame::EmeraldAny2)
         return;
 
-    SaveGame *saveRAM = GetSaveRAM();
+    SaveRAM *saveRAM = GetSaveRAM();
 
     int32 totalCount = 0;
     switch (type) {

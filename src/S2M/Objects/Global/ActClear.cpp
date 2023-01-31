@@ -519,9 +519,9 @@ void ActClear::State_SaveGameProgress()
                 Player::SaveValues();
                 SaveGame::ClearRestartData();
                 StarPost::ResetStarPosts();
-                if (Zone::sVars->actID > 0)
+                if (Zone::sVars->actID >= 0)
                     SaveGame::ClearCollectedSpecialRings();
-                SaveGame::SaveProgress();
+                    SaveGame::SaveProgress();
 
                 if (globals->saveSlotID != NO_SAVE_SLOT && !sVars->forceNoSave) {
                     if (Zone::CurrentStageSaveable())

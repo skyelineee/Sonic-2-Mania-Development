@@ -48,6 +48,25 @@ struct SaveGame : RSDK::GameObject::Entity {
     // STRUCTS
     // ==============================
 
+    struct SaveRAM {
+        int32 saveState;
+        int32 characterID;
+        int32 zoneID;
+        int32 lives;
+        int32 score;
+        int32 score1UP;
+        int32 collectedEmeralds;
+        int32 continues;
+        int32 storedStageID;
+        uint16 nextSpecialStage;
+        int32 collectedSpecialRings;
+        int32 medalMods;
+        int32 zoneTimes[32];
+        uint8 characterFlags;
+        int32 stock;
+        int32 playerID;
+    };
+
     // ==============================
     // STATIC VARS
     // ==============================
@@ -57,28 +76,12 @@ struct SaveGame : RSDK::GameObject::Entity {
         void (*loadCallback)(bool32 success);
         void *saveEntityPtr;
         void (*saveCallback)(bool32 success);
-        SaveGame *saveRAM;
+        SaveRAM *saveRAM;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
-    int32 saveState;
-    int32 characterID;
-    int32 zoneID;
-    int32 lives;
-    int32 score;
-    int32 score1UP;
-    int32 collectedEmeralds;
-    int32 continues;
-    int32 storedStageID;
-    uint16 nextSpecialStage;
-    int32 collectedSpecialRings;
-    int32 medalMods;
-    int32 zoneTimes[32];
-    uint8 characterFlags;
-    int32 stock;
-    int32 playerID;
 
     // ==============================
     // EVENTS
@@ -97,9 +100,9 @@ struct SaveGame : RSDK::GameObject::Entity {
     static void RecallCollectedEntities();
     static void LoadFileCB(int32 status);
     static void SaveFileCB(int32 status);
-    static SaveGame *GetSaveDataPtr(uint8 saveSlot);
+    static SaveRAM *GetSaveDataPtr(uint8 saveSlot);
     bool32 CheckDisableRestart();
-    static SaveGame *GetSaveRAM();
+    static SaveRAM *GetSaveRAM();
     static void LoadFile(void (*callback)(bool32 success));
     static void SaveFile(void (*callback)(bool32 success));
     static void SaveLoadedCB(bool32 success);

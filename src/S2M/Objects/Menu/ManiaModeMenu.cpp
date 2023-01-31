@@ -6,6 +6,7 @@
 
 #include "ManiaModeMenu.hpp"
 #include "MainMenu.hpp"
+#include "SaveMenu.hpp"
 #include "MenuSetup.hpp"
 #include "UILoadingIcon.hpp"
 #include "UIHeading.hpp"
@@ -41,7 +42,7 @@ void ManiaModeMenu::Initialize()
     LogHelpers::Print("ManiaModeMenu::Initialize()");
 
     MainMenu::Initialize();
-    // UISubHeading::Initialize(); i am NOT leaving it like this
+    SaveMenu::Initialize();
     // TimeAttackMenu::Initialize();
     // CompetitionMenu::Initialize();
     // OptionsMenu::Initialize();
@@ -217,7 +218,7 @@ void ManiaModeMenu::State_HandleTransition()
 void ManiaModeMenu::HandleUnlocks()
 {
     MainMenu::HandleUnlocks();
-    //UISubHeading::HandleUnlocks(); changing
+    SaveMenu::HandleUnlocks();
     //TimeAttackMenu::HandleUnlocks();
     //OptionsMenu::HandleUnlocks();
     //ExtrasMenu::HandleUnlocks();
@@ -226,7 +227,7 @@ void ManiaModeMenu::HandleUnlocks()
 void ManiaModeMenu::SetupActions()
 {
     MainMenu::SetupActions();
-    //UISubHeading::SetupActions(); changing
+    SaveMenu::SetupActions();
     //TimeAttackMenu::SetupActions();
     //OptionsMenu::SetupActions();
     //ExtrasMenu::SetupActions();
@@ -255,7 +256,7 @@ void ManiaModeMenu::HandleMenuReturn()
         }
     }
 
-    //UISubHeading::HandleMenuReturn(0); changing
+    SaveMenu::HandleMenuReturn(0);
     //TimeAttackMenu::HandleMenuReturn();
     //OptionsMenu::HandleMenuReturn();
 

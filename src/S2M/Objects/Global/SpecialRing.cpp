@@ -184,7 +184,7 @@ void SpecialRing::State_Idle()
                     this->sparkleRadius = (16 << 16);
                     this->state.Set(&SpecialRing::State_Flash);
 
-                    SaveGame *saveRAM = SaveGame::GetSaveRAM();
+                    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
                     if (this->id >= 1) {
                         globals->specialRingID = this->id;
@@ -257,7 +257,7 @@ void SpecialRing::State_Warp()
         sVars->sfxSpecialWarp.Play(false, 0xFE);
         this->Destroy();
 
-        SaveGame *saveRAM      = SaveGame::GetSaveRAM();
+        SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
         saveRAM->storedStageID = sceneInfo->listPos;
         if (this->disableHPZ) {
             Stage::SetScene("Special Stage", "");

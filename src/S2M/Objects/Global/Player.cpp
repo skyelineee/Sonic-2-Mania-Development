@@ -2909,7 +2909,7 @@ void Player::HandleDeath()
                     // Time Over!!
                     this->classID = TYPE_NONE;
 
-                    SaveGame *saveRAM = SaveGame::GetSaveRAM();
+                    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
                     if (globals->gameMode == MODE_COMPETITION) {
                     }
                     else if (saveRAM) {
@@ -2942,7 +2942,7 @@ void Player::HandleDeath()
                 }
                 else if (globals->gameMode != MODE_COMPETITION) {
                     // Regular Death, fade out and respawn
-                    SaveGame *saveRAM = SaveGame::GetSaveRAM();
+                    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
                     if (saveRAM) {
                         saveRAM->lives     = this->lives;
                         saveRAM->score     = this->score;

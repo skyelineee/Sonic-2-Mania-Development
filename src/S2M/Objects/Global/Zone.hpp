@@ -226,6 +226,8 @@ struct Zone : RSDK::GameObject::Entity {
 
     static void GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, RSDK::Tile *tile, uint8 *flags);
 
+    static int32 GetZoneListPos(int32 zoneID, int32 act, int32 characterID);
+
     // ==============================
     // DECLARATION
     // ==============================

@@ -34,7 +34,7 @@ void HP_SpecialClear::Create(void *data)
         this->stateDraw.Set(&HP_SpecialClear::Draw_FadeIn);
         this->fillColor = 0xE0E0E0;
 
-        SaveGame *saveRAM = SaveGame::GetSaveRAM();
+        SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
         this->score       = saveRAM->score;
         this->score1UP    = saveRAM->score1UP;
         this->lives       = saveRAM->lives;
@@ -103,7 +103,7 @@ void HP_SpecialClear::State_FadeIn()
     SET_CURRENT_STATE();
 
     if (this->timer >= 256) {
-        SaveGame *saveRAM = SaveGame::GetSaveRAM();
+        SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
         if (HP_Setup::sVars->gotEmerald) {
             if (Zone::sVars->actID != HP_Setup::ActNone)
@@ -254,7 +254,7 @@ void HP_SpecialClear::State_TallyScore()
     if (this->gemBonus + this->ringBonus[0] + this->ringBonus[1] <= 0) {
         this->timer = 0;
 
-        SaveGame *saveRAM = SaveGame::GetSaveRAM();
+        SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
         this->state.Set(&HP_SpecialClear::State_Failed);
         if (HP_Setup::sVars->gotEmerald) {
             if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)) { // hyper !!!
@@ -317,7 +317,7 @@ void HP_SpecialClear::State_ExitResults()
     this->alphaTimer = (this->alphaTimer + 16) & 0x1FF;
 
     if (this->timer < 0) {
-        SaveGame *saveRAM = SaveGame::GetSaveRAM();
+        SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
         Stage::SetScene("Mania Mode", "");
         sceneInfo->listPos = saveRAM->storedStageID;
@@ -359,7 +359,7 @@ void HP_SpecialClear::State_WinEnterText()
 
     this->alphaTimer = (this->alphaTimer + 16) & 0x1FF;
 
-    SaveGame *saveRAM = SaveGame::GetSaveRAM();
+    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
     if (this->textTopPos > -TO_FIXED(384)) {
         this->textTopPos -= TO_FIXED(32);
@@ -437,7 +437,7 @@ void HP_SpecialClear::Draw_Results()
 {
     SET_CURRENT_STATE();
 
-    SaveGame *saveRAM = SaveGame::GetSaveRAM();
+    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
     ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 

@@ -355,6 +355,12 @@
     <ClCompile Include="Objects\Menu\ManiaModeMenu.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\SaveMenu.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UISaveSlot.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -682,6 +688,12 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\ManiaModeMenu.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\SaveMenu.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UISaveSlot.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
