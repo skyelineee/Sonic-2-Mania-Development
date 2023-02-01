@@ -10,6 +10,7 @@
 #include "UILoadingIcon.hpp"
 #include "UIWidgets.hpp"
 #include "UISaveSlot.hpp"
+#include "UITransition.hpp"
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/GameProgress.hpp"
 #include "Helpers/MathHelpers.hpp"
@@ -224,7 +225,7 @@ void SaveMenu::SaveSel_YPressCB()
         UIWidgets::sVars->sfxAccept.Play(false, 255);
         UIControl::sVars->inputLocked = true;
 
-        //UITransition::StartTransition(SaveMenu::SecretsTransitionCB, 0);
+        UITransition::StartTransition(SaveMenu::SecretsTransitionCB, 0);
     }
 }
 

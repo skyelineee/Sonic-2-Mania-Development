@@ -6,6 +6,7 @@
 
 #include "UIControl.hpp"
 #include "UISaveSlot.hpp"
+#include "UITransition.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -283,7 +284,7 @@ void UIControl::ProcessInputs()
                     }
                     else {
                         this->selectionDisabled = true;
-                        // UITransition::StartTransition(UIControl::ReturnToParentMenu, 0); //
+                        UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
                         backPressed = false;
 
                         if (this->buttons[this->buttonID])

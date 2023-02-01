@@ -10,6 +10,7 @@
 #include "UIChoice.hpp"
 #include "UIResPicker.hpp"
 #include "UIWinSize.hpp"
+#include "UITransition.hpp"
 #include "Global/Music.hpp"
 #include "Helpers/DrawHelpers.hpp"
 
@@ -764,7 +765,7 @@ void UIButton::SelectedCB()
         if (UIChoice::sVars && this->choiceCount > 0 && choice)
             actionCB = choice->actionCB;
 
-        //UITransition::StartTransition(actionCB, 14);
+        UITransition::StartTransition(this->actionCB, 14);
     }
 
     if (this->stopMusic)

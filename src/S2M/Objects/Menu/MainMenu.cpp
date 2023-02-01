@@ -134,60 +134,6 @@ void MainMenu::Initialize()
         }
     }
 
-    /*int32 button1Frame = 1; // Time Attack
-    int32 button2Frame = 2; // Competition
-    int32 button3Frame = 3; // Options
-    int32 button4Frame = 4; // Extras
-    int32 button5Frame = 6; // Buy Plus
-
-    bool32 button3StopMus    = false; // Options button does NOT stop music
-    bool32 button5Transition = false; // Buy Plus Does NOT do a transition
-
-        button1Frame = 5; // Encore Mode
-        button2Frame = 1; // Time Attack
-        button3Frame = 2; // Competition
-        button4Frame = 3; // Options
-        button5Frame = 4; // Extras
-
-        button3StopMus    = true; // Competition button stops music
-        button5Transition = true; // Extras Does a transition
-
-
-    UIButton *buttonManiaMode = menuControl->buttons[0];
-    buttonManiaMode->frameID        = 0;
-    buttonManiaMode->transition     = true;
-    buttonManiaMode->stopMusic      = true;
-
-    UIButton *buttonEncoreMode = menuControl->buttons[1];
-    buttonEncoreMode->frameID        = button1Frame;
-    buttonEncoreMode->transition     = true;
-    buttonEncoreMode->stopMusic      = true;
-
-    UIButton *buttonTimeAttack = menuControl->buttons[2];
-    buttonTimeAttack->frameID        = button2Frame;
-    buttonTimeAttack->transition     = true;
-    buttonTimeAttack->stopMusic      = true;
-
-    UIButton *buttonCompetition = menuControl->buttons[3];
-    buttonCompetition->frameID        = button3Frame;
-    buttonCompetition->transition     = true;
-    buttonCompetition->stopMusic      = button3StopMus;
-
-    UIButton *buttonOptions = menuControl->buttons[4];
-    buttonOptions->frameID        = button4Frame;
-    buttonOptions->transition     = true;
-    buttonOptions->stopMusic      = false;
-
-    UIButton *buttonExtras = menuControl->buttons[5];
-    buttonExtras->frameID        = button5Frame;
-    buttonExtras->transition     = button5Transition;
-    buttonExtras->stopMusic      = false;
-
-    UIButton *buttonExit = menuControl->buttons[6];
-    buttonExit->frameID        = 7;
-    buttonExit->transition     = false;
-    buttonExit->stopMusic      = false;*/
-
     int32 button1Frame = 1; // Time Attack
     int32 button2Frame = 2; // Options
     int32 button3Frame = 3; // Extras
