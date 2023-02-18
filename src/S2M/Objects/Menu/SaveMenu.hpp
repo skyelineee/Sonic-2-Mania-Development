@@ -1,5 +1,6 @@
 #pragma once
 #include "S2M.hpp"
+#include "UIControl.hpp"
 
 namespace GameLogic
 {

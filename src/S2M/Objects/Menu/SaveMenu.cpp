@@ -25,7 +25,107 @@ RSDK_REGISTER_OBJECT(SaveMenu);
 
 void SaveMenu::Update() {}
 void SaveMenu::LateUpdate() {}
-void SaveMenu::StaticUpdate() {}
+void SaveMenu::StaticUpdate()
+{
+    UIControl *control = ManiaModeMenu::sVars->saveSelectMenu;
+
+    if (control && control->active) {
+        UISaveSlot *saveSlot = (UISaveSlot *)control->buttons[control->lastButtonID];
+
+        if (saveSlot) {
+            int32 selectedID = saveSlot->saveSlotPlacement;
+
+            for (int i = 0; i < control->buttonCount; ++i) {
+                if (control->buttons[i]) {
+                    UISaveSlot *saveSlot = (UISaveSlot *)control->buttons[i];
+                    UIControl *control   = (UIControl *)saveSlot->parent;
+                    SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(saveSlot->slotID);
+                    int32 saveState            = saveRAM->saveState;
+                    if (saveSlot->saveSlotPlacement > selectedID) {
+                        saveSlot->position.y = saveSlot->startPos.y + TO_FIXED(48);
+                        saveSlot->fileAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 1, true, saveSlot->frameID);
+                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 2, true, saveSlot->saveStatusAnimator.frameID);
+                        saveSlot->isSelected = false;
+                        if (!saveSlot->isSelected)
+                            if (saveState == SaveGame::SaveCompleted)
+                                switch (saveSlot->fileAnimator.frameID) {
+                                    case 0:
+                                    case 1:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID);
+                                    break;
+                                    case 2:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
+                                    break;
+                                    case 3:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
+                                    break;
+                                }
+
+                            switch (saveSlot->fileAnimator.frameID) {
+                                case 0:
+                                case 1: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID); break;
+                                case 2: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID); break;
+                                case 3: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID); break;
+                            }
+                    }
+                    else if (saveSlot->saveSlotPlacement == selectedID) {
+                        saveSlot->position.y = saveSlot->startPos.y;
+                        saveSlot->fileAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 0, true, saveSlot->frameID);
+                        saveSlot->isSelected = true;
+                        switch (saveSlot->fileAnimator.frameID) {
+                            case 0:
+                            case 1:
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID); 
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
+                            break;
+                            case 2: 
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
+                            break;
+                            case 3: 
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
+                            break;
+                        }
+                        // big boy
+                    }
+                    else {
+                        saveSlot->position.y = saveSlot->startPos.y;
+                        saveSlot->fileAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 1, true, saveSlot->frameID);
+                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 2, true, saveSlot->saveStatusAnimator.frameID);
+                        saveSlot->isSelected = false;
+                        if (!saveSlot->isSelected)
+                            if (saveState == SaveGame::SaveCompleted)
+                                switch (saveSlot->fileAnimator.frameID) {
+                                    case 0:
+                                    case 1: 
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID); 
+                                    break;
+                                    case 2: 
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
+                                    break;
+                                    case 3: 
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
+                                    break;
+                                }
+
+                            switch (saveSlot->fileAnimator.frameID) {
+                                case 0:
+                                case 1: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID); break;
+                                case 2: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID); break;
+                                case 3: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID); break;
+                            }
+                    }
+                    switch (selectedID) {
+                        case 0: 
+                        case 1: UIControl::SetTargetPos(control, saveSlot->position.x, saveSlot->position.y + TO_FIXED(84)); break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void SaveMenu::Draw() {}
 
 void SaveMenu::Create(void *data) {}
@@ -80,16 +180,17 @@ void SaveMenu::SetupActions()
     for (auto slot : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES)) { slot->actionCB.Set(&SaveMenu::SaveButton_ActionCB); }
 
     for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) {
+
         Hitbox hitbox;
         UIControl *saveSel = ManiaModeMenu::sVars->saveSelectMenu;
+        int32 x            = saveSel->startPos.x - saveSel->cameraOffset.x;
+        int32 y            = saveSel->startPos.y - saveSel->cameraOffset.y;
         hitbox.right       = saveSel->size.x >> 17;
         hitbox.left        = -(saveSel->size.x >> 17);
         hitbox.bottom      = saveSel->size.y >> 17;
         hitbox.top         = -(saveSel->size.y >> 17);
 
-        if (MathHelpers::PointInHitbox(saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
-                                       prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
-            && prompt->buttonID == 2) {
+        if (MathHelpers::PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 2) {
             ManiaModeMenu::sVars->delSavePrompt = prompt;
         }
     }

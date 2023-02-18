@@ -387,6 +387,12 @@ void UIControl::MenuChangeButtonInit(UIControl *control)
                         heading->Update();
                     }
 
+                    else if (UISaveSlot::sVars && entity->classID == UISaveSlot::sVars->classID) {
+                        UISaveSlot *saveSlot = (UISaveSlot *)entity;
+
+                        saveSlot->Update();
+                    }
+
                     if (entity->visible)
                         Graphics::AddDrawListRef(entity->drawGroup, slot);
 

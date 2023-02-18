@@ -38,23 +38,23 @@ struct UISaveSlot : RSDK::GameObject::Entity {
     int32 saveEmeralds;
     UISaveSlotTypes type;
     int32 slotID;
+    int32 saveSlotPlacement;
     bool32 currentlySelected;
     int32 zoneIconSprX;
     int32 textBounceOffset;
     int32 buttonBounceOffset;
+    int32 buttonBounceVelocity;
     int32 textBouncePos;
     int32 buttonBouncePos;
     int32 fxRadius;
     RSDK::Animator uiAnimator;
-    RSDK::Animator playersAnimator;
-    RSDK::Animator shadowsAnimator;
+    RSDK::Animator fileAnimator;
     RSDK::Animator livesAnimator;
     RSDK::Animator continuesAnimator;
     RSDK::Animator emeraldsAnimator;
     RSDK::Animator zoneIconAnimator;
     RSDK::Animator zoneNameAnimator;
     RSDK::Animator fuzzAnimator;
-    RSDK::Animator iconBGAnimator;
     RSDK::Animator saveStatusAnimator;
     RSDK::Animator numbersAnimator;
     RSDK::SpriteAnimation textFrames;
@@ -87,7 +87,7 @@ struct UISaveSlot : RSDK::GameObject::Entity {
 
     static uint8 GetPlayerIDFromID(uint8 id);
     static uint8 GetIDFromPlayerID(uint8 playerID);
-    void DrawPlayerIcons(int32 drawX, int32 drawY);
+    void DrawFileIcons(int32 drawX, int32 drawY);
     void DrawPlayerInfo(int32 drawX, int32 drawY);
     void SetupButtonElements();
     void SetupAnimators();
