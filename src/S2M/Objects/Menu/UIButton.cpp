@@ -102,7 +102,7 @@ void UIButton::Draw()
 void UIButton::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
-        this->drawGroup     = 2;
+        this->drawGroup     = 3;
         this->visible       = !this->invisible;
         this->active        = ACTIVE_BOUNDS;
         this->updateRange.x = 0x800000;
@@ -840,7 +840,7 @@ void UIButton::EditorDraw()
     this->buttonAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, this->buttonListID, true, this->buttonFrameID);
     this->descriptionAnimator.SetAnimation(&UIWidgets::sVars->descFrames, this->descriptionListID, true, this->descriptionFrameID);
 
-    this->drawGroup     = 2;
+    this->drawGroup     = 3;
     this->updateRange.x = 0x800000;
     this->updateRange.y = 0x400000;
     this->bgEdgeSize    = this->size.y >> 16;

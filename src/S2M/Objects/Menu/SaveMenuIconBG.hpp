@@ -1,12 +1,11 @@
 #pragma once
 #include "S2M.hpp"
-#include "UIControl.hpp"
-#include "UIButtonPrompt.hpp"
+#include "UISaveSlot.hpp"
 
 namespace GameLogic
 {
 
-struct ManiaModeMenu : RSDK::GameObject::Entity {
+struct SaveMenuIconBG : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -21,14 +20,13 @@ struct ManiaModeMenu : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        int32 unused;
-        UIControl *saveSelectMenu;
-        UIControl *noSaveMenu;
-        UIControl *secretsMenu;
-        UIButtonPrompt *delSavePrompt;
-        bool32 inSecretsMenu;
-        int32 saveSelLastButtonID;
     };
+
+    RSDK::Animator staticAnimator;
+    RSDK::Animator zoneIconAnimator;
+    RSDK::Animator characterIconAnimator;
+    int32 lastZoneIcon;
+    int32 timer;
 
     // ==============================
     // INSTANCE VARS
@@ -56,28 +54,10 @@ struct ManiaModeMenu : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static void Initialize();
-    static bool32 InitAPI();
-    static void InitLocalization(bool32 success);
-    static int32 GetActiveMenu();
-    static void ChangeMenuBG();
-    static void ChangeMenuTrack();
-    static void StartReturnToTitle();
-    static void ReturnToTitle();
-    static void HandleUnlocks();
-    static void SetupActions();
-    static void HandleMenuReturn();
-
-    // ==============================
-    // STATES
-    // ==============================
-
-    void State_HandleTransition();
-
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(ManiaModeMenu);
+    RSDK_DECLARE(SaveMenuIconBG);
 };
 } // namespace GameLogic

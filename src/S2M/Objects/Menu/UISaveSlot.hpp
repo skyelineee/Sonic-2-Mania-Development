@@ -41,22 +41,18 @@ struct UISaveSlot : RSDK::GameObject::Entity {
     int32 saveSlotPlacement;
     bool32 currentlySelected;
     int32 zoneIconSprX;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
     int32 buttonBounceVelocity;
-    int32 textBouncePos;
-    int32 buttonBouncePos;
     int32 fxRadius;
     RSDK::Animator uiAnimator;
     RSDK::Animator fileAnimator;
     RSDK::Animator livesAnimator;
     RSDK::Animator continuesAnimator;
     RSDK::Animator emeraldsAnimator;
-    RSDK::Animator zoneIconAnimator;
     RSDK::Animator zoneNameAnimator;
-    RSDK::Animator fuzzAnimator;
     RSDK::Animator saveStatusAnimator;
     RSDK::Animator numbersAnimator;
+    RSDK::Animator slotNumAnimator;
     RSDK::SpriteAnimation textFrames;
 
     // ==============================

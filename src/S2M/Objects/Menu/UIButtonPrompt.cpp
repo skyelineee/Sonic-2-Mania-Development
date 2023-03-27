@@ -77,22 +77,22 @@ void UIButtonPrompt::LateUpdate()
                 case UIBUTTONPROMPT_ANCHOR_NONE: break;
 
                 case UIBUTTONPROMPT_ANCHOR_TOPLEFT:
-                    this->position.x = heading->position.x - 0xBC0000;
-                    this->position.y = heading->position.y - 0x80000;
+                    this->position.x = heading->position.x - TO_FIXED(195);
+                    this->position.y = heading->position.y - TO_FIXED(5);
                     break;
 
                 case UIBUTTONPROMPT_ANCHOR_TOPRIGHT:
-                    this->position.x = heading->position.x + 0x7C0000;
-                    this->position.y = heading->position.y - 0x80000;
+                    this->position.x = heading->position.x - TO_FIXED(90);
+                    this->position.y = heading->position.y - TO_FIXED(5);
                     break;
 
                 case UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT:
-                    this->position.x = heading->position.x + 0x7C0000;
+                    this->position.x = heading->position.x - TO_FIXED(195);
                     this->position.y = heading->position.y + 0x100000;
                     break;
 
                 case UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT:
-                    this->position.x = heading->position.x - 0xBC0000;
+                    this->position.x = heading->position.x - TO_FIXED(90);
                     this->position.y = heading->position.y + 0x100000;
                     break;
             }

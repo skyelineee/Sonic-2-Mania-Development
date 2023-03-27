@@ -39,17 +39,6 @@ void UISaveSlot::Update()
     UIControl *control = (UIControl *)this->parent;
 
     if (this->isSelected) {
-        this->textBouncePos -= 0x600;
-        this->textBounceOffset += this->textBouncePos;
-
-        if (this->textBounceOffset >= 0x13600)
-            this->textBounceOffset = 0x13600;
-
-        if (this->textBounceOffset <= 0x10000 && this->textBouncePos < 0) {
-            this->textBounceOffset = 0x10000;
-            this->textBouncePos    = 0;
-        }
-
         this->buttonBounceVelocity += 0x4800;
         this->buttonBounceOffset += this->buttonBounceVelocity;
 
@@ -59,13 +48,6 @@ void UISaveSlot::Update()
         }
     }
     else if (!this->state.Matches(&UISaveSlot::State_Selected)) {
-        if (this->textBounceOffset > 0) {
-            this->textBounceOffset -= 0x2000;
-
-            if (this->textBounceOffset < 0)
-                this->textBounceOffset = 0;
-        }
-
         if (this->buttonBounceOffset) {
             int32 offset = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
             this->buttonBounceOffset += offset << 16;
@@ -100,15 +82,32 @@ void UISaveSlot::StaticUpdate() {}
 void UISaveSlot::Draw()
 {
     Vector2 drawPos;
+
+    if (this->isSelected) {
+        drawPos.x = TO_FIXED(25);
+        drawPos.y = TO_FIXED(148);
+        UISaveSlot::DrawPlayerInfo(drawPos.x, drawPos.y);
+        for (int32 e = 0; e < 7; ++e) {
+            if (GET_BIT(this->saveEmeralds, e)) {
+                this->emeraldsAnimator.frameID = e;
+                drawPos.x                      = TO_FIXED(25);
+                drawPos.y                      = TO_FIXED(178);
+                this->emeraldsAnimator.DrawSprite(&drawPos, true);
+            }
+            else if (this->saveEmeralds == 0) {
+                this->emeraldsAnimator.frameID = 7;
+                drawPos.x                      = TO_FIXED(25);
+                drawPos.y                      = TO_FIXED(178);
+                this->emeraldsAnimator.DrawSprite(&drawPos, true);
+            }
+        }
+    }
+
     drawPos.x = this->position.x;
     drawPos.y = this->position.y;
+    this->slotNumAnimator.frameID = this->saveSlotPlacement;
 
     if (this->type == UISAVESLOT_REGULAR) {
-        if (this->isSelected) {
-        }
-        else {
-        }
-
         if (this->isNewSave) {
             DrawFileIcons(drawPos.x, drawPos.y);
         }
@@ -121,18 +120,6 @@ void UISaveSlot::Draw()
                 DrawFileIcons(drawPos.x, drawPos.y);
             }
         }
-
-        /*for (int32 i = 0; i < 7; ++i) {
-            this->emeraldsAnimator.frameID = ((1 << i) & this->saveEmeralds) ? i : 7;
-            this->emeraldsAnimator.DrawSprite(&drawPos, false);
-        
-            drawPos.x += 0xC0000;
-        }*/
-
-        this->uiAnimator.frameID = 0;
-        drawPos.x                = this->position.x;
-        drawPos.y                = this->position.y - 0x300000;
-        //this->uiAnimator.DrawSprite(&drawPos, false);
 
         if (this->isSelected) {
             this->saveStatusAnimator.frameID = 0;
@@ -147,11 +134,19 @@ void UISaveSlot::Draw()
 
         if (saveState == SaveGame::SaveCompleted)
             if (this->isSelected) {
-                this->saveStatusAnimator.frameID = 4;
+                this->saveStatusAnimator.frameID = 5;
             }
             else {
-                this->saveStatusAnimator.frameID = 3;
+                this->saveStatusAnimator.frameID = 4;
             }
+        
+        if (!this->isSelected && this->isNewSave)
+            this->slotNumAnimator.SetAnimation(sVars->aniFrames, 13, true, this->slotNumAnimator.frameID);
+
+        drawPos.x = this->buttonBounceOffset + this->position.x;
+        drawPos.y = this->position.y;
+
+        this->slotNumAnimator.DrawSprite(&drawPos, false);
 
         if (this->isNewSave || this->saveZoneID == 0xFF) {
             drawPos.x = this->buttonBounceOffset + this->position.x;
@@ -159,57 +154,59 @@ void UISaveSlot::Draw()
             this->saveStatusAnimator.DrawSprite(&drawPos, false);
         }
         else if ((this->isSelected || this->state.Matches(&UISaveSlot::State_Selected) && this->saveZoneID <= Zone::ZoneCountSaveFile)) {
-            //this->zoneIconAnimator.DrawSprite(&drawPos, false);
-            drawPos.x = this->buttonBounceOffset + this->position.x;
-            drawPos.y = this->position.y;
+            // this->zoneIconAnimator.DrawSprite(&drawPos, false);
+            drawPos.x = this->buttonBounceOffset + this->position.x + TO_FIXED(20);
+            drawPos.y = this->position.y + TO_FIXED(15);
             this->zoneNameAnimator.DrawSprite(&drawPos, false);
         }
         else {
-            this->drawFX = FX_FLIP;
-            //this->fuzzAnimator.DrawSprite(&drawPos, false);
-
             this->drawFX = FX_NONE;
-            drawPos.x    = this->buttonBounceOffset + this->position.x;
-            drawPos.y    = this->position.y;
+            drawPos.x    = this->buttonBounceOffset + this->position.x + TO_FIXED(50);
+            drawPos.y    = this->position.y + TO_FIXED(8);
             this->zoneNameAnimator.DrawSprite(&drawPos, false);
         }
     }
     else {
         DrawFileIcons(this->position.x, this->position.y);
-        this->saveStatusAnimator.frameID = 2;
-        this->uiAnimator.frameID         = 2;
-        //this->uiAnimator.DrawSprite(nullptr, false);
+        this->saveStatusAnimator.frameID = 3;
 
         drawPos.x = this->buttonBounceOffset + this->position.x;
         if (!this->isSelected) {
+            this->saveStatusAnimator.frameID = 2;
             this->saveStatusAnimator.DrawSprite(&drawPos, false);
         }
         else {
             drawPos.y = this->position.y + TO_FIXED(8);
             this->saveStatusAnimator.DrawSprite(&drawPos, false);
         }
-
+        drawPos.y = this->position.y;
+        if (!this->isSelected)
+            this->slotNumAnimator.SetAnimation(sVars->aniFrames, 13, true, this->slotNumAnimator.frameID);
+        
+        this->slotNumAnimator.DrawSprite(&drawPos, false);
     }
 
-    /*if (this->isSelected || this->type == UISAVESLOT_REGULAR) {
-        if (this->type == UISAVESLOT_NOSAVE)
+    if (this->isSelected || this->type == UISAVESLOT_REGULAR) {
         if (this->isSelected && !(this->zoneIconSprX & 8)) {
-            drawPos.x = this->position.x;
+            drawPos.x = this->buttonBounceOffset + this->position.x;
             drawPos.y = this->position.y;
             if (this->type == UISAVESLOT_NOSAVE) {
-                drawPos.y -= 0x60000;
-                UIWidgets::DrawUpDownArrows(drawPos.x, drawPos.y, 40);
+                drawPos.x += TO_FIXED(65);
+                drawPos.y += TO_FIXED(30);
+                UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(120));
             }
             else if (this->isNewSave) {
-                drawPos.y += 0x200000;
-                UIWidgets::DrawUpDownArrows(drawPos.x, drawPos.y, 64);
+                drawPos.x += TO_FIXED(75);
+                drawPos.y += TO_FIXED(30);
+                UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(140));
             }
             else if (this->listID == 1) {
-                drawPos.y -= 0x300000;
-                UIWidgets::DrawUpDownArrows(drawPos.x, drawPos.y, 40);
+                drawPos.x += TO_FIXED(85);
+                drawPos.y += TO_FIXED(30);
+                UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(160));
             }
         }
-    }*/
+    }
 
     Graphics::DrawCircle(screenInfo->center.x, screenInfo->center.y, this->fxRadius, 0x000000, this->alpha, INK_ALPHA, true);
 }
@@ -218,7 +215,7 @@ void UISaveSlot::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
         this->visible         = true;
-        this->drawGroup       = 2;
+        this->drawGroup       = 6;
         this->active          = ACTIVE_BOUNDS;
         this->updateRange.x   = 0x800000;
         this->updateRange.y   = 0x300000;
@@ -288,12 +285,12 @@ void UISaveSlot::DrawFileIcons(int32 drawX, int32 drawY)
 
 void UISaveSlot::DrawPlayerInfo(int32 drawX, int32 drawY)
 {
-    this->livesAnimator.SetAnimation(sVars->aniFrames, 16, true, 0);
-    this->continuesAnimator.SetAnimation(sVars->aniFrames, 17, true, 0);
+    this->livesAnimator.SetAnimation(sVars->aniFrames, 19, true, 0);
+    this->continuesAnimator.SetAnimation(sVars->aniFrames, 20, true, 0);
 
     int32 playerID = 0;
 
-    int32 frames[] = { 0, 0, 1, 2, 3, 4 };
+    int32 frames[] = { 0, 1, 2, 3, 4 };
     playerID       = frames[this->frameID];
 
     this->livesAnimator.frameID = playerID;
@@ -315,11 +312,11 @@ void UISaveSlot::DrawPlayerInfo(int32 drawX, int32 drawY)
 
     int32 count = 1;
     if (retries[1] <= 0) {
-        positions[0].x = drawX - 0x20000;
+        positions[0].x = drawX + 0x320000;
     }
     else {
-        positions[0].x = drawX - 0x170000;
-        positions[1].x = drawX + 0x170000;
+        positions[0].x = drawX - TO_FIXED(2);
+        positions[1].x = drawX + 0x650000;
         count          = 2;
     }
 
@@ -329,19 +326,32 @@ void UISaveSlot::DrawPlayerInfo(int32 drawX, int32 drawY)
         drawPos.x = positions[i].x;
         drawPos.y = positions[i].y;
         if (true) {
-            this->uiAnimator.frameID = 0;
-            this->uiAnimator.DrawSprite(&drawPos, false);
-
             drawPos.x -= 0xC0000;
-            animators[i]->DrawSprite(&drawPos, false);
+            animators[i]->DrawSprite(&drawPos, true);
 
-            drawPos.x += 0x140000;
-            this->numbersAnimator.frameID = retries[i] / 10;
-            this->numbersAnimator.DrawSprite(&drawPos, false);
+            if (this->saveLives >= 10) {
+                drawPos.x += 0x300000;
+                this->numbersAnimator.frameID = retries[i] / 10;
+                this->numbersAnimator.DrawSprite(&drawPos, true);
 
-            drawPos.x += 0x80000;
-            this->numbersAnimator.frameID = retries[i] % 10;
-            this->numbersAnimator.DrawSprite(&drawPos, false);
+                drawPos.x += TO_FIXED(15);
+                this->numbersAnimator.frameID = retries[i] % 10;
+                this->numbersAnimator.DrawSprite(&drawPos, true);
+            }
+            else {
+                drawPos.x += 0x300000;
+                if (this->type == UISAVESLOT_NOSAVE) {
+                    this->numbersAnimator.frameID = 3;
+                }
+                else {
+                    this->numbersAnimator.frameID = retries[i] % 10;
+                }
+                this->numbersAnimator.DrawSprite(&drawPos, true);
+            }
+
+            this->uiAnimator.frameID = 0;
+            drawPos.x                = positions[i].x + TO_FIXED(19);
+            this->uiAnimator.DrawSprite(&drawPos, true);
         }
     }
 }
@@ -431,16 +441,15 @@ void UISaveSlot::SetupAnimators()
     this->fileAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
     this->livesAnimator.SetAnimation(sVars->aniFrames, 19, true, 0);
     this->saveStatusAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
-    this->fuzzAnimator.SetAnimation(sVars->aniFrames, 17, true, 2); //change
     this->emeraldsAnimator.SetAnimation(sVars->aniFrames, 18, true, 0);
-    this->zoneIconAnimator.SetAnimation(sVars->aniFrames, 17, true, 2); //change
 
     if (this->type == UISAVESLOT_NOSAVE)
-        this->zoneNameAnimator.SetAnimation(sVars->aniFrames, 17, true, 2);
+        this->zoneNameAnimator.SetAnimation(sVars->aniFrames, 17, true, 1);
     else
         this->zoneNameAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
 
-    this->numbersAnimator.SetAnimation(sVars->aniFrames, 18, true, 0);
+    this->numbersAnimator.SetAnimation(sVars->aniFrames, 21, true, 0);
+    this->slotNumAnimator.SetAnimation(sVars->aniFrames, 13, true, 0);
 }
 
 void UISaveSlot::LoadSaveInfo()
@@ -490,7 +499,6 @@ void UISaveSlot::LoadSaveInfo()
 void UISaveSlot::HandleSaveIcons()
 {
     this->saveStatusAnimator.frameID = this->listID;
-    this->zoneIconAnimator.frameID   = this->saveZoneID;
 
     if (this->type == UISAVESLOT_REGULAR) {
         this->zoneNameAnimator.frameID = this->saveZoneID;
@@ -715,7 +723,6 @@ void UISaveSlot::ButtonEnterCB()
 
         UISaveSlot::HandleSaveIcons();
 
-        this->textBouncePos   = 0;
         this->buttonBounceOffset   = 0;
         this->buttonBounceVelocity = -0x25000;
         this->stateInput.Set(nullptr);
@@ -758,12 +765,7 @@ void UISaveSlot::HandleSaveIconChange()
     }
 }
 
-void UISaveSlot::State_NotSelected()
-{
-    this->fuzzAnimator.Process();
-
-    this->direction = this->fuzzAnimator.frameID & 2;
-}
+void UISaveSlot::State_NotSelected() {}
 
 void UISaveSlot::State_OtherWasSelected()
 {

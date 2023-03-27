@@ -328,7 +328,7 @@ void HP_SpecialClear::State_ExitResults()
                 // cool ok
             }
             else if (SaveGame::GetEmeralds(SaveGame::EmeraldAny) && sVars->hiddenPalaceEnabled) {
-                Stage::SetScene("Mania Mode", "Hidden Palace Zone");
+                Stage::SetScene("Extras", "Proto Palace Zone");
             }
         }
 

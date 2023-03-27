@@ -310,6 +310,7 @@ void UITransition::State_TransitionOut()
 
         if (MenuSetup::sVars) {
             ManiaModeMenu::ChangeMenuTrack();
+            ManiaModeMenu::ChangeMenuBG();
         }
 
         UIControl *control   = UIControl::GetUIControl();

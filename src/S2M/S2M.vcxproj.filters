@@ -364,6 +364,9 @@
     <ClCompile Include="Objects\Menu\UITransition.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\SaveMenuIconBG.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -700,6 +703,9 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\UITransition.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\SaveMenuIconBG.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,6 +18,7 @@
 #include "Global/Localization.hpp"
 #include "Global/SaveGame.hpp"
 #include "Global/Music.hpp"
+#include "Common/BGSwitch.hpp"
 
 using namespace RSDK;
 
@@ -182,13 +183,36 @@ void ManiaModeMenu::ChangeMenuTrack()
         case MenuSetup::TimeAttack: trackID = 1; break;
         //case MAINMENU_COMPETITION: trackID = 2; break;
         case MenuSetup::SaveSelect: trackID = 3; break;
-        //case MAINMENU_SAVESELECT_ENCORE: trackID = 4; break;
     }
 
     if (!Music::IsPlaying())
         Music::PlayTrack(trackID);
     else if (Music::sVars->activeTrack != trackID)
         Music::PlayOnFade(trackID, 0.12f);
+}
+
+void ManiaModeMenu::ChangeMenuBG()
+{
+    switch (ManiaModeMenu::GetActiveMenu()) {
+        default:
+        case MenuSetup::Main:
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            break;
+        case MenuSetup::TimeAttack:  break;
+        case MenuSetup::SaveSelect: 
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = 2;
+            break;
+    }
 }
 
 void ManiaModeMenu::StartReturnToTitle()

@@ -16,6 +16,7 @@
 #include "Helpers/MathHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
+#include "Common/BGSwitch.hpp"
 
 using namespace RSDK;
 
@@ -100,6 +101,13 @@ void MainMenu::Initialize()
         }
     }
 
+    RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
+    RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 1;
+    RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
+    RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+    RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+    RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+
    UIControl *menuControl = MainMenu::sVars->menuControl;
 
     for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES))
@@ -138,8 +146,6 @@ void MainMenu::Initialize()
     int32 button2Frame = 2; // Options
     int32 button3Frame = 3; // Extras
     int32 button4Frame = 4; // Exit
-
-    bool32 button2StopMus    = false; // Options button does NOT stop music
 
     UIButton *buttonAdventure = menuControl->buttons[0];
     buttonAdventure->nameFrameID        = 0;
