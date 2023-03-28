@@ -151,6 +151,34 @@ void SaveMenu::StaticUpdate()
             }
         }
     }
+    UIControl *controlSecrets = ManiaModeMenu::sVars->secretsMenu;
+
+    if (controlSecrets && controlSecrets->active) {
+        UIButton *button = controlSecrets->buttons[controlSecrets->lastButtonID];
+
+        if (button) {
+            int32 selectedID = button->buttonFrameID;
+
+            for (int i = 0; i < controlSecrets->buttonCount; ++i) {
+                if (controlSecrets->buttons[i]) {
+                    UIButton *button = controlSecrets->buttons[i];
+                    if (button->buttonFrameID > selectedID) {
+                        button->position.y   = button->startPos.y + TO_FIXED(48);
+                        button->buttonListID = 6;
+                    }
+                    else if (button->buttonFrameID == selectedID) {
+                        button->position.y   = button->startPos.y;
+                        button->buttonListID = 5;
+                        // big boy
+                    }
+                    else {
+                        button->position.y   = button->startPos.y;
+                        button->buttonListID = 6;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void SaveMenu::Draw() {}
@@ -182,24 +210,13 @@ void SaveMenu::HandleUnlocks()
 {
     UIControl *control  = ManiaModeMenu::sVars->secretsMenu;
     UIButton *debugMode = control->buttons[1];
-    debugMode->disabled = !GameProgress::CheckUnlock(GameProgress::UnlockCount) && globals->superSecret;
-    if (debugMode->disabled)
-        UIButton::ManageChoices(debugMode);
 
     UIButton *sonicAbility      = control->buttons[2];
-    UIButton *peeloutChoice     = UIButton::GetChoicePtr(sonicAbility, 1);
-    UIButton *instaShieldChoice = UIButton::GetChoicePtr(sonicAbility, 2);
-    sonicAbility->disabled      = !GameProgress::CheckUnlock(GameProgress::UnlockCount);
-    if (sonicAbility->disabled)
-        UIButton::ManageChoices(sonicAbility);
-
-    peeloutChoice->disabled     = !GameProgress::CheckUnlock(GameProgress::UnlockCount);
-    instaShieldChoice->disabled = !GameProgress::CheckUnlock(GameProgress::UnlockCount);
+    UIButton *maxControlChoice  = UIButton::GetChoicePtr(sonicAbility, 0);
+    UIButton *peeloutChoice = UIButton::GetChoicePtr(sonicAbility, 2);
+    UIButton *instaShieldChoice  = UIButton::GetChoicePtr(sonicAbility, 3);
 
     UIButton *andKnux = control->buttons[3];
-    andKnux->disabled = !GameProgress::CheckUnlock(GameProgress::UnlockCount);
-    if (andKnux->disabled)
-        UIButton::ManageChoices(andKnux);
 }
 
 void SaveMenu::SetupActions()
@@ -232,20 +249,20 @@ void SaveMenu::HandleMenuReturn(int32 slot)
     UIControl *control = ManiaModeMenu::sVars->secretsMenu;
     SaveGame::SaveRAM *saveGame = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(slot);
 
-    UIButton::SetChoiceSelection(control->buttons[0], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NOTIMEOVER)) != 0);
-    UIButton::SetChoiceSelection(control->buttons[1], (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)) != 0);
+    UIButton::SetChoiceSelection(control->buttons[0], (saveGame->medalMods & MEDAL_NOTIMEOVER) != 0);
+    UIButton::SetChoiceSelection(control->buttons[1], (saveGame->medalMods & MEDAL_ANDKNUCKLES) != 0);
 
-    if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_NODROPDASH)) {
-        if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_PEELOUT))
+    if (saveGame->medalMods & MEDAL_NODROPDASH) {
+        if (saveGame->medalMods & MEDAL_PEELOUT)
             UIButton::SetChoiceSelection(control->buttons[2], 1);
-        else if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_INSTASHIELD))
+        else if (saveGame->medalMods & MEDAL_INSTASHIELD)
             UIButton::SetChoiceSelection(control->buttons[2], 2);
     }
     else {
         UIButton::SetChoiceSelection(control->buttons[2], 0);
     }
 
-    if (saveGame->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES))
+    if (saveGame->medalMods & MEDAL_ANDKNUCKLES)
         UIButton::SetChoiceSelection(control->buttons[3], 1);
     else
         UIButton::SetChoiceSelection(control->buttons[3], 0);
@@ -257,22 +274,26 @@ int32 SaveMenu::GetMedalMods()
 
     int32 mods = 0;
     if (control->buttons[0]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_NOTIMEOVER);
+        mods |= MEDAL_NOTIMEOVER;
 
     if (control->buttons[1]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_DEBUGMODE);
+        mods |= MEDAL_DEBUGMODE;
 
-    if (control->buttons[2]->selection == 1) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_PEELOUT);
+    if (control->buttons[2]->selection == 0) {
+        mods |= MEDAL_PEELOUT;
+        mods |= MEDAL_INSTASHIELD;
     }
     else if (control->buttons[2]->selection == 2) {
-        mods |= GET_MEDAL_MOD(MEDAL_NODROPDASH);
-        mods |= GET_MEDAL_MOD(MEDAL_INSTASHIELD);
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_PEELOUT;
+    }
+    else if (control->buttons[2]->selection == 3) {
+        mods |= MEDAL_NODROPDASH;
+        mods |= MEDAL_INSTASHIELD;
     }
 
     if (control->buttons[3]->selection == 1)
-        mods |= GET_MEDAL_MOD(MEDAL_ANDKNUCKLES);
+        mods |= MEDAL_ANDKNUCKLES;
 
     return mods;
 }
@@ -429,13 +450,13 @@ void SaveMenu::SaveButton_ActionCB()
         default: break;
     }
 
-    if ((globals->medalMods & GET_MEDAL_MOD(MEDAL_ANDKNUCKLES)))
+    if ((globals->medalMods & MEDAL_ANDKNUCKLES))
         globals->playerID |= ID_KNUCKLES_ASSIST;
     else if (!saveSlot->frameID)
         globals->playerID |= ID_TAILS_ASSIST;
 
     if (saveSlot->type == UISaveSlot::UISAVESLOT_NOSAVE || saveSlot->isNewSave) {
-        if (((globals->medalMods & GET_MEDAL_MOD(MEDAL_DEBUGMODE)) && (controllerInfo->keyC.down || controllerInfo->keyX.down))
+        if (((globals->medalMods & MEDAL_DEBUGMODE) && (controllerInfo->keyC.down || controllerInfo->keyX.down))
             && saveSlot->type == UISaveSlot::UISAVESLOT_NOSAVE) {
             Stage::SetScene("Presentation", "Level Select");
         }

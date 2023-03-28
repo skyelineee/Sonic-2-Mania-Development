@@ -34,6 +34,9 @@ void SaveMenuIconBG::Draw()
     SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(saveSlot->slotID);
     int32 saveState            = saveRAM->saveState;
 
+    if (saveSlot->disabled)
+        this->timer = 0;
+
     if (saveSlot->type == UISaveSlot::UISAVESLOT_REGULAR) {
         this->zoneIconAnimator.DrawSprite(&drawPos, true);
         this->zoneIconAnimator.frameID = saveSlot->zoneNameAnimator.frameID;

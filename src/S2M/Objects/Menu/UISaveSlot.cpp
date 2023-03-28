@@ -154,7 +154,6 @@ void UISaveSlot::Draw()
             this->saveStatusAnimator.DrawSprite(&drawPos, false);
         }
         else if ((this->isSelected || this->state.Matches(&UISaveSlot::State_Selected) && this->saveZoneID <= Zone::ZoneCountSaveFile)) {
-            // this->zoneIconAnimator.DrawSprite(&drawPos, false);
             drawPos.x = this->buttonBounceOffset + this->position.x + TO_FIXED(20);
             drawPos.y = this->position.y + TO_FIXED(15);
             this->zoneNameAnimator.DrawSprite(&drawPos, false);
@@ -201,9 +200,47 @@ void UISaveSlot::Draw()
                 UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(140));
             }
             else if (this->listID == 1) {
-                drawPos.x += TO_FIXED(85);
-                drawPos.y += TO_FIXED(30);
-                UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(160));
+                if (this->saveZoneID == 0xFF) {
+                    drawPos.x += TO_FIXED(85);
+                    drawPos.y += TO_FIXED(30);
+                    UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(160));
+                }
+                switch (this->zoneNameAnimator.frameID) {
+                    case 0: 
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                        drawPos.x += TO_FIXED(75);
+                        drawPos.y += TO_FIXED(30);
+                        UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(140));
+                        break;
+                    case 10:
+                        drawPos.x += TO_FIXED(85);
+                        drawPos.y += TO_FIXED(30);
+                        UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(160));
+                        break;
+                    case 11:
+                        drawPos.x += TO_FIXED(75);
+                        drawPos.y += TO_FIXED(30);
+                        UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(140));
+                        break;
+                    case 12:
+                        drawPos.x += TO_FIXED(80);
+                        drawPos.y += TO_FIXED(30);
+                        UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(150));
+                        break;
+                    case 13:
+                        drawPos.x += TO_FIXED(75);
+                        drawPos.y += TO_FIXED(30);
+                        UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(140));
+                        break;
+                }
             }
         }
     }

@@ -32,8 +32,8 @@ void UIWidgets::StageLoad()
     sVars->active = ACTIVE_ALWAYS;
 
     sVars->uiFrames.Load("UI/UIElements.bin", SCOPE_STAGE);
-    sVars->buttonFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
-    sVars->nameFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
+    sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
+    sVars->nameFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
     sVars->saveSelFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
     sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);

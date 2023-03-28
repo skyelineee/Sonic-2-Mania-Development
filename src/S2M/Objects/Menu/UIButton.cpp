@@ -870,8 +870,8 @@ void UIButton::EditorDraw()
 
 void UIButton::EditorLoad()
 {
-    UIWidgets::sVars->buttonFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
-    UIWidgets::sVars->nameFrames.Load("UI/MainMenu.bin", SCOPE_STAGE);
+    UIWidgets::sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
+    UIWidgets::sVars->nameFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
     UIWidgets::sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, align);

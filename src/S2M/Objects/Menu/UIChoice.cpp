@@ -296,11 +296,55 @@ void UIChoice::State_HandleButtonEnter()
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIChoice::EditorDraw() {}
+void UIChoice::EditorDraw()
+{
+    int32 sizeY = this->size.y;
 
-void UIChoice::EditorLoad() {}
+    this->drawGroup     = 2;
+    this->updateRange.x = 0x800000;
+    this->updateRange.y = 0x400000;
+    this->bgEdgeSize    = this->size.y >> 16;
+    this->size.y        = abs(this->size.y);
+    this->textVisible   = true;
+    this->aniFrames     = UIWidgets::sVars->textFrames;
+
+    this->labelAnimator.SetAnimation(UIWidgets::sVars->textFrames, this->listID, true, this->frameID);
+    this->iconAnimator.SetAnimation(UIChoice::sVars->aniFrames, this->auxListID, true, this->auxFrameID);
+    this->leftArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 2, true, 0);
+    this->rightArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 2, true, 1);
+
+    this->isSelected = showGizmos();
+    // Crash prevention
+    this->parent = (Entity *)this;
+
+    UIChoice::Draw();
+
+    this->size.y = sizeY;
+}
+
+void UIChoice::EditorLoad()
+{
+    sVars->aniFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(sVars, align);
+    RSDK_ENUM_VAR("Left", UIButton::ALIGN_LEFT);
+    RSDK_ENUM_VAR("Center", UIButton::ALIGN_CENTER);
+    RSDK_ENUM_VAR("Right", UIButton::ALIGN_RIGHT);
+}
 #endif
 
-void UIChoice::Serialize() {}
+void UIChoice::Serialize()
+{
+    RSDK_EDITABLE_VAR(UIChoice, VAR_BOOL, disabled);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_VECTOR2, size);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, listID);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, frameID);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_BOOL, noText);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_BOOL, auxIcon);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, auxListID);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, auxFrameID);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, align);
+    RSDK_EDITABLE_VAR(UIChoice, VAR_ENUM, arrowWidth);
+}
 
 } // namespace GameLogic

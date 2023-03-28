@@ -20,7 +20,7 @@ void GlobalVariables::Init(void *g)
 
     globals->playerID       = ID_SONIC | (ID_TAILS << 8);
     globals->saveSlotID     = NO_SAVE_SLOT;
-    globals->medalMods      = MEDAL_INSTASHIELD;
+    globals->medalMods      = MEDAL_INSTASHIELD + MEDAL_PEELOUT;
     globals->stock          = (ID_KNUCKLES << 8) | ID_TAILS;
     globals->characterFlags = ID_SONIC | ID_TAILS | ID_KNUCKLES;
 

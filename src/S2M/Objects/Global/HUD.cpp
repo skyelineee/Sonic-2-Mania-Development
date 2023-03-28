@@ -25,7 +25,7 @@ void HUD::Update()
     this->enableTimeFlash = false;
     this->enableRingFlash = false;
     
-    if (sceneInfo->minutes == 9)
+    if (sceneInfo->minutes == 9 && !(globals->medalMods & MEDAL_NOTIMEOVER))
         this->enableTimeFlash = true;
 
     if (this->replayClapAnimator.animationID == 11)
@@ -124,7 +124,7 @@ void HUD::Draw()
         this->ringFlashFrame = player->rings ? 0 : ((globals->persistentTimer >> 3) & 1);
 
         this->timeFlashFrame = 0;
-        if (sceneInfo->minutes == 9)
+        if ((sceneInfo->minutes == 9 && !(globals->medalMods & MEDAL_NOTIMEOVER)))
             this->timeFlashFrame = (globals->persistentTimer >> 3) & 1;
 
         // Draw "Score"
@@ -174,7 +174,7 @@ void HUD::Draw()
                 lifePos.x -= TO_FIXED(9);
 
                 // Draw Minutes
-                if (globals->medalMods & MEDAL_NOTIMEOVER)
+                if (sceneInfo->minutes > 9 && globals->medalMods & MEDAL_NOTIMEOVER)
                     DrawNumbersBase10(&lifePos, sceneInfo->minutes, 2);
                 else
                     DrawNumbersBase10(&lifePos, sceneInfo->minutes, 1);
@@ -331,9 +331,9 @@ void HUD::Draw()
                 this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
                 // Draw Lives
-                lifePos.x += TO_FIXED(44);
+                lifePos.x += TO_FIXED(45);
                 if (player->lives < 10)
-                    lifePos.x -= TO_FIXED(0);
+                    lifePos.x -= TO_FIXED(1);
 
                 DrawLifeNumbers(&lifePos, lifeCount, 0);
             }
@@ -439,7 +439,7 @@ void HUD::DrawLifeNumbers(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
         this->lifeNumbersAnimator.frameID = value / digit % 10;
         this->lifeNumbersAnimator.DrawSprite(drawPos, true);
         digit *= 10;
-        drawPos->x -= TO_FIXED(6);
+        drawPos->x -= TO_FIXED(7);
     }
 }
 void HUD::DrawNumbersBase10(RSDK::Vector2 *drawPos, int32 value, int32 digitCount)
