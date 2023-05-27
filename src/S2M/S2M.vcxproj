@@ -273,6 +273,7 @@
     <ClCompile Include="Objects\Helpers\PlayerProbe.cpp" />
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
+    <ClCompile Include="Objects\Menu\ExtrasMenu.cpp" />
     <ClCompile Include="Objects\Menu\LogoSetup.cpp" />
     <ClCompile Include="Objects\Menu\MainMenu.cpp" />
     <ClCompile Include="Objects\Menu\ManiaModeMenu.cpp" />
@@ -422,6 +423,7 @@
     <ClInclude Include="Objects\Helpers\PlayerProbe.hpp" />
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
+    <ClInclude Include="Objects\Menu\ExtrasMenu.hpp" />
     <ClInclude Include="Objects\Menu\LogoSetup.hpp" />
     <ClInclude Include="Objects\Menu\MainMenu.hpp" />
     <ClInclude Include="Objects\Menu\ManiaModeMenu.hpp" />

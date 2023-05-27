@@ -14,8 +14,8 @@ namespace GameLogic
 RSDK_REGISTER_OBJECT(MenuParam);
 
 MenuParam *MenuParam::GetMenuParam()
-{
-    return nullptr; // lol
+{ 
+	return (MenuParam *)globals->menuParam;
 }
 
 #if RETRO_REV0U

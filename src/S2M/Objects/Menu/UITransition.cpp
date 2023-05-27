@@ -297,17 +297,13 @@ void UITransition::State_TransitionOut()
         UIControl::GetUIControl()->selectionDisabled = false;
 
         if (!this->callback.Matches(nullptr) && !UIDialog::sVars->activeDialog) {
-            Entity *storeEntity = (Entity *)sceneInfo->entity;
-            sceneInfo->entity   = this->prevEntity;
 #if RETRO_USE_MOD_LOADER
-            this->callback.Run(this);
+            this->callback.Run(this->prevEntity);
 #else
             this->callback();
 #endif
             this->callback.Set(nullptr);
-            sceneInfo->entity = storeEntity;
         }
-
         if (MenuSetup::sVars) {
             ManiaModeMenu::ChangeMenuTrack();
             ManiaModeMenu::ChangeMenuBG();

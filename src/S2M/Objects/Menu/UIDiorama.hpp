@@ -14,9 +14,14 @@ struct UIDiorama : RSDK::GameObject::Entity {
     enum UIDioramaIDs {
         UIDIORAMA_ADVENTURE,
         UIDIORAMA_TIMEATTACK,
-        UIDIORAMA_OPTIONS,
         UIDIORAMA_EXTRAS,
+        UIDIORAMA_OPTIONS,
         UIDIORAMA_EXIT,
+        UIDIORAMA_BOSSRUSH,
+        UIDIORAMA_MUSICPLAYER,
+        UIDIORAMA_LEVELSELECT,
+        UIDIORAMA_EXTRALEVELS,
+        UIDIORAMA_CREDITS,
     } ;
 
     // ==============================
@@ -31,16 +36,36 @@ struct UIDiorama : RSDK::GameObject::Entity {
         RSDK::Animator tempAnimator;
     };
 
-    struct UIDiorama_StateInfo_Options {
+    struct UIDiorama_StateInfo_Extras {
         RSDK::Animator tempAnimator1;
     };
 
-    struct UIDiorama_StateInfo_Extras {
+    struct UIDiorama_StateInfo_Options {
         RSDK::Animator tempAnimator2;
     };
 
     struct UIDiorama_StateInfo_Exit {
         RSDK::Animator tempAnimator3;
+    };
+
+    struct UIDiorama_StateInfo_BossRush {
+        RSDK::Animator tempAnimator4;
+    };
+
+    struct UIDiorama_StateInfo_MusicPlayer {
+        RSDK::Animator tempAnimator5;
+    };
+
+    struct UIDiorama_StateInfo_LevelSelect {
+        RSDK::Animator tempAnimator6;
+    };
+
+    struct UIDiorama_StateInfo_ExtraLevels {
+        RSDK::Animator tempAnimator7;
+    };
+
+    struct UIDiorama_StateInfo_Credits {
+        RSDK::Animator tempAnimator8;
     };
 
     // ==============================
@@ -64,7 +89,7 @@ struct UIDiorama : RSDK::GameObject::Entity {
     RSDK::Vector2 dioramaSize;
     RSDK::Animator staticAnimator;
     int32 values[16];
-    RSDK::Animator animators[5];
+    RSDK::Animator animators[10];
 
     // ==============================
     // INSTANCE VARS
@@ -100,9 +125,14 @@ struct UIDiorama : RSDK::GameObject::Entity {
 
     void State_Adventure();
     void State_TimeAttack();
-    void State_Options();
     void State_Extras();
+    void State_Options();
     void State_Exit();
+    void State_BossRush();
+    void State_MusicPlayer();
+    void State_LevelSelect();
+    void State_ExtraLevels();
+    void State_Credits();
 
     // ==============================
     // DRAW STATES
@@ -113,6 +143,11 @@ struct UIDiorama : RSDK::GameObject::Entity {
     void Draw_Options();
     void Draw_Extras();
     void Draw_Exit();
+    void Draw_BossRush();
+    void Draw_MusicPlayer();
+    void Draw_LevelSelect();
+    void Draw_ExtraLevels();
+    void Draw_Credits();
 
     // ==============================
     // DECLARATION

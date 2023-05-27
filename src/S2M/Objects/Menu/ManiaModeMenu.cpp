@@ -8,6 +8,7 @@
 #include "MainMenu.hpp"
 #include "SaveMenu.hpp"
 #include "MenuSetup.hpp"
+#include "ExtrasMenu.hpp"
 #include "UILoadingIcon.hpp"
 #include "UIHeading.hpp"
 #include "UIWidgets.hpp"
@@ -47,7 +48,7 @@ void ManiaModeMenu::Initialize()
     // TimeAttackMenu::Initialize();
     // CompetitionMenu::Initialize();
     // OptionsMenu::Initialize();
-    // ExtrasMenu::Initialize();
+    ExtrasMenu::Initialize();
 
     ManiaModeMenu::HandleUnlocks();
     ManiaModeMenu::SetupActions();
@@ -151,7 +152,7 @@ int32 ManiaModeMenu::GetActiveMenu()
 {
     UIControl *control = UIControl::GetUIControl();
 
-    if (control == MainMenu::sVars->menuControl /*|| control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
+    if (control == MainMenu::sVars->menuControl || control == ExtrasMenu::sVars->extrasControl /*|| control == OptionsMenu->optionsControl
         || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl || control == OptionsMenu->dataOptionsControl
         || control == OptionsMenu->controlsControl_Windows || control == OptionsMenu->controlsControl_KB
         || control == OptionsMenu->controlsControl_PS4 || control == OptionsMenu->controlsControl_XB1 || control == OptionsMenu->controlsControl_NX
@@ -181,8 +182,7 @@ void ManiaModeMenu::ChangeMenuTrack()
         default:
         case MenuSetup::Main: trackID = 0; break;
         case MenuSetup::TimeAttack: trackID = 1; break;
-        //case MAINMENU_COMPETITION: trackID = 2; break;
-        case MenuSetup::SaveSelect: trackID = 3; break;
+        case MenuSetup::SaveSelect: trackID = 2; break;
     }
 
     if (!Music::IsPlaying())
@@ -245,7 +245,7 @@ void ManiaModeMenu::HandleUnlocks()
     SaveMenu::HandleUnlocks();
     //TimeAttackMenu::HandleUnlocks();
     //OptionsMenu::HandleUnlocks();
-    //ExtrasMenu::HandleUnlocks();
+    ExtrasMenu::HandleUnlocks();
 }
 
 void ManiaModeMenu::SetupActions()
@@ -254,7 +254,7 @@ void ManiaModeMenu::SetupActions()
     SaveMenu::SetupActions();
     //TimeAttackMenu::SetupActions();
     //OptionsMenu::SetupActions();
-    //ExtrasMenu::SetupActions();
+    ExtrasMenu::SetupActions();
 }
 
 void ManiaModeMenu::HandleMenuReturn()
@@ -289,7 +289,6 @@ void ManiaModeMenu::HandleMenuReturn()
         characterID  = param->characterID;
         zoneID       = param->zoneID;
         act          = param->actID;
-        isEncoreMode = param->isEncoreMode;
     }
 
     //TimeAttackData::Clear();
@@ -298,7 +297,6 @@ void ManiaModeMenu::HandleMenuReturn()
         param->characterID  = characterID;
         param->zoneID       = zoneID;
         param->actID        = act;
-        param->isEncoreMode = isEncoreMode;
     }
 }
 

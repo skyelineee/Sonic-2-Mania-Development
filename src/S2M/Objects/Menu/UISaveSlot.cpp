@@ -33,9 +33,6 @@ void UISaveSlot::Update()
 
     this->state.Run(this);
 
-    if (++this->zoneIconSprX >= 192)
-        this->zoneIconSprX -= 192;
-
     UIControl *control = (UIControl *)this->parent;
 
     if (this->isSelected) {
@@ -186,7 +183,7 @@ void UISaveSlot::Draw()
     }
 
     if (this->isSelected || this->type == UISAVESLOT_REGULAR) {
-        if (this->isSelected && !(this->zoneIconSprX & 8)) {
+        if (this->isSelected) {
             drawPos.x = this->buttonBounceOffset + this->position.x;
             drawPos.y = this->position.y;
             if (this->type == UISAVESLOT_NOSAVE) {

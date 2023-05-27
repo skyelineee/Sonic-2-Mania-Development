@@ -42,7 +42,6 @@ void UIChoice::Update()
     this->state.Run(this);
 
     if (parent && parent->state.Matches(&UIButton::State_HandleButtonLeave)) {
-        this->textBounceOffset   = 0;
         this->buttonBounceOffset = 0;
         this->isSelected         = false;
         this->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -55,41 +54,10 @@ void UIChoice::Draw()
     Vector2 drawPos;
     int32 size = (this->size.x + this->size.y) >> 16;
 
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-    drawPos.x -= this->buttonBounceOffset;
-    drawPos.y -= this->buttonBounceOffset;
-
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-    drawPos.x += this->buttonBounceOffset;
-    drawPos.y += this->buttonBounceOffset;
-
-    UIButton *parent = (UIButton *)this->parent;
-    if (this->arrowWidth > 0 && this->isSelected && !(this->disabled || parent->disabled)) {
-        drawPos.x = this->position.x;
-        drawPos.y = this->position.y;
-        drawPos.y += this->textBounceOffset;
-        drawPos.x -= this->arrowWidth << 15;
-        drawPos.x += this->buttonBounceOffset;
-        drawPos.y += this->buttonBounceOffset;
-        this->leftArrowAnimator.DrawSprite(&drawPos, false);
-
-        drawPos.x = this->position.x;
-        drawPos.y = this->position.y;
-        drawPos.y += this->textBounceOffset;
-        drawPos.x += this->arrowWidth << 15;
-        drawPos.x += this->buttonBounceOffset;
-        drawPos.y += this->buttonBounceOffset;
-        this->rightArrowAnimator.DrawSprite(&drawPos, false);
-    }
+    drawPos = this->position;
 
     if (this->textVisible) {
-        drawPos.x = this->position.x;
-        drawPos.y = this->position.y;
-        drawPos.y = this->textBounceOffset + this->position.y;
         drawPos.x = this->buttonBounceOffset + this->position.x;
-        drawPos.y += this->buttonBounceOffset;
 
         switch (this->align) {
             case UIButton::ALIGN_LEFT: drawPos.x += -0x60000 - (this->size.x >> 1); break;
@@ -105,6 +73,19 @@ void UIChoice::Draw()
 
         if (!this->noText)
             this->labelAnimator.DrawSprite(&drawPos, false);
+    }
+
+    UIButton *parent = (UIButton *)this->parent;
+    if (this->arrowWidth > 0 && this->isSelected && !(this->disabled || parent->disabled)) {
+        drawPos.x = this->buttonBounceOffset + this->position.x;
+        drawPos.y = this->position.y - TO_FIXED(8);
+        drawPos.x -= this->arrowWidth << 15;
+        this->leftArrowAnimator.DrawSprite(&drawPos, false);
+
+        drawPos.x = this->buttonBounceOffset + this->position.x;
+        drawPos.y = this->position.y - TO_FIXED(8);
+        drawPos.x += this->arrowWidth << 15;
+        this->rightArrowAnimator.DrawSprite(&drawPos, false);
     }
 }
 
@@ -123,14 +104,14 @@ void UIChoice::Create(void *data)
         this->touchCB.Set(&UIChoice::CheckTouch);
 
         this->aniFrames = UIWidgets::sVars->textFrames;
-        this->labelAnimator.SetAnimation(&UIWidgets::sVars->textFrames, this->listID, true, this->frameID);
+        this->labelAnimator.SetAnimation(&sVars->aniFrames, this->listID, true, this->frameID);
         this->iconAnimator.SetAnimation(&sVars->aniFrames, this->auxListID, true, this->auxFrameID);
         this->leftArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 0);
         this->rightArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 1);
     }
 }
 
-void UIChoice::StageLoad() { sVars->aniFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE); }
+void UIChoice::StageLoad() { sVars->aniFrames.Load("UI/SaveSelectNEW.bin", SCOPE_STAGE); }
 
 void UIChoice::SetChoiceActive(UIChoice *choice)
 {
@@ -141,10 +122,8 @@ void UIChoice::SetChoiceActive(UIChoice *choice)
         if (!parent->disabled)
             choice->visible = true;
 
-        choice->textBounceOffset     = 0;
         choice->buttonBounceOffset   = 0;
-        choice->textBounceVelocity   = -0x20000;
-        choice->buttonBounceVelocity = -0x20000;
+        choice->buttonBounceVelocity = -0x25000;
         choice->isSelected           = true;
         choice->state.Set(&UIChoice::State_HandleButtonEnter);
     }
@@ -153,7 +132,6 @@ void UIChoice::SetChoiceActive(UIChoice *choice)
 void UIChoice::SetChoiceInactive(UIChoice *choice)
 {
     if (choice) {
-        choice->textBounceOffset   = 0;
         choice->buttonBounceOffset = 0;
         choice->isSelected         = false;
         choice->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -255,16 +233,6 @@ bool32 UIChoice::CheckTouch()
 
 void UIChoice::State_HandleButtonLeave()
 {
-    if (this->textBounceOffset) {
-        int32 offset = -(this->textBounceOffset / abs(this->textBounceOffset));
-        this->textBounceOffset += offset << 15;
-
-        if (offset < 0 && this->textBounceOffset < 0)
-            this->textBounceOffset = 0;
-        else if (offset > 0 && this->textBounceOffset > 0)
-            this->textBounceOffset = 0;
-    }
-
     if (this->buttonBounceOffset) {
         int32 offset = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
         this->buttonBounceOffset += offset << 16;
@@ -278,19 +246,11 @@ void UIChoice::State_HandleButtonLeave()
 
 void UIChoice::State_HandleButtonEnter()
 {
-    this->textBounceVelocity += 0x4000;
-    this->textBounceOffset += this->textBounceVelocity;
-
-    if (this->textBounceOffset >= 0 && this->textBounceVelocity > 0) {
-        this->textBounceOffset   = 0;
-        this->textBounceVelocity = 0;
-    }
-
     this->buttonBounceVelocity += 0x4800;
     this->buttonBounceOffset += this->buttonBounceVelocity;
 
     if (this->buttonBounceOffset >= -0x20000 && this->buttonBounceVelocity > 0) {
-        this->buttonBounceOffset   = -0x20000;
+        this->buttonBounceOffset   = 0;
         this->buttonBounceVelocity = 0;
     }
 }

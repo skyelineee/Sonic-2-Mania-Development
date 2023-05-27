@@ -40,7 +40,6 @@ struct UISaveSlot : RSDK::GameObject::Entity {
     int32 slotID;
     int32 saveSlotPlacement;
     bool32 currentlySelected;
-    int32 zoneIconSprX;
     int32 buttonBounceOffset;
     int32 buttonBounceVelocity;
     int32 fxRadius;

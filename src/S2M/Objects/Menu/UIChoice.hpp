@@ -34,9 +34,7 @@ struct UIChoice : RSDK::GameObject::Entity {
     int32 arrowWidth;
     bool32 isDisabled;
     int32 bgEdgeSize;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
-    int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
     bool32 clearParentState;

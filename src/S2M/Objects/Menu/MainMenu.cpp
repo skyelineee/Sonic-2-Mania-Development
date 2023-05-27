@@ -56,15 +56,15 @@ void MainMenu::StaticUpdate()
                     UIButton* button = control->buttons[i]; 
                     if (button->nameFrameID > selectedID) {
                         button->position.y = button->startPos.y + TO_FIXED(24);
-                        button->buttonFrameID = button->nameFrameID;
-                        button->descriptionListID = 1;
+                        button->buttonFrameID = button->descriptionFrameID;
+                        button->descriptionListID = 2;
                         button->buttonListID = 1;
                         button->nameListID   = 3;
                     }
                     else if (button->nameFrameID == selectedID) {
                         button->buttonListID = 0;
                         button->position.y = button->startPos.y;
-                        button->buttonFrameID = button->nameFrameID;
+                        button->buttonFrameID = button->descriptionFrameID;
                         button->descriptionListID = 0;
                         button->nameListID    = 2;
                         // big boy
@@ -72,9 +72,9 @@ void MainMenu::StaticUpdate()
                     else {
                         button->buttonListID = 1;
                         button->nameListID    = 4;
-                        button->descriptionListID = 1;
+                        button->descriptionListID = 2;
                         button->position.y = button->startPos.y;
-                        button->buttonFrameID = button->nameFrameID + 5;
+                        button->buttonFrameID = button->descriptionFrameID + 5;
                     }
                 }
             }
@@ -143,8 +143,8 @@ void MainMenu::Initialize()
     }
 
     int32 button1Frame = 1; // Time Attack
-    int32 button2Frame = 2; // Options
-    int32 button3Frame = 3; // Extras
+    int32 button2Frame = 2; // Extras
+    int32 button3Frame = 3; // Options
     int32 button4Frame = 4; // Exit
 
     UIButton *buttonAdventure = menuControl->buttons[0];
@@ -159,17 +159,17 @@ void MainMenu::Initialize()
     buttonTimeAttack->transition     = true;
     buttonTimeAttack->stopMusic      = true;
 
-    UIButton *buttonOptions = menuControl->buttons[2];
-    buttonOptions->nameFrameID    = button2Frame;
-    buttonOptions->buttonFrameID  = 2;
+    UIButton *buttonExtras      = menuControl->buttons[2];
+    buttonExtras->nameFrameID   = button2Frame;
+    buttonExtras->buttonFrameID = 2;
+    buttonExtras->transition    = true;
+    buttonExtras->stopMusic     = false;
+
+    UIButton *buttonOptions = menuControl->buttons[3];
+    buttonOptions->nameFrameID    = button3Frame;
+    buttonOptions->buttonFrameID  = 3;
     buttonOptions->transition     = true;
     buttonOptions->stopMusic      = false;
-
-    UIButton *buttonExtras = menuControl->buttons[3];
-    buttonExtras->nameFrameID    = button3Frame;
-    buttonExtras->buttonFrameID  = 3;
-    buttonExtras->transition     = true;
-    buttonExtras->stopMusic      = false;
 
     UIButton *buttonExit = menuControl->buttons[4];
     buttonExit->nameFrameID    = button4Frame;
@@ -217,7 +217,7 @@ void MainMenu::MenuButton_ActionCB()
     UIButton *button = (UIButton *)this;
 
     switch (button->nameFrameID) {
-        case 0: //Mania Mode
+        case 0: // Adventure
             if (API::Storage::GetNoSave()) {
                 UIControl::MatchMenuTag("No Save Mode");
             }
@@ -230,7 +230,6 @@ void MainMenu::MenuButton_ActionCB()
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store     = (Entity *)sceneInfo->entity;
                     sceneInfo->entity = (Entity *)saveSelect->buttons[i];
-                    //UISaveSlot::HandleSaveIconChange();
                     sceneInfo->entity = store;
                 }
                 UIControl::MatchMenuTag("Save Select");
@@ -238,18 +237,18 @@ void MainMenu::MenuButton_ActionCB()
             break;
 
         case 1: // Time Attack
-                /*UIControl *control = TimeAttackMenu::sVars->timeAttackControl_Legacy;
-                control->buttonID        = 0;
-                control->menuWasSetup    = false;
-                UIControl::MatchMenuTag("Time Attack Legacy");*/
+                //UIControl *control = TimeAttackMenu::sVars->timeAttackControl_Legacy;
+                //control->buttonID        = 0;
+                //control->menuWasSetup    = false;
+                UIControl::MatchMenuTag("Time Attack Legacy");
             break;
 
-        case 2: // Options
-            UIControl::MatchMenuTag("Options");
-            break;
-
-        case 3: // Extras
+        case 2: // Extras
             UIControl::MatchMenuTag("Extras");
+            break;
+
+        case 3: // Options
+            UIControl::MatchMenuTag("Options");
             break;
 
         default: break;

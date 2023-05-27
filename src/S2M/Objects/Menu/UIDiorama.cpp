@@ -125,19 +125,44 @@ void UIDiorama::ChangeDiorama(uint8 dioramaID)
             this->state.Set(&UIDiorama::State_TimeAttack);
             break;
 
-        case UIDIORAMA_OPTIONS:
-            this->stateDraw.Set(&UIDiorama::Draw_Options);
-            this->state.Set(&UIDiorama::State_Options);
-            break;
-
         case UIDIORAMA_EXTRAS:
             this->stateDraw.Set(&UIDiorama::Draw_Extras);
             this->state.Set(&UIDiorama::State_Extras);
             break;
 
+        case UIDIORAMA_OPTIONS:
+            this->stateDraw.Set(&UIDiorama::Draw_Options);
+            this->state.Set(&UIDiorama::State_Options);
+            break;
+
         case UIDIORAMA_EXIT:
             this->stateDraw.Set(&UIDiorama::Draw_Exit);
             this->state.Set(&UIDiorama::State_Exit);
+            break;
+
+        case UIDIORAMA_BOSSRUSH:
+            this->stateDraw.Set(&UIDiorama::Draw_BossRush);
+            this->state.Set(&UIDiorama::State_BossRush);
+            break;
+
+        case UIDIORAMA_MUSICPLAYER:
+            this->stateDraw.Set(&UIDiorama::Draw_MusicPlayer);
+            this->state.Set(&UIDiorama::State_MusicPlayer);
+            break;
+
+        case UIDIORAMA_LEVELSELECT:
+            this->stateDraw.Set(&UIDiorama::Draw_LevelSelect);
+            this->state.Set(&UIDiorama::State_LevelSelect);
+            break;
+
+        case UIDIORAMA_EXTRALEVELS:
+            this->stateDraw.Set(&UIDiorama::Draw_ExtraLevels);
+            this->state.Set(&UIDiorama::State_ExtraLevels);
+            break;
+
+        case UIDIORAMA_CREDITS:
+            this->stateDraw.Set(&UIDiorama::Draw_Credits);
+            this->state.Set(&UIDiorama::State_Credits);
             break;
 
         default: break;
@@ -166,6 +191,17 @@ void UIDiorama::State_TimeAttack()
     }
 }
 
+void UIDiorama::State_Extras()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)this->values;
+
+    if (this->needsSetup) {
+        this->maskColor  = 0x00FF00;
+        this->needsSetup = false;
+    }
+}
+
 void UIDiorama::State_Options()
 {
     // Using this makes these states FAR more readable
@@ -177,10 +213,54 @@ void UIDiorama::State_Options()
     }
 }
 
-void UIDiorama::State_Extras()
+void UIDiorama::State_Exit()
 {
     // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)this->values;
+    UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)this->values;
+
+    if (this->needsSetup) {
+        this->maskColor = 0x00FF00;
+        this->needsSetup               = false;
+    }
+}
+
+void UIDiorama::State_BossRush()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_BossRush *info = (UIDiorama_StateInfo_BossRush *)this->values;
+
+    if (this->needsSetup) {
+        this->maskColor = 0x00FF00;
+        this->needsSetup = false;
+    }
+}
+
+void UIDiorama::State_MusicPlayer()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_MusicPlayer *info = (UIDiorama_StateInfo_MusicPlayer *)this->values;
+
+    if (this->needsSetup) {
+        this->maskColor = 0x00FF00;
+        this->needsSetup = false;
+    }
+}
+
+void UIDiorama::State_LevelSelect()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_LevelSelect *info = (UIDiorama_StateInfo_LevelSelect *)this->values;
+
+    if (this->needsSetup) {
+        this->maskColor = 0x00FF00;
+        this->needsSetup = false;
+    }
+}
+
+void UIDiorama::State_ExtraLevels()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_ExtraLevels *info = (UIDiorama_StateInfo_ExtraLevels *)this->values;
 
     if (this->needsSetup) {
         this->maskColor = 0x00FF00;
@@ -188,10 +268,10 @@ void UIDiorama::State_Extras()
     }
 }
 
-void UIDiorama::State_Exit()
+void UIDiorama::State_Credits()
 {
     // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)this->values;
+    UIDiorama_StateInfo_Credits *info = (UIDiorama_StateInfo_Credits *)this->values;
 
     if (this->needsSetup) {
         this->maskColor = 0x00FF00;
@@ -211,7 +291,7 @@ void UIDiorama::Draw_Adventure()
     if (sceneInfo->currentDrawGroup == this->drawGroup) {
         this->inkEffect = INK_NONE;
         info->ehzAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
-        info->ehzAnimator.DrawSprite(&drawPos, true);
+        info->ehzAnimator.DrawSprite(&drawPos, false);
     }
 }
 
@@ -227,23 +307,7 @@ void UIDiorama::Draw_TimeAttack()
     if (sceneInfo->currentDrawGroup == this->drawGroup) {
         this->inkEffect = INK_NONE;
         info->tempAnimator.SetAnimation(sVars->aniFrames, 0, true, 1);
-        info->tempAnimator.DrawSprite(&drawPos, true);
-    }
-}
-
-void UIDiorama::Draw_Options()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Options *info = (UIDiorama_StateInfo_Options *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator1.SetAnimation(sVars->aniFrames, 0, true, 2);
-        info->tempAnimator1.DrawSprite(&drawPos, true);
+        info->tempAnimator.DrawSprite(&drawPos, false);
     }
 }
 
@@ -258,8 +322,24 @@ void UIDiorama::Draw_Extras()
 
     if (sceneInfo->currentDrawGroup == this->drawGroup) {
         this->inkEffect = INK_NONE;
-        info->tempAnimator2.SetAnimation(sVars->aniFrames, 0, true, 3);
-        info->tempAnimator2.DrawSprite(&drawPos, true);
+        info->tempAnimator1.SetAnimation(sVars->aniFrames, 0, true, 3);
+        info->tempAnimator1.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_Options()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_Options *info = (UIDiorama_StateInfo_Options *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator2.SetAnimation(sVars->aniFrames, 0, true, 2);
+        info->tempAnimator2.DrawSprite(&drawPos, false);
     }
 }
 
@@ -275,7 +355,87 @@ void UIDiorama::Draw_Exit()
     if (sceneInfo->currentDrawGroup == this->drawGroup) {
         this->inkEffect = INK_NONE;
         info->tempAnimator3.SetAnimation(sVars->aniFrames, 0, true, 4);
-        info->tempAnimator3.DrawSprite(&drawPos, true);
+        info->tempAnimator3.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_BossRush()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_BossRush *info = (UIDiorama_StateInfo_BossRush *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator4.SetAnimation(sVars->aniFrames, 0, true, 5);
+        info->tempAnimator4.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_MusicPlayer()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_MusicPlayer *info = (UIDiorama_StateInfo_MusicPlayer *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator5.SetAnimation(sVars->aniFrames, 0, true, 6);
+        info->tempAnimator5.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_LevelSelect()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_LevelSelect *info = (UIDiorama_StateInfo_LevelSelect *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator6.SetAnimation(sVars->aniFrames, 0, true, 7);
+        info->tempAnimator6.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_ExtraLevels()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_ExtraLevels *info = (UIDiorama_StateInfo_ExtraLevels *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator7.SetAnimation(sVars->aniFrames, 0, true, 8);
+        info->tempAnimator7.DrawSprite(&drawPos, false);
+    }
+}
+
+void UIDiorama::Draw_Credits()
+{
+    // Using this makes these states FAR more readable
+    UIDiorama_StateInfo_Credits *info = (UIDiorama_StateInfo_Credits *)this->values;
+
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+
+    if (sceneInfo->currentDrawGroup == this->drawGroup) {
+        this->inkEffect = INK_NONE;
+        info->tempAnimator8.SetAnimation(sVars->aniFrames, 0, true, 9);
+        info->tempAnimator8.DrawSprite(&drawPos, false);
     }
 }
 

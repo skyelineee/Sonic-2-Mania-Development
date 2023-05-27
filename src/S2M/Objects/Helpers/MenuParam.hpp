@@ -10,15 +10,11 @@ struct MenuParam : RSDK::GameObject::Entity {
     // ENUMS
     // ==============================
 
-    enum CreditsSelectionType {
-        CREDITS_SELECTION_NONE,
-        CREDITS_SELECTION_EXTRAS,
-    };
-
     enum ExtrasSelectionIDs {
-        EXTRAS_SELECTION_BSS,
-        EXTRAS_SELECTION_PUYO,
-        EXTRAS_SELECTION_DAGARDEN,
+        EXTRAS_SELECTION_BOSSRUSH,
+        EXTRAS_SELECTION_MUSICPLAYER,
+        EXTRAS_SELECTION_LEVELSELECT,
+        EXTRAS_SELECTION_EXTRALEVELS,
         EXTRAS_SELECTION_CREDITS,
     };
 
@@ -36,8 +32,7 @@ struct MenuParam : RSDK::GameObject::Entity {
     // ==============================
     // INSTANCE VARS
     // ==============================
-    uint8 puyoSelection;
-    uint8 bssSelection;
+
     char menuTag[256];
     int32 menuSelection;
     bool32 startedTAAttempt;
@@ -47,7 +42,6 @@ struct MenuParam : RSDK::GameObject::Entity {
     int32 zoneID;
     int32 actID;
     int32 timeAttackRank;
-    bool32 isEncoreMode;
     int32 replayUUID;
     bool32 viewReplay;
     bool32 showGhost;
@@ -59,6 +53,7 @@ struct MenuParam : RSDK::GameObject::Entity {
     int32 unused5;
     int32 vsZoneID;
     int32 vsActID;
+    int32 creditsReturnToMenu;
 
     // ==============================
     // EVENTS

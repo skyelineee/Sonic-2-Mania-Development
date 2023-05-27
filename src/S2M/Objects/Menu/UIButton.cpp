@@ -191,7 +191,6 @@ void UIButton::SetChoiceSelectionWithCB(UIButton *button, int32 selection)
         if (curChoice) {
             if (curChoice->classID == UIChoice::sVars->classID) {
                 UIChoice *choice     = (UIChoice *)curChoice;
-                choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -241,7 +240,6 @@ void UIButton::SetChoiceSelection(UIButton *button, int32 selection)
         if (choicePtr) {
             if (choicePtr->classID == UIChoice::sVars->classID) {
                 UIChoice *choice     = (UIChoice *)choicePtr;
-                choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -726,7 +724,6 @@ void UIButton::ButtonLeaveCB()
         UIButton *widget = UIButton::GetChoicePtr(this, this->selection);
         if (widget) {
             if (widget->classID == UIChoice::sVars->classID) {
-                ((UIChoice *)widget)->textBounceOffset   = 0;
                 ((UIChoice *)widget)->buttonBounceOffset = 0;
                 widget->isSelected                             = false;
                 widget->state.Set(&UIChoice::State_HandleButtonLeave);
