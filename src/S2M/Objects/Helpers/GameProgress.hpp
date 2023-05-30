@@ -1,6 +1,9 @@
 #pragma once
 #include "S2M.hpp"
 
+#define GAMEPROGRESS_MEDAL_COUNT   (32)
+#define GAMEPROGRESS_EMERALD_COUNT (7)
+
 namespace GameLogic
 {
 
@@ -12,6 +15,12 @@ struct GameProgress : RSDK::GameObject::Entity {
 
     enum GameProgressUnlockIDs {
         UnlockCount
+    };
+
+    enum GameProgressEndingIDs {
+        EndingNone,
+        EndingBad,
+        EndingGood,
     };
 
     // ==============================
@@ -28,7 +37,6 @@ struct GameProgress : RSDK::GameObject::Entity {
     // ==============================
     // INSTANCE VARS
     // ==============================
-    bool32 medals[32];
     bool32 zoneCleared[13];
     bool32 emeraldObtained[7];
     bool32 allEmeraldsObtained;
@@ -36,8 +44,6 @@ struct GameProgress : RSDK::GameObject::Entity {
     bool32 specialCleared[7];
     bool32 disableSaving;
     uint8 unlockedEndingID;
-    uint8 goldMedalCount;
-    uint8 silverMedalCount;
 
     // ==============================
     // EVENTS
@@ -53,6 +59,7 @@ struct GameProgress : RSDK::GameObject::Entity {
     static GameProgress *GetProgressRAM();
     static void Save(void (*callback)(bool32 success));
     static void DumpProgress();
+    static void ClearProgress();
     static void MarkZoneCompleted(int32 zoneID);
     static void CollectEmerald(int32 emeraldID);
     static int32 GetNotifStringID(int32 type);

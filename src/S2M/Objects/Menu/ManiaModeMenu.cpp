@@ -12,6 +12,7 @@
 #include "UILoadingIcon.hpp"
 #include "UIHeading.hpp"
 #include "UIWidgets.hpp"
+#include "OptionsMenu.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/DialogRunner.hpp"
@@ -47,7 +48,7 @@ void ManiaModeMenu::Initialize()
     SaveMenu::Initialize();
     // TimeAttackMenu::Initialize();
     // CompetitionMenu::Initialize();
-    // OptionsMenu::Initialize();
+    OptionsMenu::Initialize();
     ExtrasMenu::Initialize();
 
     ManiaModeMenu::HandleUnlocks();
@@ -152,12 +153,12 @@ int32 ManiaModeMenu::GetActiveMenu()
 {
     UIControl *control = UIControl::GetUIControl();
 
-    if (control == MainMenu::sVars->menuControl || control == ExtrasMenu::sVars->extrasControl /*|| control == OptionsMenu->optionsControl
-        || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl || control == OptionsMenu->dataOptionsControl
-        || control == OptionsMenu->controlsControl_Windows || control == OptionsMenu->controlsControl_KB
-        || control == OptionsMenu->controlsControl_PS4 || control == OptionsMenu->controlsControl_XB1 || control == OptionsMenu->controlsControl_NX
-        || control == OptionsMenu->controlsControl_NXGrip || control == OptionsMenu->controlsControl_NXJoycon
-        || control == OptionsMenu->controlsControl_NXPro*/) {
+    if (control == MainMenu::sVars->menuControl || control == ExtrasMenu::sVars->extrasControl || control == OptionsMenu::sVars->optionsControl
+        || control == OptionsMenu::sVars->videoControl || control == OptionsMenu::sVars->soundControl || control == OptionsMenu::sVars->dataOptionsControl
+        || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB || control == OptionsMenu::sVars->controlsControl_PS4
+        || control == OptionsMenu::sVars->controlsControl_XB1 || control == OptionsMenu::sVars->controlsControl_NX
+        || control == OptionsMenu::sVars->controlsControl_NXGrip || control == OptionsMenu::sVars->controlsControl_NXJoycon
+        || control == OptionsMenu::sVars->controlsControl_NXPro) {
         return MenuSetup::Main;
     }
 
@@ -244,7 +245,7 @@ void ManiaModeMenu::HandleUnlocks()
     MainMenu::HandleUnlocks();
     SaveMenu::HandleUnlocks();
     //TimeAttackMenu::HandleUnlocks();
-    //OptionsMenu::HandleUnlocks();
+    OptionsMenu::HandleUnlocks();
     ExtrasMenu::HandleUnlocks();
 }
 
@@ -253,7 +254,7 @@ void ManiaModeMenu::SetupActions()
     MainMenu::SetupActions();
     SaveMenu::SetupActions();
     //TimeAttackMenu::SetupActions();
-    //OptionsMenu::SetupActions();
+    OptionsMenu::SetupActions();
     ExtrasMenu::SetupActions();
 }
 
@@ -282,7 +283,7 @@ void ManiaModeMenu::HandleMenuReturn()
 
     SaveMenu::HandleMenuReturn(0);
     //TimeAttackMenu::HandleMenuReturn();
-    //OptionsMenu::HandleMenuReturn();
+    OptionsMenu::HandleMenuReturn();
 
     int32 characterID = 0, zoneID = 0, act = 0, isEncoreMode = false;
     if (param->inTimeAttack) {

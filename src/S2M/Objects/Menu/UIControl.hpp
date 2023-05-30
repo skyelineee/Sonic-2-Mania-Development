@@ -143,6 +143,7 @@ struct UIControl : RSDK::GameObject::Entity {
     void HandlePosition();
     void ProcessInputs();
     void ProcessButtonInput();
+    static bool32 ContainsPos(UIControl *control, RSDK::Vector2 *pos);
 
     // ==============================
     // DECLARATION

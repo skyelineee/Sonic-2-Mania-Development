@@ -4,7 +4,11 @@
 namespace GameLogic
 {
 
-struct UIResPicker : RSDK::GameObject::Entity {
+#define UISLIDER_MIN       (0)
+#define UISLIDER_MAX       (0x400)
+#define UISLIDER_INCREMENT (UISLIDER_MAX / 0x10)
+
+struct UISlider : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -19,34 +23,30 @@ struct UIResPicker : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        RSDK::SpriteAnimation aniFrames;
+        RSDK::SpriteAnimation aniFrames; // prolly used in-editor
+        Entity *activeEntity;
     };
 
-    S2M_UI_ITEM_BASE(UIResPicker);
+    // ==============================
+    // INSTANCE VARS
+    // ==============================
+
+    S2M_UI_ITEM_BASE(UISlider);
+    int32 listID;
+    int32 frameID;
     RSDK::Vector2 size;
-    int32 align;
-    int32 arrowWidth;
-    int32 selection;
-    int32 prevSelection;
     int32 bgEdgeSize;
     int32 textBounceOffset;
     int32 buttonBounceOffset;
     int32 textBounceVelocity;
     int32 buttonBounceVelocity;
+    int32 sliderPos;
     bool32 textVisible;
-    RSDK::String text;
-    int32 touchID;
-    int32 displayWidth;
-    int32 displayHeight;
-    int32 displayRefreshRate;
-    RSDK::Animator unusedAnimator;
+    bool32 isTouchSelected;
+    int32 sliderPosTouch;
+    RSDK::StateMachine<UISlider> sliderChangedCB;
     RSDK::Animator textAnimator;
-    RSDK::Animator arrowAnimatorL;
-    RSDK::Animator arrowAnimatorR;
-
-    // ==============================
-    // INSTANCE VARS
-    // ==============================
+    RSDK::SpriteAnimation textFrames;
 
     // ==============================
     // EVENTS
@@ -70,18 +70,15 @@ struct UIResPicker : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static void GetDisplayInfo(UIResPicker *entity);
-    void ApplySettings();
-    void ProcessButtonCB();
-    bool32 ProcessTouchCB();
-    void TouchedCB_Left();
-    void TouchedCB_Right();
-    static void SetChoiceActive(UIResPicker *entity);
-    static void SetChoiceInactive(UIResPicker *entity);
+    void DrawBGShapes();
+    void DrawSlider();
 
-    // ==============================
-    // STATES
-    // ==============================
+    void ButtonPressCB();
+    bool32 TouchCB();
+    void ButtonEnterCB();
+    void ButtonLeaveCB();
+    bool32 CheckButtonEnterCB();
+    static bool32 CheckSelectedCB();
 
     void State_HandleButtonLeave();
     void State_HandleButtonEnter();
@@ -90,6 +87,6 @@ struct UIResPicker : RSDK::GameObject::Entity {
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(UIResPicker);
+    RSDK_DECLARE(UISlider);
 };
 } // namespace GameLogic

@@ -8,6 +8,7 @@
 #include "UIWidgets.hpp"
 #include "UIControl.hpp"
 #include "UIButtonPrompt.hpp"
+#include "UIDialog.hpp"
 #include "Global/Localization.hpp"
 #include "Helpers/LogHelpers.hpp"
 
@@ -34,7 +35,7 @@ void UIKeyBinder::Update()
     int32 inputID           = this->inputID + 1;
     int32 keyMap            = UIKeyBinder::GetMappings(inputID, this->type);
 
-    String string;
+    String string        = {};
     bool32 keyMapChanged = true;
 
     int32 frameID = -1;
@@ -56,7 +57,8 @@ void UIKeyBinder::Update()
                 if (UIKeyBinder::GetMappings(inputSlot, buttonID) != keyMap)
                     continue;
 
-                if (this->state.Set(&UIKeyBinder::State_Selected)) {
+                if (this->state.Matches(&UIKeyBinder::State_Selected)) {
+                    // Handle Key clashes
                     sVars->activeInputID  = inputSlot;
                     sVars->activeButtonID = buttonID;
 
@@ -73,6 +75,14 @@ void UIKeyBinder::Update()
 
                     UIKeyBinder::SetMappings(this->type, inputID, KEYMAP_NO_MAPPING);
                     this->lasyKeyMap = KEYMAP_NO_MAPPING;
+
+                    Action<void> callbackYes = {};
+                    callbackYes.Set(&UIKeyBinder::MoveKeyToActionCB_Yes);
+
+                    Action<void> callbackNo = {};
+                    callbackNo.Set(&UIKeyBinder::MoveKeyToActionCB_No);
+
+                    UIDialog::CreateDialogYesNo(&string, callbackYes, callbackNo, true, true);
                     keyMapChanged = false;
                 }
             }
@@ -92,7 +102,7 @@ void UIKeyBinder::Update()
                 this->processButtonCB.Set(&UIButton::ProcessButtonCB_Scroll);
                 this->state.Set(&UIKeyBinder::State_HandleButtonEnter);
 
-                sVars->activeBinder = NULL;
+                sVars->activeBinder = nullptr;
                 parent->childHasFocus     = false;
 
                
@@ -121,16 +131,15 @@ void UIKeyBinder::Update()
         }
     }
 
-    if (this->state.Matches(&UIKeyBinder::State_HandleButtonEnter)) {
-        if ((!parent->state.Matches(&UIControl::ProcessInputs) || parent->buttonID != id)) {
-            this->isSelected = false;
-            this->state.Set(&UIKeyBinder::State_HandleButtonLeave);
-        }
+    if (this->state.Matches(&UIKeyBinder::State_HandleButtonEnter) && (!parent->state.Matches(&UIControl::ProcessInputs) || parent->buttonID != id))
+    {
+        this->isSelected = false;
+        this->state.Set(&UIKeyBinder::State_HandleButtonLeave);
     }
 }
 void UIKeyBinder::LateUpdate() {}
 void UIKeyBinder::StaticUpdate() {}
-void UIKeyBinder::Draw() {}
+void UIKeyBinder::Draw() { UIKeyBinder::DrawSprites(); }
 
 void UIKeyBinder::Create(void *data)
 {
@@ -147,7 +156,7 @@ void UIKeyBinder::Create(void *data)
     this->touchCB.Set(&UIButton::ProcessTouchCB_Single);
     this->actionCB.Set(&UIKeyBinder::ActionCB);
     this->selectedCB.Set(&UIKeyBinder::SelectedCB);
-    this->failCB.Set(NULL);
+    this->failCB.Set(nullptr);
     this->buttonEnterCB.Set(&UIKeyBinder::ButtonEnterCB);
     this->buttonLeaveCB.Set(&UIKeyBinder::ButtonLeaveCB);
     this->checkButtonEnterCB.Set(&UIKeyBinder::CheckButtonEnterCB);
@@ -266,17 +275,17 @@ void UIKeyBinder::ActionCB() {}
 
 bool32 UIKeyBinder::CheckButtonEnterCB()
 {
-    return this->state.Set(&UIKeyBinder::State_HandleButtonEnter);
+    return this->state.Matches(&UIKeyBinder::State_HandleButtonEnter);
 }
 
 bool32 UIKeyBinder::CheckSelectedCB()
 {
-    return this->state.Set(&UIKeyBinder::State_Selected);
+    return this->state.Matches(&UIKeyBinder::State_Selected);
 }
 
 void UIKeyBinder::ButtonEnterCB()
 {
-    if (this->state.Set(&UIKeyBinder::State_HandleButtonEnter)) {
+    if (!this->state.Matches(&UIKeyBinder::State_HandleButtonEnter)) {
         this->textBounceOffset     = 0;
         this->buttonBounceOffset   = 0;
         this->textBounceVelocity   = -0x20000;
@@ -375,7 +384,7 @@ void UIKeyBinder::MoveKeyToActionCB_No()
 {
     UIKeyBinder *binder = sVars->activeBinder;
 
-    if (binder->state.Set(&UIKeyBinder::State_Selected)) {
+    if (binder->state.Matches(&UIKeyBinder::State_Selected)) {
         UIKeyBinder::SetMappings(binder->inputID + 1, binder->type, KEYMAP_AUTO_MAPPING);
         sVars->activeInputID  = KEYMAP_AUTO_MAPPING;
         sVars->activeButtonID = KEYMAP_AUTO_MAPPING;
@@ -386,7 +395,7 @@ void UIKeyBinder::MoveKeyToActionCB_Yes()
 {
     UIKeyBinder *binder = sVars->activeBinder;
 
-    if (binder->state.Set(&UIKeyBinder::State_Selected)) {
+    if (binder->state.Matches(&UIKeyBinder::State_Selected)) {
         // Store the keyMap from the other button
         int32 keyMap = UIKeyBinder::GetMappings(sVars->activeInputID, sVars->activeButtonID);
 
@@ -403,7 +412,7 @@ void UIKeyBinder::MoveKeyToActionCB_Yes()
         sVars->isSelected   = false;
         binder->processButtonCB.Set(&UIButton::ProcessButtonCB_Scroll);
         binder->state.Set(&UIKeyBinder::State_HandleButtonEnter);
-        sVars->activeBinder = NULL;
+        sVars->activeBinder = nullptr;
 
         Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
         sVars->activeInputID  = KEYMAP_AUTO_MAPPING;
@@ -423,15 +432,15 @@ void UIKeyBinder::EditorLoad()
     sVars->aniFrames.Load("UI/Buttons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, type);
-    RSDK_ENUM_VAR("Up");
-    RSDK_ENUM_VAR("Down");
-    RSDK_ENUM_VAR("Left");
-    RSDK_ENUM_VAR("Right");
-    RSDK_ENUM_VAR("A");
-    RSDK_ENUM_VAR("B");
-    RSDK_ENUM_VAR("X");
-    RSDK_ENUM_VAR("Y");
-    RSDK_ENUM_VAR("Start");
+    RSDK_ENUM_VAR("Up", UIKEYBINDER_UP);
+    RSDK_ENUM_VAR("Down", UIKEYBINDER_DOWN);
+    RSDK_ENUM_VAR("Left", UIKEYBINDER_LEFT);
+    RSDK_ENUM_VAR("Right", UIKEYBINDER_RIGHT);
+    RSDK_ENUM_VAR("A", UIKEYBINDER_A);
+    RSDK_ENUM_VAR("B", UIKEYBINDER_B);
+    RSDK_ENUM_VAR("X", UIKEYBINDER_X);
+    RSDK_ENUM_VAR("Y", UIKEYBINDER_Y);
+    RSDK_ENUM_VAR("Start", UIKEYBINDER_START);
 }
 #endif
 

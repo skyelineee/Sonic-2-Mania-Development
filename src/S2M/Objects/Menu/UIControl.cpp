@@ -7,6 +7,7 @@
 #include "UIControl.hpp"
 #include "UISaveSlot.hpp"
 #include "UITransition.hpp"
+#include "UISlider.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -558,7 +559,7 @@ void UIControl::SetupButtons()
             int32 classID = button->classID;
             if (classID != UIButton::sVars->classID && (!UISaveSlot::sVars || classID != UISaveSlot::sVars->classID)
                 //&& (!UITAZoneModule || classID != UITAZoneModule->classID)
-                /*&& (!UISlider || classID != UISlider->classID)*/ && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
+                && (!UISlider::sVars || classID != UISlider::sVars->classID) && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }
             else {
                 int32 x            = this->startPos.x - this->cameraOffset.x;
@@ -795,6 +796,23 @@ void UIControl::ProcessButtonInput()
             }
         }
     }
+}
+
+bool32 UIControl::ContainsPos(UIControl *control, Vector2 *pos)
+{
+    int32 x = control->startPos.x - control->cameraOffset.x;
+    int32 y = control->startPos.y - control->cameraOffset.y;
+
+    Hitbox hitbox;
+    hitbox.top    = -(control->size.y >> 17);
+    hitbox.left   = -(control->size.x >> 17);
+    hitbox.right  = control->size.x >> 17;
+    hitbox.bottom = control->size.y >> 17;
+
+    if (MathHelpers::PointInHitbox(x, y, pos->x, pos->y, FLIP_NONE, &hitbox))
+        return true;
+
+    return false;
 }
 
 #if RETRO_INCLUDE_EDITOR

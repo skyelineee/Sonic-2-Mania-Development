@@ -199,6 +199,10 @@ struct GlobalVariables {
     int32 enableIntro;
     int32 optionsLoaded;
     int32 optionsRAM[0x80];
+    int32 taTableID;
+    int32 taTableLoaded;
+    int32 replayTableID;
+    int32 replayTableLoaded;
     int32 medallionDebug;
     int32 notifiedAutosave;
     int32 recallEntities;

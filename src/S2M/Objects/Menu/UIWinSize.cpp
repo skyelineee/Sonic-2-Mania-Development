@@ -122,7 +122,7 @@ void UIWinSize::SetupText(UIWinSize *entityPtr)
 {
     if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_DEV) {
         int32 height = 0;
-        Graphics::GetWindowSize(NULL, &height);
+        Graphics::GetWindowSize(nullptr, &height);
 
         this->maxScale = height / SCREEN_YSIZE;
         if (this->selection < 1)
@@ -135,14 +135,12 @@ void UIWinSize::SetupText(UIWinSize *entityPtr)
         sprintf_s(buffer, (int32)sizeof(buffer), "%ix", this->selection);
 
         entityPtr->text.Set(buffer);
-#if GAME_VERSION != VER_100
-        if (Localization->language == LANGUAGE_TC) {
+        if (Localization::sVars->language == LANGUAGE_TC) {
             for (int32 c = 0; c < entityPtr->text.length; ++c) {
                 if (entityPtr->text.chars[c] == 'x')
                     entityPtr->text.chars[c] = 20493; // unicode character ID
             }
         }
-#endif
 
         entityPtr->text.SetSpriteString(UIWidgets::sVars->fontFrames, 0);
     }
@@ -181,7 +179,7 @@ void UIWinSize::ProcessButtonCB()
 
 bool32 UIWinSize::ProcessTouchCB()
 {
-    StateMachine<UIWinSize> *callbacks[2];
+    StateMachine<UIWinSize> *callbacks[2] = {};
     Vector2 touchStart[2];
     Vector2 touchEnd[2];
 

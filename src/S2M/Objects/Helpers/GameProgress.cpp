@@ -75,6 +75,35 @@ void GameProgress::DumpProgress()
 
     LogHelpers::Print("\n=========================");
 }
+
+void GameProgress::ClearProgress()
+{
+    if (sceneInfo->inEditor || API::Storage::GetNoSave() || globals->saveLoaded != STATUS_OK) {
+        LogHelpers::Print("WARNING GameProgress Attempted to clear all before loading SaveGame file");
+        return;
+    }
+
+    GameProgress *progress = GetProgressRAM();
+
+    progress->allEmeraldsObtained = false;
+    progress->unlockedEndingID    = EndingNone;
+
+    for (int32 m = 0; m < GAMEPROGRESS_MEDAL_COUNT; ++m) {
+        if (m < GAMEPROGRESS_EMERALD_COUNT)
+            progress->emeraldObtained[m] = false;
+
+        if (m < UnlockCount)
+            progress->zoneCleared[m] = false;
+
+        if (m < UnlockCount)
+            progress->specialCleared[m] = false;
+
+        if (m < UnlockCount)
+            progress->unreadNotifs[m] = false;
+
+    }
+}
+
 void GameProgress::MarkZoneCompleted(int32 zoneID)
 {
     if (sceneInfo->inEditor || globals->saveLoaded != STATUS_OK) {

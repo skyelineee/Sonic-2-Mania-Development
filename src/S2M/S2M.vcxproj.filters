@@ -370,6 +370,21 @@
     <ClCompile Include="Objects\Menu\ExtrasMenu.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\OptionsMenu.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UISubHeading.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UISlider.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIInfoLabel.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIOptionPanel.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -712,6 +727,21 @@
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\ExtrasMenu.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\OptionsMenu.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UISubHeading.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UISlider.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIInfoLabel.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIOptionPanel.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
