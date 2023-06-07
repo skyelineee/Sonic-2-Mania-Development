@@ -48,35 +48,26 @@ void UIResPicker::Draw()
     Vector2 drawPos;
     int32 width = (this->size.y + this->size.x) >> 16;
 
-    drawPos.x = this->position.x - this->buttonBounceOffset;
-    drawPos.y = this->position.y - this->buttonBounceOffset;
-    UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, width, this->size.y >> 16, this->bgEdgeSize, (UIWidgets::sVars->buttonColor >> 16) & 0xFF,
-                                 (UIWidgets::sVars->buttonColor >> 8) & 0xFF, (UIWidgets::sVars->buttonColor) & 0xFF);
-
     drawPos = this->position;
-    drawPos.x += this->buttonBounceOffset;
-    drawPos.y += this->buttonBounceOffset;
+
+    drawPos.x = this->buttonBounceOffset + this->position.x;
     UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, width, (this->size.y >> 16), this->bgEdgeSize, 0x00, 0x00, 0x00);
 
     if (this->arrowWidth > 0 && this->isSelected) {
         drawPos = this->position;
-        drawPos.y += this->textBounceOffset;
         drawPos.x -= this->arrowWidth << 15;
         drawPos.x += this->buttonBounceOffset;
-        drawPos.y += this->buttonBounceOffset;
         this->arrowAnimatorL.DrawSprite(&drawPos, false);
 
         drawPos = this->position;
-        drawPos.y += this->textBounceOffset;
         drawPos.x += this->arrowWidth << 15;
         drawPos.x += this->buttonBounceOffset;
-        drawPos.y += this->buttonBounceOffset;
         this->arrowAnimatorR.DrawSprite(&drawPos, false);
     }
 
     if (this->textVisible) {
-        drawPos.x = this->position.x;
-        drawPos.y = this->position.y + this->textBounceOffset + this->buttonBounceOffset;
+        drawPos   = this->position;
+        drawPos.x = this->buttonBounceOffset + this->position.x;
 
         switch (this->align) {
             case UIButton::ALIGN_LEFT: drawPos.x = -0x60000 - (this->size.x >> 1) + drawPos.x; break;
@@ -138,10 +129,8 @@ void UIResPicker::ApplySettings()
 {
     UIWidgets::sVars->sfxBleep.Play(false, 255);
 
-    this->textBounceVelocity   = -0x20000;
-    this->buttonBounceVelocity = -0x20000;
-    this->textBounceOffset     = 0;
-    this->buttonBounceOffset   = -0x20000;
+    this->buttonBounceOffset   = 0;
+    this->buttonBounceVelocity = -0x25000;
 
     UIResPicker::GetDisplayInfo(this);
 
@@ -241,10 +230,8 @@ void UIResPicker::SetChoiceActive(UIResPicker *entity)
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = true;
 
-        entity->textBounceOffset     = 0;
         entity->buttonBounceOffset   = 0;
-        entity->textBounceVelocity   = -0x20000;
-        entity->buttonBounceVelocity = -0x20000;
+        entity->buttonBounceVelocity = -0x25000;
 
         entity->isSelected = true;
         entity->state.Set(&UIResPicker::State_HandleButtonEnter);
@@ -254,9 +241,7 @@ void UIResPicker::SetChoiceActive(UIResPicker *entity)
 void UIResPicker::SetChoiceInactive(UIResPicker *entity)
 {
     if (entity) {
-        entity->textBounceOffset     = 0;
         entity->buttonBounceOffset   = 0;
-        entity->textBounceVelocity   = 0;
         entity->buttonBounceVelocity = 0;
 
         entity->isSelected = false;
@@ -266,53 +251,24 @@ void UIResPicker::SetChoiceInactive(UIResPicker *entity)
 
 void UIResPicker::State_HandleButtonLeave()
 {
-    this->textVisible = true;
-
-    if (this->textBounceOffset) {
-        int32 dist = -(this->textBounceOffset / abs(this->textBounceOffset));
-        this->textBounceOffset += dist << 15;
-
-        if (dist < 0) {
-            if (this->textBounceOffset < 0)
-                this->textBounceOffset = 0;
-            else if (dist > 0 && this->textBounceOffset > 0)
-                this->textBounceOffset = 0;
-        }
-        else if (dist > 0 && this->textBounceOffset > 0)
-            this->textBounceOffset = 0;
-    }
-
     if (this->buttonBounceOffset) {
-        int32 dist = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
-        this->buttonBounceOffset += dist << 16;
+        int32 offset = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
+        this->buttonBounceOffset += offset << 16;
 
-        if (dist < 0) {
-            if (this->buttonBounceOffset < 0)
-                this->buttonBounceOffset = 0;
-            else if (dist > 0 && this->buttonBounceOffset > 0)
-                this->buttonBounceOffset = 0;
-        }
-        else if (dist > 0 && this->buttonBounceOffset > 0)
+        if (offset < 0 && this->buttonBounceOffset < 0)
+            this->buttonBounceOffset = 0;
+        else if (offset > 0 && this->buttonBounceOffset > 0)
             this->buttonBounceOffset = 0;
     }
 }
 
 void UIResPicker::State_HandleButtonEnter()
 {
-    this->textBounceVelocity += 0x4000;
-    this->textBounceOffset += this->textBounceVelocity;
-
-    this->textVisible = true;
-    if (this->textBounceOffset >= 0 && this->textBounceVelocity > 0) {
-        this->textBounceOffset   = 0;
-        this->textBounceVelocity = 0;
-    }
-
     this->buttonBounceVelocity += 0x4800;
     this->buttonBounceOffset += this->buttonBounceVelocity;
 
     if (this->buttonBounceOffset >= -0x20000 && this->buttonBounceVelocity > 0) {
-        this->buttonBounceOffset   = -0x20000;
+        this->buttonBounceOffset   = 0;
         this->buttonBounceVelocity = 0;
     }
 }

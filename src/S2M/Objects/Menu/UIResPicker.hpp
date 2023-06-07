@@ -29,9 +29,7 @@ struct UIResPicker : RSDK::GameObject::Entity {
     int32 selection;
     int32 prevSelection;
     int32 bgEdgeSize;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
-    int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
     RSDK::String text;
@@ -39,7 +37,6 @@ struct UIResPicker : RSDK::GameObject::Entity {
     int32 displayWidth;
     int32 displayHeight;
     int32 displayRefreshRate;
-    RSDK::Animator unusedAnimator;
     RSDK::Animator textAnimator;
     RSDK::Animator arrowAnimatorL;
     RSDK::Animator arrowAnimatorR;

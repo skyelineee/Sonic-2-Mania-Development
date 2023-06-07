@@ -52,7 +52,7 @@ void ExtrasMenu::StaticUpdate()
                     UIButton *button = control->buttons[i];
                     if (button->nameFrameID > selectedID) {
                         button->position.y        = button->startPos.y + TO_FIXED(24);
-                        button->descriptionListID = 2;
+                        button->descriptionListID = 4;
                         button->buttonListID      = 1;
                         button->nameListID        = 3;
                         button->buttonFrameID     = button->descriptionFrameID;
@@ -68,7 +68,7 @@ void ExtrasMenu::StaticUpdate()
                     else {
                         button->buttonListID      = 1;
                         button->nameListID        = 4;
-                        button->descriptionListID = 2;
+                        button->descriptionListID = 4;
                         button->position.y        = button->startPos.y;
                         button->buttonFrameID     = button->descriptionFrameID + 5;
                     }
@@ -139,32 +139,34 @@ void ExtrasMenu::SetupActions()
 
     for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES))
     {
-        switch (button->nameFrameID) {
-            default: break;
-            case 5:
-                button->actionCB.Set(&ExtrasMenu::BossRush_ActionCB);
-                button->clearParentState = true;
-                break;
+        if (button->nameListID == 3) {
+            switch (button->nameFrameID) {
+                default: break;
+                case 5:
+                    button->actionCB.Set(&ExtrasMenu::BossRush_ActionCB);
+                    button->clearParentState = true;
+                    break;
 
-            case 6:
-                button->actionCB.Set(&ExtrasMenu::MusicPlayer_ActionCB);
-                button->clearParentState = true;
-                break;
+                case 6:
+                    button->actionCB.Set(&ExtrasMenu::MusicPlayer_ActionCB);
+                    button->clearParentState = true;
+                    break;
 
-            case 7:
-                button->actionCB.Set(&ExtrasMenu::LevelSelect_ActionCB);
-                button->clearParentState = true;
-                break;
+                case 7:
+                    button->actionCB.Set(&ExtrasMenu::LevelSelect_ActionCB);
+                    button->clearParentState = true;
+                    break;
 
-            case 8:
-                button->actionCB.Set(&ExtrasMenu::ExtraLevels_ActionCB);
-                button->clearParentState = true;
-                break;
+                case 8:
+                    button->actionCB.Set(&ExtrasMenu::ExtraLevels_ActionCB);
+                    button->clearParentState = true;
+                    break;
 
-            case 9:
-                button->actionCB.Set(&ExtrasMenu::Credits_ActionCB);
-                button->clearParentState = true;
-                break;
+                case 9:
+                    button->actionCB.Set(&ExtrasMenu::Credits_ActionCB);
+                    button->clearParentState = true;
+                    break;
+            }
         }
     }
 }

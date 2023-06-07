@@ -48,6 +48,7 @@ struct UIButton : RSDK::GameObject::Entity {
     int32 bgEdgeSize;
     int32 buttonBounceOffset;
     int32 buttonBounceVelocity;
+    bool32 reverseVelocity;
     bool32 nameVisible;
     bool32 clearParentState;
     RSDK::Vector2 firstChoicePos;

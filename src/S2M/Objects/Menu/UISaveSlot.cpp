@@ -624,7 +624,7 @@ void UISaveSlot::ProcessButtonCB()
             }
         }
         else if (UIControl::sVars->anyXPress && saveRAM->saveState != SaveGame::SaveEmpty && this->type == UISAVESLOT_REGULAR) {
-            Localization::GetString(&msg, Localization::Delete);
+            Localization::GetString(&msg, Localization::DeletePopup);
             Action<void> callbackYes;
             callbackYes.Set(&UISaveSlot::DeleteDLG_CB);
             Action<void> callbackNo;

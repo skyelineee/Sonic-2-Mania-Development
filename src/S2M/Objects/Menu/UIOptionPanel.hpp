@@ -22,25 +22,11 @@ struct UIOptionPanel : RSDK::GameObject::Entity {
         RSDK::SpriteAnimation aniFrames;
     };
 
+    RSDK::Animator panelAnimator;
+
     // ==============================
     // INSTANCE VARS
     // ==============================
-
-    int32 panelSize;
-    int32 topListID;
-    int32 topFrameID;
-    int32 botListID;
-    int32 botFrameID;
-    bool32 botAlignRight;
-    bool32 botHidden;
-    RSDK::Vector2 startPos;
-    RSDK::Vector2 size;
-    RSDK::Vector2 drawPosTop;
-    RSDK::Vector2 drawPosBottom;
-    RSDK::Hitbox hitbox;
-    RSDK::Animator topAnimator;
-    RSDK::Animator botAnimator;
-    RSDK::SpriteAnimation textFrames;
 
     // ==============================
     // EVENTS
@@ -63,8 +49,6 @@ struct UIOptionPanel : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
-
-    void DrawBG();
 
     // ==============================
     // DECLARATION

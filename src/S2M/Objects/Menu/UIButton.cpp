@@ -789,13 +789,23 @@ void UIButton::State_HandleButtonLeave()
 
 void UIButton::State_HandleButtonEnter()
 {
-    this->buttonBounceVelocity += 0x4800;
-    this->buttonBounceOffset += this->buttonBounceVelocity;
-
-    if (this->buttonBounceOffset >= -0x20000 && this->buttonBounceVelocity > 0) {
-        this->buttonBounceOffset   = 0;
-        this->buttonBounceVelocity = 0;
+    if (this->reverseVelocity == true) {
+        this->buttonBounceOffset -= this->buttonBounceVelocity;
+        if (this->buttonBounceOffset <= 0x20000 && this->buttonBounceVelocity > 0) {
+            this->buttonBounceOffset   = 0;
+            this->buttonBounceVelocity = 0;
+        }
     }
+    else {
+        this->buttonBounceOffset += this->buttonBounceVelocity;
+        if (this->buttonBounceOffset >= -0x20000 && this->buttonBounceVelocity > 0) {
+            this->buttonBounceOffset   = 0;
+            this->buttonBounceVelocity = 0;
+        }
+    }
+  
+    this->buttonBounceVelocity += 0x4800;
+
 }
 
 void UIButton::State_Selected()
@@ -896,6 +906,7 @@ void UIButton::Serialize()
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, freeBindP2);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, transition);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, stopMusic);
+    RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, reverseVelocity);
 }
 
 } // namespace GameLogic

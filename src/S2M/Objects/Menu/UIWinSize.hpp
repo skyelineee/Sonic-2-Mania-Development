@@ -29,15 +29,12 @@ struct UIWinSize : RSDK::GameObject::Entity {
     int32 selection;
     int32 prevSelection;
     int32 bgEdgeSize;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
-    int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     bool32 textVisible;
     RSDK::String text;
     int32 touchID;
     int32 maxScale;
-    RSDK::Animator unusedAnimator;
     RSDK::Animator textAnimator;
     RSDK::Animator arrowAnimatorL;
     RSDK::Animator arrowAnimatorR;

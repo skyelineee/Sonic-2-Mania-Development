@@ -39,10 +39,6 @@ void UIDiorama::Update()
         this->timer--;
         this->staticAnimator.Process();
     }
-
-    if (!this->timer) {
-        this->state.Run(this);
-    }
 }
 
 void UIDiorama::LateUpdate() {}
@@ -64,13 +60,17 @@ void UIDiorama::Draw()
             this->dioramaSize.y = 0xA20000;
             // Draw Lime BG Rect to clear the screen, ONLY draw over the already existing lime pixels
             // Extra Note: as far as I can tell this doesn't *actually* do anything, the sprite already has a lime area setup
-            Graphics::DrawRect(this->dioramaPos.x, this->dioramaPos.y, this->dioramaSize.x, this->dioramaSize.y, this->maskColor, 255, INK_MASKED,
+            Graphics::DrawRect(this->dioramaPos.x, this->dioramaPos.y, this->dioramaSize.x, this->dioramaSize.y, 0x00FF00, 255, INK_MASKED,
                                false);
         }
 
         this->inkEffect = INK_MASKED;
-        this->stateDraw.Run(this);
         this->inkEffect = INK_NONE;
+
+        if (sceneInfo->currentDrawGroup == this->drawGroup) {
+            this->inkEffect = INK_NONE;
+            this->dioramaAnimator.DrawSprite(nullptr, false);
+        }
     }
     else {
         this->staticAnimator.DrawSprite(nullptr, false);
@@ -102,340 +102,56 @@ void UIDiorama::StageLoad()
 
 void UIDiorama::ChangeDiorama(uint8 dioramaID)
 {
-    int32 ids[] = { 0x00, 0x0C, 0x0C, 0x01, 0x03, 0x0F, 0x0D, 0x0E };
-
     this->lastDioramaID = dioramaID;
-
-    uint8 bankID = 1 + (ids[this->dioramaID] >> 3);
-    paletteBank[0].Copy(bankID, 32 * ids[this->dioramaID], 224, 32);
 
     this->needsSetup = true;
 
-    int32 size = sizeof(int32) + sizeof(Vector2) + sizeof(Animator);
-    memset(this->values, 0, size * 16);
+    if (this->needsSetup) {
+        this->needsSetup = false;
+    }
 
     switch (dioramaID) {
         case UIDIORAMA_ADVENTURE:
-            this->stateDraw.Set(&UIDiorama::Draw_Adventure);
-            this->state.Set(&UIDiorama::State_Adventure);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
             break;
 
         case UIDIORAMA_TIMEATTACK:
-            this->stateDraw.Set(&UIDiorama::Draw_TimeAttack);
-            this->state.Set(&UIDiorama::State_TimeAttack);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 1);
             break;
 
         case UIDIORAMA_EXTRAS:
-            this->stateDraw.Set(&UIDiorama::Draw_Extras);
-            this->state.Set(&UIDiorama::State_Extras);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 2);
             break;
 
         case UIDIORAMA_OPTIONS:
-            this->stateDraw.Set(&UIDiorama::Draw_Options);
-            this->state.Set(&UIDiorama::State_Options);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 3);
             break;
 
         case UIDIORAMA_EXIT:
-            this->stateDraw.Set(&UIDiorama::Draw_Exit);
-            this->state.Set(&UIDiorama::State_Exit);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 4);
             break;
 
         case UIDIORAMA_BOSSRUSH:
-            this->stateDraw.Set(&UIDiorama::Draw_BossRush);
-            this->state.Set(&UIDiorama::State_BossRush);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 5);
             break;
 
         case UIDIORAMA_MUSICPLAYER:
-            this->stateDraw.Set(&UIDiorama::Draw_MusicPlayer);
-            this->state.Set(&UIDiorama::State_MusicPlayer);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 6);
             break;
 
         case UIDIORAMA_LEVELSELECT:
-            this->stateDraw.Set(&UIDiorama::Draw_LevelSelect);
-            this->state.Set(&UIDiorama::State_LevelSelect);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 7);
             break;
 
         case UIDIORAMA_EXTRALEVELS:
-            this->stateDraw.Set(&UIDiorama::Draw_ExtraLevels);
-            this->state.Set(&UIDiorama::State_ExtraLevels);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 8);
             break;
 
         case UIDIORAMA_CREDITS:
-            this->stateDraw.Set(&UIDiorama::Draw_Credits);
-            this->state.Set(&UIDiorama::State_Credits);
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 9);
             break;
 
         default: break;
-    }
-}
-
-void UIDiorama::State_Adventure()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Adventure *info = (UIDiorama_StateInfo_Adventure *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_TimeAttack()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_TimeAttack *info = (UIDiorama_StateInfo_TimeAttack *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_Extras()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor  = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_Options()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Options *info = (UIDiorama_StateInfo_Options *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_Exit()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup               = false;
-    }
-}
-
-void UIDiorama::State_BossRush()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_BossRush *info = (UIDiorama_StateInfo_BossRush *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_MusicPlayer()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_MusicPlayer *info = (UIDiorama_StateInfo_MusicPlayer *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_LevelSelect()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_LevelSelect *info = (UIDiorama_StateInfo_LevelSelect *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup = false;
-    }
-}
-
-void UIDiorama::State_ExtraLevels()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_ExtraLevels *info = (UIDiorama_StateInfo_ExtraLevels *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup          = false;
-    }
-}
-
-void UIDiorama::State_Credits()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Credits *info = (UIDiorama_StateInfo_Credits *)this->values;
-
-    if (this->needsSetup) {
-        this->maskColor = 0x00FF00;
-        this->needsSetup               = false;
-    }
-}
-
-void UIDiorama::Draw_Adventure()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Adventure *info = (UIDiorama_StateInfo_Adventure *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->ehzAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
-        info->ehzAnimator.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_TimeAttack()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_TimeAttack *info = (UIDiorama_StateInfo_TimeAttack *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator.SetAnimation(sVars->aniFrames, 0, true, 1);
-        info->tempAnimator.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_Extras()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator1.SetAnimation(sVars->aniFrames, 0, true, 3);
-        info->tempAnimator1.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_Options()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Options *info = (UIDiorama_StateInfo_Options *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator2.SetAnimation(sVars->aniFrames, 0, true, 2);
-        info->tempAnimator2.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_Exit()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator3.SetAnimation(sVars->aniFrames, 0, true, 4);
-        info->tempAnimator3.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_BossRush()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_BossRush *info = (UIDiorama_StateInfo_BossRush *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator4.SetAnimation(sVars->aniFrames, 0, true, 5);
-        info->tempAnimator4.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_MusicPlayer()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_MusicPlayer *info = (UIDiorama_StateInfo_MusicPlayer *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator5.SetAnimation(sVars->aniFrames, 0, true, 6);
-        info->tempAnimator5.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_LevelSelect()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_LevelSelect *info = (UIDiorama_StateInfo_LevelSelect *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator6.SetAnimation(sVars->aniFrames, 0, true, 7);
-        info->tempAnimator6.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_ExtraLevels()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_ExtraLevels *info = (UIDiorama_StateInfo_ExtraLevels *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator7.SetAnimation(sVars->aniFrames, 0, true, 8);
-        info->tempAnimator7.DrawSprite(&drawPos, false);
-    }
-}
-
-void UIDiorama::Draw_Credits()
-{
-    // Using this makes these states FAR more readable
-    UIDiorama_StateInfo_Credits *info = (UIDiorama_StateInfo_Credits *)this->values;
-
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
-
-    if (sceneInfo->currentDrawGroup == this->drawGroup) {
-        this->inkEffect = INK_NONE;
-        info->tempAnimator8.SetAnimation(sVars->aniFrames, 0, true, 9);
-        info->tempAnimator8.DrawSprite(&drawPos, false);
     }
 }
 

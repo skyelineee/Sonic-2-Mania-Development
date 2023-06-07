@@ -32,7 +32,90 @@ RSDK_REGISTER_OBJECT(OptionsMenu);
 
 void OptionsMenu::Update() {}
 void OptionsMenu::LateUpdate() {}
-void OptionsMenu::StaticUpdate() {}
+void OptionsMenu::StaticUpdate() 
+{
+    UIControl *control = sVars->optionsControl;
+    UIControl *dataControl = sVars->dataOptionsControl;
+
+    if (control && control->active) {
+        UIDiorama *diorama = sVars->diorama;
+        UIButton *button   = control->buttons[control->lastButtonID];
+
+        if (button) {
+            int32 selectedID = button->nameFrameID;
+
+            switch (selectedID) {
+                case 0: diorama->dioramaID = UIDiorama::UIDIORAMA_BOSSRUSH; break;
+                case 1: diorama->dioramaID = UIDiorama::UIDIORAMA_MUSICPLAYER; break;
+                case 2: diorama->dioramaID = UIDiorama::UIDIORAMA_LEVELSELECT; break;
+                case 3: diorama->dioramaID = UIDiorama::UIDIORAMA_EXTRALEVELS; break;
+                default: break;
+            }
+
+            if (button->disabled)
+                diorama->timer = 12;
+
+            for (int i = 0; i < control->buttonCount; ++i) {
+                if (control->buttons[i]) {
+                    UIButton *button = control->buttons[i];
+                    if (button->nameFrameID > selectedID) {
+                        button->position.y        = button->startPos.y + TO_FIXED(48);
+                        button->descriptionListID = 4;
+                        button->buttonListID      = 9;
+                        button->nameListID        = 11;
+                    }
+                    else if (button->nameFrameID == selectedID) {
+                        button->buttonListID      = 8;
+                        button->position.y        = button->startPos.y;
+                        button->descriptionListID = 2;
+                        button->nameListID        = 10;
+                        // big boy
+                    }
+                    else {
+                        button->buttonListID      = 9;
+                        button->nameListID        = 11;
+                        button->descriptionListID = 4;
+                        button->position.y        = button->startPos.y;
+                    }
+                }
+            }
+        }
+    }
+
+    if (dataControl && dataControl->active) {
+        UIButton *button = dataControl->buttons[dataControl->lastButtonID];
+
+        if (button) {
+            int32 selectedID = button->nameFrameID;
+
+            for (int i = 0; i < dataControl->buttonCount; ++i) {
+                if (dataControl->buttons[i]) {
+                    UIButton *button = dataControl->buttons[i];
+                    if (button->nameFrameID > selectedID) {
+                        button->position.y        = button->startPos.y + TO_FIXED(48);
+                        button->descriptionListID = 4;
+                        button->buttonListID      = 9;
+                        button->nameListID        = 13;
+                    }
+                    else if (button->nameFrameID == selectedID) {
+                        button->buttonListID      = 8;
+                        button->position.y        = button->startPos.y;
+                        button->descriptionListID = 3;
+                        button->nameListID        = 12;
+                        // big boy
+                    }
+                    else {
+                        button->buttonListID      = 9;
+                        button->nameListID        = 13;
+                        button->descriptionListID = 4;
+                        button->position.y        = button->startPos.y;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void OptionsMenu::Draw() {}
 
 void OptionsMenu::Create(void *data) {}
@@ -110,39 +193,18 @@ void OptionsMenu::Initialize()
 
     for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES))
     {
-        UIControl *controller = sVars->videoControl;
+        UIControl *controller = sVars->optionsControl;
 
         if (UIControl::ContainsPos(controller, &diorama->position)) {
             sVars->diorama = diorama;
-            diorama->parent      = sVars->videoControl;
+            diorama->parent      = sVars->optionsControl;
         }
-    }
-
-    for (auto label : GameObject::GetEntities<UIInfoLabel>(FOR_ALL_ENTITIES))
-    {
-        UIControl *controller = sVars->dataOptionsControl;
-
-        if (UIControl::ContainsPos(controller, &label->position))
-            sVars->selectDataToEraseLabel = label;
     }
 }
 
 void OptionsMenu::HandleUnlocks()
 {
     UIControl *control = sVars->dataOptionsControl;
-
-    // Time Attack Data Button
-    control->buttons[5]  = control->buttons[4];
-    control->buttonCount = 6;
-
-    UIButton *replaysButton = control->buttons[2];
-    replaysButton->invisible      = true;
-    replaysButton->visible        = false;
-
-    UIButton *allGameDataButton = control->buttons[3];
-    control->buttons[2]               = allGameDataButton;
-    allGameDataButton->position.x     = control->buttons[4]->position.x;
-    allGameDataButton->size.x         = control->buttons[4]->size.x;
 }
 
 void OptionsMenu::SetupActions()
@@ -161,7 +223,7 @@ void OptionsMenu::SetupActions()
         if (UIControl::ContainsPos(controlsControl_Win, &button->position))
             button->actionCB.Set(&OptionsMenu::KeyboardIDButton_Win_ActionCB);
 
-        if (UIControl::ContainsPos(optionsControl, &button->position) && button->nameListID == 3) {
+        if (UIControl::ContainsPos(optionsControl, &button->position) && button->nameListID == 11) {
 
             switch (button->nameFrameID) {
                 case 0: button->actionCB.Set(&OptionsMenu::VideoMenuButton_ActionCB); break;
@@ -172,9 +234,7 @@ void OptionsMenu::SetupActions()
                     if (SKU->platform == PLATFORM_DEV || SKU->platform == PLATFORM_PC)
                         button->transition = false;
                     break;
-
-                case 3: button->actionCB.Set(nullptr); break;
-                case 4: button->actionCB.Set(&OptionsMenu::DataOptionsMenuButton_ActionCB); break;
+                case 3: button->actionCB.Set(&OptionsMenu::DataOptionsMenuButton_ActionCB); break;
             }
         }
 
@@ -184,39 +244,34 @@ void OptionsMenu::SetupActions()
         if (UIControl::ContainsPos(controlsControl_Win, &button->position) && button->nameListID == 17 && button->nameFrameID == 1)
             button->actionCB.Set(&OptionsMenu::SetDefaultMappings);
 
-        if (UIControl::ContainsPos(videoControl_Win, &button->position) && button->nameListID == 17) {
+        if (UIControl::ContainsPos(videoControl_Win, &button->position) && button->nameListID == 14) {
             switch (button->nameFrameID) {
-                case 2: button->choiceChangeCB.Set(&OptionsMenu::ShaderButton_ActionCB); break;
-                case 7: button->choiceChangeCB.Set(&OptionsMenu::WindowScaleButton_ActionCB); break;
-                case 13: button->choiceChangeCB.Set(&OptionsMenu::BorderlessButton_ActionCB); break;
-                case 14: button->choiceChangeCB.Set(&OptionsMenu::FullScreenButton_ActionCB); break;
-                case 15: button->choiceChangeCB.Set(&OptionsMenu::VSyncButton_ActionCB); break;
-                case 16: button->choiceChangeCB.Set(&OptionsMenu::TripleBufferButton_ActionCB); break;
+                case 7: button->choiceChangeCB.Set(&OptionsMenu::ShaderButton_ActionCB); break;
+                case 8: button->choiceChangeCB.Set(&OptionsMenu::WindowScaleButton_ActionCB); break;
+                case 9: button->choiceChangeCB.Set(&OptionsMenu::BorderlessButton_ActionCB); break;
+                case 10: button->choiceChangeCB.Set(&OptionsMenu::FullScreenButton_ActionCB); break;
+                case 11: button->choiceChangeCB.Set(&OptionsMenu::VSyncButton_ActionCB); break;
+                case 12: button->choiceChangeCB.Set(&OptionsMenu::TripleBufferButton_ActionCB); break;
             }
         }
 
-        if (UIControl::ContainsPos(dataControl, &button->position) && button->nameListID == 18) {
+        if (UIControl::ContainsPos(dataControl, &button->position) && button->nameListID == 13) {
             switch (button->nameFrameID) {
                 case 0: button->actionCB.Set(&OptionsMenu::EraseSaveGameButton_ActionCB); break;
-                case 1: button->actionCB.Set(&OptionsMenu::EraseMedallionsButton_ActionCB); break;
-                case 2: button->actionCB.Set(&OptionsMenu::EraseTimeAttackButton_ActionCB); break;
-                case 3: button->actionCB.Set(&OptionsMenu::EraseReplaysButton_ActionCB); break;
-                case 4: button->actionCB.Set(&OptionsMenu::EraseAllButton_ActionCB); break;
+                case 1: button->actionCB.Set(&OptionsMenu::EraseTimeAttackButton_ActionCB); break;
+                case 2: button->actionCB.Set(&OptionsMenu::EraseReplaysButton_ActionCB); break;
+                case 3: button->actionCB.Set(&OptionsMenu::EraseAllButton_ActionCB); break;
             }
         }
     }
 
     for (auto slider : GameObject::GetEntities<UISlider>(FOR_ALL_ENTITIES))
     {
-        if (UIControl::ContainsPos(soundControl, &slider->position) && slider->listID == 5)
+        if (UIControl::ContainsPos(soundControl, &slider->position) && slider->listID == 17)
             slider->sliderChangedCB.Set(&OptionsMenu::UISlider_ChangedCB);
     }
 
     optionsControl->menuSetupCB.Set(&OptionsMenu::MenuSetupCB);
-
-    UIInfoLabel *label = sVars->selectDataToEraseLabel;
-    Localization::GetString(&string, Localization::SelectDataToErase);
-    UIInfoLabel::SetString(label, &string);
 
     videoControl_Win->menuUpdateCB.Set(&OptionsMenu::VideoControl_Win_MenuUpdateCB);
     videoControl_Win->yPressCB.Set(&OptionsMenu::VideoControl_Win_YPressCB);
@@ -765,30 +820,6 @@ void OptionsMenu::EraseSaveGameButton_ActionCB()
 
     Action<void> callbackYes = {};
     callbackYes.Set(&OptionsMenu::AreYouSureDlg_YesCB_EraseSaveGame);
-
-    Action<void> callbackNo = {};
-    callbackNo.Set(nullptr);
-
-    UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
-}
-
-void OptionsMenu::AreYouSureDlg_YesCB_EraseMedallions()
-{
-    UIControl *control   = OptionsMenu::sVars->dataOptionsControl;
-    control->selectionDisabled = true;
-
-    //GameProgress::ClearBSSSave();
-    SaveGame::SaveFile(OptionsMenu::EraseSaveDataCB);
-}
-
-void OptionsMenu::EraseMedallionsButton_ActionCB()
-{
-    String message = {};
-
-    Localization::GetString(&message, Localization::AreYouSureSave);
-
-    Action<void> callbackYes = {};
-    callbackYes.Set(&OptionsMenu::AreYouSureDlg_YesCB_EraseMedallions);
 
     Action<void> callbackNo = {};
     callbackNo.Set(nullptr);

@@ -153,12 +153,7 @@ int32 ManiaModeMenu::GetActiveMenu()
 {
     UIControl *control = UIControl::GetUIControl();
 
-    if (control == MainMenu::sVars->menuControl || control == ExtrasMenu::sVars->extrasControl || control == OptionsMenu::sVars->optionsControl
-        || control == OptionsMenu::sVars->videoControl || control == OptionsMenu::sVars->soundControl || control == OptionsMenu::sVars->dataOptionsControl
-        || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB || control == OptionsMenu::sVars->controlsControl_PS4
-        || control == OptionsMenu::sVars->controlsControl_XB1 || control == OptionsMenu::sVars->controlsControl_NX
-        || control == OptionsMenu::sVars->controlsControl_NXGrip || control == OptionsMenu::sVars->controlsControl_NXJoycon
-        || control == OptionsMenu::sVars->controlsControl_NXPro) {
+    if (control == MainMenu::sVars->menuControl || control == ExtrasMenu::sVars->extrasControl) {
         return MenuSetup::Main;
     }
 
@@ -169,8 +164,21 @@ int32 ManiaModeMenu::GetActiveMenu()
     }*/
 
     if (control == ManiaModeMenu::sVars->saveSelectMenu || control == ManiaModeMenu::sVars->noSaveMenu
-        || control == ManiaModeMenu::sVars->secretsMenu)
+        || control == ManiaModeMenu::sVars->secretsMenu) {
         return MenuSetup::SaveSelect;
+    }
+
+    if (control == OptionsMenu::sVars->optionsControl || control == OptionsMenu::sVars->dataOptionsControl) {
+        return MenuSetup::OptionsMain;
+    }
+
+    if (control == OptionsMenu::sVars->videoControl || control == OptionsMenu::sVars->videoControl_Windows || control == OptionsMenu::sVars->soundControl
+        || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB || control == OptionsMenu::sVars->controlsControl_PS4
+        || control == OptionsMenu::sVars->controlsControl_XB1 || control == OptionsMenu::sVars->controlsControl_NX
+        || control == OptionsMenu::sVars->controlsControl_NXGrip || control == OptionsMenu::sVars->controlsControl_NXJoycon
+        || control == OptionsMenu::sVars->controlsControl_NXPro) {
+        return MenuSetup::OptionsElse;
+    }
 
     return MenuSetup::Main;
 }
@@ -184,6 +192,8 @@ void ManiaModeMenu::ChangeMenuTrack()
         case MenuSetup::Main: trackID = 0; break;
         case MenuSetup::TimeAttack: trackID = 1; break;
         case MenuSetup::SaveSelect: trackID = 2; break;
+        case MenuSetup::OptionsMain:                   ;
+        case MenuSetup::OptionsElse: trackID = 0; break;
     }
 
     if (!Music::IsPlaying())
@@ -198,11 +208,12 @@ void ManiaModeMenu::ChangeMenuBG()
         default:
         case MenuSetup::Main:
             RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
-            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
             RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
-            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
             RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             break;
         case MenuSetup::TimeAttack:  break;
         case MenuSetup::SaveSelect: 
@@ -212,6 +223,25 @@ void ManiaModeMenu::ChangeMenuBG()
             RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = 1;
             RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
             RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = 2;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            break;
+        case MenuSetup::OptionsMain:
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = 2;
+            break;
+        case MenuSetup::OptionsElse:
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             break;
     }
 }

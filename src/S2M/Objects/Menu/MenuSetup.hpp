@@ -15,6 +15,8 @@ struct MenuSetup : RSDK::GameObject::Entity {
         Main,
         TimeAttack,
         SaveSelect,
+        OptionsMain,
+        OptionsElse,
     };
 
     // ==============================

@@ -57,7 +57,7 @@ void MainMenu::StaticUpdate()
                     if (button->nameFrameID > selectedID) {
                         button->position.y = button->startPos.y + TO_FIXED(24);
                         button->buttonFrameID = button->descriptionFrameID;
-                        button->descriptionListID = 2;
+                        button->descriptionListID = 4;
                         button->buttonListID = 1;
                         button->nameListID   = 3;
                     }
@@ -72,7 +72,7 @@ void MainMenu::StaticUpdate()
                     else {
                         button->buttonListID = 1;
                         button->nameListID    = 4;
-                        button->descriptionListID = 2;
+                        button->descriptionListID = 4;
                         button->position.y = button->startPos.y;
                         button->buttonFrameID = button->descriptionFrameID + 5;
                     }
@@ -102,11 +102,12 @@ void MainMenu::Initialize()
     }
 
     RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
-    RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 1;
+    RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
     RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
     RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
-    RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+    RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
     RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+    RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
 
    UIControl *menuControl = MainMenu::sVars->menuControl;
 

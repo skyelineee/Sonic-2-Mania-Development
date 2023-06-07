@@ -3,7 +3,6 @@
 #include "UIControl.hpp"
 #include "UIButtonPrompt.hpp"
 #include "UIDiorama.hpp"
-#include "UIInfoLabel.hpp"
 
 namespace GameLogic
 {
@@ -38,7 +37,6 @@ struct OptionsMenu : RSDK::GameObject::Entity {
         UIControl *controlsControl_NXJoycon;
         UIControl *controlsControl_NXPro;
         UIDiorama *diorama;
-        UIInfoLabel *selectDataToEraseLabel;
     };
 
     // ==============================
@@ -106,8 +104,6 @@ struct OptionsMenu : RSDK::GameObject::Entity {
     static void AreYouSureDlg_YesCB_EraseSaveGame();
     static void AreYouSureDlg_YesCB_EraseAllData();
     static void EraseSaveGameButton_ActionCB();
-    static void AreYouSureDlg_YesCB_EraseMedallions();
-    static void EraseMedallionsButton_ActionCB();
     static void AreYouSureDlg_YesCB_EraseTimeAttack();
     static void EraseTimeAttackButton_ActionCB();
     static void AreYouSureDlg_YesCB_EraseReplays();

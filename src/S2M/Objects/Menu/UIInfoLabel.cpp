@@ -69,14 +69,15 @@ void UIInfoLabel::DrawSprites()
     drawPos.x = this->position.x;
     drawPos.y = this->position.y;
     if (sceneInfo->inEditor) {
-        this->textAnimator.SetAnimation(UIInfoLabel::sVars->aniFrames, 12, true, 2);
+        this->textAnimator.SetAnimation(&UIInfoLabel::sVars->aniFrames, 12, true, 2);
         drawPos.y -= 0x40000;
         this->textAnimator.DrawSprite(&drawPos, false);
     }
     else {
         drawPos.y -= 0x10000;
         drawPos.x -= this->text.GetWidth(UIWidgets::sVars->fontFrames, 0, 0, this->text.length, 0) << 15;
-        this->textAnimator.DrawString(&drawPos, &this->text, 0, this->text.length, 0, 0, 0, 0);
+        //this->textAnimator.DrawString(&drawPos, &this->text, 0, this->text.length, 0, 0, 0, 0);
+        RSDKTable->DrawText(&this->textAnimator, &drawPos, &this->text, 0, this->text.length, 0, 0, 0, 0, 0);
     }
 }
 

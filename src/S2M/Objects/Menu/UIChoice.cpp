@@ -59,6 +59,8 @@ void UIChoice::Draw()
     if (this->textVisible) {
         drawPos.x = this->buttonBounceOffset + this->position.x;
 
+        UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, size, this->size.y >> 16, this->bgEdgeSize, 0x00, 0x00, 0x00);
+
         switch (this->align) {
             case UIButton::ALIGN_LEFT: drawPos.x += -0x60000 - (this->size.x >> 1); break;
 
@@ -78,12 +80,12 @@ void UIChoice::Draw()
     UIButton *parent = (UIButton *)this->parent;
     if (this->arrowWidth > 0 && this->isSelected && !(this->disabled || parent->disabled)) {
         drawPos.x = this->buttonBounceOffset + this->position.x;
-        drawPos.y = this->position.y - TO_FIXED(8);
+        drawPos.y = this->position.y;
         drawPos.x -= this->arrowWidth << 15;
         this->leftArrowAnimator.DrawSprite(&drawPos, false);
 
         drawPos.x = this->buttonBounceOffset + this->position.x;
-        drawPos.y = this->position.y - TO_FIXED(8);
+        drawPos.y = this->position.y;
         drawPos.x += this->arrowWidth << 15;
         this->rightArrowAnimator.DrawSprite(&drawPos, false);
     }
@@ -111,7 +113,7 @@ void UIChoice::Create(void *data)
     }
 }
 
-void UIChoice::StageLoad() { sVars->aniFrames.Load("UI/SaveSelectNEW.bin", SCOPE_STAGE); }
+void UIChoice::StageLoad() { sVars->aniFrames.Load("UI/UIButtons.bin", SCOPE_STAGE); }
 
 void UIChoice::SetChoiceActive(UIChoice *choice)
 {

@@ -16,11 +16,6 @@ RSDK_REGISTER_OBJECT(UISlider);
 
 void UISlider::Update() 
 {
-    if (!this->textFrames.Matches(&UIWidgets::sVars->textFrames)) {
-        this->textAnimator.SetAnimation(UIWidgets::sVars->textFrames, this->listID, true, this->frameID);
-        this->textFrames = UIWidgets::sVars->textFrames;
-    }
-
     this->touchPosOffsetS.y = this->buttonBounceOffset;
     this->touchPosOffsetS.x = 0x7A0000 + this->buttonBounceOffset;
 
@@ -38,7 +33,6 @@ void UISlider::Update()
 
     if (this->state.Matches(&UISlider::State_HandleButtonEnter) && (!control->state.Matches(&UIControl::ProcessInputs) || control->buttonID != id)) {
         this->isSelected         = false;
-        this->textBounceOffset   = 0;
         this->buttonBounceOffset = 0;
 
         if (this->isSelected) {
@@ -83,11 +77,10 @@ void UISlider::Create(void *data)
 
     this->textVisible = true;
     this->sliderPos   = (UISLIDER_MAX - UISLIDER_MIN) / 2;
-    this->textAnimator.SetAnimation(UIWidgets::sVars->textFrames, this->listID, true, this->frameID);
-    this->textFrames = UIWidgets::sVars->textFrames;
+    this->textAnimator.SetAnimation(&sVars->aniFrames, this->listID, true, this->frameID);
 }
 
-void UISlider::StageLoad() {}
+void UISlider::StageLoad() { sVars->aniFrames.Load("UI/UIButtons.bin", SCOPE_STAGE); }
 
 void UISlider::DrawBGShapes()
 {
@@ -99,7 +92,6 @@ void UISlider::DrawBGShapes()
 
     if (this->textVisible) {
         drawPos = this->position;
-        drawPos.y += this->textBounceOffset;
         drawPos.x += -0x60000 - (this->size.x >> 1);
         this->textAnimator.DrawSprite(&drawPos, false);
     }
@@ -112,22 +104,19 @@ void UISlider::DrawSlider()
     int32 sliderPos = (((34048 * this->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
     int32 drawX2    = drawX - ((0x7A0000 - sliderPos) >> 1);
 
-    UIWidgets::DrawParallelogram(drawX - this->buttonBounceOffset, this->position.y - this->buttonBounceOffset, 122, 12, 12, 0xF0, 0xF0, 0xF0);
-    UIWidgets::DrawParallelogram(drawX + this->buttonBounceOffset, this->buttonBounceOffset + this->position.y, 122, 12, 12, 0x00, 0x00, 0x00);
-    UIWidgets::DrawParallelogram(drawX2 + this->buttonBounceOffset, this->buttonBounceOffset + this->position.y, sliderPos >> 16, 12, 12, 0xE8, 0x28,
-                                0x58);
+    UIWidgets::DrawParallelogram(drawX + this->buttonBounceOffset, this->position.y, 122, 12, 12, 0x00, 0x00, 0x00);
+    UIWidgets::DrawParallelogram(drawX2 + this->buttonBounceOffset, this->position.y, sliderPos >> 16, 12, 12, 0xE7, 0x38,
+                                0x5A);
 
     drawPos.x = drawX2 + (sliderPos >> 1) + this->buttonBounceOffset + 0x60000;
-    drawPos.y = this->buttonBounceOffset + this->position.y;
+    drawPos.y = this->position.y;
+ 
+    drawPos.x += 0x30000;
+    drawPos.y += 0x30000;
+    UIWidgets::DrawRectOutline_Blended(drawPos.x, drawPos.y, 14, 24);
 
-    if (this->isSelected) {
-        drawPos.x += 0x30000;
-        drawPos.y += 0x30000;
-        UIWidgets::DrawRectOutline_Blended(drawPos.x, drawPos.y, 14, 24);
-
-        drawPos.x -= 0x30000;
-        drawPos.y -= 0x30000;
-    }
+    drawPos.x -= 0x30000;
+    drawPos.y -= 0x30000;
 
     Graphics::DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
 
@@ -268,10 +257,8 @@ void UISlider::ButtonEnterCB()
 {
     if (!this->isSelected) {
         this->isSelected           = true;
-        this->textBounceOffset     = 0;
         this->buttonBounceOffset   = 0;
-        this->textBounceVelocity   = -0x20000;
-        this->buttonBounceVelocity = -0x20000;
+        this->buttonBounceVelocity = -0x25000;
         this->state.Set(&UISlider::State_HandleButtonEnter);
     }
 }
@@ -293,52 +280,24 @@ bool32 UISlider::CheckSelectedCB() { return false; }
 
 void UISlider::State_HandleButtonLeave()
 {
-    if (this->textBounceOffset) {
-        int32 dist = -(this->textBounceOffset / abs(this->textBounceOffset));
-        this->textBounceOffset += dist << 15;
-
-        if (dist < 0) {
-            if (this->textBounceOffset < 0) {
-                this->textBounceOffset = 0;
-            }
-            else if (dist > 0 && this->textBounceOffset > 0)
-                this->textBounceOffset = 0;
-        }
-        else if (dist > 0 && this->textBounceOffset > 0)
-            this->textBounceOffset = 0;
-    }
-
     if (this->buttonBounceOffset) {
-        int32 dist = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
-        this->buttonBounceOffset += dist << 16;
+        int32 offset = -(this->buttonBounceOffset / abs(this->buttonBounceOffset));
+        this->buttonBounceOffset += offset << 16;
 
-        if (dist < 0) {
-            if (this->buttonBounceOffset < 0) {
-                this->buttonBounceOffset = 0;
-            }
-            else if (dist > 0 && this->buttonBounceOffset > 0)
-                this->buttonBounceOffset = 0;
-        }
-        else if (dist > 0 && this->buttonBounceOffset > 0)
+        if (offset < 0 && this->buttonBounceOffset < 0)
+            this->buttonBounceOffset = 0;
+        else if (offset > 0 && this->buttonBounceOffset > 0)
             this->buttonBounceOffset = 0;
     }
 }
 
 void UISlider::State_HandleButtonEnter()
 {
-    this->textBounceVelocity += 0x4000;
-    this->textBounceOffset += this->textBounceVelocity;
-
-    if (this->textBounceOffset >= 0 && this->textBounceVelocity > 0) {
-        this->textBounceOffset   = 0;
-        this->textBounceVelocity = 0;
-    }
-
     this->buttonBounceVelocity += 0x4800;
     this->buttonBounceOffset += this->buttonBounceVelocity;
 
     if (this->buttonBounceOffset >= -0x20000 && this->buttonBounceVelocity > 0) {
-        this->buttonBounceOffset   = -0x20000;
+        this->buttonBounceOffset   = 0;
         this->buttonBounceVelocity = 0;
     }
 }

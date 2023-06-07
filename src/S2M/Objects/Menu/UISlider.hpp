@@ -23,7 +23,7 @@ struct UISlider : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        RSDK::SpriteAnimation aniFrames; // prolly used in-editor
+        RSDK::SpriteAnimation aniFrames;
         Entity *activeEntity;
     };
 
@@ -36,9 +36,7 @@ struct UISlider : RSDK::GameObject::Entity {
     int32 frameID;
     RSDK::Vector2 size;
     int32 bgEdgeSize;
-    int32 textBounceOffset;
     int32 buttonBounceOffset;
-    int32 textBounceVelocity;
     int32 buttonBounceVelocity;
     int32 sliderPos;
     bool32 textVisible;
@@ -46,7 +44,6 @@ struct UISlider : RSDK::GameObject::Entity {
     int32 sliderPosTouch;
     RSDK::StateMachine<UISlider> sliderChangedCB;
     RSDK::Animator textAnimator;
-    RSDK::SpriteAnimation textFrames;
 
     // ==============================
     // EVENTS
