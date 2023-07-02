@@ -42,7 +42,6 @@ struct UISaveSlot : RSDK::GameObject::Entity {
     bool32 currentlySelected;
     int32 buttonBounceOffset;
     int32 buttonBounceVelocity;
-    int32 fxRadius;
     RSDK::Animator uiAnimator;
     RSDK::Animator fileAnimator;
     RSDK::Animator livesAnimator;

@@ -29,7 +29,7 @@ void UIOptionPanel::Create(void *data)
     this->updateRange.x = 0x800000;
     this->updateRange.y = 0x800000;
 
-    this->panelAnimator.SetAnimation(&sVars->aniFrames, 2, true, 0);
+    this->panelAnimator.SetAnimation(&sVars->aniFrames, 2, true, this->frameID);
 }
 
 void UIOptionPanel::StageLoad() { sVars->aniFrames.Load("UI/BGIcons.bin", SCOPE_STAGE); }
@@ -40,6 +40,6 @@ void UIOptionPanel::EditorDraw() { UIOptionPanel::Draw(); }
 void UIOptionPanel::EditorLoad() {}
 #endif
 
-void UIOptionPanel::Serialize() {}
+void UIOptionPanel::Serialize() { RSDK_EDITABLE_VAR(UIOptionPanel, VAR_INT32, frameID); }
 
 } // namespace GameLogic

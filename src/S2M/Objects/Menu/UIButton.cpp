@@ -23,7 +23,7 @@ RSDK_REGISTER_OBJECT(UIButton);
 void UIButton::Update()
 {
     this->buttonAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, this->buttonListID, true, this->buttonFrameID);
-    this->nameAnimator.SetAnimation(&UIWidgets::sVars->nameFrames, this->nameListID, true, this->nameFrameID);
+    this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, this->nameListID, true, this->nameFrameID);
     this->descriptionAnimator.SetAnimation(&UIWidgets::sVars->descFrames, this->descriptionListID, true, this->descriptionFrameID);
     this->touchPosSizeS.x   = this->size.x;
     this->touchPosOffsetS.x = 0;
@@ -31,14 +31,12 @@ void UIButton::Update()
     this->touchPosSizeS.x += 3 * this->size.y;
     this->touchPosSizeS.y = this->size.y + 0x60000;
 
-    if (!this->nameFrames.Matches(UIWidgets::sVars->nameFrames) || this->startNameListID != this->nameListID || this->startNameFrameID != this->nameFrameID
+    if (!this->buttonFrames.Matches(UIWidgets::sVars->buttonFrames) || this->startNameListID != this->nameListID || this->startNameFrameID != this->nameFrameID
         || this->isDisabled != this->disabled) {
         if (this->disabled)
-            this->nameAnimator.SetAnimation(&UIWidgets::sVars->nameFrames, 7, true, 0);
+            this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, 7, true, 0);
         else
-            this->nameAnimator.SetAnimation(&UIWidgets::sVars->nameFrames, this->nameListID, true, this->nameFrameID);
-
-        this->nameFrames   = UIWidgets::sVars->nameFrames;
+            this->buttonFrames   = UIWidgets::sVars->buttonFrames;
         this->startNameListID  = this->nameListID;
         this->startNameFrameID = this->nameFrameID;
         this->isDisabled   = this->disabled;
@@ -65,6 +63,17 @@ void UIButton::StaticUpdate() {}
 void UIButton::Draw()
 {
     Vector2 drawPos;
+    int32 width = (this->size.x + this->size.y) >> 16;
+
+    drawPos.x = this->buttonBounceOffset + this->position.x;
+    drawPos.y = this->position.y;
+    UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, width, this->size.y >> 16, this->bgEdgeSize, 0x00, 0x00, 0x00);
+
+    if (this->isSelected && this->visibleArrow) {
+        drawPos.x = this->buttonBounceOffset + this->position.x;
+        drawPos.y = this->position.y - TO_FIXED(24);
+        UIWidgets::sVars->arrowDownAnimator.DrawSprite(&drawPos, false);
+    }
 
     if (this->nameVisible) {
         drawPos.x = this->buttonBounceOffset + this->position.x;
@@ -120,7 +129,6 @@ void UIButton::Create(void *data)
         this->checkSelectedCB.Set(&UIButton::CheckSelectedCB);
 
         this->nameVisible = true;
-        this->nameFrames   = UIWidgets::sVars->nameFrames;
         this->buttonFrames = UIWidgets::sVars->buttonFrames;
         this->startNameListID  = this->nameListID;
         this->startNameFrameID = this->nameFrameID;
@@ -691,6 +699,8 @@ bool32 UIButton::CheckSelectedCB()
 
 void UIButton::ButtonEnterCB()
 {
+    this->isSelected = true;
+
     if (!this->state.Matches(&UIButton::State_HandleButtonEnter)) {
         this->buttonBounceOffset   = 0;
         this->buttonBounceVelocity = -0x25000;
@@ -718,6 +728,8 @@ void UIButton::ButtonEnterCB()
 
 void UIButton::ButtonLeaveCB()
 {
+    this->isSelected = false;
+
     this->state.Set(&UIButton::State_HandleButtonLeave);
 
     if (UIChoice::sVars) {
@@ -832,15 +844,14 @@ void UIButton::EditorDraw()
     int32 sizeY = this->size.y;
 
     if (this->disabled)
-        this->nameAnimator.SetAnimation(&UIWidgets::sVars->nameFrames, 7, true, 0);
+        this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, 7, true, 0);
     else
-        this->nameAnimator.SetAnimation(&UIWidgets::sVars->nameFrames, this->nameListID, true, this->nameFrameID);
+        this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, this->nameListID, true, this->nameFrameID);
 
-    this->nameFrames   = UIWidgets::sVars->nameFrames;
+    this->buttonFrames   = UIWidgets::sVars->buttonFrames;
     this->startNameListID  = this->nameListID;
     this->startNameFrameID = this->nameFrameID;
 
-    this->buttonFrames       = UIWidgets::sVars->buttonFrames;
     this->startButtonListID  = this->buttonListID;
     this->startButtonFrameID = this->buttonFrameID;
 
@@ -878,7 +889,6 @@ void UIButton::EditorDraw()
 void UIButton::EditorLoad()
 {
     UIWidgets::sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
-    UIWidgets::sVars->nameFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
     UIWidgets::sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, align);
@@ -907,6 +917,7 @@ void UIButton::Serialize()
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, transition);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, stopMusic);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, reverseVelocity);
+    RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, visibleArrow);
 }
 
 } // namespace GameLogic

@@ -26,14 +26,6 @@ struct UIButtonPrompt : RSDK::GameObject::Entity {
         UIBUTTONPROMPT_KEYBOARD_SP,
     };
 
-    enum UIButtonPromptAnchors {
-        UIBUTTONPROMPT_ANCHOR_NONE,
-        UIBUTTONPROMPT_ANCHOR_TOPLEFT,
-        UIBUTTONPROMPT_ANCHOR_TOPRIGHT,
-        UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT,
-        UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT,
-    };
-
     enum UIButtonPromptButtons {
         UIBUTTONPROMPT_BUTTON_A,
         UIBUTTONPROMPT_BUTTON_B,
@@ -63,8 +55,6 @@ struct UIButtonPrompt : RSDK::GameObject::Entity {
     RSDK::Vector2 startPos;
     int32 promptID;
     int32 buttonID;
-    uint8 headingAnchor;
-    int32 unused;
     int32 prevPrompt;
     int32 prevButton;
     int32 mappings;

@@ -27,7 +27,7 @@ void GameOver::Draw()
     Vector2 drawPos;
     Player *player = GameObject::Get<Player>(sceneInfo->currentScreenID + Player::sVars->playerCount);
 
-    if (globals->gameMode != MODE_COMPETITION || sceneInfo->currentScreenID == this->playerID) {
+    if (sceneInfo->currentScreenID == this->playerID) {
         // Game/Time Over 
         drawPos.x = this->gameOverPos.x;
         drawPos.y = this->gameOverPos.y - 120;
@@ -79,18 +79,13 @@ void GameOver::State_MoveIn()
     }
 
     if (this->timer == 0) {
-        if (globals->gameMode != MODE_COMPETITION) {
-            Music::ClearMusicStack();
-            Music::PlayOnFade(Music::TRACK_GAMEOVER, 0.025f);
-        }
-        else {
-            // removed
-        }
+        Music::ClearMusicStack();
+        Music::PlayOnFade(Music::TRACK_GAMEOVER, 0.025f);
     }
 
     if (++this->timer == 120) {
         this->timer = 0;
-        if (globals->gameMode == MODE_COMPETITION || Zone::sVars->gotTimeOver)
+        if (Zone::sVars->gotTimeOver)
             this->state.Set(&GameOver::State_WaitComp);
         else
             this->state.Set(&GameOver::State_Wait);
@@ -105,7 +100,7 @@ void GameOver::State_Wait()
 
     ++this->timer;
 
-    int32 id = globals->gameMode == MODE_COMPETITION ? (this->playerID + 1) : Input::INPUT_NONE;
+    int32 id = 4 ? (this->playerID + 1) : Input::INPUT_NONE;
 
     if (controllerInfo[id].keyA.press || controllerInfo[id].keyB.press || controllerInfo[id].keyC.press || controllerInfo[id].keyX.press
         || controllerInfo[id].keyStart.press)
@@ -134,10 +129,7 @@ void GameOver::State_MoveOut()
     if (this->timer == 90) {
         this->timer = 0;
 
-        if (globals->gameMode == MODE_COMPETITION) {
-            // TODO: ... maybe
-        }
-        else if (this->animator.animationID != 6) {
+        if (this->animator.animationID != 6) {
             StarPost::sVars->storedMilliseconds = 0;
             StarPost::sVars->storedSeconds      = 0;
             StarPost::sVars->storedMinutes      = 0;

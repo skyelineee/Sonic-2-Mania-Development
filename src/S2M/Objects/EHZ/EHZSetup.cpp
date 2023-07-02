@@ -40,24 +40,26 @@ void EHZSetup::StageLoad()
     Animals::sVars->animalTypes[0] = Animals::Flicky;
     Animals::sVars->animalTypes[1] = Animals::Ricky;
 
-    if (Zone::sVars->actID) {
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        if (Zone::sVars->actID) {
 
-        if (globals->atlEnabled) {
-            if (!CutsceneRules::CheckStageReload())
-                EHZSetup::HandleActTransition();
+            if (globals->atlEnabled) {
+                if (!CutsceneRules::CheckStageReload())
+                    EHZSetup::HandleActTransition();
+            }
+
+            if (CutsceneRules::CheckAct2()) {
+                Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct2);
+            }
         }
-
-        if (CutsceneRules::CheckAct2()) {
-            Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct2);
+        else {
+            if (CutsceneRules::CheckAct1()) {
+                Zone::sVars->shouldRecoverPlayers = true;
+                Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
+            }
         }
-
     }
-    else {
-        if (CutsceneRules::CheckAct1()) {
-            Zone::sVars->shouldRecoverPlayers = true;
-            Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
-        }
-    }
+
     sVars->background = SceneLayer::GetTileLayer(0);
     for (int32 i = 0; i < 1024; ++i) {
         sVars->background->deformationData[i] = sVars->deformation[i & 63];

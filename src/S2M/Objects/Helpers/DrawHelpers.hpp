@@ -40,6 +40,7 @@ struct DrawHelpers : RSDK::GameObject::Entity {
     static void DrawHitboxOutline(int32 x, int32 y, RSDK::Hitbox *hitbox, uint8 direction, uint32 color);
     static void DrawPath(RSDK::GameObject::Entity *entity, RSDK::Hitbox *hitbox, uint32 color);
     static void DrawArrowAdditive(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color);
+    static void DrawIsocelesTriangle(int32 x1, int32 y1, int32 x2, int32 y2, int32 edgeSize, uint32 color, uint32 inkEffect, uint32 alpha);
     static void DrawLine(RSDK::Vector2 position, RSDK::Vector2 targetPos, color color);
     static void DrawCross(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 color);
     static void Load();

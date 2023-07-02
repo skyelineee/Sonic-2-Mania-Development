@@ -168,7 +168,7 @@ void UIDialog::AddButton(uint8 frame, UIDialog *dialog, RSDK::Action<void> callb
         button->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
         button->position.y = (screenInfo->position.y + screenInfo->center.y) << 16;
         button->nameAnimator.SetAnimation(&UIWidgets::sVars->textFrames, 9, true, frame);
-        button->nameFrames = UIWidgets::sVars->textFrames;
+        button->buttonFrames = UIWidgets::sVars->textFrames;
 
         if (frame == DIALOG_CONTINUE)
             button->size.x = 0x640000;

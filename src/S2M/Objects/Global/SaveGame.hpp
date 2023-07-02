@@ -112,6 +112,8 @@ struct SaveGame : RSDK::GameObject::Entity {
     static void ClearRestartData();
     static void StoreStageState();
     static void SavePlayerState();
+    static void LoadPlayerState();
+    static void ResetPlayerState();
     static void LoadGameState();
     static void SaveGameState();
     static bool32 GetEmeralds(EmeraldCheckTypes type);

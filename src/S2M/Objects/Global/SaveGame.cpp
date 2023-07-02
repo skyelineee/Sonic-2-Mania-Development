@@ -12,6 +12,7 @@
 #include "ActClear.hpp"
 #include "Menu/UISaveSlot.hpp"
 #include "Helpers/GameProgress.hpp"
+#include "Helpers/TimeAttackData.hpp"
 
 #include "Helpers/LogHelpers.hpp"
 
@@ -252,8 +253,8 @@ void SaveGame::SaveLoadedCB(bool32 success)
         GameProgress::DumpProgress();
     }
 
-    /*if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
-        TimeAttackData_LoadTimeAttackDB(NULL);*/
+    if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE)
+        TimeAttackData::LoadDB(nullptr);
 }
 
 void SaveGame::SaveProgress()
@@ -378,6 +379,36 @@ void SaveGame::SavePlayerState()
     globals->restartRings    = player1->rings;
     globals->restart1UP      = player1->ringExtraLife;
     globals->restartPowerups = player1->shield | (player1->hyperRing << 6);
+}
+
+void SaveGame::LoadPlayerState()
+{
+    sceneInfo->milliseconds = globals->restartMilliseconds;
+    sceneInfo->seconds      = globals->restartSeconds;
+    sceneInfo->minutes      = globals->restartMinutes;
+
+    Player::sVars->rings         = globals->restartRings;
+    Player::sVars->ringExtraLife = globals->restart1UP;
+    Player::sVars->powerups      = globals->restartPowerups;
+
+    globals->restartRings    = 0;
+    globals->restart1UP      = 100;
+    globals->restartPowerups = 0;
+}
+void SaveGame::ResetPlayerState()
+{
+    globals->restartMilliseconds = 0;
+    globals->restartSeconds      = 0;
+    globals->restartMinutes      = 0;
+    globals->restartRings        = 0;
+    globals->restart1UP          = 0;
+    globals->restartPowerups     = 0;
+
+    if (Player::sVars) {
+        Player::sVars->rings         = globals->restartRings;
+        Player::sVars->ringExtraLife = globals->restart1UP;
+        Player::sVars->powerups      = globals->restartPowerups;
+    }
 }
 
 void SaveGame::LoadGameState()

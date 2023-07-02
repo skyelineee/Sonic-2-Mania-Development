@@ -64,15 +64,6 @@ void HP_Message::StageLoad()
         if (unicodeChar <= 9) 
             sVars->numFrames[unicodeChar] = f;
     }
-
-    if (globals->gameMode == MODE_COMPETITION) {
-        for (auto message : GameObject::GetEntities<HP_Message>(FOR_ALL_ENTITIES)) {
-            if (message->type == HP_Message::StartMessage) {
-                Stage::SetEngineState(ENGINESTATE_PAUSED);
-                break;
-            }
-        }
-    }
 }
 
 void HP_Message::SetMessage(void (HP_Message::*state)(), int32 number, int32 duration, bool32 resetRings, ...)
@@ -277,17 +268,10 @@ void HP_Message::State_InitStartMessage()
     this->charAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
 
     this->timer = 256;
-    if (globals->gameMode == MODE_COMPETITION) {
-        // this->vsReady       = false;
-        // this->sentReadyFlag = true;
-        this->state.Set(&HP_Message::State_StartMessageDelay);
-    }
-    else {
-        // this->vsReady       = true;
-        // this->sentReadyFlag = false;
+    // this->vsReady       = true;
+    // this->sentReadyFlag = false;
 
-        this->state.Set(&HP_Message::State_StartMessageStartFadeIn);
-    }
+    this->state.Set(&HP_Message::State_StartMessageStartFadeIn);
 }
 void HP_Message::State_StartMessageDelay()
 {
@@ -295,23 +279,6 @@ void HP_Message::State_StartMessageDelay()
 
     if (this->timer++ >= 256 + 15) {
         // SendEntity(this, false);
-
-        if (globals->gameMode == MODE_COMPETITION) {
-            // if (!ReceiveValue) {
-            //     this->vsReady = true;
-            // }
-            // else {
-            //     HP_Message *buffer = GameObject::Get<HP_Message>(0x400);
-            //     ReceiveEntity(buffer, true);
-            //     this->vsReady = buffer->sentReadyFlag;
-            //     buffer->Destroy();
-            // }
-            //
-            // if (this->vsReady) {
-            //     this->timer = 256;
-            //     this->state.Set(&HP_Message::State_StartMessageSendDelay);
-            // }
-        }
     }
 }
 void HP_Message::State_StartMessageSendDelay()
@@ -332,14 +299,6 @@ void HP_Message::State_StartMessageStartFadeIn()
     Stage::SetEngineState(ENGINESTATE_REGULAR);
     this->state.Set(&HP_Message::State_StartMessageFadeIn);
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        HP_Message *message = GameObject::Get<HP_Message>(SLOT_HP_MESSAGE);
-        message->Reset(HP_Message::sVars->classID, 0);
-
-        message->position.y = TO_FIXED(116);
-        message->SetMessage(&HP_Message::State_RingReminder, 0, 120, false, "PLAYER & PLAYER", nullptr);
-    }
-
     Music::PlayTrack(Music::TRACK_STAGE);
 }
 void HP_Message::State_StartMessageFadeIn()
@@ -350,10 +309,7 @@ void HP_Message::State_StartMessageFadeIn()
         this->timer -= 8;
     }
     else {
-        if (globals->gameMode == MODE_COMPETITION)
-            this->position.y = -TO_FIXED(75);
-        else
-            this->position.y = -TO_FIXED(15);
+        this->position.y = -TO_FIXED(15);
 
         this->charAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
         this->state.Set(&HP_Message::State_StartMessageEnterMessage);
@@ -466,16 +422,10 @@ void HP_Message::State_StartMessageSetupNextMsg()
         HP_Message *message = GameObject::Get<HP_Message>(SLOT_HP_MESSAGE);
         message->Reset(HP_Message::sVars->classID, 0);
 
-        if (globals->gameMode == MODE_COMPETITION) {
-            message->position.y = TO_FIXED(116);
-            message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, false, "MOST RINGS WINS!", nullptr);
-        }
-        else {
-            message->position.y = TO_FIXED(116);
-            message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
-                                "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
-            message->stateDraw.Set(&HP_Message::Draw_GetRings);
-        }
+        message->position.y = TO_FIXED(116);
+        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
+                            "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
+        message->stateDraw.Set(&HP_Message::Draw_GetRings);
 
         this->Destroy();
     }
@@ -560,14 +510,6 @@ void HP_Message::Draw_Fade()
     ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
     Graphics::FillScreen(this->fadeColor, this->timer, this->timer, this->timer);
-
-    if (globals->gameMode == MODE_COMPETITION) {
-        Vector2 drawPos = screen->size;
-        drawPos.x       = TO_FIXED(drawPos.x);
-        drawPos.y       = TO_FIXED(drawPos.y);
-
-        this->charAnimator.DrawSprite(&drawPos, true);
-    }
 }
 
 #if RETRO_INCLUDE_EDITOR

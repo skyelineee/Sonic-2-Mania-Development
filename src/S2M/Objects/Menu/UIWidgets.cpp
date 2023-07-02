@@ -22,6 +22,10 @@ void UIWidgets::StaticUpdate()
     sVars->timer &= 0x7FFF;
 
     sVars->buttonColor = sVars->buttonColors[(sVars->timer >> 1) & 0xF];
+
+    sVars->arrowRightAnimator.Process();
+    sVars->arrowLeftAnimator.Process();
+    sVars->arrowDownAnimator.Process();
 }
 void UIWidgets::Draw() {}
 
@@ -33,14 +37,14 @@ void UIWidgets::StageLoad()
 
     sVars->uiFrames.Load("UI/UIElements.bin", SCOPE_STAGE);
     sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
-    sVars->nameFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
-    sVars->saveSelFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
     sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
+    sVars->timeAttackFrames.Load("UI/TimeAttack.bin", SCOPE_STAGE);
 
     UIWidgets::ApplyLanguage();
-    sVars->frameAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
-    sVars->arrowsAnimator.SetAnimation(&sVars->uiFrames, 2, true, 0);
+    sVars->arrowRightAnimator.SetAnimation(&sVars->uiFrames, 0, true, 0);
+    sVars->arrowLeftAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
+    sVars->arrowDownAnimator.SetAnimation(&sVars->uiFrames, 2, true, 0);
 
     sVars->sfxBleep.Get("Global/MenuBleep.wav");
     sVars->sfxAccept.Get("Global/MenuAccept.wav");
@@ -239,21 +243,6 @@ void UIWidgets::DrawParallelogram(int32 x, int32 y, int32 width, int32 height, i
     }
 }
 
-void UIWidgets::DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)
-{
-    Vector2 drawPos;
-    drawPos.x = x;
-    drawPos.y = y;
-
-    UIWidgets::sVars->arrowsAnimator.frameID = 2;
-    drawPos.y -= arrowDist << 15;
-    sVars->arrowsAnimator.DrawSprite(&drawPos, false);
-
-    UIWidgets::sVars->arrowsAnimator.frameID = 3;
-    drawPos.y += arrowDist << 16;
-    sVars->arrowsAnimator.DrawSprite(&drawPos, false);
-}
-
 void UIWidgets::DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
@@ -261,13 +250,11 @@ void UIWidgets::DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
     drawPos.x = x;
     drawPos.y = y;
 
-    UIWidgets::sVars->arrowsAnimator.frameID = 0;
     drawPos.x -= arrowDist >> 1;
-    sVars->arrowsAnimator.DrawSprite(&drawPos, false);
+    sVars->arrowLeftAnimator.DrawSprite(&drawPos, false);
 
-    UIWidgets::sVars->arrowsAnimator.frameID = 1;
     drawPos.x += arrowDist;
-    sVars->arrowsAnimator.DrawSprite(&drawPos, false);
+    sVars->arrowRightAnimator.DrawSprite(&drawPos, false);
 }
 
 Vector2 UIWidgets::DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor)
@@ -295,7 +282,7 @@ void UIWidgets::DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 m
     drawPos.x = x;
     drawPos.y = y + TO_FIXED(2);
 
-    arrowsAnimator.SetAnimation(&sVars->saveSelFrames, 9, true, 9);
+    arrowsAnimator.SetAnimation(&sVars->timeAttackFrames, 10, true, 0);
     arrowsAnimator.DrawSprite(&drawPos, false);
 
     drawPos.x += TO_FIXED(16);
@@ -317,7 +304,7 @@ void UIWidgets::DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 m
         if (!strBuf[i])
             break;
 
-        animator.SetAnimation(&sVars->saveSelFrames, 8, true, (uint8)(strBuf[i] - '0'));
+        animator.SetAnimation(&sVars->timeAttackFrames, 9, true, (uint8)(strBuf[i] - '0'));
         animator.DrawSprite(&drawPos, false);
 
         drawPos.x += TO_FIXED(8);
@@ -330,12 +317,15 @@ void UIWidgets::EditorDraw() {}
 void UIWidgets::EditorLoad()
 {
     sVars->uiFrames.Load("UI/UIElements.bin", SCOPE_STAGE);
-    sVars->saveSelFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
+    sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
-    sVars->textFrames.Load("UI/TextEN.bin", SCOPE_STAGE);
+    sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
+    sVars->timeAttackFrames.Load("UI/TimeAttack.bin", SCOPE_STAGE);
 
-    sVars->frameAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
-    sVars->arrowsAnimator.SetAnimation(&sVars->uiFrames, 2, true, 0);
+    sVars->arrowRightAnimator.SetAnimation(&sVars->uiFrames, 0, true, 0);
+    sVars->arrowLeftAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
+    sVars->arrowDownAnimator.SetAnimation(&sVars->uiFrames, 2, true, 0);
+
 
     sVars->buttonColor = 0xF0F0F0;
 }

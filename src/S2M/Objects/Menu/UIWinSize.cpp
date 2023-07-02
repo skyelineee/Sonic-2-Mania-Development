@@ -37,6 +37,8 @@ void UIWinSize::Update()
         UIWinSize::SetChoiceInactive(this);
 
     this->visible = true;
+    this->arrowAnimatorR.Process();
+    this->arrowAnimatorL.Process();
 }
 
 void UIWinSize::LateUpdate() {}
@@ -101,8 +103,8 @@ void UIWinSize::Create(void *data)
         this->processButtonCB.Set(&UIWinSize::ProcessButtonCB);
         this->touchCB.Set(&UIWinSize::ProcessTouchCB);
 
-        this->arrowAnimatorL.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 0);
-        this->arrowAnimatorR.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 1);
+        this->arrowAnimatorR.SetAnimation(&UIWidgets::sVars->uiFrames, 0, true, 0);
+        this->arrowAnimatorL.SetAnimation(&UIWidgets::sVars->uiFrames, 1, true, 0);
         this->textAnimator.SetAnimation(&UIWidgets::sVars->fontFrames, 0, true, 0);
     }
 }
@@ -297,8 +299,8 @@ void UIWinSize::EditorDraw()
     this->size.y        = abs(this->size.y);
 
     if (UIWidgets::sVars) {
-        this->arrowAnimatorL.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 0);
-        this->arrowAnimatorR.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 1);
+        this->arrowAnimatorR.SetAnimation(&UIWidgets::sVars->uiFrames, 0, true, 0);
+        this->arrowAnimatorL.SetAnimation(&UIWidgets::sVars->uiFrames, 1, true, 0);
         this->textAnimator.SetAnimation(&UIWidgets::sVars->fontFrames, 0, true, 0);
     }
 

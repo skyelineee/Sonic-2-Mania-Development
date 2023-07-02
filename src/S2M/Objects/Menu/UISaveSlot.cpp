@@ -14,6 +14,7 @@
 #include "Global/SaveGame.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
+#include "Helpers/FXFade.hpp"
 
 using namespace RSDK;
 
@@ -241,8 +242,6 @@ void UISaveSlot::Draw()
             }
         }
     }
-
-    Graphics::DrawCircle(screenInfo->center.x, screenInfo->center.y, this->fxRadius, 0x000000, this->alpha, INK_ALPHA, true);
 }
 
 void UISaveSlot::Create(void *data)
@@ -270,7 +269,7 @@ void UISaveSlot::Create(void *data)
     }
 }
 
-void UISaveSlot::StageLoad() { sVars->aniFrames.Load("UI/SaveSelectNEW.bin", SCOPE_STAGE); }
+void UISaveSlot::StageLoad() { sVars->aniFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE); }
 
 uint8 UISaveSlot::GetPlayerIDFromID(uint8 id)
 {
@@ -846,12 +845,17 @@ void UISaveSlot::State_Selected()
     if (this->timer == 32)
         UIWidgets::sVars->sfxWarp.Play(false, 255);
     
-    if (this->timer > 32) {
-        this->alpha += 0x20;
-        this->fxRadius += 12;
+    if (FXFade::sVars) {
+        if (this->timer == 32) {
+            FXFade *fxFade   = GameObject::Create<FXFade>(0x000000, this->position.x, this->position.y);
+            fxFade->active   = ACTIVE_ALWAYS;
+            fxFade->speedIn  = 12;
+            fxFade->speedOut  = 0;
+            fxFade->state.Set(&FXFade::State_FadeOut);
+        }
     }
-    
-    if (this->fxRadius > 0x200) {
+
+    if (this->timer > 128) {
         this->actionCB.Run(this);
         this->state.Set(nullptr);
     }
@@ -880,7 +884,7 @@ void UISaveSlot::EditorDraw()
 
 void UISaveSlot::EditorLoad()
 {
-    sVars->aniFrames.Load("UI/SaveSelectNEW.bin", SCOPE_STAGE);
+    sVars->aniFrames.Load("UI/SaveSelect.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, type);
     RSDK_ENUM_VAR("Regular Save Slot", UISAVESLOT_REGULAR);

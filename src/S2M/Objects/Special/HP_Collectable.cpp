@@ -100,8 +100,8 @@ void HP_Collectable::StageLoad()
     // }
 
     sVars->sfxRing.Get("Global/Ring.wav");
-    sVars->sfxBomb.Get("Stage/BlockBreak.wav");
-    sVars->sfxEmerald.Get("Stage/Emerald.wav"); // TODO (this one's for you AChickMcNuggie...): does not exist rn ig???
+    sVars->sfxBomb.Get("Stage/LedgeBreak.wav");
+    sVars->sfxEmerald.Get("Special/Emerald.wav"); // TODO (this one's for you AChickMcNuggie...): does not exist rn ig???
 }
 
 void HP_Collectable::State_Ring()

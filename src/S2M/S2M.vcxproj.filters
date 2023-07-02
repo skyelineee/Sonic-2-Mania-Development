@@ -316,9 +316,6 @@
     <ClCompile Include="Objects\Menu\UIButtonPrompt.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\UIHeading.cpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Menu\UIKeyBinder.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
@@ -379,10 +376,40 @@
     <ClCompile Include="Objects\Menu\UISlider.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\UIInfoLabel.cpp">
+    <ClCompile Include="Objects\Menu\UIOptionPanel.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\UIOptionPanel.cpp">
+    <ClCompile Include="Objects\Menu\UIRankButton.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UICharButton.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UITABanner.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UITAZoneModule.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\TimeAttackMenu.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Helpers\ReplayDB.cpp">
+      <Filter>Source Files\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Global\TimeAttackGate.cpp">
+      <Filter>Source Files\Objects\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIReplayCarousel.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIPopover.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\TAMenuIconBG.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIButtonLabel.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
   </ItemGroup>
@@ -675,9 +702,6 @@
     <ClInclude Include="Objects\Menu\UIButtonPrompt.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\UIHeading.hpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Menu\UIKeyBinder.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
@@ -738,10 +762,40 @@
     <ClInclude Include="Objects\Menu\UISlider.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\UIInfoLabel.hpp">
+    <ClInclude Include="Objects\Menu\UIOptionPanel.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\UIOptionPanel.hpp">
+    <ClInclude Include="Objects\Menu\UIRankButton.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UICharButton.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UITABanner.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UITAZoneModule.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\TimeAttackMenu.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Helpers\ReplayDB.hpp">
+      <Filter>Source Files\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Global\TimeAttackGate.hpp">
+      <Filter>Source Files\Objects\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIReplayCarousel.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIPopover.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\TAMenuIconBG.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIButtonLabel.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>

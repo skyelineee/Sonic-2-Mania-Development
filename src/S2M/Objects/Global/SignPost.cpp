@@ -113,31 +113,6 @@ void SignPost::Create(void *data)
                 Zone::sVars->playerBoundActiveR[p] = true;
             }
 
-            if (globals->gameMode == MODE_COMPETITION) {
-                int32 left   = this->vsBoundsOffset.x - (this->vsBoundsSize.x >> 1);
-                int32 top    = this->vsBoundsOffset.y - (this->vsBoundsSize.y >> 1);
-                int32 right  = this->vsBoundsOffset.x + (this->vsBoundsSize.x >> 1);
-                int32 bottom = this->vsBoundsOffset.y + (this->vsBoundsSize.y >> 1);
-
-                int32 extendTop    = -(this->vsExtendTop << 16);
-                int32 extendBottom = (this->vsExtendBottom << 16);
-
-                if (extendTop < top)
-                    top = extendTop;
-
-                if (extendBottom < bottom)
-                    bottom = extendBottom;
-
-                if (abs(left) > right)
-                    this->updateRange.x = abs(left);
-                else
-                    this->updateRange.x = right + 0x400000;
-
-                if (abs(top) > bottom)
-                    this->updateRange.y = abs(top) + 0x400000;
-                else
-                    this->updateRange.y = bottom + 0x400000;
-            }
             this->visible   = true;
             this->drawGroup = Zone::sVars->objectDrawGroup[0];
             this->spinSpeed = 0x3000;
@@ -149,35 +124,24 @@ void SignPost::Create(void *data)
             switch (this->type) {
                 default: break;
                 case SignPost::RunPast: // Normal (Main Game Only)
-                    if (globals->gameMode != MODE_COMPETITION) {
-                        this->active = ACTIVE_BOUNDS;
-                        this->state.Set(&SignPost::State_InitDelay);
-                        destroy = false;
-                    }
+                    this->active = ACTIVE_BOUNDS;
+                    this->state.Set(&SignPost::State_InitDelay);
+                    destroy = false;
                     break;
 
                 case SignPost::Drop: // Hidden (Until Dropped)
-                    if (globals->gameMode != MODE_COMPETITION) {
-                        this->active = ACTIVE_XBOUNDS;
-                        this->state.Set(nullptr);
-                        destroy = false;
-                    }
+                    this->active = ACTIVE_XBOUNDS;
+                    this->state.Set(nullptr);
+                    destroy = false;
                     break;
 
                 case SignPost::Competition: // Normal (Competition Only)
-                    if (globals->gameMode == MODE_COMPETITION) {
-                        this->active = ACTIVE_BOUNDS;
-                        this->state.Set(&SignPost::State_InitDelay);
-                        destroy = false;
-                    }
                     break;
 
                 case SignPost::Decoration: // Decoration
-                    if (globals->gameMode != MODE_COMPETITION) {
-                        this->active = ACTIVE_BOUNDS;
-                        this->state.Set(&SignPost::State_Done);
-                        destroy = false;
-                    }
+                    this->active = ACTIVE_BOUNDS;
+                    this->state.Set(&SignPost::State_Done);
+                    destroy = false;
                     break;
             }
 
@@ -435,28 +399,9 @@ void SignPost::HandleCamBounds()
     for (int32 p = 0; p < Player::sVars->playerCount; ++p) {
         Player *player = GameObject::Get<Player>(p);
         if (player->classID == Player::sVars->classID && !player->sidekick) {
-            if (globals->gameMode == MODE_COMPETITION) {
-                int32 storeX     = this->position.x;
-                int32 storeY     = this->position.y;
-                this->position.x = x;
-                this->position.y = y;
-                if (player->CheckCollisionTouch(this, &hitbox)) {
-                    this->position.x                   = storeX;
-                    this->position.y                   = storeY;
-                    Zone::sVars->cameraBoundsL[p]      = (this->position.x >> 0x10) - screenInfo[p].center.x;
-                    Zone::sVars->cameraBoundsR[p]      = screenInfo[p].center.x + (this->position.x >> 0x10);
-                    Zone::sVars->playerBoundActiveR[p] = true;
-                }
-                else {
-                    this->position.x = storeX;
-                    this->position.y = storeY;
-                }
-            }
-            else {
-                if (this->position.x - player->position.x < 0x1000000 || this->position.x - (Zone::sVars->cameraBoundsR[p] << 16) < 0x1000000) {
-                    Zone::sVars->cameraBoundsL[p] = (this->position.x >> 0x10) - screenInfo[p].center.x;
-                    Zone::sVars->cameraBoundsR[p] = screenInfo[p].center.x + (this->position.x >> 0x10);
-                }
+            if (this->position.x - player->position.x < 0x1000000 || this->position.x - (Zone::sVars->cameraBoundsR[p] << 16) < 0x1000000) {
+                Zone::sVars->cameraBoundsL[p] = (this->position.x >> 0x10) - screenInfo[p].center.x;
+                Zone::sVars->cameraBoundsR[p] = screenInfo[p].center.x + (this->position.x >> 0x10);
             }
         }
     }
@@ -471,17 +416,10 @@ void SignPost::CheckTouch()
             this->activePlayers |= 1 << p;
         }
         else {
-             if (!p || globals->gameMode == MODE_COMPETITION) {
+             if (!p) {
                  if (!((1 << p) & this->activePlayers)) {
                      bool32 passedSignpost = false;
-                     if (globals->gameMode != MODE_COMPETITION) {
-                         passedSignpost = player->position.x > this->position.x;
-                     }
-                     else if (this->playerPosStore[p].x && this->playerPosStore[p].y) {
-                         passedSignpost = MathHelpers::CheckPositionOverlap(
-                             player->position.x, player->position.y, this->playerPosStore[p].x, this->playerPosStore[p].y, this->position.x,
-                             this->position.y - (this->vsExtendTop << 16), this->position.x, this->position.y + (this->vsExtendBottom << 16));
-                     }
+                     passedSignpost = player->position.x > this->position.x;
 
                      if (passedSignpost) {
                          sVars->sfxSignPost.Play();
@@ -497,41 +435,13 @@ void SignPost::CheckTouch()
 
                          this->velocity.y      = -(vel >> 1);
                          this->gravityStrength = vel / 96;
-                         if (globals->gameMode == MODE_COMPETITION) {
-                             this->active = ACTIVE_NORMAL;
-                             if (!this->activePlayers) {
-                                 switch (player->characterID) {
-                                     default:
-                                     case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
-                                     case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
-                                     case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                                 }
-                                 sVars->sfxSignPost2P.Play();
-                             }
-
-                             this->activePlayers |= 1 << p;
-                             if (this->activePlayers == sVars->maxPlayerCount)
-                                 Music::FadeOut(0.025f);
-                             this->state.Set(&SignPost::State_SpinVS);
+                         sceneInfo->timeEnabled = false;
+                         if (vel >= 0x40000 && globals->useManiaBehavior) {
+                             this->state.Set(&SignPost::State_FlyUp);
                          }
                          else {
-                             if (globals->gameMode == MODE_ENCORE) {
-                                 switch (GET_CHARACTER_ID(1)) {
-                                     default:
-                                     case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
-                                     case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
-                                     case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-                                 }
-                             }
-
-                             sceneInfo->timeEnabled = false;
-                             if (vel >= 0x40000 && globals->useManiaBehavior) {
-                                 this->state.Set(&SignPost::State_FlyUp);
-                             }
-                             else {
-                                 Music::FadeOut(0.025f);
-                                 this->state.Set(&SignPost::State_Spin);
-                             }
+                             Music::FadeOut(0.025f);
+                             this->state.Set(&SignPost::State_Spin);
                          }
                      }
 
@@ -617,13 +527,11 @@ void SignPost::State_Falling()
 
     if (this->type == SignPost::Drop) {
         this->type = SignPost::RunPast;
-        if (globals->gameMode < MODE_COMPETITION) {
-            switch (GET_CHARACTER_ID(1)) {
-                default:
-                case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
-                case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
-                case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
-            }
+        switch (GET_CHARACTER_ID(1)) {
+            default:
+            case ID_SONIC: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniSonic, true, 0); break;
+            case ID_TAILS: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniTails, true, 0); break;
+            case ID_KNUCKLES: this->facePlateAnimator.SetAnimation(sVars->aniFrames, SignPost::AniKnux, true, 0); break;
         }
     }
 

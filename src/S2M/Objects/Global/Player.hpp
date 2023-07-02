@@ -378,7 +378,6 @@ struct Player : RSDK::GameObject::Entity {
 
     // Misc
     static void LoadSprites();
-    static void LoadSpritesVS();
     void LoadPlayerSprites();
 
     static void DrawSprite(Player *self, RSDK::Animator *animator);
@@ -490,7 +489,6 @@ struct Player : RSDK::GameObject::Entity {
     void BoxCollisionResponce(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox, uint32 side);
     uint8 CheckCollisionBox(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox);
     bool32 CheckCollisionPlatform(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox);
-    bool32 CheckMightyUnspin(int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer);
 
     // Damage
     void Hit(bool32 forceKill = false);

@@ -77,8 +77,8 @@ void DialogRunner::StaticLoad(Static *sVars) { RSDK_INIT_STATIC_VARS(DialogRunne
 void DialogRunner::HandleCallback()
 {
     if (this->timer <= 0) {
-        LogHelpers::Print("Callback: %x", this->callback);
-        this->callback.Run(this);
+        LogHelpers::Print("Callback: %x", this->state);
+        this->state.Run(this);
         this->Destroy();
     }
     else {

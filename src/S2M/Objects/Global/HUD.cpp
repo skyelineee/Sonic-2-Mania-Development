@@ -11,8 +11,7 @@
 #include "DebugMode.hpp"
 #include "ActClear.hpp"
 #include "GameOver.hpp"
-
-// #include "Menu/UIButtonPrompt.hpp"
+#include "Menu/UIButtonPrompt.hpp"
 
 using namespace RSDK;
 
@@ -33,14 +32,7 @@ void HUD::Update()
 }
 void HUD::LateUpdate()
 {
-    if (globals->gameMode == MODE_COMPETITION) {
-        for (this->screenID = 0; this->screenID < Graphics::GetVideoSetting(VIDEOSETTING_SCREENCOUNT); ++this->screenID) {
-            this->vsStates[this->screenID].Run(this);
-        }
-    }
-    else {
-        this->state.Run(this);
-    }
+    this->state.Run(this);
 
     if (globals->gameMode < MODE_TIMEATTACK) {
         Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
@@ -50,12 +42,12 @@ void HUD::LateUpdate()
             if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_SWITCH || SKU->platform == PLATFORM_DEV)
                 HUD::GetActionButtonFrames();
 
-            if (this->superButtonPos < TO_FIXED(24))
-                this->superButtonPos += TO_FIXED(8);
+            if (this->actionPromptPos < TO_FIXED(24))
+                this->actionPromptPos += TO_FIXED(8);
         }
         else {
-            if (this->superButtonPos > -TO_FIXED(32))
-                this->superButtonPos -= TO_FIXED(8);
+            if (this->actionPromptPos > -TO_FIXED(32))
+                this->actionPromptPos -= TO_FIXED(8);
         }
     }
     else if (globals->gameMode == MODE_TIMEATTACK) {
@@ -66,12 +58,12 @@ void HUD::LateUpdate()
                 HUD::GetButtonFrame(&this->thumbsUpButtonAnimator, KeyStart);
             }
 
-            if (this->superButtonPos < TO_FIXED(24))
-                this->superButtonPos += TO_FIXED(8);
+            if (this->actionPromptPos < TO_FIXED(24))
+                this->actionPromptPos += TO_FIXED(8);
         }
         else {
-            if (this->superButtonPos > -TO_FIXED(64))
-                this->superButtonPos -= TO_FIXED(8);
+            if (this->actionPromptPos > -TO_FIXED(64))
+                this->actionPromptPos -= TO_FIXED(8);
         }
     }
 }
@@ -93,32 +85,11 @@ void HUD::Draw()
     lifeOffset.y  = this->lifeOffset.y;
 
     {
-        if (globals->gameMode == MODE_COMPETITION) {
-            scoreOffset.x = this->vsScoreOffsets[sceneInfo->currentScreenID].x;
-            scoreOffset.y = this->vsScoreOffsets[sceneInfo->currentScreenID].y;
-            timeOffset.x  = this->vsTimeOffsets[sceneInfo->currentScreenID].x;
-            timeOffset.y  = this->vsTimeOffsets[sceneInfo->currentScreenID].y;
-            ringsOffset.x = this->vsRingsOffsets[sceneInfo->currentScreenID].x;
-            ringsOffset.y = this->vsRingsOffsets[sceneInfo->currentScreenID].y;
-            lifeOffset.x  = this->vsLifeOffsets[sceneInfo->currentScreenID].x;
-            lifeOffset.y  = this->vsLifeOffsets[sceneInfo->currentScreenID].y;
-
-            if (globals->useManiaBehavior) {
-                for (auto playerPtr : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-                    if (playerPtr != player) {
-                        this->playerIDAnimator.frameID = playerPtr->playerID;
-                        this->playerIDAnimator.DrawSprite(&playerPtr->position, false);
-                    }
-                }
-            }
-        }
-        else {
-            // encore leftover
-            if (sVars->swapCooldown > 0) {
-                this->playerIDAnimator.Process();
-                this->playerIDAnimator.DrawSprite(&player->position, false);
-                --sVars->swapCooldown;
-            }
+        // encore leftover
+        if (sVars->swapCooldown > 0) {
+            this->playerIDAnimator.Process();
+            this->playerIDAnimator.DrawSprite(&player->position, false);
+            --sVars->swapCooldown;
         }
 
         this->ringFlashFrame = player->rings ? 0 : ((globals->persistentTimer >> 3) & 1);
@@ -217,14 +188,38 @@ void HUD::Draw()
                 DrawNumbersBase16(&lifePos, player->position.x >> 0x10);
             }
         }
-        else if (this->superButtonPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
-            // RIP replay buttons
-            lifePos.x = (screenInfo[sceneInfo->currentScreenID].size.x << 16) - this->superButtonPos;
+        else if (this->actionPromptPos > -TO_FIXED(64) && globals->gameMode == MODE_TIMEATTACK) {
+            lifePos.x = TO_FIXED(screenInfo[sceneInfo->currentScreenID].size.x) - this->actionPromptPos;
             lifePos.y = TO_FIXED(20);
+
+            // Draw Replay Save Icon
+            this->replayClapAnimator.DrawSprite(&lifePos, true);
+
+            // Draw Replay Save Button
+            lifePos.x -= TO_FIXED(28);
+            if (sVars->replaySaveEnabled) {
+                this->saveReplayButtonAnimator.DrawSprite(&lifePos, true);
+            }
+            else {
+                this->inkEffect = INK_BLEND;
+                this->saveReplayButtonAnimator.DrawSprite(&lifePos, true);
+
+                this->inkEffect = INK_NONE;
+            }
+
+            lifePos.x = TO_FIXED(screenInfo[sceneInfo->currentScreenID].size.x) - this->actionPromptPos;
+            lifePos.y += TO_FIXED(28);
+
+            // Draw Thumbs Up Icon
+            this->thumbsUpIconAnimator.DrawSprite(&lifePos, true);
+
+            // Draw Thumbs Up Button
+            lifePos.x -= TO_FIXED(28);
+            this->thumbsUpButtonAnimator.DrawSprite(&lifePos, true);
         }
-        else if (this->superButtonPos > -TO_FIXED(32)) {
+        else if (this->actionPromptPos > -TO_FIXED(32)) {
             // Draw Super Icon
-            lifePos.x = (screenInfo[sceneInfo->currentScreenID].size.x << 16) - this->superButtonPos;
+            lifePos.x = TO_FIXED(screenInfo[sceneInfo->currentScreenID].size.x) - this->actionPromptPos;
             lifePos.y = TO_FIXED(20);
             this->superIconAnimator.DrawSprite(&lifePos, true);
 
@@ -241,6 +236,7 @@ void HUD::Draw()
             else {
                 this->inkEffect = INK_BLEND;
                 this->superButtonAnimator.DrawSprite(&lifePos, true);
+
                 this->inkEffect = INK_NONE;
             }
         }
@@ -281,73 +277,28 @@ void HUD::Draw()
 
         this->lifeIconAnimator.DrawSprite(&lifePos, true);
 
-        if (globals->gameMode == MODE_ENCORE) {
-            for (int32 p = 0; p < PLAYER_COUNT; ++p) {
-                if (sVars->stockFlashTimers[p] > 0)
-                    sVars->stockFlashTimers[p]--;
-            }
+        if (globals->useManiaBehavior) {
+            // Draw Life Icon "X"
+            this->hudElementsAnimator.frameID = 14;
+            this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
-            lifePos.x += TO_FIXED(20);
-            Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
-            if (sidekick->classID) {
-                // Draw Buddy Icon
-                int32 charID       = sidekick->characterID;
-                int32 stockFrameID = -1;
-                for (stockFrameID = -1; charID > 0; ++stockFrameID) charID >>= 1;
-                this->lifeIconAnimator.frameID = stockFrameID;
-                if (stockFrameID >= 0 && !(sVars->stockFlashTimers[0] & 4)) {
-                    if ((!sidekick->state.Matches(&Player::State_Death) && !sidekick->state.Matches(&Player::State_Drown)
-                         && !sidekick->state.Matches(&Player::State_DeathHold))
-                        || !sidekick->abilityValues[0]) {
-                        this->lifeIconAnimator.DrawSprite(&lifePos, true);
-                    }
-                }
+            // Draw Lives
+            lifePos.x += TO_FIXED(45);
+            if (player->lives < 10)
+                lifePos.x -= TO_FIXED(1);
 
-                // Draw Stock Icons
-                lifePos.x += TO_FIXED(20);
-                this->lifeIconAnimator.SetAnimation(sVars->aniFrames, 12, true, 0);
-                for (int32 i = 0; i < 3; ++i) {
-                    stockFrameID = -1;
-                    int32 stock  = (globals->stock >> (i * 8)) & 0xFF;
-                    while (stock > 0) {
-                        stock >>= 1;
-                        ++stockFrameID;
-                    }
-
-                    this->lifeIconAnimator.frameID = stockFrameID;
-                    if (stockFrameID >= 0 && !(sVars->stockFlashTimers[i + 1] & 4))
-                        this->lifeIconAnimator.DrawSprite(&lifePos, true);
-
-                    lifePos.x += TO_FIXED(16);
-                }
-
-                this->lifeIconAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
-            }
+            DrawLifeNumbers(&lifePos, lifeCount, 0);
         }
-        else {
-            if (globals->useManiaBehavior) {
-                // Draw Life Icon "X"
-                this->hudElementsAnimator.frameID = 14;
-                this->hudElementsAnimator.DrawSprite(&lifePos, true);
+        else { // Draw Life Name
+            this->lifeNamesAnimator.DrawSprite(&lifePos, true);
 
-                // Draw Lives
-                lifePos.x += TO_FIXED(45);
-                if (player->lives < 10)
-                    lifePos.x -= TO_FIXED(1);
+            this->hudElementsAnimator.frameID = 14; // 'x'
+            // Draw "x"
+            this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
-                DrawLifeNumbers(&lifePos, lifeCount, 0);
-            }
-            else { // Draw Life Name
-                this->lifeNamesAnimator.DrawSprite(&lifePos, true);
-
-                this->hudElementsAnimator.frameID = 14; // 'x'
-                // Draw "x"
-                this->hudElementsAnimator.DrawSprite(&lifePos, true);
-
-                // Draw Life Count
-                lifePos.x += 0x290000;
-                DrawLifeNumbers(&lifePos, lifeCount, 1);
-            }
+            // Draw Life Count
+            lifePos.x += 0x290000;
+            DrawLifeNumbers(&lifePos, lifeCount, 1);
         }
     }
 }
@@ -369,7 +320,7 @@ void HUD::Create(void *data)
         this->ringsOffset.y  = TO_FIXED(44);
         this->lifeOffset.x   = TO_FIXED(16);
         this->lifeOffset.y   = (screenInfo->size.y - 12) << 16;
-        this->superButtonPos = -TO_FIXED(32);
+        this->actionPromptPos = -TO_FIXED(32);
 
         for (int32 p = 0; p < PLAYER_COUNT; ++p) {
             this->vsScoreOffsets[p].x = this->scoreOffset.x;
@@ -392,7 +343,7 @@ void HUD::Create(void *data)
         else
             this->lifeNumbersAnimator.SetAnimation(sVars->aniFrames, 14, true, 0);
 
-        this->playerIDAnimator.SetAnimation(sVars->aniFrames, globals->gameMode == MODE_ENCORE ? 13 : 8, true, 0);
+        this->playerIDAnimator.SetAnimation(sVars->aniFrames, 2 ? 13 : 8, true, 0);
         this->thumbsUpIconAnimator.SetAnimation(sVars->aniFrames, 10, true, 2);
         this->replayClapAnimator.SetAnimation(sVars->aniFrames, 10, true, 1);
         this->superIconAnimator.SetAnimation(sVars->superButtonFrames, 0, true, 0);
@@ -508,34 +459,34 @@ void HUD::DrawNumbersHyperRing(RSDK::Vector2 *drawPos, int32 value)
 
 void HUD::GetButtonFrame(RSDK::Animator *animator, int32 buttonID)
 {
-    // int32 gamepadType = UIButtonPrompt::GetGamepadType();
-    //
-    // // Gamepad
-    // if (gamepadType != UIButtonPrompt::Keyboard && (gamepadType < UIButtonPrompt::Keyboard_FR || gamepadType > UIButtonPrompt::Keyboard_SP)) {
-    //     animator->SetAnimation(sVars->superButtonFrames, gamepadType, true, buttonID);
-    // }
-    // else {
-    //     // Keyboard
-    //     Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
-    //
-    //     int32 id     = Input::GetInputDeviceID(player->controllerID);
-    //     int32 contID = id == Input::INPUT_UNASSIGNED ? Input::CONT_P1 : player->controllerID;
-    //
-    //     int32 map = 0;
-    //     switch (buttonID) {
-    //         default: break;
-    //         case 0: map = controllerInfo[contID].keyA.keyMap; break;
-    //         case 1: map = controllerInfo[contID].keyB.keyMap; break;
-    //         case 2: map = controllerInfo[contID].keyX.keyMap; break;
-    //         case 3: map = controllerInfo[contID].keyY.keyMap; break;
-    //         case 4: map = controllerInfo[contID].keyStart.keyMap; break;
-    //     }
-    //
-    //     int32 frame = UIButtonPrompt::MappingsToFrame(map);
-    //     unused(frame);
-    //
-    //     animator->SetAnimation(sVars->superButtonFrames, 1, true, buttonID);
-    // }
+    int32 gamepadType = UIButtonPrompt::GetGamepadType();
+    if (API::GetConfirmButtonFlip() && buttonID <= 1)
+        buttonID ^= 1;
+    
+    // Gamepad
+    if (gamepadType != UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD && (gamepadType < UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_FR || gamepadType > UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_SP)) {
+        animator->SetAnimation(sVars->superButtonFrames, gamepadType, true, buttonID);
+    }
+    else {
+        // Keyboard
+        Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
+    
+        int32 id     = Input::GetInputDeviceID(player->controllerID);
+        int32 contID = id == Input::INPUT_UNASSIGNED ? Input::CONT_P1 : player->controllerID;
+    
+        int32 map = 0;
+        switch (buttonID) {
+            default: break;
+            case 0: map = controllerInfo[contID].keyA.keyMap; break;
+            case 1: map = controllerInfo[contID].keyB.keyMap; break;
+            case 2: map = controllerInfo[contID].keyX.keyMap; break;
+            case 3: map = controllerInfo[contID].keyY.keyMap; break;
+            case 4: map = controllerInfo[contID].keyStart.keyMap; break;
+        }
+    
+        int32 frame = UIButtonPrompt::MappingsToFrame(map);
+        animator->SetAnimation(sVars->superButtonFrames, 1, true, frame);
+    }
 }
 void HUD::GetActionButtonFrames()
 {
@@ -552,22 +503,12 @@ void HUD::State_MoveIn()
     Vector2 *scoreOffset = nullptr, *timeOffset = nullptr, *ringsOffset = nullptr, *lifeOffset = nullptr;
     int32 *max = nullptr;
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        state       = &this->vsStates[sceneInfo->currentScreenID];
-        scoreOffset = &this->vsScoreOffsets[sceneInfo->currentScreenID];
-        timeOffset  = &this->vsTimeOffsets[sceneInfo->currentScreenID];
-        ringsOffset = &this->vsRingsOffsets[sceneInfo->currentScreenID];
-        lifeOffset  = &this->vsLifeOffsets[sceneInfo->currentScreenID];
-        max         = &this->vsMaxOffsets[sceneInfo->currentScreenID];
-    }
-    else {
-        state       = &this->state;
-        scoreOffset = &this->scoreOffset;
-        timeOffset  = &this->timeOffset;
-        ringsOffset = &this->ringsOffset;
-        lifeOffset  = &this->lifeOffset;
-        max         = &this->maxOffset;
-    }
+    state       = &this->state;
+    scoreOffset = &this->scoreOffset;
+    timeOffset  = &this->timeOffset;
+    ringsOffset = &this->ringsOffset;
+    lifeOffset  = &this->lifeOffset;
+    max         = &this->maxOffset;
 
     if (scoreOffset->x < *max)
         scoreOffset->x += TO_FIXED(8);
@@ -590,20 +531,11 @@ void HUD::State_MoveOut()
     Vector2 *scoreOffset = nullptr, *timeOffset = nullptr, *ringsOffset = nullptr, *lifeOffset = nullptr;
     StateMachine<HUD> *state = nullptr;
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        state       = &this->vsStates[this->screenID];
-        scoreOffset = &this->vsScoreOffsets[this->screenID];
-        timeOffset  = &this->vsTimeOffsets[this->screenID];
-        ringsOffset = &this->vsRingsOffsets[this->screenID];
-        lifeOffset  = &this->vsLifeOffsets[this->screenID];
-    }
-    else {
-        state       = &this->state;
-        scoreOffset = &this->scoreOffset;
-        timeOffset  = &this->timeOffset;
-        ringsOffset = &this->ringsOffset;
-        lifeOffset  = &this->lifeOffset;
-    }
+    state       = &this->state;
+    scoreOffset = &this->scoreOffset;
+    timeOffset  = &this->timeOffset;
+    ringsOffset = &this->ringsOffset;
+    lifeOffset  = &this->lifeOffset;
 
     scoreOffset->x -= TO_FIXED(8);
     if (timeOffset->x - scoreOffset->x > TO_FIXED(16))
@@ -616,12 +548,7 @@ void HUD::State_MoveOut()
         lifeOffset->x -= TO_FIXED(8);
 
     if (lifeOffset->x < -TO_FIXED(80)) {
-        if (globals->gameMode == MODE_COMPETITION) {
-            state->Set(nullptr);
-        }
-        else {
-            this->Destroy();
-        }
+        this->Destroy();
     }
 }
 

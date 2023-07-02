@@ -11,10 +11,15 @@
 #include "Helpers/GameProgress.hpp"
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/TimeAttackData.hpp"
+#include "Menu/UIDialog.hpp"
+#include "Menu/UIWidgets.hpp"
+#include "Menu/UILoadingIcon.hpp"
+#include "ReplayRecorder.hpp"
 #include "HUD.hpp"
 #include "Music.hpp"
 #include "Animals.hpp"
 #include "StarPost.hpp"
+#include "Announcer.hpp"
 
 using namespace RSDK;
 
@@ -95,7 +100,13 @@ void ActClear::Draw()
     drawPos.x                         = offset + this->timeBonusPos.x - TO_FIXED(100);
     drawPos.y                         = this->timeBonusPos.y;
     this->hudElementsAnimator.frameID = 1;
-    this->hudElementsAnimator.DrawSprite(&drawPos, true);
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+    }
+    else {
+        drawPos.y += TO_FIXED(14);
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+    }
 
     // Draw "Bonus" Sprite
     drawPos.x += TO_FIXED(50);
@@ -126,16 +137,20 @@ void ActClear::Draw()
     // Draw Ring Bonus
     drawPos.x = offset + this->ringBonusPos.x - TO_FIXED(100);
     drawPos.y = this->ringBonusPos.y;
-    if (globals->gameMode == MODE_TIMEATTACK)
+    if (globals->gameMode == MODE_TIMEATTACK) {
+        drawPos.y += TO_FIXED(14);
         this->hudElementsAnimator.frameID = 17; // "Best"
-    else
+    }
+    else {
         this->hudElementsAnimator.frameID = 5; // "Ring"
+    }
+
     this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
     drawPos.x += TO_FIXED(50);
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x -= TO_FIXED(10);
-        this->hudElementsAnimator.frameID = 1; // "Time"
+        this->hudElementsAnimator.frameID = 20; // "Time"
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
         drawPos.x += TO_FIXED(10);
     }
@@ -166,10 +181,14 @@ void ActClear::Draw()
     if (this->showCoolBonus) { // Draw Cool Bonus
         drawPos.x = offset + this->coolBonusPos.x - TO_FIXED(100);
         drawPos.y = this->coolBonusPos.y;
-        if (globals->gameMode == MODE_TIMEATTACK)
+        if (globals->gameMode == MODE_TIMEATTACK) {
+            drawPos.y += TO_FIXED(14);
             this->hudElementsAnimator.frameID = 18; // "Rank"
-        else
+        }
+        else {
             this->hudElementsAnimator.frameID = 15; // "Cool"
+        }
+
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
 
         drawPos.x += TO_FIXED(50);
@@ -208,29 +227,6 @@ void ActClear::Draw()
 
     if (globals->gameMode == MODE_TIMEATTACK) {
         // Draw World Rank
-        drawPos.x                         = offset + this->totalScorePos.x - TO_FIXED(92);
-        this->hudElementsAnimator.frameID = 19; // "World"
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x += TO_FIXED(50);
-        this->hudElementsAnimator.frameID = 18; // "Rank"
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        // Draw World Rank BG thingy
-        this->hudElementsAnimator.frameID = 10;
-        drawPos.x += TO_FIXED(52);
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x += TO_FIXED(67);
-        drawPos.y += TO_FIXED(14);
-        if (!TimeAttackData::sVars->leaderboardRank) {
-            this->numbersAnimator.frameID = 16; // "-" (no rank)
-            this->numbersAnimator.DrawSprite(&drawPos, true);
-        }
-        else {
-            // Draw Rank
-            DrawNumbers(&drawPos, TimeAttackData::sVars->leaderboardRank, 0);
-        }
     }
     else {
         // Draw Total Score
@@ -290,7 +286,7 @@ void ActClear::Create(void *data)
 
                 case 9:
                     if (!sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && sceneInfo->seconds == 59) {
-                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & MEDAL_NOTIMEOVER))
+                        if (!(globals->medalMods & MEDAL_NOTIMEOVER))
                             this->timeBonus = 100000;
                     }
                     break;
@@ -305,7 +301,7 @@ void ActClear::Create(void *data)
 
         if (globals->gameMode == MODE_TIMEATTACK) {
             MenuParam *param   = MenuParam::GetMenuParam();
-            this->time         = TimeAttackData::GetScore(param->zoneID, param->actID, param->characterID, sceneInfo->filter == 5, 1);
+            this->time         = TimeAttackData::GetScore(param->zoneID, param->actID, param->characterID, 1);
             this->achievedRank = false;
             this->isNewRecord  = false;
         }
@@ -511,30 +507,25 @@ void ActClear::State_SaveGameProgress()
         this->timer            = 0;
         globals->specialRingID = 0;
         if (sVars->displayedActID <= 0) {
-            if (globals->gameMode == MODE_COMPETITION) {
-                Stage::SetScene("Presentation", "Menu");
+            globals->enableIntro = true;
+            Player::SaveValues();
+            SaveGame::ClearRestartData();
+            StarPost::ResetStarPosts();
+            if (Zone::sVars->actID >= 0)
+                SaveGame::ClearCollectedSpecialRings();
+                SaveGame::SaveProgress();
+
+            if (globals->saveSlotID != NO_SAVE_SLOT && !sVars->forceNoSave) {
+                if (Zone::CurrentStageSaveable())
+                    GameProgress::MarkZoneCompleted(Zone::CurrentID());
+
+                sVars->isSavingGame = true;
+                SaveGame::SaveFile(ActClear::SaveGameCallback);
             }
-            else {
-                globals->enableIntro = true;
-                Player::SaveValues();
-                SaveGame::ClearRestartData();
-                StarPost::ResetStarPosts();
-                if (Zone::sVars->actID >= 0)
-                    SaveGame::ClearCollectedSpecialRings();
-                    SaveGame::SaveProgress();
 
-                if (globals->saveSlotID != NO_SAVE_SLOT && !sVars->forceNoSave) {
-                    if (Zone::CurrentStageSaveable())
-                        GameProgress::MarkZoneCompleted(Zone::CurrentID());
-
-                    sVars->isSavingGame = true;
-                    SaveGame::SaveFile(ActClear::SaveGameCallback);
-                }
-
-                ++sceneInfo->listPos;
-                if (!Stage::CheckValidScene())
-                    Stage::SetScene("Presentation", "Title Screen");
-            }
+            ++sceneInfo->listPos;
+            if (!Stage::CheckValidScene())
+                Stage::SetScene("Presentation", "Title Screen");
         }
         else {
             Player::SaveValues();
@@ -548,8 +539,8 @@ void ActClear::State_SaveGameProgress()
             }
         }
 
-        // if (sVars->isSavingGame)
-        //     UIWaitSpinner::StartWait();
+        if (sVars->isSavingGame)
+            UILoadingIcon::StartWait();
 
         this->state.SetAndRun(&ActClear::State_WaitForSave, this);
     }
@@ -560,7 +551,7 @@ void ActClear::State_ShowResultsTA()
     SET_CURRENT_STATE();
 
     if (this->newRecordTimer > 0) {
-        if (TimeAttackData::sVars->personalRank > 0 /*&& !ReplayRecorder::sVars->hasSetupGhostView*/) {
+        if (TimeAttackData::sVars->personalRank > 0 && !ReplayRecorder::sVars->hasSetupGhostView) {
             if (this->newRecordTimer == 120) {
                 if (TimeAttackData::sVars->personalRank == 1)
                     this->isNewRecord = true;
@@ -570,10 +561,10 @@ void ActClear::State_ShowResultsTA()
             }
 
             if (this->newRecordTimer == 30) {
-                // if (TimeAttackData::sVars->personalRank == 1)
-                //     Announcer::sVars->sfxNewRecordTop.Play();
-                // else if (TimeAttackData::sVars->personalRank <= 3)
-                //     Announcer::sVars->sfxNewRecordMid.Play();
+                if (TimeAttackData::sVars->personalRank == 1)
+                    Announcer::sVars->sfxNewRecordTop.Play();
+                else if (TimeAttackData::sVars->personalRank <= 3)
+                   Announcer::sVars->sfxNewRecordMid.Play();
             }
         }
         --this->newRecordTimer;
@@ -583,18 +574,18 @@ void ActClear::State_ShowResultsTA()
         if (controllerInfo->keyY.press) {
             if (!sVars->hasSavedReplay) {
                 if (HUD::sVars->replaySaveEnabled) {
-                    // if (!UIDialog->activeDialog) {
-                    sVars->saveReplay_CB.Run(this);
-                    sVars->hasSavedReplay      = true;
-                    sVars->disableResultsInput = true;
-                    return;
-                    // }
+                    if (!UIDialog::sVars->activeDialog) {
+                        sVars->saveReplay_CB.Run(this);
+                        sVars->hasSavedReplay      = true;
+                        sVars->disableResultsInput = true;
+                        return;
+                    }
                 }
             }
         }
 
         if (controllerInfo->keyStart.press) {
-            // UIWidgets::sVars->sfxAccept.Play();
+            UIWidgets::sVars->sfxAccept.Play();
 
             State_WaitForSave();
         }

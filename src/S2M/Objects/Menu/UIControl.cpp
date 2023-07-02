@@ -8,6 +8,10 @@
 #include "UISaveSlot.hpp"
 #include "UITransition.hpp"
 #include "UISlider.hpp"
+#include "UICharButton.hpp"
+#include "UITAZoneModule.hpp"
+#include "UIRankButton.hpp"
+#include "UIReplayCarousel.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -274,10 +278,6 @@ void UIControl::ProcessInputs()
                     if (!backPressed) {
                         sVars->anyBackPress = false;
                     }
-                    else {
-                        if (this->buttons[this->buttonID])
-                            this->buttons[this->buttonID]->isSelected = false;
-                    }
                 }
                 else {
                     if (this->parentTag.length <= 0) {
@@ -287,9 +287,6 @@ void UIControl::ProcessInputs()
                         this->selectionDisabled = true;
                         UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
                         backPressed = false;
-
-                        if (this->buttons[this->buttonID])
-                            this->buttons[this->buttonID]->isSelected = false;
                     }
                 }
 
@@ -375,18 +372,12 @@ void UIControl::MenuChangeButtonInit(UIControl *control)
                         choice->Update();
                     }
 
-                    // TODO: uncomment this when its done //
-                    /*else if (UITAZoneModule::sVars && entity->classID == UITAZoneModule::sVars->classID) {
+                    else if (UITAZoneModule::sVars && entity->classID == UITAZoneModule::sVars->classID) {
                         UITAZoneModule *zoneModule = (UITAZoneModule *)entity;
 
                         zoneModule->Update();
-                    }*/
-
-                    else if (UIHeading::sVars && entity->classID == UIHeading::sVars->classID) {
-                        UIHeading *heading = (UIHeading *)entity;
-
-                        heading->Update();
                     }
+
 
                     else if (UISaveSlot::sVars && entity->classID == UISaveSlot::sVars->classID) {
                         UISaveSlot *saveSlot = (UISaveSlot *)entity;
@@ -503,20 +494,6 @@ void UIControl::SetupButtons()
     int32 slotID = this->Slot();
 
     Hitbox hitboxRange;
-    if (UIHeading::sVars && slotID != SLOT_DIALOG_UICONTROL) {
-        for (auto heading : GameObject::GetEntities<UIHeading>(FOR_ALL_ENTITIES))
-        {
-            int32 x            = this->startPos.x - this->cameraOffset.x;
-            int32 y            = this->startPos.y - this->cameraOffset.y;
-            hitboxRange.left   = -(this->size.x >> 17);
-            hitboxRange.top    = -(this->size.y >> 17);
-            hitboxRange.right  = this->size.x >> 17;
-            hitboxRange.bottom = this->size.y >> 17;
-
-            if (MathHelpers::PointInHitbox(x, y, heading->position.x, heading->position.y, FLIP_NONE, &hitboxRange))
-                this->heading = heading;
-        }
-    }
 
     if (UIShifter::sVars && slotID != SLOT_DIALOG_UICONTROL) {
         for (auto shifter : GameObject::GetEntities<UIShifter>(FOR_ALL_ENTITIES))
@@ -558,7 +535,8 @@ void UIControl::SetupButtons()
         if (button) {
             int32 classID = button->classID;
             if (classID != UIButton::sVars->classID && (!UISaveSlot::sVars || classID != UISaveSlot::sVars->classID)
-                //&& (!UITAZoneModule || classID != UITAZoneModule->classID)
+                && (!UICharButton::sVars || classID != UICharButton::sVars->classID) && (!UITAZoneModule::sVars || classID != UITAZoneModule::sVars->classID)
+                && (!UIRankButton::sVars || classID != UIRankButton::sVars->classID) && (!UIReplayCarousel::sVars || classID != UIReplayCarousel::sVars->classID)
                 && (!UISlider::sVars || classID != UISlider::sVars->classID) && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }
             else {
@@ -710,9 +688,6 @@ void UIControl::HandlePosition()
         if (this->position.y < this->targetPos.y)
             this->position.y = this->targetPos.y;
     }
-
-    if (this->heading)
-        this->heading->position.x = this->position.x;
 }
 
 void UIControl::ProcessButtonInput()

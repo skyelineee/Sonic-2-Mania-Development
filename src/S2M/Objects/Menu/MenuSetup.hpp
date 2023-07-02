@@ -13,7 +13,8 @@ struct MenuSetup : RSDK::GameObject::Entity {
 
     enum MainMenuIDs {
         Main,
-        TimeAttack,
+        TimeAttackMain,
+        TimeAttackElse,
         SaveSelect,
         OptionsMain,
         OptionsElse,
@@ -28,7 +29,6 @@ struct MenuSetup : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        int32 unused1;
         bool32 initializedMenuReturn;
         bool32 initializedMenu;
         bool32 initializedAPI;

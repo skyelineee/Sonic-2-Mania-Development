@@ -117,7 +117,7 @@ void MenuSetup::StageLoad()
     sVars->initializedMenu       = false;
     sVars->initializedAPI        = false;
     sVars->initializedSaves      = false;
-    sVars->fxFade                = NULL;
+    sVars->fxFade                = nullptr;
 
     if (!globals->suppressAutoMusic) {
         Music::Stop();

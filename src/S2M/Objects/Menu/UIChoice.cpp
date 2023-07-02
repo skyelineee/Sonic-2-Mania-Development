@@ -46,6 +46,9 @@ void UIChoice::Update()
         this->isSelected         = false;
         this->state.Set(&UIChoice::State_HandleButtonLeave);
     }
+
+    this->rightArrowAnimator.Process();
+    this->leftArrowAnimator.Process();
 }
 void UIChoice::LateUpdate() {}
 void UIChoice::StaticUpdate() {}
@@ -80,12 +83,12 @@ void UIChoice::Draw()
     UIButton *parent = (UIButton *)this->parent;
     if (this->arrowWidth > 0 && this->isSelected && !(this->disabled || parent->disabled)) {
         drawPos.x = this->buttonBounceOffset + this->position.x;
-        drawPos.y = this->position.y;
+        drawPos.y = this->position.y + TO_FIXED(2);
         drawPos.x -= this->arrowWidth << 15;
         this->leftArrowAnimator.DrawSprite(&drawPos, false);
 
         drawPos.x = this->buttonBounceOffset + this->position.x;
-        drawPos.y = this->position.y;
+        drawPos.y = this->position.y + TO_FIXED(2);
         drawPos.x += this->arrowWidth << 15;
         this->rightArrowAnimator.DrawSprite(&drawPos, false);
     }
@@ -95,7 +98,7 @@ void UIChoice::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
         this->visible       = true;
-        this->drawGroup     = 2;
+        this->drawGroup     = 3;
         this->active        = ACTIVE_NEVER;
         this->updateRange.x = 0x800000;
         this->updateRange.y = 0x400000;
@@ -108,8 +111,8 @@ void UIChoice::Create(void *data)
         this->aniFrames = UIWidgets::sVars->textFrames;
         this->labelAnimator.SetAnimation(&sVars->aniFrames, this->listID, true, this->frameID);
         this->iconAnimator.SetAnimation(&sVars->aniFrames, this->auxListID, true, this->auxFrameID);
-        this->leftArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 0);
-        this->rightArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 2, true, 1);
+        this->rightArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 0, true, 0);
+        this->leftArrowAnimator.SetAnimation(&UIWidgets::sVars->uiFrames, 1, true, 0);
     }
 }
 
@@ -272,8 +275,8 @@ void UIChoice::EditorDraw()
 
     this->labelAnimator.SetAnimation(UIWidgets::sVars->textFrames, this->listID, true, this->frameID);
     this->iconAnimator.SetAnimation(UIChoice::sVars->aniFrames, this->auxListID, true, this->auxFrameID);
-    this->leftArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 2, true, 0);
-    this->rightArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 2, true, 1);
+    this->rightArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 0, true, 0);
+    this->leftArrowAnimator.SetAnimation(UIWidgets::sVars->uiFrames, 1, true, 0);
 
     this->isSelected = showGizmos();
     // Crash prevention

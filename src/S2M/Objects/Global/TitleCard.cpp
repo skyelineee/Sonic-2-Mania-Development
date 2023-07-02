@@ -11,6 +11,7 @@
 #include "ActClear.hpp"
 #include "ImageTrail.hpp"
 #include "InvincibleStars.hpp"
+#include "Announcer.hpp"
 
 using namespace RSDK;
 
@@ -113,22 +114,24 @@ void TitleCard::HandleCamera()
 
 void TitleCard::ChangeTitleColors()
 {
-    switch (GET_CHARACTER_ID(1)) {
-        default: break;
-        case ID_SONIC:  
-            paletteBank[0].SetEntry(3, 0x0F16AD);
-            paletteBank[0].SetEntry(4, 0x1D2EE2);
-        break;
+    if (!globals->suppressTitlecard) {
+        switch (GET_CHARACTER_ID(1)) {
+            default: break;
+            case ID_SONIC:
+                paletteBank[0].SetEntry(3, 0x0F16AD);
+                paletteBank[0].SetEntry(4, 0x1D2EE2);
+                break;
 
-        case ID_TAILS:
-            paletteBank[0].SetEntry(3, 0xE24F05);
-            paletteBank[0].SetEntry(4, 0xFD7300);
-        break;
+            case ID_TAILS:
+                paletteBank[0].SetEntry(3, 0xE24F05);
+                paletteBank[0].SetEntry(4, 0xFD7300);
+                break;
 
-        case ID_KNUCKLES:
-            paletteBank[0].SetEntry(3, 0x057F19);
-            paletteBank[0].SetEntry(4, 0x4CB00A);
-        break;
+            case ID_KNUCKLES:
+                paletteBank[0].SetEntry(3, 0x057F19);
+                paletteBank[0].SetEntry(4, 0x4CB00A);
+                break;
+        }
     }
 }
 
@@ -264,11 +267,8 @@ void TitleCard::State_SlideAway()
     if (this->actionTimer > 30) {
         globals->atlEnabled  = false;
         globals->enableIntro = false;
-        if (globals->gameMode >= MODE_TIMEATTACK) {
-            if (globals->gameMode == MODE_COMPETITION) {
-                // Competition::ClearMatchData();
-                // Announcer::StartCountdown();
-            }
+        if (globals->gameMode == MODE_TIMEATTACK) {
+            Announcer::StartCountdown();
         }
         else {
             globals->suppressTitlecard = false;

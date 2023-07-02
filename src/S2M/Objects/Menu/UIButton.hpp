@@ -51,13 +51,13 @@ struct UIButton : RSDK::GameObject::Entity {
     bool32 reverseVelocity;
     bool32 nameVisible;
     bool32 clearParentState;
+    bool32 visibleArrow;
     RSDK::Vector2 firstChoicePos;
     int32 selection;
     RSDK::Action<void> choiceChangeCB;
     RSDK::Animator nameAnimator;
     RSDK::Animator buttonAnimator;
     RSDK::Animator descriptionAnimator;
-    RSDK::SpriteAnimation nameFrames;
     RSDK::SpriteAnimation buttonFrames;
     RSDK::Vector2 descOffset;
     int32 startNameListID;

@@ -21,17 +21,15 @@ struct UIWidgets : RSDK::GameObject::Entity {
     struct Static : RSDK::GameObject::Static {
         int32 buttonColors[16];
         int32 timer;
-        RSDK::Animator unusedAnimator1;
-        RSDK::Animator unusedAnimator2;
-        RSDK::Animator frameAnimator;
-        RSDK::Animator arrowsAnimator;
+        RSDK::Animator arrowRightAnimator;
+        RSDK::Animator arrowLeftAnimator;
+        RSDK::Animator arrowDownAnimator;
         RSDK::SpriteAnimation uiFrames;
         RSDK::SpriteAnimation buttonFrames;
-        RSDK::SpriteAnimation saveSelFrames;
         RSDK::SpriteAnimation textFrames;
-        RSDK::SpriteAnimation nameFrames;
         RSDK::SpriteAnimation fontFrames;
         RSDK::SpriteAnimation descFrames;
+        RSDK::SpriteAnimation timeAttackFrames;
         RSDK::SoundFX sfxBleep;
         RSDK::SoundFX sfxAccept;
         RSDK::SoundFX sfxWarp;
@@ -73,7 +71,6 @@ struct UIWidgets : RSDK::GameObject::Entity {
     static void DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
     static void DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeMode, int32 red, int32 green, int32 blue, RSDK::InkEffects ink);
     static void DrawParallelogram(int32 x, int32 y, int32 width, int32 height, int32 edgeSize, int32 red, int32 green, int32 blue);
-    static void DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
     static void DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
     static RSDK::Vector2 DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor);
 

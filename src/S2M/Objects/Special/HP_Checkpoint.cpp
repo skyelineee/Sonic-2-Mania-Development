@@ -45,18 +45,6 @@ void HP_Checkpoint::StageLoad()
 
     sVars->sfxStarPost.Get("Global/StarPost.wav");
     sVars->sfxFail.Get("Stage/Fail.wav");
-
-    if (globals->gameMode == MODE_COMPETITION) {
-        for (auto collectable : GameObject::GetEntities<HP_Collectable>(FOR_ALL_ENTITIES)) {
-            if (collectable->type == HP_Collectable::Emerald)
-                collectable->Reset(sVars->classID, 0);
-        }
-
-        for (auto message : GameObject::GetEntities<HP_Message>(FOR_ALL_ENTITIES)) {
-            if (message->type == HP_Message::RingReminder)
-                message->Destroy();
-        }
-    }
 }
 
 // States
@@ -88,81 +76,35 @@ void HP_Checkpoint::State_AwaitPlayer()
             this->thumbPos  = 80;
             this->drawGroup = Zone::sVars->hudDrawGroup;
 
-            if (globals->gameMode == MODE_COMPETITION) {
-                HP_Message *message = GameObject::Create<HP_Message>(0, 0, 0);
+            this->emblemAnimator.frameID = HUD::CharacterIndexFromID(GET_CHARACTER_ID(1));
 
-                if (player1->rings == player2->rings) {
-                    this->emblemAnimator.frameID = -1;
+            HP_Message *message = GameObject::Get<HP_Message>(SLOT_HP_MESSAGE);
+            message->Reset(HP_Message::sVars->classID, 0);
 
-                    message->position.y = TO_FIXED(68);
-                    message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, true, "TIE!", nullptr);
-                }
-                else {
-                    message->position.y = TO_FIXED(116);
+            int32 totalRings = player1->rings + (GET_CHARACTER_ID(2) ? player2->rings : 0);
+            if (totalRings >= HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID]) {
+                this->failed = false;
 
-                    if (player1->rings > player2->rings) {
-                        player1->vsCheckpointID++;
-                        this->emblemAnimator.frameID = HUD::CharacterIndexFromID(player1->characterID);
-
-                        // if (!vs.playerID)
-                        //     message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, true, "PLAYER ONE WINS!", nullptr);
-                        // else
-                        //     message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, true, "PLAYER TWO WINS!", nullptr);
-                    }
-                    else {
-                        //  if (ReceiveValue == -1)
-                        //  	player2->vsCheckpointID++;
-                        player2->vsCheckpointID++;
-
-                        this->emblemAnimator.frameID = HUD::CharacterIndexFromID(player2->characterID);
-                        // if (!vs.playerID)
-                        //     message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, true, "PLAYER TWO WINS!", nullptr);
-                        // else
-                        //     message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, true, "PLAYER ONE WINS!", nullptr);
-                    }
-                }
-
-                player1->vsCheckpointRings[HP_Setup::sVars->checkpointID] = player1->rings;
-                player2->vsCheckpointRings[HP_Setup::sVars->checkpointID] = player2->rings;
+                message->position.y = TO_FIXED(116);
+                message->SetMessage(&HP_Message::State_SingleMessage, 0, 120, false, "COOL!", nullptr);
 
                 sVars->sfxStarPost.Play();
-                this->iconAnimator.frameID = 0;
-
-                this->state.Set(&HP_Checkpoint::State_ShowResults);
-                this->stateDraw.Set(&HP_Checkpoint::Draw_Results);
-                break;
             }
             else {
-                this->emblemAnimator.frameID = HUD::CharacterIndexFromID(GET_CHARACTER_ID(1));
+                this->failed           = true;
 
-                HP_Message *message = GameObject::Get<HP_Message>(SLOT_HP_MESSAGE);
-                message->Reset(HP_Message::sVars->classID, 0);
+                message->position.y = TO_FIXED(116);
+                message->SetMessage(&HP_Message::State_NotEnough, 0, 120, false, "NOT ENOUGH", "RINGS ... ", nullptr);
 
-                int32 totalRings = player1->rings + (GET_CHARACTER_ID(2) ? player2->rings : 0);
-                if (totalRings >= HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID]) {
-                    this->failed = false;
-
-                    message->position.y = TO_FIXED(116);
-                    message->SetMessage(&HP_Message::State_SingleMessage, 0, 120, false, "COOL!", nullptr);
-
-                    sVars->sfxStarPost.Play();
-                }
-                else {
-                    this->failed           = true;
-
-                    message->position.y = TO_FIXED(116);
-                    message->SetMessage(&HP_Message::State_NotEnough, 0, 120, false, "NOT ENOUGH", "RINGS ... ", nullptr);
-
-                    sVars->sfxFail.Play();
-                }
-
-                this->iconAnimator.frameID = this->failed;
-                if (GET_CHARACTER_ID(1) == ID_KNUCKLES)
-                    this->iconAnimator.frameID += 2;
-
-                this->state.Set(&HP_Checkpoint::State_ShowResults);
-                this->stateDraw.Set(&HP_Checkpoint::Draw_Results);
+                sVars->sfxFail.Play();
             }
+
+            this->iconAnimator.frameID = this->failed;
+            if (GET_CHARACTER_ID(1) == ID_KNUCKLES)
+                this->iconAnimator.frameID += 2;
+
+            this->state.Set(&HP_Checkpoint::State_ShowResults);
+            this->stateDraw.Set(&HP_Checkpoint::Draw_Results);
         }
     }
 }
@@ -182,24 +124,11 @@ void HP_Checkpoint::State_ShowResults()
         HP_Player *player1 = GameObject::Get<HP_Player>(SLOT_HP_PLAYER1);
         HP_Player *player2 = GameObject::Get<HP_Player>(SLOT_HP_PLAYER2);
 
-        if (globals->gameMode == MODE_COMPETITION) {
-            if (++HP_Setup::sVars->checkpointID == 3) {
-                this->state.Set(&HP_Checkpoint::State_FadeOut);
-                this->stateDraw.Set(&HP_Checkpoint::Draw_Fade);
-                player1->stateInput.Set(nullptr);
-                player2->stateInput.Set(nullptr);
-            }
-            else {
-                this->state.Set(&HP_Checkpoint::State_ShowNewRingTarget);
-            }
-        }
-        else {
-            this->timer = 0;
-            this->state.Set(&HP_Checkpoint::State_ExitMessage);
-            this->scale.x = 0x200;
-            this->scale.y = 0x200;
-            this->drawFX |= FX_SCALE;
-        }
+        this->timer = 0;
+        this->state.Set(&HP_Checkpoint::State_ExitMessage);
+        this->scale.x = 0x200;
+        this->scale.y = 0x200;
+        this->drawFX |= FX_SCALE;
     }
 }
 void HP_Checkpoint::State_ExitMessage()
@@ -228,19 +157,13 @@ void HP_Checkpoint::State_ShowNewRingTarget()
         HP_Message *message = GameObject::Get<HP_Message>(SLOT_HP_MESSAGE);
         message->Reset(HP_Message::sVars->classID, 0);
 
-        if (globals->gameMode == MODE_COMPETITION) {
-            message->position.y = TO_FIXED(116);
-            message->SetMessage(&HP_Message::State_SingleMessage, 0, 90, false, "MOST RINGS WINS!", nullptr);
-        }
-        else {
-            HP_Setup::sVars->checkpointID++;
+        HP_Setup::sVars->checkpointID++;
 
-            message->position.y = TO_FIXED(116);
-            message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
-                                "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
-            message->stateDraw.Set(&HP_Message::Draw_GetRings);
+        message->position.y = TO_FIXED(116);
+        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
+                            "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
+        message->stateDraw.Set(&HP_Message::Draw_GetRings);
 
-        }
         this->Destroy();
     }
 }

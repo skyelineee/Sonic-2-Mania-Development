@@ -10,13 +10,15 @@
 #include "MenuSetup.hpp"
 #include "ExtrasMenu.hpp"
 #include "UILoadingIcon.hpp"
-#include "UIHeading.hpp"
 #include "UIWidgets.hpp"
 #include "OptionsMenu.hpp"
+#include "TimeAttackMenu.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/DialogRunner.hpp"
 #include "Helpers/Options.hpp"
+#include "Helpers/ReplayDB.hpp"
+#include "Helpers/TimeAttackData.hpp"
 #include "Global/Localization.hpp"
 #include "Global/SaveGame.hpp"
 #include "Global/Music.hpp"
@@ -46,8 +48,7 @@ void ManiaModeMenu::Initialize()
 
     MainMenu::Initialize();
     SaveMenu::Initialize();
-    // TimeAttackMenu::Initialize();
-    // CompetitionMenu::Initialize();
+    TimeAttackMenu::Initialize();
     OptionsMenu::Initialize();
     ExtrasMenu::Initialize();
 
@@ -90,7 +91,7 @@ bool32 ManiaModeMenu::InitAPI()
                 UILoadingIcon::StartWait();
                 Options::LoadOptionsBin();
                 SaveGame::LoadFile(&SaveGame::SaveLoadedCB);
-                //ReplayRecorder::LoadReplayDB(nullptr);
+                ReplayDB::LoadDB(&ReplayDB::LoadCallback);
 
                 MenuSetup::sVars->initializedSaves = true;
             }
@@ -98,8 +99,7 @@ bool32 ManiaModeMenu::InitAPI()
             if (MenuSetup::sVars->initializedAPI)
                 return true;
 
-            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK //&& globals->replayTableLoaded == STATUS_OK
-                /*&& globals->taTableLoaded == STATUS_OK*/) {
+            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK && globals->taTableLoaded == STATUS_OK) {
 
                 if (!API::Storage::GetNoSave() && DialogRunner::NotifyAutosave())
                     return false;
@@ -117,8 +117,7 @@ bool32 ManiaModeMenu::InitAPI()
                 return true;
             }
             else {
-                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR //|| globals->replayTableLoaded == STATUS_ERROR
-                    /*|| globals->taTableLoaded == STATUS_ERROR*/) {
+                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR || globals->replayTableLoaded == STATUS_ERROR || globals->taTableLoaded == STATUS_ERROR) {
                     int32 status = API::Storage::GetSaveStatus();
 
                     if (status != STATUS_CONTINUE) {
@@ -145,7 +144,6 @@ void ManiaModeMenu::InitLocalization(bool32 success)
 
         Localization::LoadStrings();
         UIWidgets::ApplyLanguage();
-        UIHeading::LoadSprites();
     }
 }
 
@@ -157,11 +155,13 @@ int32 ManiaModeMenu::GetActiveMenu()
         return MenuSetup::Main;
     }
 
-    /*if (control == TimeAttackMenu->timeAttackControl || control == TimeAttackMenu->timeAttackControl_Legacy
-        || control == TimeAttackMenu->taZoneSelControl || control == TimeAttackMenu->taDetailsControl
-        || control == TimeAttackMenu->leaderboardsControl || control == TimeAttackMenu->replaysControl {
-        return MenuSetup::TimeAttack;
-    }*/
+    if (control == TimeAttackMenu::sVars->timeAttackControl || control == TimeAttackMenu::sVars->taDetailsControl) {
+        return MenuSetup::TimeAttackMain;
+    } 
+    
+    if (control == TimeAttackMenu::sVars->taZoneSelControl || control == TimeAttackMenu::sVars->replaysControl) {
+        return MenuSetup::TimeAttackElse;
+    }
 
     if (control == ManiaModeMenu::sVars->saveSelectMenu || control == ManiaModeMenu::sVars->noSaveMenu
         || control == ManiaModeMenu::sVars->secretsMenu) {
@@ -172,7 +172,7 @@ int32 ManiaModeMenu::GetActiveMenu()
         return MenuSetup::OptionsMain;
     }
 
-    if (control == OptionsMenu::sVars->videoControl || control == OptionsMenu::sVars->videoControl_Windows || control == OptionsMenu::sVars->soundControl
+    if (control == OptionsMenu::sVars->videoControl_Windows || control == OptionsMenu::sVars->soundControl
         || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB || control == OptionsMenu::sVars->controlsControl_PS4
         || control == OptionsMenu::sVars->controlsControl_XB1 || control == OptionsMenu::sVars->controlsControl_NX
         || control == OptionsMenu::sVars->controlsControl_NXGrip || control == OptionsMenu::sVars->controlsControl_NXJoycon
@@ -190,9 +190,10 @@ void ManiaModeMenu::ChangeMenuTrack()
     switch (ManiaModeMenu::GetActiveMenu()) {
         default:
         case MenuSetup::Main: trackID = 0; break;
-        case MenuSetup::TimeAttack: trackID = 1; break;
-        case MenuSetup::SaveSelect: trackID = 2; break;
-        case MenuSetup::OptionsMain:                   ;
+        case MenuSetup::TimeAttackMain: ;
+        case MenuSetup::TimeAttackElse: trackID = 2; break;
+        case MenuSetup::SaveSelect: trackID = 1; break;
+        case MenuSetup::OptionsMain: ;
         case MenuSetup::OptionsElse: trackID = 0; break;
     }
 
@@ -215,7 +216,24 @@ void ManiaModeMenu::ChangeMenuBG()
             RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             break;
-        case MenuSetup::TimeAttack:  break;
+        case MenuSetup::TimeAttackMain:
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            break;
+        case MenuSetup::TimeAttackElse: 
+            RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
+            RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
+            RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
+            RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = 2;
+            break;
         case MenuSetup::SaveSelect: 
             RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
             RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
@@ -258,7 +276,7 @@ void ManiaModeMenu::StartReturnToTitle()
 
 void ManiaModeMenu::ReturnToTitle()
 {
-    //TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     Stage::SetScene("Presentation", "Title Screen");
     Stage::LoadScene();
@@ -274,7 +292,7 @@ void ManiaModeMenu::HandleUnlocks()
 {
     MainMenu::HandleUnlocks();
     SaveMenu::HandleUnlocks();
-    //TimeAttackMenu::HandleUnlocks();
+    TimeAttackMenu::HandleUnlocks();
     OptionsMenu::HandleUnlocks();
     ExtrasMenu::HandleUnlocks();
 }
@@ -283,14 +301,14 @@ void ManiaModeMenu::SetupActions()
 {
     MainMenu::SetupActions();
     SaveMenu::SetupActions();
-    //TimeAttackMenu::SetupActions();
+    TimeAttackMenu::SetupActions();
     OptionsMenu::SetupActions();
     ExtrasMenu::SetupActions();
 }
 
 void ManiaModeMenu::HandleMenuReturn()
 {
-    MenuParam *param = (MenuParam *)globals->menuParam;
+    MenuParam *param = MenuParam::GetMenuParam();
 
     char buffer[0x100];
     memset(buffer, 0, 0x100);
@@ -312,22 +330,23 @@ void ManiaModeMenu::HandleMenuReturn()
     }
 
     SaveMenu::HandleMenuReturn(0);
-    //TimeAttackMenu::HandleMenuReturn();
+    TimeAttackMenu::HandleMenuReturn();
     OptionsMenu::HandleMenuReturn();
 
-    int32 characterID = 0, zoneID = 0, act = 0, isEncoreMode = false;
-    if (param->inTimeAttack) {
+    int32 zoneID = 0, actID = 0, characterID = 0;
+    bool32 inTimeAttack = param->inTimeAttack;
+    if (inTimeAttack) {
         characterID  = param->characterID;
         zoneID       = param->zoneID;
-        act          = param->actID;
+        actID        = param->actID;
     }
 
-    //TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
-    if (param->inTimeAttack) {
+    if (inTimeAttack) {
         param->characterID  = characterID;
         param->zoneID       = zoneID;
-        param->actID        = act;
+        param->actID        = actID;
     }
 }
 

@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------
 // RSDK Project: Sonic 2 Mania
 // Object Description: UITransition Object
-// Object Author: Ducky
+// Object Author: AChickMcNuggie
 // ---------------------------------------------------------------------
 
 #include "UITransition.hpp"
@@ -10,6 +10,7 @@
 #include "UIWidgets.hpp"
 #include "MenuSetup.hpp"
 #include "ManiaModeMenu.hpp"
+#include "Helpers/FXFade.hpp"
 
 using namespace RSDK;
 
@@ -26,22 +27,12 @@ void UITransition::LateUpdate() {}
 
 void UITransition::StaticUpdate() {}
 
-void UITransition::Draw()
-{
-    if (this->isTransitioning)
-        DrawShapes();
-}
+void UITransition::Draw() { UITransition::DrawFade(); }
 
 void UITransition::Create(void *data)
 {
     this->active       = ACTIVE_ALWAYS;
     this->drawGroup    = 13;
-    this->drawPos[0].x = 0;
-    this->drawPos[0].y = 0;
-    this->drawPos[1].x = 0;
-    this->drawPos[1].y = 0;
-    this->drawPos[2].x = 0;
-    this->drawPos[2].y = 0;
 
     this->visible = true;
     this->state.Set(&UITransition::State_Init);
@@ -59,6 +50,7 @@ void UITransition::StartTransition(void (*callback)(), int32 delay)
     if (transition->state.Matches(&UITransition::State_Init) && !UIDialog::sVars->activeDialog) {
         transition->state.Set(&UITransition::State_TransitionIn);
         transition->timer      = 0;
+        transition->fadeColor  = 0x000000;
         transition->delay      = delay;
         transition->callback.Set(callback);
         transition->prevEntity = (Entity *)sceneInfo->entity;
@@ -76,6 +68,7 @@ void UITransition::StartTransition(Action<void> callback, int32 delay)
     if (transition->state.Matches(&UITransition::State_Init) && !UIDialog::sVars->activeDialog) {
         transition->state.Set(&UITransition::State_TransitionIn);
         transition->timer = 0;
+        transition->fadeColor   = 0x000000;
         transition->delay = delay;
         transition->callback = callback;
         transition->prevEntity = (Entity *)sceneInfo->entity;
@@ -105,34 +98,33 @@ void UITransition::SetNewTag(const char *text)
     }
 }
 
-void UITransition::DrawShapes()
+void UITransition::DrawFade()
 {
-    Vector2 positions[3];
-    uint32 colors[3];
-
-    colors[0] = 0xE48E00;
-    colors[1] = 0x1888F0;
-    colors[2] = 0xE82858;
-
-    int32 screenCenterX = (screenInfo->position.x + screenInfo->center.x) << 16;
-    int32 screenCenterY = (screenInfo->position.y + screenInfo->center.y) << 16;
-    positions[0].x      = screenCenterX + this->drawPos[0].x - 0xF00000;
-    positions[0].y      = screenCenterY + this->drawPos[0].y;
-    positions[1].x      = screenCenterX + this->drawPos[1].x;
-    positions[1].y      = screenCenterY + this->drawPos[1].y;
-    positions[2].x      = screenCenterX + this->drawPos[2].x + 0xF00000;
-    positions[2].y      = screenCenterY + this->drawPos[2].y;
-
-    for (int32 i = 0; i < 3; ++i) {
-        UIWidgets::DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF,
-                                    colors[i] & 0xFF);
+    if (FXFade::sVars) {
+        if (this->isTransitioning) {
+            FXFade *fxFade   = GameObject::Create<FXFade>(this->fadeColor, this->position.x, this->position.y);
+            fxFade->active   = ACTIVE_ALWAYS;
+            fxFade->speedIn  = 26;
+            fxFade->speedOut = 26;
+            fxFade->state.Set(&FXFade::State_FadeOut);
+        }
     }
 }
 
 void UITransition::State_Init()
 {
     this->isTransitioning = false;
-    this->timer           = 0;
+
+    if (this->timer == 32) {
+        UIControl *control = UIControl::GetUIControl();
+        if (control)
+            control->selectionDisabled = false;
+
+        this->timer = 0;
+    }
+    else {
+        ++this->timer;
+    }
 }
 
 void UITransition::State_TransitionIn()
@@ -140,13 +132,7 @@ void UITransition::State_TransitionIn()
     if (this->timer < this->delay)
         this->isTransitioning = false;
 
-    if (this->timer > this->delay + 16) {
-        this->drawPos[0].y = 0;
-        this->drawPos[1].x = 0;
-        this->drawPos[1].y = 0;
-        this->drawPos[2].y = 0;
-        this->drawPos[0].x = 0;
-        this->drawPos[2].x = 0;
+    if (this->timer > this->delay + 17) {
         this->timer        = 0;
         this->state.Set(&UITransition::State_TransitionOut);
     }
@@ -157,59 +143,6 @@ void UITransition::State_TransitionIn()
         if (!remain)
             UIWidgets::sVars->sfxWoosh.Play(false, 255);
 
-        int32 offsets[3];
-        offsets[0] = CLAMP(remain, 0, 8);
-        offsets[1] = CLAMP(remain - 4, 0, 8);
-        offsets[2] = CLAMP(remain - 8, 0, 8);
-
-        int32 percent = 32 * offsets[0];
-        if (percent > 0) {
-            if (percent < 256) {
-                this->drawPos[0].x = -0xF000 * percent + 0xF00000;
-                this->drawPos[0].y = 0xF000 * percent - 0xF00000;
-            }
-            else {
-                this->drawPos[0].x = 0;
-                this->drawPos[0].y = 0;
-            }
-        }
-        else {
-            this->drawPos[0].x = 0xF00000;
-            this->drawPos[0].y = -0xF00000;
-        }
-
-        percent = 32 * offsets[1];
-        if (percent > 0) {
-            if (percent < 256) {
-                this->drawPos[1].x = 0xF000 * percent - 0xF00000;
-                this->drawPos[1].y = -0xF000 * percent + 0xF00000;
-            }
-            else {
-                this->drawPos[1].x = 0;
-                this->drawPos[1].y = 0;
-            }
-        }
-        else {
-            this->drawPos[1].x = -0xF00000;
-            this->drawPos[1].y = 0xF00000;
-        }
-
-        percent = 32 * offsets[2];
-        if (percent > 0) {
-            if (percent < 256) {
-                this->drawPos[2].x = -0xF000 * percent + 0xF00000;
-                this->drawPos[2].y = 0xF000 * percent - 0xF00000;
-            }
-            else {
-                this->drawPos[2].x = 0;
-                this->drawPos[2].y = 0;
-            }
-        }
-        else {
-            this->drawPos[2].x = 0xF00000;
-            this->drawPos[2].y = -0xF00000;
-        }
-
         ++this->timer;
     }
 }
@@ -217,77 +150,13 @@ void UITransition::State_TransitionIn()
 void UITransition::State_TransitionOut()
 {
     if (this->timer >= 1) {
-        if (this->timer > 16) {
+        if (this->timer > 17) {
             this->timer           = 0;
             this->isTransitioning = false;
-            this->drawPos[0].x    = -0xF00000;
-            this->drawPos[0].y    = 0xF00000;
-            this->drawPos[1].x    = 0xF00000;
-            this->drawPos[1].y    = -0xF00000;
-            this->drawPos[2].x    = -0xF00000;
-            this->drawPos[2].y    = 0xF00000;
-
-            UIControl *control = UIControl::GetUIControl();
-            if (control)
-                control->selectionDisabled = false;
-
             this->state.Set(&UITransition::State_Init);
         }
         else {
             this->isTransitioning = true;
-            int32 offsets[3];
-
-            offsets[0] = CLAMP(this->timer - 1, 0, 8);
-            offsets[1] = CLAMP(this->timer - 4, 0, 8);
-            offsets[2] = CLAMP(this->timer - 1, 0, 8);
-
-            int32 percent = 32 * offsets[0];
-            if (percent > 0) {
-                if (percent < 256) {
-                    this->drawPos[0].x = -0xF000 * percent;
-                    this->drawPos[0].y = 0xF000 * percent;
-                }
-                else {
-                    this->drawPos[0].x = -0xF00000;
-                    this->drawPos[0].y = 0xF00000;
-                }
-            }
-            else {
-                this->drawPos[0].x = 0;
-                this->drawPos[0].y = 0;
-            }
-
-            percent = 32 * offsets[1];
-            if (percent > 0) {
-                if (percent < 256) {
-                    this->drawPos[1].x = 0xF000 * percent;
-                    this->drawPos[1].y = -0xF000 * percent;
-                }
-                else {
-                    this->drawPos[1].x = 0xF00000;
-                    this->drawPos[1].y = -0xF00000;
-                }
-            }
-            else {
-                this->drawPos[1].x = 0;
-                this->drawPos[1].y = 0;
-            }
-
-            percent = 32 * offsets[2];
-            if (percent > 0) {
-                if (percent < 256) {
-                    this->drawPos[2].x = -0xF000 * percent;
-                    this->drawPos[2].y = 0x1E0000 * offsets[2];
-                }
-                else {
-                    this->drawPos[2].x = -0xF00000;
-                    this->drawPos[2].y = 0xF00000;
-                }
-            }
-            else {
-                this->drawPos[2].x = 0;
-                this->drawPos[2].y = 0;
-            }
 
             ++this->timer;
         }

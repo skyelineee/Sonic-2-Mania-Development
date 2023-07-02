@@ -253,6 +253,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Objects\Global\SuperSparkle.cpp" />
+    <ClCompile Include="Objects\Global\TimeAttackGate.cpp" />
     <ClCompile Include="Objects\Global\TitleCard.cpp" />
     <ClCompile Include="Objects\Global\Zone.cpp" />
     <ClCompile Include="Objects\Helpers\BadnikHelpers.cpp" />
@@ -271,6 +272,7 @@
     <ClCompile Include="Objects\Helpers\Options.cpp" />
     <ClCompile Include="Objects\Helpers\PlayerHelpers.cpp" />
     <ClCompile Include="Objects\Helpers\PlayerProbe.cpp" />
+    <ClCompile Include="Objects\Helpers\ReplayDB.cpp" />
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="Objects\Menu\ExtrasMenu.cpp" />
@@ -282,24 +284,31 @@
     <ClCompile Include="Objects\Menu\SaveMenu.cpp" />
     <ClCompile Include="Objects\Menu\SaveMenuIconBG.cpp" />
     <ClCompile Include="Objects\Menu\Sega.cpp" />
+    <ClCompile Include="Objects\Menu\TAMenuIconBG.cpp" />
+    <ClCompile Include="Objects\Menu\TimeAttackMenu.cpp" />
     <ClCompile Include="Objects\Menu\UIButton.cpp" />
+    <ClCompile Include="Objects\Menu\UIButtonLabel.cpp" />
     <ClCompile Include="Objects\Menu\UIButtonPrompt.cpp" />
     <ClCompile Include="Objects\Menu\UICarousel.cpp" />
+    <ClCompile Include="Objects\Menu\UICharButton.cpp" />
     <ClCompile Include="Objects\Menu\UIChoice.cpp" />
     <ClCompile Include="Objects\Menu\UIControl.cpp" />
     <ClCompile Include="Objects\Menu\UIDialog.cpp" />
     <ClCompile Include="Objects\Menu\UIDiorama.cpp" />
-    <ClCompile Include="Objects\Menu\UIHeading.cpp" />
-    <ClCompile Include="Objects\Menu\UIInfoLabel.cpp" />
     <ClCompile Include="Objects\Menu\UIKeyBinder.cpp" />
     <ClCompile Include="Objects\Menu\UILoadingIcon.cpp" />
     <ClCompile Include="Objects\Menu\UIOptionPanel.cpp" />
     <ClCompile Include="Objects\Menu\UIPicture.cpp" />
+    <ClCompile Include="Objects\Menu\UIPopover.cpp" />
+    <ClCompile Include="Objects\Menu\UIRankButton.cpp" />
+    <ClCompile Include="Objects\Menu\UIReplayCarousel.cpp" />
     <ClCompile Include="Objects\Menu\UIResPicker.cpp" />
     <ClCompile Include="Objects\Menu\UISaveSlot.cpp" />
     <ClCompile Include="Objects\Menu\UIShifter.cpp" />
     <ClCompile Include="Objects\Menu\UISlider.cpp" />
     <ClCompile Include="Objects\Menu\UISubHeading.cpp" />
+    <ClCompile Include="Objects\Menu\UITABanner.cpp" />
+    <ClCompile Include="Objects\Menu\UITAZoneModule.cpp" />
     <ClCompile Include="Objects\Menu\UITransition.cpp" />
     <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Menu\UIWinSize.cpp" />
@@ -408,6 +417,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Objects\Global\SuperSparkle.hpp" />
+    <ClInclude Include="Objects\Global\TimeAttackGate.hpp" />
     <ClInclude Include="Objects\Global\TitleCard.hpp" />
     <ClInclude Include="Objects\Global\Zone.hpp" />
     <ClInclude Include="Objects\Helpers\BadnikHelpers.hpp" />
@@ -426,6 +436,7 @@
     <ClInclude Include="Objects\Helpers\Options.hpp" />
     <ClInclude Include="Objects\Helpers\PlayerHelpers.hpp" />
     <ClInclude Include="Objects\Helpers\PlayerProbe.hpp" />
+    <ClInclude Include="Objects\Helpers\ReplayDB.hpp" />
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\Menu\ExtrasMenu.hpp" />
@@ -437,24 +448,31 @@
     <ClInclude Include="Objects\Menu\SaveMenu.hpp" />
     <ClInclude Include="Objects\Menu\SaveMenuIconBG.hpp" />
     <ClInclude Include="Objects\Menu\Sega.hpp" />
+    <ClInclude Include="Objects\Menu\TAMenuIconBG.hpp" />
+    <ClInclude Include="Objects\Menu\TimeAttackMenu.hpp" />
     <ClInclude Include="Objects\Menu\UIButton.hpp" />
+    <ClInclude Include="Objects\Menu\UIButtonLabel.hpp" />
     <ClInclude Include="Objects\Menu\UIButtonPrompt.hpp" />
     <ClInclude Include="Objects\Menu\UICarousel.hpp" />
+    <ClInclude Include="Objects\Menu\UICharButton.hpp" />
     <ClInclude Include="Objects\Menu\UIChoice.hpp" />
     <ClInclude Include="Objects\Menu\UIControl.hpp" />
     <ClInclude Include="Objects\Menu\UIDialog.hpp" />
     <ClInclude Include="Objects\Menu\UIDiorama.hpp" />
-    <ClInclude Include="Objects\Menu\UIHeading.hpp" />
-    <ClInclude Include="Objects\Menu\UIInfoLabel.hpp" />
     <ClInclude Include="Objects\Menu\UIKeyBinder.hpp" />
     <ClInclude Include="Objects\Menu\UILoadingIcon.hpp" />
     <ClInclude Include="Objects\Menu\UIOptionPanel.hpp" />
     <ClInclude Include="Objects\Menu\UIPicture.hpp" />
+    <ClInclude Include="Objects\Menu\UIPopover.hpp" />
+    <ClInclude Include="Objects\Menu\UIRankButton.hpp" />
+    <ClInclude Include="Objects\Menu\UIReplayCarousel.hpp" />
     <ClInclude Include="Objects\Menu\UIResPicker.hpp" />
     <ClInclude Include="Objects\Menu\UISaveSlot.hpp" />
     <ClInclude Include="Objects\Menu\UIShifter.hpp" />
     <ClInclude Include="Objects\Menu\UISlider.hpp" />
     <ClInclude Include="Objects\Menu\UISubHeading.hpp" />
+    <ClInclude Include="Objects\Menu\UITABanner.hpp" />
+    <ClInclude Include="Objects\Menu\UITAZoneModule.hpp" />
     <ClInclude Include="Objects\Menu\UITransition.hpp" />
     <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Menu\UIWinSize.hpp" />

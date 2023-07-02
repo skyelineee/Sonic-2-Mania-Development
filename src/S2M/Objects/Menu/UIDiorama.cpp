@@ -151,6 +151,22 @@ void UIDiorama::ChangeDiorama(uint8 dioramaID)
             this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 9);
             break;
 
+        case UIDIORAMA_VIDEO:
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 10);
+            break;
+
+        case UIDIORAMA_SOUND:
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 11);
+            break;
+
+        case UIDIORAMA_CONTROLS:
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 12);
+            break;
+
+        case UIDIORAMA_DATA: 
+            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 13);
+            break;
+
         default: break;
     }
 }

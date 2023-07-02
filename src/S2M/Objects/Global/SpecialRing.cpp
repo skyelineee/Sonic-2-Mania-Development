@@ -105,7 +105,7 @@ void SpecialRing::StageLoad()
     DebugMode::AddObject(sVars->classID, &SpecialRing::DebugSpawn, &SpecialRing::DebugDraw);
 
     for (auto ring : GameObject::GetEntities<SpecialRing>(FOR_ALL_ENTITIES)) {
-        if (ring->id <= 0 || globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION || (globals->secrets & SECRET_NOITEMS)) {
+        if (ring->id <= 0 || globals->gameMode == MODE_TIMEATTACK || (globals->secrets & SECRET_NOITEMS)) {
             ring->enabled = false;
         }
         else {
@@ -118,19 +118,17 @@ void SpecialRing::StageLoad()
                     player->position.y = ring->position.y + 0x100000;
                     if (!p) {
                         Player *player2 = GameObject::Get<Player>(SLOT_PLAYER2);
-                        if (globals->gameMode != MODE_COMPETITION) {
-                            player2->position.x = player->position.x;
-                            player2->position.y = player->position.y;
-                            player2->direction  = player->direction;
-                            if (player->direction)
-                                player2->position.x += 0x100000;
-                            else
-                                player2->position.x -= 0x100000;
+                        player2->position.x = player->position.x;
+                        player2->position.y = player->position.y;
+                        player2->direction  = player->direction;
+                        if (player->direction)
+                            player2->position.x += 0x100000;
+                        else
+                            player2->position.x -= 0x100000;
 
-                            for (int32 f = 0; f < 0x10; ++f) {
-                                Player::sVars->leaderPositionBuffer[f].x = player->position.x;
-                                Player::sVars->leaderPositionBuffer[f].y = player->position.y;
-                            }
+                        for (int32 f = 0; f < 0x10; ++f) {
+                            Player::sVars->leaderPositionBuffer[f].x = player->position.x;
+                            Player::sVars->leaderPositionBuffer[f].y = player->position.y;
                         }
                     }
                 }
@@ -262,9 +260,6 @@ void SpecialRing::State_Warp()
         if (this->disableHPZ) {
             Stage::SetScene("Special Stage", "");
             sceneInfo->listPos += saveRAM->nextSpecialStage;
-
-            if (globals->gameMode == MODE_ENCORE)
-                sceneInfo->listPos += 7;
         }
         else {
             // Stage::SetScene("Mania Mode", "Hidden Palace Zone");

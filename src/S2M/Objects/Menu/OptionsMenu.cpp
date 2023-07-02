@@ -21,6 +21,8 @@
 #include "Helpers/Options.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Helpers/GameProgress.hpp"
+#include "Helpers/ReplayDB.hpp"
+#include "Helpers/TimeAttackData.hpp"
 #include "Global/Localization.hpp"
 #include "Global/SaveGame.hpp"
 
@@ -45,10 +47,10 @@ void OptionsMenu::StaticUpdate()
             int32 selectedID = button->nameFrameID;
 
             switch (selectedID) {
-                case 0: diorama->dioramaID = UIDiorama::UIDIORAMA_BOSSRUSH; break;
-                case 1: diorama->dioramaID = UIDiorama::UIDIORAMA_MUSICPLAYER; break;
-                case 2: diorama->dioramaID = UIDiorama::UIDIORAMA_LEVELSELECT; break;
-                case 3: diorama->dioramaID = UIDiorama::UIDIORAMA_EXTRALEVELS; break;
+                case 0: diorama->dioramaID = UIDiorama::UIDIORAMA_VIDEO; break;
+                case 1: diorama->dioramaID = UIDiorama::UIDIORAMA_SOUND; break;
+                case 2: diorama->dioramaID = UIDiorama::UIDIORAMA_CONTROLS; break;
+                case 3: diorama->dioramaID = UIDiorama::UIDIORAMA_DATA; break;
                 default: break;
             }
 
@@ -60,7 +62,7 @@ void OptionsMenu::StaticUpdate()
                     UIButton *button = control->buttons[i];
                     if (button->nameFrameID > selectedID) {
                         button->position.y        = button->startPos.y + TO_FIXED(48);
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->buttonListID      = 9;
                         button->nameListID        = 11;
                     }
@@ -74,7 +76,7 @@ void OptionsMenu::StaticUpdate()
                     else {
                         button->buttonListID      = 9;
                         button->nameListID        = 11;
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->position.y        = button->startPos.y;
                     }
                 }
@@ -93,7 +95,7 @@ void OptionsMenu::StaticUpdate()
                     UIButton *button = dataControl->buttons[i];
                     if (button->nameFrameID > selectedID) {
                         button->position.y        = button->startPos.y + TO_FIXED(48);
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->buttonListID      = 9;
                         button->nameListID        = 13;
                     }
@@ -107,7 +109,7 @@ void OptionsMenu::StaticUpdate()
                     else {
                         button->buttonListID      = 9;
                         button->nameListID        = 13;
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->position.y        = button->startPos.y;
                     }
                 }
@@ -133,10 +135,6 @@ void OptionsMenu::Initialize()
         tag.Set("Options");
         if (tag.Compare(&tag, &control->tag, false))
             sVars->optionsControl = control;
-
-        tag.Set("Video");
-        if (tag.Compare(&tag, &control->tag, false))
-            sVars->videoControl = control;
 
         tag.Set("Video WIN");
         if (tag.Compare(&tag, &control->tag, false))
@@ -183,14 +181,6 @@ void OptionsMenu::Initialize()
             sVars->dataOptionsControl = control;
     }
 
-    for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES))
-    {
-        UIControl *controller = sVars->optionsControl;
-
-        if (UIControl::ContainsPos(controller, &prompt->position) && prompt->buttonID == 3)
-            sVars->helpPrompt = prompt;
-    }
-
     for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES))
     {
         UIControl *controller = sVars->optionsControl;
@@ -210,7 +200,6 @@ void OptionsMenu::HandleUnlocks()
 void OptionsMenu::SetupActions()
 {
     UIControl *optionsControl         = sVars->optionsControl;
-    UIControl *videoControl           = sVars->videoControl;
     UIControl *controlsControl_Win    = sVars->controlsControl_Windows;
     UIControl *videoControl_Win       = sVars->videoControl_Windows;
     UIControl *soundControl           = sVars->soundControl;
@@ -238,10 +227,7 @@ void OptionsMenu::SetupActions()
             }
         }
 
-        if (UIControl::ContainsPos(videoControl, &button->position) && button->nameListID == 3 && button->nameFrameID == 0)
-            button->choiceChangeCB.Set(&OptionsMenu::ShaderButton_ActionCB);
-
-        if (UIControl::ContainsPos(controlsControl_Win, &button->position) && button->nameListID == 17 && button->nameFrameID == 1)
+        if (UIControl::ContainsPos(controlsControl_Win, &button->position) && button->nameListID == 24 && button->nameFrameID == 2)
             button->actionCB.Set(&OptionsMenu::SetDefaultMappings);
 
         if (UIControl::ContainsPos(videoControl_Win, &button->position) && button->nameListID == 14) {
@@ -276,26 +262,14 @@ void OptionsMenu::SetupActions()
     videoControl_Win->menuUpdateCB.Set(&OptionsMenu::VideoControl_Win_MenuUpdateCB);
     videoControl_Win->yPressCB.Set(&OptionsMenu::VideoControl_Win_YPressCB);
     videoControl_Win->backPressCB.Set(&OptionsMenu::VideoControl_Win_BackPressCB);
-
-    if (SKU->platform == PLATFORM_SWITCH || SKU->platform == PLATFORM_DEV) {
-        optionsControl->yPressCB.Set(&OptionsMenu::ShowManual);
-    }
-    else {
-        UIButtonPrompt *prompt = sVars->helpPrompt;
-        prompt->visible              = false;
-    }
 }
 
 void OptionsMenu::HandleMenuReturn()
 {
-    UIControl *videoControl        = sVars->videoControl;
     UIControl *soundControl        = sVars->soundControl;
 
     if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_DEV)
         OptionsMenu::InitVideoOptionsMenu();
-
-    UIButton *button = videoControl->buttons[0];
-    UIButton::SetChoiceSelection(button, Graphics::GetVideoSetting(VIDEOSETTING_SHADERID));
 
     UISlider *musSlider = (UISlider *)soundControl->buttons[0];
     musSlider->sliderPos = Graphics::GetVideoSetting(VIDEOSETTING_STREAM_VOL);
@@ -377,15 +351,15 @@ void OptionsMenu::DlgRunnerCB_RevertVideoChanges()
     Localization::GetString(&message, Localization::VideoChangesApplied);
     // This is bugged! Using `OptionsMenu_ApplyChangesDlg_BackPress_NoCB` causes the settings to be reverted instead of saved!
     // This should have called a modified version of `OptionsMenu_ApplyChangesDlg_Win_YesCB` which also transitions to the previous menu!
+    // fixed :]]]
 
     Action<void> callbackYes = {};
-    callbackYes.Set(&OptionsMenu::ApplyChangesDlg_BackPress_NoCB);
+    callbackYes.Set(&OptionsMenu::ApplyChangesDlg_Win_BackPress_YesCB);
 
     Action<void> callbackNo = {};
     callbackNo.Set(&OptionsMenu::ApplyChangesDlg_NoCB);
 
-    UIDialog *dialog =
-        UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
+    UIDialog *dialog = UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
     if (dialog)
         dialog->closeDelay = 15 * 60; // 15 seconds at 60 FPS
 }
@@ -421,7 +395,7 @@ void OptionsMenu::ApplyChangesDlg_BackPress_YesCB()
     callback.Set(&DialogRunner::HandleCallback);
     DialogRunner *dialogRunner = GameObject::Create<DialogRunner>(&callback, 0, 0);
 
-    dialogRunner->callback.Set(&OptionsMenu::DlgRunnerCB_RevertVideoChanges);
+    dialogRunner->state.Set(&OptionsMenu::DlgRunnerCB_RevertVideoChanges);
     dialogRunner->timer       = 0;
     dialogRunner->isPermanent = true;
 }
@@ -452,6 +426,15 @@ void OptionsMenu::ApplyChangesDlg_Win_YesCB()
     Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
     Graphics::SetVideoSetting(VIDEOSETTING_WRITE, true);
     Graphics::SetVideoSetting(VIDEOSETTING_STORE, false);
+}
+
+void OptionsMenu::ApplyChangesDlg_Win_BackPress_YesCB()
+{
+    Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
+    Graphics::SetVideoSetting(VIDEOSETTING_WRITE, true);
+    Graphics::SetVideoSetting(VIDEOSETTING_STORE, false);
+
+    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
 }
 
 void OptionsMenu::ApplyChangesDlg_BackPress_NoCB()
@@ -612,7 +595,7 @@ void OptionsMenu::SaveOptionsCB_Action(bool32 success)
 
     UILoadingIcon::FinishWait();
 
-    //TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Options");
     MenuSetup::StartTransition(OptionsMenu::TransitionCB_ReloadScene, 32);
@@ -751,12 +734,6 @@ void OptionsMenu::UISlider_ChangedCB()
     Options::sVars->changed = true;
 }
 
-void OptionsMenu::ShowManual()
-{
-    UIWidgets::sVars->sfxAccept.Play(false, 0xFF);
-    API::LaunchManual();
-}
-
 void OptionsMenu::EraseSaveDataCB(bool32 success)
 {
     String message;
@@ -835,7 +812,7 @@ void OptionsMenu::AreYouSureDlg_YesCB_EraseTimeAttack()
     UILoadingIcon::StartWait();
     APITable->RemoveAllDBRows(globals->taTableID);
 
-    //TimeAttackData::SaveDB(OptionsMenu::EraseSaveDataCB);
+    TimeAttackData::SaveDB(&OptionsMenu::EraseSaveDataCB);
     LogHelpers::Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
 }
 
@@ -867,16 +844,15 @@ void OptionsMenu::AreYouSureDlg_YesCB_EraseReplays()
     APITable->SetupUserDBRowSorting(globals->taTableID);
 
     if (APITable->GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
-        //ReplayDB::SaveDB(OptionsMenu::EraseReplaysCB);
+        ReplayDB::SaveDB(&OptionsMenu::EraseReplaysCB);
     }
     else {
         int32 row = APITable->GetSortedUserDBRowID(globals->replayTableID, 0);
-        //ReplayDB::DeleteReplay(row, OptionsMenu::EraseReplaysCB, true);
+        ReplayDB::DeleteReplay(row, OptionsMenu::EraseReplaysCB, true);
     }
 }
 
-void OptionsMenu_EraseReplaysCB(bool32 success) { //TimeAttackData::SaveDB(OptionsMenu::EraseSaveDataCB);
-}
+void OptionsMenu::EraseReplaysCB(bool32 success) { TimeAttackData::SaveDB(&OptionsMenu::EraseSaveDataCB); }
 
 void OptionsMenu::EraseReplaysButton_ActionCB()
 {

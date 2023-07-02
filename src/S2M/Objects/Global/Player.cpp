@@ -18,7 +18,7 @@
 #include "Ring.hpp"
 #include "ItemBox.hpp"
 #include "Animals.hpp"
-#include "Animals.hpp"
+#include "Announcer.hpp"
 #include "ScoreBonus.hpp"
 #include "SuperSparkle.hpp"
 #include "SuperFlicky.hpp"
@@ -28,7 +28,6 @@
 #include "Common/Water.hpp"
 
 #include "Helpers/FXFade.hpp"
-// #include "Competition/CompetitionSession.hpp"
 #include "Helpers/BadnikHelpers.hpp"
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/LogHelpers.hpp"
@@ -86,7 +85,7 @@ void Player::Update()
                 if (!this->invincibleTimer) {
                     ApplyShield();
 
-                    if (globals->gameMode != MODE_ENCORE || !this->sidekick) {
+                    if (!this->sidekick) {
                         bool32 stopPlaying = true;
                         for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
                             if (player->invincibleTimer > 0)
@@ -224,7 +223,7 @@ void Player::LateUpdate()
     if (this->deathType) {
         this->abilityValues[0] = 0;
 
-        if (this->sidekick || globals->gameMode == MODE_COMPETITION || globals->gameMode == MODE_ENCORE) {
+        if (this->sidekick) {
             if (this->invincibleTimer > 1)
                 this->invincibleTimer = 1;
             if (this->speedShoesTimer > 1)
@@ -249,8 +248,7 @@ void Player::LateUpdate()
         this->interaction    = false;
         this->tileCollisions = TILECOLLISION_NONE;
 
-        if (globals->gameMode != MODE_COMPETITION)
-            this->active = ACTIVE_ALWAYS;
+        this->active = ACTIVE_ALWAYS;
 
         this->shield         = Shield::None;
         this->collisionFlagH = 0;
@@ -275,19 +273,7 @@ void Player::LateUpdate()
                 if (!(this->drawFX & FX_SCALE) || this->scale.x == 0x200)
                     this->drawGroup = Zone::sVars->playerDrawGroup[1];
 
-                if (this->sidekick || globals->gameMode == MODE_COMPETITION) {
-                    if (this->camera) {
-                        this->scrollDelay = 2;
-                        this->camera->state.Set(nullptr);
-                    }
-                }
-                else if (globals->gameMode == MODE_ENCORE) {
-                    Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
-                    if (!globals->stock && !sidekick->classID) {
-                        Stage::SetEngineState(ENGINESTATE_FROZEN);
-                        sceneInfo->timeEnabled = false;
-                    }
-
+                if (this->sidekick) {
                     if (this->camera) {
                         this->scrollDelay = 2;
                         this->camera->state.Set(nullptr);
@@ -316,18 +302,7 @@ void Player::LateUpdate()
                 this->stateGravity.Set(&Player::Gravity_NULL);
 
                 if (!this->sidekick) {
-                    if (globals->gameMode == MODE_COMPETITION) {
-                        Music::JingleFadeOut(Music::TRACK_DROWNING, false);
-                    }
-                    else if (globals->gameMode == MODE_ENCORE) {
-                        Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
-                        if (globals->stock == 0 && !sidekick->classID) {
-                            sceneInfo->timeEnabled = false;
-                        }
-                    }
-                    else {
-                        sceneInfo->timeEnabled = false;
-                    }
+                    sceneInfo->timeEnabled = false;
                 }
 
                 if (this->camera) {
@@ -709,8 +684,11 @@ void Player::Create(void *data)
         this->state.Set(&Player::State_Ground);
 
         // Handle Input Setup
-        if (!sceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
+        if (!sceneInfo->entitySlot) {
             this->stateInput.Set(&Player::Input_Gamepad);
+        }
+        else if (sceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
+            sVars->configureGhostCB.Run(this);
         }
         else {
             Input::AssignInputSlotToDevice(this->controllerID, Input::INPUT_AUTOASSIGN);
@@ -776,7 +754,8 @@ void Player::StageLoad()
     Dev::AddViewableVariable("Debug Mode", &sceneInfo->debugMode, Dev::VIEWVAR_BOOL, false, true);
 
     // TEMP
-    sceneInfo->debugMode = true;
+    if (globals->gameMode != MODE_TIMEATTACK)
+        sceneInfo->debugMode = true;
 
     if (globals->medalMods & MEDAL_ANDKNUCKLES) {
         globals->playerID &= 0xFF;
@@ -788,19 +767,9 @@ void Player::StageLoad()
     sVars->active            = ACTIVE_ALWAYS;
 
     // Sprite loading & characterID management
-    if (globals->gameMode == MODE_COMPETITION)
-        LoadSpritesVS();
-    else
-        LoadSprites();
+    LoadSprites();
 
-    if (globals->gameMode == MODE_ENCORE) {
-        sVars->playerCount = 2;
-        Player *sidekick   = GameObject::Get<Player>(SLOT_PLAYER2);
-        sidekick->playerID = 1;
-    }
-    else {
-        sVars->playerCount = GameObject::Count<Player>(false);
-    }
+    sVars->playerCount = GameObject::Count<Player>(false);
 
     // Handle Sidekick stuff setup
     sVars->nextLeaderPosID   = 1;
@@ -887,28 +856,6 @@ void Player::LoadSprites()
         sidekick->characterID = globals->playerID >> 8;
         sidekick->LoadPlayerSprites();
     }
-}
-void Player::LoadSpritesVS()
-{
-    // CompetitionSession *session = CompetitionSession::GetSession();
-    //
-    // for (auto spawn : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
-    //     if (spawn->characterID & ID_SONIC) {
-    //         int32 slotID = 0;
-    //         for (int32 i = 0; i < session->playerCount; ++i, ++slotID) {
-    //             Player *player = GameObject::Get<Player>(slotID);
-    //             spawn->Copy(player, true);
-    //
-    //             player->characterID = GET_CHARACTER_ID(1 + i);
-    //             spawn->LoadPlayerSprites();
-    //
-    //             player->controllerID = i + 1;
-    //             player->camera       = Camera::SetTargetEntity(i, player);
-    //         }
-    //     }
-    //
-    //     spawn->Destroy();
-    // }
 }
 
 void Player::LoadPlayerSprites()
@@ -1134,7 +1081,7 @@ void Player::GiveRings(int32 amount, bool32 playSfx)
 }
 void Player::GiveLife()
 {
-    if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
+    if (globals->gameMode != MODE_TIMEATTACK) {
         Player *player = this;
         if (player->sidekick)
             player = GameObject::Get<Player>(SLOT_PLAYER1);
@@ -2858,7 +2805,7 @@ void Player::HandleDeath()
 
         // Sidekicks just respawn, no biggie
         Player *leader = GameObject::Get<Player>(SLOT_PLAYER1);
-        if (globals->gameMode != MODE_ENCORE || (!leader->state.Matches(&Player::State_Death) && !leader->state.Matches(&Player::State_Drown))) {
+        if ((!leader->state.Matches(&Player::State_Death) && !leader->state.Matches(&Player::State_Drown))) {
             this->angle = 0x80;
             this->state.Set(&Player::State_HoldRespawn);
             this->abilityPtrs[0]   = dust;
@@ -2895,131 +2842,63 @@ void Player::HandleDeath()
         sVars->savedScore1UP                  = this->score1UP;
         globals->restartLives[this->playerID] = this->lives;
 
-        if (globals->gameMode != MODE_ENCORE) {
-            this->rings           = 0;
-            this->ringExtraLife   = 0;
-            globals->restartRings = 0;
-            globals->restart1UP   = 100;
-        }
+        this->rings           = 0;
+        this->ringExtraLife   = 0;
+        globals->restartRings = 0;
+        globals->restart1UP   = 100;
+
         globals->coolBonus[this->playerID] = 0;
 
-        if (globals->gameMode != MODE_ENCORE) {
-            if (this->lives || (globals->medalMods & MEDAL_NOLIVES)) {
-                if (Zone::sVars->gotTimeOver && !(globals->medalMods & MEDAL_NOLIVES)) {
-                    // Time Over!!
-                    this->classID = TYPE_NONE;
+        if (this->lives || (globals->medalMods & MEDAL_NOLIVES)) {
+            if (Zone::sVars->gotTimeOver && !(globals->medalMods & MEDAL_NOLIVES)) {
+                // Time Over!!
+                this->classID = TYPE_NONE;
 
-                    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
-                    if (globals->gameMode == MODE_COMPETITION) {
-                    }
-                    else if (saveRAM) {
-                        saveRAM->lives     = this->lives;
-                        saveRAM->score     = this->score;
-                        saveRAM->score1UP  = this->score1UP;
-                        saveRAM->continues = globals->continues;
-                        if (globals->gameMode == MODE_ENCORE) {
-                            globals->playerID &= 0xFF;
-                            saveRAM->playerID = globals->playerID;
+                SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
+                if (saveRAM) {
+                    saveRAM->lives     = this->lives;
+                    saveRAM->score     = this->score;
+                    saveRAM->score1UP  = this->score1UP;
+                    saveRAM->continues = globals->continues;
 
-                            int32 id = -1;
-                            for (int32 i = this->characterID; i > 0; ++id) i >>= 1;
-                            globals->characterFlags &= ~(1 << id);
-
-                            saveRAM->characterFlags = globals->characterFlags;
-                            saveRAM->stock          = globals->stock;
-                        }
-
-                        SaveGame::SaveFile(nullptr);
-                    }
-
-                    GameOver *gameOver = GameObject::Get<GameOver>(SLOT_GAMEOVER);
-                    gameOver->Reset(GameOver::sVars->classID, true);
-                    gameOver->playerID = this->Slot();
-                    GameOver::sVars->activeScreens |= 1 << this->playerID;
-
-                    Stage::SetEngineState(ENGINESTATE_FROZEN);
-                    sceneInfo->timeEnabled = false;
+                    SaveGame::SaveFile(nullptr);
                 }
-                else if (globals->gameMode != MODE_COMPETITION) {
-                    // Regular Death, fade out and respawn
-                    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
-                    if (saveRAM) {
-                        saveRAM->lives     = this->lives;
-                        saveRAM->score     = this->score;
-                        saveRAM->score1UP  = this->score1UP;
-                        saveRAM->continues = globals->continues;
-                        if (globals->gameMode == MODE_ENCORE) {
-                            globals->playerID &= 0xFF;
-                            saveRAM->playerID = globals->playerID;
 
-                            int32 id = -1;
-                            for (int32 i = this->characterID; i > 0; ++id) i >>= 1;
-                            globals->characterFlags &= ~(1 << id);
+                GameOver *gameOver = GameObject::Get<GameOver>(SLOT_GAMEOVER);
+                gameOver->Reset(GameOver::sVars->classID, true);
+                gameOver->playerID = this->Slot();
+                GameOver::sVars->activeScreens |= 1 << this->playerID;
 
-                            saveRAM->characterFlags = globals->characterFlags;
-                            saveRAM->stock          = globals->stock;
-                        }
-                        SaveGame::SaveFile(nullptr);
-                    }
-
-                    Music::FadeOut(0.025f);
-                    Zone::StartFadeOut_MusicFade(10, 0x000000);
-                    this->classID = TYPE_NONE;
-                }
+                Stage::SetEngineState(ENGINESTATE_FROZEN);
+                sceneInfo->timeEnabled = false;
             }
-            else {
-                // GGGGGGGame Over...!
-                int32 screenID = 0;
-                this->classID  = TYPE_NONE;
-                if (this->camera) {
-                    screenID             = this->camera->screenID;
-                    this->camera->target = (Entity *)this->camera;
-                }
+            // Regular Death, fade out and respawn
+            SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
+            if (saveRAM) {
+                saveRAM->lives     = this->lives;
+                saveRAM->score     = this->score;
+                saveRAM->score1UP  = this->score1UP;
+                saveRAM->continues = globals->continues;
 
-                bool32 showGameOver = true;
-                if (globals->gameMode == MODE_COMPETITION)
-                    showGameOver = false;
-
-                if (showGameOver) {
-                    GameOver *gameOver = GameObject::Get<GameOver>(SLOT_GAMEOVER);
-                    gameOver->Reset(GameOver::sVars->classID, false);
-                    gameOver->playerID = this->Slot();
-                    GameOver::sVars->activeScreens |= 1 << screenID;
-
-                    Stage::SetEngineState(ENGINESTATE_FROZEN);
-                    sceneInfo->timeEnabled = false;
-                }
+                SaveGame::SaveFile(nullptr);
             }
 
-            if (this->classID == sVars->classID) {
-                this->abilityValues[0] = 0;
-
-                if (globals->useManiaBehavior) {
-                    this->ResetBoundaries();
-                }
-
-                if (BoundsMarker::sVars)
-                    BoundsMarker::ApplyAllBounds(this, true);
-
-                if (Water::sVars)
-                    Water::ApplyHeightTriggers();
-            }
+            Music::FadeOut(0.025f);
+            Zone::StartFadeOut_MusicFade(10, 0x000000);
+            this->classID = TYPE_NONE;
         }
         else {
-            // Encore death, lets switch to the next character and be on our way if possible
+            // GGGGGGGame Over...!
+            int32 screenID = 0;
+            this->classID  = TYPE_NONE;
+            if (this->camera) {
+                screenID             = this->camera->screenID;
+                this->camera->target = (Entity *)this->camera;
+            }
 
-            int32 id = -1;
-            for (int32 i = this->characterID; i > 0; ++id) i >>= 1;
-            globals->characterFlags &= ~(1 << id);
+            bool32 showGameOver = true;
 
-            if (!globals->characterFlags) {
-                int32 screenID = 0;
-                this->classID  = TYPE_NONE;
-                if (this->camera) {
-                    screenID             = this->camera->screenID;
-                    this->camera->target = (Entity *)this->camera;
-                }
-
+            if (showGameOver) {
                 GameOver *gameOver = GameObject::Get<GameOver>(SLOT_GAMEOVER);
                 gameOver->Reset(GameOver::sVars->classID, false);
                 gameOver->playerID = this->Slot();
@@ -3027,35 +2906,23 @@ void Player::HandleDeath()
 
                 Stage::SetEngineState(ENGINESTATE_FROZEN);
                 sceneInfo->timeEnabled = false;
-
-                if (this->classID == sVars->classID) {
-                    this->abilityValues[0] = 0;
-
-                    if (globals->useManiaBehavior) {
-                        ResetBoundaries();
-                    }
-
-                    if (BoundsMarker::sVars)
-                        BoundsMarker::ApplyAllBounds(this, true);
-
-                    if (Water::sVars)
-                        Water::ApplyHeightTriggers();
-                }
-            }
-            else {
-                Player *player2     = GameObject::Get<Player>(SLOT_PLAYER2);
-                sVars->respawnTimer = 0;
-
-                if (globals->stock) {
-                    globals->stock >>= 8;
-                }
-                else {
-                    globals->playerID &= 0xFF;
-                    player2->classID = TYPE_NONE;
-                }
             }
         }
-    }
+
+        if (this->classID == sVars->classID) {
+            this->abilityValues[0] = 0;
+
+            if (globals->useManiaBehavior) {
+                this->ResetBoundaries();
+            }
+
+            if (BoundsMarker::sVars)
+                BoundsMarker::ApplyAllBounds(this, true);
+
+            if (Water::sVars)
+                Water::ApplyHeightTriggers();
+        }
+    }  
 }
 
 void Player::Action_Jump()
@@ -3132,7 +2999,7 @@ void Player::Action_DblJumpSonic()
     bool32 dropdashDisabled = this->jumpAbilityState <= 1;
 
     if (this->jumpAbilityState == 1) {
-        if (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE)) {
+        if (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up)) {
             if (this->jumpPress) {
                 Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->Slot());
                 if (this->invincibleTimer) {
@@ -3302,7 +3169,7 @@ void Player::Action_DblJumpTails()
     SET_CURRENT_STATE();
 
     if (this->jumpPress && this->jumpAbilityState == 1
-        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE))) {
+        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
         if (!this->invertGravity) {
             this->jumpAbilityState = 0;
             this->outtaHereTimer   = 0;
@@ -3328,7 +3195,7 @@ void Player::Action_DblJumpKnux()
     SET_CURRENT_STATE();
 
     if (this->jumpPress && this->jumpAbilityState == 1
-        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up && globals->gameMode != MODE_ENCORE))) {
+        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
         if (!this->invertGravity) {
             if (GameObject::Get<Player>(SLOT_PLAYER1)->characterID == ID_KNUCKLES) {
                 NotifyCallback(NOTIFY_STATS_CHARA_ACTION, 0, 0, 1);
@@ -4392,7 +4259,7 @@ void Player::State_TailsFlight()
         if (leader->abilityValues[1] == 3)
             this->velocity.y = 0;
 
-        if (globals->gameMode != MODE_COMPETITION && !this->isChibi && !leader->isChibi)
+        if (!this->isChibi && !leader->isChibi)
             this->CheckStartFlyCarry(leader);
 
         if (this->timer >= 480) {
@@ -5561,11 +5428,9 @@ void Player::State_FlyToPlayer()
     }
 
     if (this->camera && this->camera->target != parent) {
-        if (globals->gameMode != MODE_ENCORE) {
-            this->camera->position.x = parent->position.x;
-            this->camera->position.y = parent->position.y;
-            Camera::SetTargetEntity(this->camera->screenID, parent);
-        }
+        this->camera->position.x = parent->position.x;
+        this->camera->position.y = parent->position.y;
+        Camera::SetTargetEntity(this->camera->screenID, parent);
     }
 
     int32 maxDistance = 0;
@@ -5612,8 +5477,6 @@ void Player::State_FlyToPlayer()
         int32 yVel = 0;
         if (this->characterID == ID_TAILS || this->characterID == ID_KNUCKLES) {
             yVel = 0x10000;
-            if (globals->gameMode == MODE_ENCORE)
-                yVel = 0x20000;
         }
         else {
             yVel = 0x30000;
@@ -5773,7 +5636,7 @@ void Player::State_HoldRespawn()
             this->drawGroup        = Zone::sVars->playerDrawGroup[1] + 1;
             this->angle            = 128;
 
-            if ((this->characterID != ID_TAILS && this->characterID != ID_KNUCKLES) || globals->gameMode == MODE_ENCORE) {
+            if ((this->characterID != ID_TAILS && this->characterID != ID_KNUCKLES)) {
                 this->state.Set(&Player::State_ReturnToPlayer);
                 this->drawFX |= FX_SCALE;
                 this->scale.x = 0x400;
@@ -6246,9 +6109,6 @@ void Player::DisableInputs(bool32 backupState)
 
 bool32 Player::CheckP2KeyPress()
 {
-    if (globals->gameMode == MODE_ENCORE)
-        return false;
-
     if (this->controllerID > Input::CONT_P4 || sVars->disableP2KeyCheck)
         return false;
 
@@ -6373,39 +6233,36 @@ void Player::Input_Gamepad()
     SET_CURRENT_STATE();
 
     if (this->controllerID <= Input::CONT_P4) {
-        ControllerState *controller = &controllerInfo[this->controllerID];
-        AnalogState *stick          = &analogStickInfoL[this->controllerID];
+        if (globals->gameMode != MODE_TIMEATTACK || Announcer::sVars->finishedCountdown) {
+            ControllerState *controller = &controllerInfo[this->controllerID];
+            AnalogState *stick          = &analogStickInfoL[this->controllerID];
 
-        this->up    = controller->keyUp.down;
-        this->down  = controller->keyDown.down;
-        this->left  = controller->keyLeft.down;
-        this->right = controller->keyRight.down;
+            this->up    = controller->keyUp.down;
+            this->down  = controller->keyDown.down;
+            this->left  = controller->keyLeft.down;
+            this->right = controller->keyRight.down;
 
-        this->up |= stick->keyUp.down;
-        this->down |= stick->keyDown.down;
-        this->left |= stick->keyLeft.down;
-        this->right |= stick->keyRight.down;
+            this->up |= stick->keyUp.down;
+            this->down |= stick->keyDown.down;
+            this->left |= stick->keyLeft.down;
+            this->right |= stick->keyRight.down;
 
-        if (this->left && this->right) {
-            this->left  = false;
-            this->right = false;
-        }
-        this->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
-        this->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
+            if (this->left && this->right) {
+                this->left  = false;
+                this->right = false;
+            }
+            this->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+            this->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
-        if (globals->gameMode == MODE_ENCORE && controller->keyY.press)
-            sVars->sfxSwapFail.Play();
+            Input_NULL();
 
-        Input_NULL();
-
-        if (controller->keyStart.press || unknownInfo->pausePress) {
-            if (sceneInfo->state == ENGINESTATE_REGULAR) {
-                PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
-                if (!pauseMenu->classID) {
-                    GameObject::Reset(SLOT_PAUSEMENU, PauseMenu::sVars->classID, nullptr);
-                    pauseMenu->triggerPlayer = (uint8)this->Slot();
-                    if (globals->gameMode == MODE_COMPETITION)
-                        pauseMenu->disableRestart = true;
+            if (controller->keyStart.press || unknownInfo->pausePress) {
+                if (sceneInfo->state == ENGINESTATE_REGULAR) {
+                    PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
+                    if (!pauseMenu->classID) {
+                        GameObject::Reset(SLOT_PAUSEMENU, PauseMenu::sVars->classID, nullptr);
+                        pauseMenu->triggerPlayer = (uint8)this->Slot();
+                    }
                 }
             }
         }
@@ -7152,8 +7009,7 @@ bool32 Player::CheckBadnikBreak(RSDK::GameObject::Entity *badnik, bool32 destroy
 
     if (isAttacking) {
         Player *player = this;
-        if (globals->gameMode != MODE_COMPETITION)
-            player = GameObject::Get<Player>(SLOT_PLAYER1);
+        player = GameObject::Get<Player>(SLOT_PLAYER1);
 
         BadnikHelpers::BadnikBreakUnseeded(badnik, false, true);
 

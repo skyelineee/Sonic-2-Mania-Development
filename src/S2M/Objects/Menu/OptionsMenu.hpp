@@ -23,8 +23,6 @@ struct OptionsMenu : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         UIControl *optionsControl;
-        UIButtonPrompt *helpPrompt;
-        UIControl *videoControl;
         UIControl *videoControl_Windows;
         UIControl *soundControl;
         UIControl *dataOptionsControl;
@@ -78,6 +76,7 @@ struct OptionsMenu : RSDK::GameObject::Entity {
     static void ApplyChangesDlg_Win_NoCB();
     static void ApplyChangesDlg_NoCB();
     static void ApplyChangesDlg_Win_YesCB();
+    static void ApplyChangesDlg_Win_BackPress_YesCB();
     static void ApplyChangesDlg_BackPress_NoCB();
     static void VideoMenuButton_ActionCB();
     static void SoundMenuButton_ActionCB();
@@ -99,7 +98,6 @@ struct OptionsMenu : RSDK::GameObject::Entity {
     void VSyncButton_ActionCB();
     void TripleBufferButton_ActionCB();
     void UISlider_ChangedCB();
-    static void ShowManual();
     static void EraseSaveDataCB(bool32 success);
     static void AreYouSureDlg_YesCB_EraseSaveGame();
     static void AreYouSureDlg_YesCB_EraseAllData();

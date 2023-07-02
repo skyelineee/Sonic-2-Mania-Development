@@ -42,8 +42,12 @@ struct UISlider : RSDK::GameObject::Entity {
     bool32 textVisible;
     bool32 isTouchSelected;
     int32 sliderPosTouch;
+    int32 sliderFrame;
     RSDK::StateMachine<UISlider> sliderChangedCB;
+    RSDK::Animator bgShapeAnimator;
     RSDK::Animator textAnimator;
+    RSDK::Animator sliderAnimator;
+    RSDK::Animator buttonAnimator;
 
     // ==============================
     // EVENTS
@@ -67,7 +71,7 @@ struct UISlider : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void DrawBGShapes();
+    void DrawFGShapes();
     void DrawSlider();
 
     void ButtonPressCB();

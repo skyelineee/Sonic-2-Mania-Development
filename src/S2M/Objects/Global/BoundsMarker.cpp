@@ -154,50 +154,45 @@ void BoundsMarker::Draw()
 void BoundsMarker::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
-        if (this->vsDisable && globals->gameMode == MODE_COMPETITION) {
-            this->Destroy();
+        this->active = ACTIVE_XBOUNDS;
+        if (this->lockLeft != BoundsMarker::LockNone || this->lockRight != BoundsMarker::LockNone)
+            this->active = ACTIVE_BOUNDS;
+        this->drawGroup = Zone::sVars->hudDrawGroup;
+
+        if (this->width <= 0) {
+            this->initialWidth  = this->width;
+            this->width         = -0x8000 * this->width * screenInfo->size.x;
+            this->updateRange.x = -0x8000 * this->width * screenInfo->size.x;
         }
         else {
-            this->active = ACTIVE_XBOUNDS;
-            if (this->lockLeft != BoundsMarker::LockNone || this->lockRight != BoundsMarker::LockNone)
-                this->active = ACTIVE_BOUNDS;
-            this->drawGroup = Zone::sVars->hudDrawGroup;
+            this->initialWidth  = this->width << 15;
+            this->width         = this->width << 15;
+        }
+        this->updateRange.x = this->width;
 
-            if (this->width <= 0) {
-                this->initialWidth  = this->width;
-                this->width         = -0x8000 * this->width * screenInfo->size.x;
-                this->updateRange.x = -0x8000 * this->width * screenInfo->size.x;
-            }
-            else {
-                this->initialWidth  = this->width << 15;
-                this->width         = this->width << 15;
-            }
-            this->updateRange.x = this->width;
+        if (this->lockLeft != BoundsMarker::LockNone || this->lockRight != BoundsMarker::LockNone) {
+            if (this->offset <= 0)
+                this->updateRange.y = 48 << 16;
+            else
+                this->updateRange.y = 0x18000 * this->offset;
+        }
 
-            if (this->lockLeft != BoundsMarker::LockNone || this->lockRight != BoundsMarker::LockNone) {
-                if (this->offset <= 0)
-                    this->updateRange.y = 48 << 16;
-                else
-                    this->updateRange.y = 0x18000 * this->offset;
-            }
+        this->destroyOnDeactivate = false;
+        this->lockedL[0]          = false;
+        this->lockedL[1]          = false;
+        this->lockedL[2]          = false;
+        this->lockedL[3]          = false;
+        this->storedBounds        = false;
+        this->lockedR[0]          = false;
+        this->lockedR[1]          = false;
+        this->lockedR[2]          = false;
+        this->lockedR[3]          = false;
+        this->state.Set(&BoundsMarker::State_Init);
+        this->restoreAccel.x >>= 16;
+        this->restoreAccel.y >>= 16;
 
-            this->destroyOnDeactivate = false;
-            this->lockedL[0]          = false;
-            this->lockedL[1]          = false;
-            this->lockedL[2]          = false;
-            this->lockedL[3]          = false;
-            this->storedBounds        = false;
-            this->lockedR[0]          = false;
-            this->lockedR[1]          = false;
-            this->lockedR[2]          = false;
-            this->lockedR[3]          = false;
-            this->state.Set(&BoundsMarker::State_Init);
-            this->restoreAccel.x >>= 16;
-            this->restoreAccel.y >>= 16;
-
-            for (auto player : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
-                UNUSED(player);
-            }
+        for (auto player : GameObject::GetEntities<Player>(FOR_ALL_ENTITIES)) {
+            UNUSED(player);
         }
     }
 }

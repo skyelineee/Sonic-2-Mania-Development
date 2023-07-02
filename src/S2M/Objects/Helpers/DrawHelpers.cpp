@@ -91,6 +91,37 @@ void DrawHelpers::DrawArrowAdditive(int32 x1, int32 y1, int32 x2, int32 y2, uint
     Graphics::DrawLine(x2, y2, x2 + (Math::Cos256(angle - 12) << 12), y2 + (Math::Sin256(angle - 12) << 12), color, 0x7F, INK_ADD, false);
 }
 
+void DrawHelpers::DrawIsocelesTriangle(int32 x1, int32 y1, int32 x2, int32 y2, int32 edgeSize, uint32 color, uint32 inkEffect, uint32 alpha)
+{
+    Vector2 verts[3];
+
+    int32 angle = Math::ATan2(x2 - x1, y2 - y1);
+
+    verts[0].x = x2;
+    verts[0].y = y2;
+    verts[1].x = x1 + (edgeSize << 7) * Math::Cos256(angle + 64);
+    verts[1].y = y1 + (edgeSize << 7) * Math::Sin256(angle + 64);
+    verts[2].x = x1 + (edgeSize << 7) * Math::Cos256(angle - 64);
+    verts[2].y = y1 + (edgeSize << 7) * Math::Sin256(angle - 64);
+
+    if (sceneInfo->inEditor) {
+        Graphics::DrawLine(x2, y2, verts[1].x, verts[1].y, color, 255, INK_NONE, false);
+        Graphics::DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, color, 255, INK_NONE, false);
+        Graphics::DrawLine(verts[2].x, verts[2].y, x2, y2, color, 255, INK_NONE, false);
+    }
+    else {
+        int32 screenX = screenInfo->position.x << 16;
+        int32 screenY = screenInfo->position.y << 16;
+        verts[0].x -= screenX;
+        verts[0].y -= screenY;
+        verts[1].x -= screenX;
+        verts[1].y -= screenY;
+        verts[2].x -= screenX;
+        verts[2].y -= screenY;
+        Graphics::DrawFace(verts, 3, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, alpha, inkEffect);
+    }
+}
+
 void DrawHelpers::DrawLine(RSDK::Vector2 position, RSDK::Vector2 targetPos, color color)
 {
     Graphics::DrawLine(position.x, position.y, targetPos.x, targetPos.y, color, 0x7F, INK_NONE, false);

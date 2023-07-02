@@ -87,6 +87,7 @@ struct Localization : RSDK::GameObject::Entity {
 
     static void LoadStrings();
     static void GetString(RSDK::String *string, uint8 id);
+    static void GetZoneName(RSDK::String *string, uint8 zone);
 
     // ==============================
     // DECLARATION

@@ -7,7 +7,6 @@
 #include "Options.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Global/Localization.hpp"
-#include "Menu/UIHeading.hpp"
 #include "Menu/UIWidgets.hpp"
 
 using namespace RSDK;
@@ -94,7 +93,6 @@ void Options::LoadCallback(bool32 success)
 
         Localization::LoadStrings();
         UIWidgets::ApplyLanguage();
-        UIHeading::LoadSprites();
     }
 }
 

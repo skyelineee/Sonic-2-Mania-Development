@@ -14,9 +14,7 @@ struct Vector3 {
 enum GameModes {
     MODE_NOSAVE,
     MODE_MANIA,
-    MODE_ENCORE,
     MODE_TIMEATTACK,
-    MODE_COMPETITION,
 };
 
 enum PlayerIDs {
@@ -203,6 +201,10 @@ struct GlobalVariables {
     int32 taTableLoaded;
     int32 replayTableID;
     int32 replayTableLoaded;
+    int32 replayWriteBuffer[0x40000];
+    int32 replayReadBuffer[0x40000];
+    int32 replayTempWBuffer[0x40000];
+    int32 replayTempRBuffer[0x40000];
     int32 medallionDebug;
     int32 notifiedAutosave;
     int32 recallEntities;
@@ -366,7 +368,7 @@ template <typename R> struct Action
 
 } // namespace RSDK
 
-#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
+#define isMainGameMode() (globals->gameMode == MODE_MANIA)
 
 #define S2M_UI_ITEM_BASE(type)                                                                                                                       \
     RSDK::StateMachine<type> state;                                                                                                                  \

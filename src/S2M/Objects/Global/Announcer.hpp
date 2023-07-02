@@ -20,12 +20,28 @@ struct Announcer : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX sfxThree;
+        RSDK::SoundFX sfxTwo;
+        RSDK::SoundFX sfxOne;
+        RSDK::SoundFX sfxGo;
+        RSDK::SoundFX sfxGoal;
+        RSDK::SoundFX sfxNewRecordTop;
+        RSDK::SoundFX sfxNewRecordMid;
+        RSDK::SoundFX sfxSonic;
+        RSDK::SoundFX sfxTails;
+        RSDK::SoundFX sfxKnuckles;
+        bool32 finishedCountdown;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
     RSDK::StateMachine<Announcer> state;
+    RSDK::StateMachine<Announcer> stateDraw;
+    int32 timer;
+    int32 playerID;
+    int32 screen;
+    RSDK::Vector2 drawOffset;
     RSDK::Animator animator;
 
     // ==============================
@@ -39,9 +55,6 @@ struct Announcer : RSDK::GameObject::Entity {
 
     static void StaticUpdate();
     static void StageLoad();
-#if RETRO_REV0U
-    static void StaticLoad(Static *sVars);
-#endif
     static void Serialize();
 
 #if RETRO_INCLUDE_EDITOR
@@ -53,8 +66,14 @@ struct Announcer : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void State_Init();
-    void State_Idle();
+    static void StartCountdown();
+    static void AnnounceGoal(int32 screen);
+
+    void Draw_Countdown();
+    void Draw_Finished();
+
+    void State_Countdown();
+    void State_Finished();
 
     // ==============================
     // DECLARATION

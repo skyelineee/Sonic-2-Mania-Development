@@ -32,7 +32,7 @@ struct DialogRunner : RSDK::GameObject::Entity {
     // ==============================
     // INSTANCE VARS
     // ==============================
-    RSDK::StateMachine<DialogRunner> state;
+    RSDK::Action<void> state;
     int32 timer;
     int32 unused[20];
     bool32 useGenericText;

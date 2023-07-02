@@ -15,6 +15,7 @@
 #include "Helpers/GameProgress.hpp"
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/MathHelpers.hpp"
+#include "Helpers/TimeAttackData.hpp"
 
 using namespace RSDK;
 
@@ -52,7 +53,7 @@ void ExtrasMenu::StaticUpdate()
                     UIButton *button = control->buttons[i];
                     if (button->nameFrameID > selectedID) {
                         button->position.y        = button->startPos.y + TO_FIXED(24);
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->buttonListID      = 1;
                         button->nameListID        = 3;
                         button->buttonFrameID     = button->descriptionFrameID;
@@ -68,7 +69,7 @@ void ExtrasMenu::StaticUpdate()
                     else {
                         button->buttonListID      = 1;
                         button->nameListID        = 4;
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->position.y        = button->startPos.y;
                         button->buttonFrameID     = button->descriptionFrameID + 5;
                     }
@@ -181,7 +182,7 @@ void ExtrasMenu::Start_BossRush()
 {
     MenuParam *param = MenuParam::GetMenuParam();
 
-    // TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_BOSSRUSH;
@@ -196,7 +197,7 @@ void ExtrasMenu::Start_MusicPlayer()
 {
     MenuParam *param = MenuParam::GetMenuParam();
 
-    // TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_MUSICPLAYER;
@@ -211,7 +212,7 @@ void ExtrasMenu::Start_LevelSelect()
 {
     MenuParam *param = MenuParam::GetMenuParam();
 
-    // TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_LEVELSELECT;
@@ -226,7 +227,7 @@ void ExtrasMenu::Start_ExtraLevels()
 {
     MenuParam *param = MenuParam::GetMenuParam();
 
-    // TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_EXTRALEVELS;
@@ -241,7 +242,7 @@ void ExtrasMenu::Start_Credits()
 {
     MenuParam *param = MenuParam::GetMenuParam();
 
-    //TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_CREDITS;

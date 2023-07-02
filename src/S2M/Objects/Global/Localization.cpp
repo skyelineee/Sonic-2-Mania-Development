@@ -7,6 +7,7 @@
 #include "Localization.hpp"
 #include "Helpers/Options.hpp"
 #include "Helpers/LogHelpers.hpp"
+#include "Zone.hpp"
 
 using namespace RSDK;
 
@@ -49,6 +50,28 @@ void Localization::GetString(RSDK::String *string, uint8 id)
     for (int32 c = 0; c < string->length; ++c) {
         if (string->chars[c] == '\\')
             string->chars[c] = '\n';
+    }
+}
+
+void Localization::GetZoneName(String *string, uint8 zone)
+{
+    switch (zone) {
+        case Zone::OWZ: string->Init("OCEAN WIND", 0); break;
+        case Zone::EHZ: string->Init("EMERALD HILL", 0); break;
+        case Zone::CPZ: string->Init("CHEMICAL PLANT", 0); break;
+        case Zone::ARZ: string->Init("AQUATIC RUIN", 0); break;
+        case Zone::SWZ: string->Init("SECRET WOODS", 0); break;
+        case Zone::CNZ: string->Init("CASINO NIGHT", 0); break;
+        case Zone::HTZ: string->Init("HILL TOP", 0); break;
+        case Zone::MCZ: string->Init("MYSTIC CAVE", 0); break;
+        case Zone::SSZ: string->Init("SAND SHOWER", 0); break;
+        case Zone::OOZ: string->Init("OIL OCEAN", 0); break;
+        case Zone::MTZ: string->Init("METROPOLIS", 0); break;
+        case Zone::CCZ: string->Init("CYBER CITY", 0); break;
+        case Zone::SFZ: string->Init("SKY FORTRESS", 0); break;
+        case Zone::DEZ: string->Init("DEATH EGG", 0); break;
+        case Zone::HPZ: string->Init("HIDDEN PALACE", 0); break;
+        default: break;
     }
 }
 

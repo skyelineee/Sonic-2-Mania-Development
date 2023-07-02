@@ -29,18 +29,6 @@ void HP_Player::Update()
 
     this->state.Run(this);
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        int32 leadingPlayer = (this->Slot() - SLOT_HP_PLAYER1) ^ this->playerID ^ 1;
-        if (leadingPlayer == 0) {
-            if (this->zpos < 0x1000)
-                this->zpos += 64;
-        }
-        else {
-            if (this->zpos > 0x400)
-                this->zpos -= 64;
-        }
-    }
-
     HP_Halfpipe *halfpipe = GameObject::Get<HP_Halfpipe>(SLOT_HP_HALFPIPE);
     this->localPos.x      = FROM_FIXED(this->position.x) >> 1;
     this->localPos.y      = FROM_FIXED(this->position.y) >> 1;
@@ -111,7 +99,7 @@ void HP_Player::Create(void *data)
         this->groundPos = (this->xBoundsR * this->xBoundsR) - 0x10000;
 
         // Handle Input Setup
-        if (!this->playerID || globals->gameMode == MODE_COMPETITION) {
+        if (!this->playerID) {
             this->zpos = 0x1000;
             this->stateInput.Set(&HP_Player::Input_Gamepad);
         }
@@ -132,10 +120,7 @@ void HP_Player::Create(void *data)
 
 void HP_Player::StageLoad()
 {
-    if (globals->gameMode == MODE_COMPETITION)
-        HP_Player::LoadSpritesVS();
-    else
-        HP_Player::LoadSprites();
+    HP_Player::LoadSprites();
 
     sVars->upState        = false;
     sVars->downState      = false;
@@ -218,9 +203,6 @@ void HP_Player::LoadPlayerSprites()
 
 bool32 HP_Player::CheckP2KeyPress()
 {
-    if (globals->gameMode == MODE_ENCORE)
-        return false;
-
     if (this->controllerID > Input::CONT_P4 || sVars->disableP2KeyCheck)
         return false;
 
@@ -299,8 +281,6 @@ void HP_Player::Input_Gamepad()
                 if (!pauseMenu->classID) {
                     GameObject::Reset(SLOT_PAUSEMENU, PauseMenu::sVars->classID, nullptr);
                     pauseMenu->triggerPlayer = (uint8)this->Slot();
-                    if (globals->gameMode == MODE_COMPETITION)
-                        pauseMenu->disableRestart = true;
                 }
             }
         }
@@ -471,13 +451,6 @@ void HP_Player::State_Air()
 {
     SET_CURRENT_STATE();
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        if (!this->changedLeader) {
-            sVars->leadingPlayer ^= 1;
-            this->changedLeader = true;
-        }
-    }
-
     this->position.x += TO_FIXED(this->velocity.x);
     if (this->position.x <= TO_FIXED(this->xBoundsL))
         this->position.x = TO_FIXED(this->xBoundsL);
@@ -553,15 +526,6 @@ void HP_Player::State_Air()
 void HP_Player::State_Hurt()
 {
     SET_CURRENT_STATE();
-
-    if (globals->gameMode == MODE_COMPETITION) {
-        if (this->playerID == 0) {
-            if (!this->changedLeader) {
-                sVars->leadingPlayer = (this->Slot() - SLOT_HP_PLAYER1) ^ this->playerID ^ 1;
-                this->changedLeader  = true;
-            }
-        }
-    }
 
     if (this->spinTimer < 512) {
         this->spinTimer += 16;

@@ -6,7 +6,6 @@
 
 #include "UIButtonPrompt.hpp"
 #include "UIControl.hpp"
-#include "UIHeading.hpp"
 #include "UIWidgets.hpp"
 #include "Global/Localization.hpp"
 
@@ -65,40 +64,7 @@ void UIButtonPrompt::Update()
         }
     }
 }
-void UIButtonPrompt::LateUpdate()
-{
-    UIControl *control = (UIControl *)this->parent;
-    if (control && this->headingAnchor) {
-
-        UIHeading *heading = (UIHeading *)control->heading;
-        if (heading) {
-            switch (this->headingAnchor) {
-                default:
-                case UIBUTTONPROMPT_ANCHOR_NONE: break;
-
-                case UIBUTTONPROMPT_ANCHOR_TOPLEFT:
-                    this->position.x = heading->position.x - TO_FIXED(195);
-                    this->position.y = heading->position.y - TO_FIXED(5);
-                    break;
-
-                case UIBUTTONPROMPT_ANCHOR_TOPRIGHT:
-                    this->position.x = heading->position.x - TO_FIXED(90);
-                    this->position.y = heading->position.y - TO_FIXED(5);
-                    break;
-
-                case UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT:
-                    this->position.x = heading->position.x - TO_FIXED(195);
-                    this->position.y = heading->position.y + 0x100000;
-                    break;
-
-                case UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT:
-                    this->position.x = heading->position.x - TO_FIXED(90);
-                    this->position.y = heading->position.y + 0x100000;
-                    break;
-            }
-        }
-    }
-}
+void UIButtonPrompt::LateUpdate() {}
 
 void UIButtonPrompt::StaticUpdate()
 {
@@ -131,7 +97,7 @@ void UIButtonPrompt::Create(void *data)
     if (!sceneInfo->inEditor) {
         this->startPos      = this->position;
         this->visible       = true;
-        this->drawGroup     = 2;
+        this->drawGroup     = 3;
         this->scaleMax      = 0x200;
         this->scaleSpeed    = 0x10;
         this->scale.x       = 0x200;
@@ -446,7 +412,6 @@ void UIButtonPrompt::Serialize()
 {
     RSDK_EDITABLE_VAR(UIButtonPrompt, VAR_ENUM, promptID);
     RSDK_EDITABLE_VAR(UIButtonPrompt, VAR_ENUM, buttonID);
-    RSDK_EDITABLE_VAR(UIButtonPrompt, VAR_UINT8, headingAnchor);
 }
 
 } // namespace GameLogic

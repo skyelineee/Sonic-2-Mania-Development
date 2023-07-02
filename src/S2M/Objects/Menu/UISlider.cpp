@@ -46,8 +46,8 @@ void UISlider::LateUpdate() {}
 void UISlider::StaticUpdate() {}
 void UISlider::Draw()
 {
-    UISlider::DrawBGShapes();
     UISlider::DrawSlider();
+    UISlider::DrawFGShapes();
 }
 
 void UISlider::Create(void *data) 
@@ -77,22 +77,23 @@ void UISlider::Create(void *data)
 
     this->textVisible = true;
     this->sliderPos   = (UISLIDER_MAX - UISLIDER_MIN) / 2;
-    this->textAnimator.SetAnimation(&sVars->aniFrames, this->listID, true, this->frameID);
+    this->textAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, this->listID, true, this->frameID);
 }
 
-void UISlider::StageLoad() { sVars->aniFrames.Load("UI/UIButtons.bin", SCOPE_STAGE); }
+void UISlider::StageLoad() { sVars->aniFrames.Load("UI/Slider.bin", SCOPE_STAGE); }
 
-void UISlider::DrawBGShapes()
+void UISlider::DrawFGShapes()
 {
     Vector2 drawPos;
     int32 width = this->size.y + this->size.x;
-    drawPos.x   = this->position.x;
+    drawPos.x   = this->position.x + this->buttonBounceOffset;
     drawPos.y   = this->position.y;
-    UIWidgets::DrawParallelogram(this->position.x, this->position.y, width >> 16, (this->size.y >> 16), this->bgEdgeSize, 0x00, 0x00, 0x00);
+    this->bgShapeAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
+    this->bgShapeAnimator.DrawSprite(&drawPos, false);
 
     if (this->textVisible) {
-        drawPos = this->position;
-        drawPos.x += -0x60000 - (this->size.x >> 1);
+        drawPos.x = this->position.x + this->buttonBounceOffset - TO_FIXED(18);
+        drawPos.y = this->position.y;
         this->textAnimator.DrawSprite(&drawPos, false);
     }
 }
@@ -101,27 +102,28 @@ void UISlider::DrawSlider()
 {
     Vector2 drawPos;
     int32 drawX     = 0x7A0000 + this->position.x;
-    int32 sliderPos = (((34048 * this->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
-    int32 drawX2    = drawX - ((0x7A0000 - sliderPos) >> 1);
+    int32 sliderPos = (((34048 * this->sliderPos) >> 2));
+    int32 drawX2    = drawX - ((TO_FIXED(10) - sliderPos));
 
-    UIWidgets::DrawParallelogram(drawX + this->buttonBounceOffset, this->position.y, 122, 12, 12, 0x00, 0x00, 0x00);
-    UIWidgets::DrawParallelogram(drawX2 + this->buttonBounceOffset, this->position.y, sliderPos >> 16, 12, 12, 0xE7, 0x38,
-                                0x5A);
+    drawPos.x       = this->position.x + this->buttonBounceOffset + TO_FIXED(156);
+    drawPos.y       = this->position.y;
+    this->sliderFrame = this->sliderPos / 64;
+    this->sliderAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
+    this->sliderAnimator.DrawSprite(&drawPos, false);
+    this->sliderAnimator.SetAnimation(sVars->aniFrames, 1, true, this->sliderFrame);
+    this->sliderAnimator.DrawSprite(&drawPos, false);
 
-    drawPos.x = drawX2 + (sliderPos >> 1) + this->buttonBounceOffset + 0x60000;
+    this->buttonAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
+    drawPos.x = drawX2 + (sliderPos >> 1) + this->buttonBounceOffset;
     drawPos.y = this->position.y;
  
-    drawPos.x += 0x30000;
-    drawPos.y += 0x30000;
-    UIWidgets::DrawRectOutline_Blended(drawPos.x, drawPos.y, 14, 24);
+    drawPos.x -= TO_FIXED(57);
+    this->buttonAnimator.DrawSprite(&drawPos, false);
 
-    drawPos.x -= 0x30000;
-    drawPos.y -= 0x30000;
-
-    Graphics::DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
-
-    if (this->isSelected)
-        UIWidgets::DrawRectOutline_Flash(drawPos.x, drawPos.y, 14, 24);
+    if (this->isSelected) {
+        drawPos.y = drawPos.y - TO_FIXED(24);
+        UIWidgets::sVars->arrowDownAnimator.DrawSprite(&drawPos, false);
+    }
 }
 
 void UISlider::ButtonPressCB()

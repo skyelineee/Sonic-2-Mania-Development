@@ -1,7 +1,6 @@
 #pragma once
 #include "S2M.hpp"
 #include "UIButton.hpp"
-#include "UIHeading.hpp"
 
 namespace GameLogic
 {
@@ -88,7 +87,6 @@ struct UIControl : RSDK::GameObject::Entity {
     int32 backoutTimer;
     int32 storedButtonID;
     int32 lastButtonID;
-    UIHeading *heading;
     UIShifter *shifter;
     UICarousel *carousel;
     UIButtonPrompt *prompts[UICONTROL_PROMPT_COUNT];

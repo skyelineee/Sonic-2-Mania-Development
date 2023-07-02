@@ -94,7 +94,7 @@ void UIKeyBinder::Update()
             this->keyAnimator.SetAnimation(&sVars->aniFrames, UIKeyBinder::GetButtonListID(), true, frameID);
             this->lasyKeyMap = keyMap;
 
-            if (this->state.Set(&UIKeyBinder::State_Selected)) {
+            if (this->state.Matches(&UIKeyBinder::State_Selected)) {
                 LogHelpers::Print("bind = %d 0x%02x", keyMap, keyMap);
 
                 sVars->isSelected   = false;
@@ -105,7 +105,6 @@ void UIKeyBinder::Update()
                 sVars->activeBinder = nullptr;
                 parent->childHasFocus     = false;
 
-               
                 Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, true);
                 UIWidgets::sVars->sfxAccept.Play(false, 255);
             }
@@ -253,11 +252,14 @@ void UIKeyBinder::DrawSprites()
     Vector2 drawPos;
     drawPos.x = this->position.x - this->buttonBounceOffset;
     drawPos.y = this->position.y - this->buttonBounceOffset;
+    UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, this->size.x >> 16, this->size.y >> 16, this->bgEdgeSize, (UIWidgets::sVars->buttonColor >> 16) & 0xFF,
+                                (UIWidgets::sVars->buttonColor >> 8) & 0xFF, (UIWidgets::sVars->buttonColor) & 0xFF);
 
     drawPos.x += this->buttonBounceOffset;
     drawPos.y += this->buttonBounceOffset;
     drawPos.x += this->buttonBounceOffset;
     drawPos.y += this->buttonBounceOffset;
+    UIWidgets::DrawParallelogram(drawPos.x, drawPos.y, this->size.x >> 16, this->size.y >> 16, this->bgEdgeSize, 0x00, 0x00, 0x00);
  
     drawPos.x = this->position.x + this->buttonBounceOffset;
     drawPos.y = this->position.y + this->buttonBounceOffset;

@@ -29,22 +29,7 @@ void ItemBox::Update()
 
     if (this->type == ItemBox::Stock) {
         if (this->contentsAnimator.animationID == 2 || this->contentsAnimator.animationID == 7 || this->contentsAnimator.animationID == 8) {
-            if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
-                this->contentsAnimator.SetAnimation(sVars->aniFrames, 8, false, 0);
-            }
-            else {
-                this->contentsAnimator.SetAnimation(sVars->aniFrames, 7, false, 0);
-                if (globals->gameMode == MODE_ENCORE) {
-                    int32 id = 0;
-                    while ((1 << this->contentsAnimator.frameID) & globals->characterFlags) {
-                        if (++this->contentsAnimator.frameID > 4)
-                            this->contentsAnimator.frameID = 0;
-                        if (++id > 5) {
-                            this->contentsAnimator.SetAnimation(sVars->aniFrames, 8, false, 0);
-                        }
-                    }
-                }
-            }
+            this->contentsAnimator.SetAnimation(sVars->aniFrames, 7, false, 0);
         }
     }
 }
@@ -101,9 +86,6 @@ void ItemBox::Create(void *data)
                 if (globals->gameMode == MODE_TIMEATTACK) {
                     this->type = ItemBox::Ring;
                 }
-                else if (globals->gameMode == MODE_ENCORE) {
-                    this->type = ItemBox::Stock;
-                }
                 else {
                     switch (player->characterID) {
                         case ID_SONIC: this->type = ItemBox::ExtraLife_Sonic; break;
@@ -116,17 +98,12 @@ void ItemBox::Create(void *data)
                 break;
 
             case ItemBox::Swap:
-                if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
-                    this->contentsAnimator.frameID = this->type;
-                else
-                    this->Destroy();
+                this->Destroy();
                 break;
 
             case ItemBox::Random:
                 if (globals->secrets & SECRET_RANDOMITEMS) 
                     this->contentsAnimator.frameID = ItemBox::Random;
-                else if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
-                    this->contentsAnimator.frameID = this->type;
                 else
                     this->Destroy();
                 break;
@@ -181,29 +158,15 @@ void ItemBox::StageLoad()
 
     DebugMode::AddObject(sVars->classID, &ItemBox::DebugSpawn, &ItemBox::DebugDraw);
 
-    if (globals->gameMode == MODE_COMPETITION) {
-        if (globals->itemMode == 2) {
-            for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
-                itemBox->type = ItemBox::Swap;
-            }
-        }
-        else if (globals->itemMode == 1) {
-            for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
-                itemBox->type = ItemBox::Random;
-            }
+    if (globals->secrets & SECRET_RANDOMITEMS) {
+        for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
+            itemBox->type = ItemBox::Random;
         }
     }
-    else {
-        if (globals->secrets & SECRET_RANDOMITEMS) {
-            for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
-                itemBox->type = ItemBox::Random;
-            }
-        }
-        else if (globals->secrets & SECRET_BLUESHIELDMODE) {
-            for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
-                if (itemBox->type == ItemBox::BubbleShield || itemBox->type == ItemBox::FireShield || itemBox->type == ItemBox::LightningShield)
-                itemBox->type = ItemBox::BlueShield;
-            }
+    else if (globals->secrets & SECRET_BLUESHIELDMODE) {
+        for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
+            if (itemBox->type == ItemBox::BubbleShield || itemBox->type == ItemBox::FireShield || itemBox->type == ItemBox::LightningShield)
+            itemBox->type = ItemBox::BlueShield;
         }
     }
 
@@ -496,34 +459,8 @@ void ItemBox::GivePowerup()
             player->hyperRing = true;
             break;
 
-        case ItemBox::Swap:
-            if (globals->gameMode == MODE_ENCORE) {
-                if (!globals->stock || player->animator.animationID == Player::ANI_TRANSFORM) {
-                    Player::sVars->sfxSwapFail.Play();
-                }
-                else {
-                    int32 charID = player->characterID;
-                    player->ChangeCharacter((uint8)globals->stock);
-                    globals->stock >>= 8;
-
-                    if (globals->stock) {
-                        charID <<= 8;
-                        if (globals->stock & 0xFF00)
-                            charID <<= 8;
-                    }
-                    globals->stock |= charID;
-                    Explosion *explosion = GameObject::Create<Explosion>(0, player->position.x, player->position.y);
-                    explosion->drawGroup = Zone::sVars->objectDrawGroup[1];
-                    sVars->sfxPowerDown.Play();
-                }
-            }
-            else if (globals->gameMode != MODE_COMPETITION) {
-                Player::sVars->sfxSwapFail.Play();
-            }
-            else {
-                Zone::StartTeleportAction();
-                sVars->sfxTeleport.Play();
-            }
+        case ItemBox::Swap:       
+            Player::sVars->sfxSwapFail.Play();
             break;
 
         case ItemBox::Random: {
@@ -631,99 +568,21 @@ void ItemBox::GivePowerup()
 
         case ItemBox::Super:
             player->GiveRings(50, false);
-            player->TryTransform(false, Player::TransformAuto);
+            player->TryTransform(false, Player::TransformHyper);
             break;
 
         case ItemBox::Stock: {
-            if (this->contentsAnimator.animationID == 7) {
-                if (globals->gameMode == MODE_ENCORE) {
-                    if (!((1 << this->contentsAnimator.frameID) & globals->characterFlags) && globals->characterFlags != 31
-                        && !(globals->stock & 0xFF0000)) {
-                        globals->characterFlags |= 1 << this->contentsAnimator.frameID;
-                        Player *player2 = GameObject::Get<Player>(SLOT_PLAYER2);
-                        if (player2->classID) {
-
-                            int32 id = 0;
-                            while ((globals->stock >> id) & 0xFF) id += 8;
-
-                            globals->stock |= (1 << this->contentsAnimator.frameID << id);
-                            HUD::sVars->stockFlashTimers[(id >> 3) + 1] = 120;
-                        }
-                        else {
-                            player2->classID     = Player::sVars->classID;
-                            Player::sVars->respawnTimer = 0;
-                            Dust *dust     = GameObject::Create<Dust>(1, player2->position.x, player2->position.y);
-
-                            dust->visible         = false;
-                            dust->active          = ACTIVE_NEVER;
-                            dust->isPermanent     = true;
-                            dust->position.y      = (screenInfo->position.y - 128) << 16;
-                            player2->playerID     = 1;
-
-                            Player *player1 = GameObject::Get<Player>(SLOT_PLAYER1);
-                            if (player1->state.Matches(&Player::State_Death) || player1->state.Matches(&Player::State_Drown)) {
-                                player2->state.Set(&Player::State_DeathHold);
-                                player2->velocity.x = 0;
-                                player2->velocity.y = 0;
-                                player2->position.x = -0x200000;
-                                player2->position.y = -0x200000;
-                                break;
-                            }
-                            else {
-                                player2->ChangeCharacter(1 << this->contentsAnimator.frameID);
-                                player2->velocity.x = 0;
-                                player2->velocity.y = 0;
-                                player2->groundVel  = 0;
-                                player2->position.x = -0x400000;
-                                player2->position.y = -0x400000;
-                                player2->angle      = 128;
-                                if (player2->characterID == ID_TAILS) {
-                                    player2->state.Set(&Player::State_FlyToPlayer);
-                                }
-                                else {
-                                    player2->state.Set(&Player::State_ReturnToPlayer);
-                                    player2->abilityValues[0] = ((screenInfo->position.y + screenInfo->size.y + 16) << 16) - player->position.y;
-                                    player2->drawFX |= FX_SCALE;
-                                    player2->scale.x    = 0x400;
-                                    player2->scale.y    = 0x400;
-                                    player2->velocity.y = CLAMP(player2->abilityValues[0] / -12, -0xE0000, -0x68000);
-                                }
-                                player2->abilityPtrs[0]   = dust;
-                                player2->abilityValues[0] = 0;
-                                player2->nextAirState     .Set(nullptr);
-                                player2->nextGroundState  .Set(nullptr);
-                                player2->stateInput       .Set(&Player::GetDelayedInput);
-                                player2->tileCollisions          = TILECOLLISION_NONE;
-                                player2->interaction      = false;
-                                player2->drawGroup               = Zone::sVars->playerDrawGroup[1];
-                                player2->drownTimer       = 0;
-                                player2->active           = ACTIVE_NORMAL;
-                                player2->collisionPlane   = 0;
-                                player2->collisionMode    = CMODE_FLOOR;
-                                player2->collisionLayers         = Zone::sVars->collisionLayers;
-                                player2->controllerID            = Input::CONT_P2;
-                                player2->sidekick         = true;
-                                player2->drawFX           = FX_FLIP | FX_ROTATE;
-                                player2->visible          = true;
-                                HUD::sVars->stockFlashTimers[0]  = 120;
-                            }
-                        }
-                    }
-
-                    sVars->sfxRecovery.Play();
+            if (this->contentsAnimator.animationID == 7) {      
+                switch (this->contentsAnimator.frameID) {
+                    case 0: player->ChangeCharacter(ID_SONIC); break;
+                    case 1: player->ChangeCharacter(ID_TAILS); break;
+                    case 2: player->ChangeCharacter(ID_KNUCKLES); break;
+                    default: break;
                 }
-                else {
-                    switch (this->contentsAnimator.frameID) {
-                        case 0: player->ChangeCharacter(ID_SONIC); break;
-                        case 1: player->ChangeCharacter(ID_TAILS); break;
-                        case 2: player->ChangeCharacter(ID_KNUCKLES); break;
-                        default: break;
-                    }
 
-                    Explosion *explosion = GameObject::Create<Explosion>(0, player->position.x, player->position.y);
-                    explosion->drawGroup = Zone::sVars->objectDrawGroup[1];
-                    sVars->sfxPowerDown.Play();
-                }
+                Explosion *explosion = GameObject::Create<Explosion>(0, player->position.x, player->position.y);
+                explosion->drawGroup = Zone::sVars->objectDrawGroup[1];
+                sVars->sfxPowerDown.Play();
             }
             else {
                 switch (this->contentsAnimator.frameID) {
@@ -818,43 +677,39 @@ void ItemBox::Break(Player *player)
 
     this->active = ACTIVE_NORMAL;
     if (this->type == ItemBox::Random) {
-        if (globals->gameMode != MODE_ENCORE) {
-            while (true) {
-                this->type = Math::Rand(0, 13);
-                switch (this->type) {
-                    case ItemBox::BubbleShield:
-                    case ItemBox::FireShield:
-                    case ItemBox::LightningShield:
-                        if (globals->secrets & SECRET_BLUESHIELDMODE)
-                            this->type = ItemBox::BlueShield;
-                        break;
+        while (true) {
+            this->type = Math::Rand(0, 13);
+            switch (this->type) {
+                case ItemBox::BubbleShield:
+                case ItemBox::FireShield:
+                case ItemBox::LightningShield:
+                    if (globals->secrets & SECRET_BLUESHIELDMODE)
+                        this->type = ItemBox::BlueShield;
+                    break;
 
-                    case ItemBox::ExtraLife_Sonic:
-                        if (globals->gameMode == MODE_TIMEATTACK)
-                            continue;
-
-                        switch (player->characterID) {
-                            case ID_SONIC: this->type = ItemBox::ExtraLife_Sonic; break;
-                            case ID_TAILS: this->type = ItemBox::ExtraLife_Tails; break;
-                            case ID_KNUCKLES: this->type = ItemBox::ExtraLife_Knux; break;
-                            default: break;
-                        }
-                        this->contentsAnimator.frameID = this->type;
-                        break;
-
-                    case ItemBox::ExtraLife_Tails:
-                    case ItemBox::ExtraLife_Knux:
+                case ItemBox::ExtraLife_Sonic:
+                    if (globals->gameMode == MODE_TIMEATTACK)
                         continue;
 
-                    case ItemBox::Swap:
-                        if (globals->gameMode == MODE_COMPETITION)
-                            this->contentsAnimator.frameID = this->type;
-                        break;
+                    switch (player->characterID) {
+                        case ID_SONIC: this->type = ItemBox::ExtraLife_Sonic; break;
+                        case ID_TAILS: this->type = ItemBox::ExtraLife_Tails; break;
+                        case ID_KNUCKLES: this->type = ItemBox::ExtraLife_Knux; break;
+                        default: break;
+                    }
+                    this->contentsAnimator.frameID = this->type;
+                    break;
 
-                    default: this->contentsAnimator.frameID = this->type; break;
-                }
-                break;
+                case ItemBox::ExtraLife_Tails:
+                case ItemBox::ExtraLife_Knux:
+                    continue;
+
+                case ItemBox::Swap:
+                    break;
+
+                default: this->contentsAnimator.frameID = this->type; break;
             }
+            break;
         }
     }
 }

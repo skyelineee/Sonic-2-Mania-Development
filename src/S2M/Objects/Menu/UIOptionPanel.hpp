@@ -23,6 +23,7 @@ struct UIOptionPanel : RSDK::GameObject::Entity {
     };
 
     RSDK::Animator panelAnimator;
+    int32 frameID;
 
     // ==============================
     // INSTANCE VARS

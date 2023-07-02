@@ -14,6 +14,7 @@
 #include "Helpers/MenuParam.hpp"
 #include "Helpers/GameProgress.hpp"
 #include "Helpers/MathHelpers.hpp"
+#include "Helpers/TimeAttackData.hpp"
 #include "Global/SaveGame.hpp"
 #include "Global/Zone.hpp"
 #include "Common/BGSwitch.hpp"
@@ -37,10 +38,7 @@ void SaveMenu::StaticUpdate()
         RSDKTable->GetTileLayer(4)->drawGroup[BGSwitch::sVars->screenID] = 1;
         RSDKTable->GetTileLayer(5)->drawGroup[BGSwitch::sVars->screenID] = 1;
         RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = 2;
-        UIHeading *heading   = control->heading;
-        if (UIControl::isMoving(control)) {
-            heading->position.y = control->position.y - TO_FIXED(100);
-        }
+        RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
 
         UISaveSlot *saveSlot = (UISaveSlot *)control->buttons[control->lastButtonID];
 
@@ -386,12 +384,11 @@ void SaveMenu::SaveButton_ActionCB()
     UIControl *control = (UIControl *)saveSlot->parent;
 
     SaveGame::SaveRAM *saveGame = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(saveSlot->slotID);
-    // TimeAttackData::Clear();
+    TimeAttackData::Clear();
 
     control->tag.CStr(param->menuTag);
     param->menuSelection = control->lastButtonID;
     param->replayID      = 0;
-    //globals->gameMode    = self->encoreMode != false;
 
     bool32 loadingSave = false;
     if (saveSlot->type) {
@@ -415,8 +412,7 @@ void SaveMenu::SaveButton_ActionCB()
             // see above
 
             memset(saveData, 0, 0x400);
-            if (globals->gameMode != MODE_ENCORE)
-                saveGame->saveState = 1;
+            saveGame->saveState = 1;
 
             saveGame->characterID   = saveSlot->frameID;
             saveGame->zoneID        = 0;

@@ -8,6 +8,7 @@
 #include "LogHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/SaveGame.hpp"
+#include "Global/Zone.hpp"
 
 using namespace RSDK;
 
@@ -60,7 +61,7 @@ void GameProgress::DumpProgress()
     else
         LogHelpers::Print("YOU'VE NOT ENOUGH EMERALDS!\n");
 
-    for (int32 z = 0; z < 13; ++z) {
+    for (int32 z = 0; z < Zone::ZoneCount; ++z) {
         if (progress->zoneCleared[z])
             LogHelpers::Print("Zone %d clear => TRUE", z);
         else

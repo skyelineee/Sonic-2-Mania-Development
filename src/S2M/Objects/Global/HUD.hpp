@@ -56,7 +56,7 @@ struct HUD : RSDK::GameObject::Entity {
     int32 lifeFrameIDs[PLAYER_COUNT];
     int32 lives[PLAYER_COUNT];
     int32 maxOffset;
-    int32 superButtonPos;
+    int32 actionPromptPos;
     RSDK::StateMachine<HUD> vsStates[PLAYER_COUNT];
     RSDK::Vector2 vsScoreOffsets[PLAYER_COUNT];
     RSDK::Vector2 vsTimeOffsets[PLAYER_COUNT];

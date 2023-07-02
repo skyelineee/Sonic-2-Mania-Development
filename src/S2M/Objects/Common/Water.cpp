@@ -104,29 +104,24 @@ void Water::Create(void *data)
 
         switch (this->type) {
             case Water::WaterLevel:
-                if (globals->gameMode == MODE_COMPETITION && Stage::CheckSceneFolder("CPZ")) {
-                    this->Destroy();
-                }
-                else {
-                    this->active    = ACTIVE_NORMAL;
-                    this->drawGroup = Zone::sVars->hudDrawGroup - 1;
-                    if (this->surfaceWaves) {
-                        if (globals->gameSpriteStyle == GAME_S3K) {
-                            this->inkEffect = INK_ALPHA;
-                            this->alpha     = 0xA0;
-                        }
-                        else {
-                            this->inkEffect = INK_ADD;
-                            this->alpha     = Stage::CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
-                        }
-                        this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
+                this->active    = ACTIVE_NORMAL;
+                this->drawGroup = Zone::sVars->hudDrawGroup - 1;
+                if (this->surfaceWaves) {
+                    if (globals->gameSpriteStyle == GAME_S3K) {
+                        this->inkEffect = INK_ALPHA;
+                        this->alpha     = 0xA0;
                     }
-                    this->state.Set(&Water::State_Water);
-                    this->stateDraw.Set(&Water::Draw_Water);
-                    this->size.x >>= 16;
-                    sVars->newWaterLevel    = this->position.y;
-                    sVars->targetWaterLevel = this->position.y;
+                    else {
+                        this->inkEffect = INK_ADD;
+                        this->alpha     = Stage::CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
+                    }
+                    this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
                 }
+                this->state.Set(&Water::State_Water);
+                this->stateDraw.Set(&Water::Draw_Water);
+                this->size.x >>= 16;
+                sVars->newWaterLevel    = this->position.y;
+                sVars->targetWaterLevel = this->position.y;
                 break;
 
             case Water::Pool:
@@ -567,9 +562,8 @@ void Water::State_Water()
                                 break;
 
                             case 1080:
-                                if (globals->gameMode != MODE_COMPETITION && globals->gameMode != MODE_ENCORE) {
-                                    if (!player->sidekick)
-                                        Music::PlayJingle(Music::TRACK_DROWNING);
+                                if (!player->sidekick) {
+                                    Music::PlayJingle(Music::TRACK_DROWNING);
                                 }
 
                                 Water::SpawnCountDownBubble(player, playerID, 5);
@@ -618,11 +612,6 @@ void Water::State_Water()
                                 player->drawGroup = Zone::sVars->playerDrawGroup[1];
                                 playAlertSfx      = true;
                                 break;
-                        }
-
-                        if (playAlertSfx) {
-                            if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
-                                sVars->sfxDrownAlert.Play();
                         }
                     }
                 }

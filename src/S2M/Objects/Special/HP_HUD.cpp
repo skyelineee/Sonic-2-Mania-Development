@@ -26,77 +26,54 @@ void HP_HUD::Draw()
     HP_Player *player1 = GameObject::Get<HP_Player>(SLOT_HP_PLAYER1);
     HP_Player *player2 = GameObject::Get<HP_Player>(SLOT_HP_PLAYER2);
 
-    if (globals->gameMode != MODE_COMPETITION) {
-        if (!GET_CHARACTER_ID(2)) {
-            drawPos.x = TO_FIXED(screen->center.x - 24);
-            DrawRingCount(SLOT_HP_PLAYER1, &drawPos);
-        }
-        else {
-            drawPos.x = TO_FIXED(screen->center.x - 104);
-            DrawRingCount(SLOT_HP_PLAYER1, &drawPos);
-
-            drawPos.x = TO_FIXED(screen->center.x + 48);
-            DrawRingCount(SLOT_HP_PLAYER2, &drawPos);
-
-            int32 totalRings = player1->rings + player2->rings;
-
-            drawPos.x                         = TO_FIXED(screen->center.x);
-            drawPos.y                         = TO_FIXED(21);
-            this->hudElementsAnimator.frameID = 3;
-            this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-            drawPos.x = TO_FIXED(screen->center.x);
-            drawPos.y = TO_FIXED(29);
-            if (totalRings > 99) {
-                drawPos.x -= TO_FIXED(12);
-                this->numbersAnimator.frameID = totalRings / 100;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-
-                drawPos.x += TO_FIXED(8);
-                this->numbersAnimator.frameID = totalRings % 100 / 10;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-
-                drawPos.x += TO_FIXED(8);
-                this->numbersAnimator.frameID = totalRings % 10;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-            }
-            else if (totalRings > 9) {
-                drawPos.x -= TO_FIXED(8);
-                this->numbersAnimator.frameID = totalRings / 10;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-
-                drawPos.x += TO_FIXED(8);
-                this->numbersAnimator.frameID = totalRings % 10;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-            }
-            else {
-                drawPos.x -= TO_FIXED(4);
-
-                this->numbersAnimator.frameID = totalRings;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-            }
-        }
+    
+    if (!GET_CHARACTER_ID(2)) {
+        drawPos.x = TO_FIXED(screen->center.x - 24);
+        DrawRingCount(SLOT_HP_PLAYER1, &drawPos);
     }
     else {
         drawPos.x = TO_FIXED(screen->center.x - 104);
         DrawRingCount(SLOT_HP_PLAYER1, &drawPos);
 
-        drawPos.x                         = TO_FIXED(screen->center.x - 96);
-        drawPos.y                         = TO_FIXED(45);
-        this->hudElementsAnimator.frameID = 4;
-        for (int32 c = 0; c < player1->vsCheckpointID; ++c) {
-            this->hudElementsAnimator.DrawSprite(nullptr, true);
-            drawPos.x += TO_FIXED(16);
-        }
-
         drawPos.x = TO_FIXED(screen->center.x + 48);
         DrawRingCount(SLOT_HP_PLAYER2, &drawPos);
 
-        drawPos.x = TO_FIXED(screen->center.x + 56);
-        drawPos.y = TO_FIXED(45);
-        for (int32 c = 0; c < player1->vsCheckpointID; ++c) {
-            this->hudElementsAnimator.DrawSprite(nullptr, true);
-            drawPos.x += TO_FIXED(16);
+        int32 totalRings = player1->rings + player2->rings;
+
+        drawPos.x                         = TO_FIXED(screen->center.x);
+        drawPos.y                         = TO_FIXED(21);
+        this->hudElementsAnimator.frameID = 3;
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+
+        drawPos.x = TO_FIXED(screen->center.x);
+        drawPos.y = TO_FIXED(29);
+        if (totalRings > 99) {
+            drawPos.x -= TO_FIXED(12);
+            this->numbersAnimator.frameID = totalRings / 100;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
+
+            drawPos.x += TO_FIXED(8);
+            this->numbersAnimator.frameID = totalRings % 100 / 10;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
+
+            drawPos.x += TO_FIXED(8);
+            this->numbersAnimator.frameID = totalRings % 10;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
+        }
+        else if (totalRings > 9) {
+            drawPos.x -= TO_FIXED(8);
+            this->numbersAnimator.frameID = totalRings / 10;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
+
+            drawPos.x += TO_FIXED(8);
+            this->numbersAnimator.frameID = totalRings % 10;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
+        }
+        else {
+            drawPos.x -= TO_FIXED(4);
+
+            this->numbersAnimator.frameID = totalRings;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
         }
     }
 }

@@ -13,6 +13,7 @@
 #include "UIWidgets.hpp"
 #include "MenuSetup.hpp"
 #include "ManiaModeMenu.hpp"
+#include "TimeAttackMenu.hpp"
 #include "Helpers/MathHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
@@ -57,7 +58,7 @@ void MainMenu::StaticUpdate()
                     if (button->nameFrameID > selectedID) {
                         button->position.y = button->startPos.y + TO_FIXED(24);
                         button->buttonFrameID = button->descriptionFrameID;
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->buttonListID = 1;
                         button->nameListID   = 3;
                     }
@@ -72,7 +73,7 @@ void MainMenu::StaticUpdate()
                     else {
                         button->buttonListID = 1;
                         button->nameListID    = 4;
-                        button->descriptionListID = 4;
+                        button->descriptionListID = 5;
                         button->position.y = button->startPos.y;
                         button->buttonFrameID = button->descriptionFrameID + 5;
                     }
@@ -238,10 +239,15 @@ void MainMenu::MenuButton_ActionCB()
             break;
 
         case 1: // Time Attack
-                //UIControl *control = TimeAttackMenu::sVars->timeAttackControl_Legacy;
-                //control->buttonID        = 0;
-                //control->menuWasSetup    = false;
-                UIControl::MatchMenuTag("Time Attack Legacy");
+            // TEMP
+            if (API::Storage::GetNoSave()) {
+            }
+            else {
+                UIControl *control    = TimeAttackMenu::sVars->timeAttackControl;
+                control->buttonID     = 0;
+                control->menuWasSetup = false;
+                UIControl::MatchMenuTag("Time Attack");
+            }
             break;
 
         case 2: // Extras

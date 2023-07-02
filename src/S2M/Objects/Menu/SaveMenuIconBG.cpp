@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------
 // RSDK Project: Sonic 2 Mania
 // Object Description: SaveMenuIconBG Object
-// Object Author: Ducky
+// Object Author: AChickMcNuggie
 // ---------------------------------------------------------------------
 
 #include "SaveMenuIconBG.hpp"

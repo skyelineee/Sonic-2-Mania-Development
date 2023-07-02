@@ -50,12 +50,7 @@ void HP_Setup::StageLoad()
     }
 
     int32 start = 0;
-    if (globals->gameMode == MODE_COMPETITION) {
-        start = Math::Rand(0, 12) << 3;
-    }
-    else {
-        start = paletteID << 3;
-    }
+    start = paletteID << 3;
 
     paletteBank[0].Copy(1, start, 192, 8);
 

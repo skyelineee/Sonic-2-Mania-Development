@@ -22,6 +22,11 @@ struct UIDiorama : RSDK::GameObject::Entity {
         UIDIORAMA_LEVELSELECT,
         UIDIORAMA_EXTRALEVELS,
         UIDIORAMA_CREDITS,
+        UIDIORAMA_VIDEO,
+        UIDIORAMA_SOUND,
+        UIDIORAMA_CONTROLS,
+        UIDIORAMA_DATA,
+
     } ;
 
     // ==============================

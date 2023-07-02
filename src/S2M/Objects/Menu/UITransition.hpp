@@ -1,5 +1,6 @@
 #pragma once
 #include "S2M.hpp"
+#include "Helpers/FXFade.hpp"
 
 namespace GameLogic
 {
@@ -29,7 +30,7 @@ struct UITransition : RSDK::GameObject::Entity {
     int32 timer;
     int32 delay;
     bool32 isTransitioning;
-    RSDK::Vector2 drawPos[3];
+    int32 fadeColor;
 
     // ==============================
     // INSTANCE VARS
@@ -62,7 +63,7 @@ struct UITransition : RSDK::GameObject::Entity {
     static void MatchNewTag();
     static void SetNewTag(const char *text);
 
-    void DrawShapes();
+    void DrawFade();
 
     void State_Init();
     void State_TransitionIn();

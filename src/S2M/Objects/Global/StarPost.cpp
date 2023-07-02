@@ -44,7 +44,7 @@ void StarPost::Draw()
 void StarPost::Create(void *data)
 {
 
-    if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && this->vsRemove)) {
+    if (globals->gameMode == MODE_TIMEATTACK) {
         this->Destroy();
     }
     else {
@@ -115,31 +115,22 @@ void StarPost::StageLoad()
 
                 if (!p) {
                     Player *sidekick = GameObject::Get<Player>(SLOT_PLAYER2);
-                    if (globals->gameMode != MODE_COMPETITION) {
-                        sidekick->position.x = player->position.x;
-                        sidekick->position.y = player->position.y;
-                        sidekick->direction  = player->direction;
-                        if (player->direction)
-                            sidekick->position.x += 0x100000;
-                        else
-                            sidekick->position.x -= 0x100000;
+                    sidekick->position.x = player->position.x;
+                    sidekick->position.y = player->position.y;
+                    sidekick->direction  = player->direction;
+                    if (player->direction)
+                        sidekick->position.x += 0x100000;
+                    else
+                        sidekick->position.x -= 0x100000;
 
-                        for (int32 p = 0; p < 0x10; ++p) {
-                            Player::sVars->leaderPositionBuffer[p].x = player->position.x;
-                            Player::sVars->leaderPositionBuffer[p].y = player->position.y;
-                        }
+                    for (int32 p = 0; p < 0x10; ++p) {
+                        Player::sVars->leaderPositionBuffer[p].x = player->position.x;
+                        Player::sVars->leaderPositionBuffer[p].y = player->position.y;
                     }
                 }
             }
 
             savedStarPost->interactedPlayers = sVars->interactablePlayers;
-        }
-
-        if (globals->gameMode == MODE_COMPETITION || globals->gameMode == MODE_ENCORE) {
-            Player *player              = GameObject::Get<Player>(p);
-            sVars->playerPositions[p].x = player->position.x;
-            sVars->playerPositions[p].y = player->position.y - 0x100000;
-            sVars->playerDirections[p]  = player->direction;
         }
     }
 
@@ -273,10 +264,7 @@ void StarPost::CheckCollisions()
                     bool32 spawnStars = false;
 
                     {
-                        if (globals->gameMode == MODE_ENCORE)
-                            quota = 50;
-                        else
-                            quota = 25;
+                        quota = 25;
 
                         if (player->rings >= quota) {
                             this->bonusStageID = ((player->rings - 20) / 15 % 3) + 1;
