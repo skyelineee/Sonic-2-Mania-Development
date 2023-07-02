@@ -4,5 +4,6 @@ mod.ini
 log.txt
 *.exe
 *.dll
+*.pdb
 
 .vs*
