@@ -54,8 +54,6 @@ struct PauseMenu : RSDK::GameObject::Entity {
     int32 forcePaused;
     RSDK::Animator animator;
     RSDK::Action<void> fadeoutCB;
-    int32 unused1;
-    int32 unused2; // these may possibly be leftover or editor things
 
     // ==============================
     // EVENTS

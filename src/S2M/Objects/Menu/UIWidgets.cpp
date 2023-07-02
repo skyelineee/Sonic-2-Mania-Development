@@ -36,10 +36,13 @@ void UIWidgets::StageLoad()
     sVars->active = ACTIVE_ALWAYS;
 
     sVars->uiFrames.Load("UI/UIElements.bin", SCOPE_STAGE);
-    sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
-    sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
-    sVars->timeAttackFrames.Load("UI/TimeAttack.bin", SCOPE_STAGE);
+
+    if (Stage::CheckSceneFolder("Menu")) {
+        sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
+        sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
+        sVars->timeAttackFrames.Load("UI/TimeAttack.bin", SCOPE_STAGE);
+    }
 
     UIWidgets::ApplyLanguage();
     sVars->arrowRightAnimator.SetAnimation(&sVars->uiFrames, 0, true, 0);

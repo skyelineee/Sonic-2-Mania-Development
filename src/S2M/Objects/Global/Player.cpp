@@ -7,10 +7,12 @@
 #include "Player.hpp"
 #include "Zone.hpp"
 #include "SaveGame.hpp"
+#include "ActClear.hpp"
 #include "DebugMode.hpp"
 #include "Common/ScreenWrap.hpp"
 #include "Camera.hpp"
 #include "PauseMenu.hpp"
+#include "TitleCard.hpp"
 #include "Music.hpp"
 #include "Shield.hpp"
 #include "HUD.hpp"
@@ -6256,12 +6258,15 @@ void Player::Input_Gamepad()
 
             Input_NULL();
 
-            if (controller->keyStart.press || unknownInfo->pausePress) {
+            if (controller->keyStart.press || Unknown_pausePress) {
                 if (sceneInfo->state == ENGINESTATE_REGULAR) {
                     PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
-                    if (!pauseMenu->classID) {
-                        GameObject::Reset(SLOT_PAUSEMENU, PauseMenu::sVars->classID, nullptr);
-                        pauseMenu->triggerPlayer = (uint8)this->Slot();
+                    bool32 allowPause          = true;
+                    if (ActClear::sVars && ActClear::sVars->actClearActive)
+                        allowPause = false;
+                    if (!RSDKTable->GetEntityCount(TitleCard::sVars->classID, false) && !pauseMenu->classID && allowPause) {
+                        RSDKTable->ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu::sVars->classID, nullptr);
+                        pauseMenu->triggerPlayer = this->playerID;
                     }
                 }
             }

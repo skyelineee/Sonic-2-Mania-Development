@@ -137,7 +137,7 @@ void PauseMenu::Create(void *data)
     }
 }
 
-void PauseMenu::StageLoad(void)
+void PauseMenu::StageLoad()
 {
     sVars->active = ACTIVE_ALWAYS;
 
