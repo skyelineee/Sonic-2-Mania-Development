@@ -38,9 +38,10 @@ struct PauseMenu : RSDK::GameObject::Entity {
     RSDK::StateMachine<PauseMenu>state;
     RSDK::StateMachine<PauseMenu> stateDraw;
     int32 timer;
+    int32 pauseTimer;
+    int32 triangleSpeed;
+    int32 centerSpeed;
     int32 tintAlpha;
-    RSDK::Vector2 headerPos;
-    RSDK::Vector2 yellowTrianglePos;
     UIControl *manager;
     uint8 triggerPlayer;
     bool32 disableRestart;
@@ -52,8 +53,19 @@ struct PauseMenu : RSDK::GameObject::Entity {
     int32 fadeTimer;
     RSDK::Action<bool32> disconnectCheck;
     int32 forcePaused;
-    RSDK::Animator animator;
+    RSDK::Vector2 triangleLeftPos;
+    RSDK::Vector2 triangleRightPos;
+    RSDK::Vector2 bgCirclePos;
+    RSDK::Vector2 pauseTextPos;
+    RSDK::Vector2 emeraldsPos;
+    RSDK::Vector2 buttonPos;
     RSDK::Action<void> fadeoutCB;
+    RSDK::Animator bgCircleAnimator;
+    RSDK::Animator pauseTextAnimator;
+    RSDK::Animator emeraldsAnimator;
+    RSDK::Animator trianglesLeftAnimator;
+    RSDK::Animator trianglesRightAnimator;
+
 
     // ==============================
     // EVENTS
@@ -112,22 +124,20 @@ struct PauseMenu : RSDK::GameObject::Entity {
     void State_SetupButtons();
 
     void State_StartPause();
-    void State_StartPauseCompetition();
 
     void State_Paused();
     void State_ForcedPause();
-    void State_ForcedPauseCompetition();
 
     void State_Resume();
-    void State_ResumeCompetition();
-    void State_ForcedResumeCompetition();
 
     static void State_SetupTitleFade();
     void State_FadeToTitle();
     void State_HandleFadeout();
 
     // Draw States
+    void DrawStartPause();
     void DrawPauseMenu();
+    void DrawEndPause();
     void Draw_RegularPause();
 
     void Draw_ForcePause();

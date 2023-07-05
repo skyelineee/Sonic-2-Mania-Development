@@ -95,6 +95,15 @@ void UIButton::Draw()
 
         this->buttonAnimator.DrawSprite(&drawPos, false);
         this->nameAnimator.DrawSprite(&drawPos, false);
+
+        // weird solution to a drawing order issue in the pause menu :]
+        // (the buttons were always drawn after any elements in pausemenu which is good so theyre always in front of it and visible but this also
+        // meant i couldnt put an arrow animator there as it was stuck behind the button)
+        if (this->isSelected && this->visibleArrowHorizontal) {
+            drawPos.x = this->buttonBounceOffset + this->position.x + TO_FIXED(82);
+            drawPos.y = this->position.y;
+            UIWidgets::sVars->arrowLeftAnimator.DrawSprite(&drawPos, false);
+        }
     }
 
     this->descOffset.y = Math::Sin256(this->descAngle) << 10;
@@ -918,6 +927,7 @@ void UIButton::Serialize()
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, stopMusic);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, reverseVelocity);
     RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, visibleArrow);
+    RSDK_EDITABLE_VAR(UIButton, VAR_BOOL, visibleArrowHorizontal);
 }
 
 } // namespace GameLogic

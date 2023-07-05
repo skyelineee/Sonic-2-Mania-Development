@@ -52,6 +52,7 @@ struct UIButton : RSDK::GameObject::Entity {
     bool32 nameVisible;
     bool32 clearParentState;
     bool32 visibleArrow;
+    bool32 visibleArrowHorizontal;
     RSDK::Vector2 firstChoicePos;
     int32 selection;
     RSDK::Action<void> choiceChangeCB;
