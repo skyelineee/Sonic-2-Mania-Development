@@ -25,6 +25,7 @@ void TitleCard::Update() {
 
     this->yellowPieceAnimator.Process();
     this->redPieceAnimator.Process();
+    this->bluePieceAnimator.Process();
 
 }
 void TitleCard::LateUpdate() {}
@@ -173,7 +174,7 @@ void TitleCard::PiecePositions()
 
     piecePos.x = this->zoneNamePos.x + TO_FIXED(300);
     piecePos.y = this->zoneNamePos.y;
-    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, 0, nullptr, true);
+    this->zoneNameAnimator.DrawString(&piecePos, &this->zoneName, 0, 0, 2, -1, nullptr, true);
 }
 
 // States

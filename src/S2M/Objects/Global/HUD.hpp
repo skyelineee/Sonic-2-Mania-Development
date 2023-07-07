@@ -119,7 +119,7 @@ struct HUD : RSDK::GameObject::Entity {
     void State_MoveIn();
     void State_MoveOut();
 
-    void MoveIn();
+    static void MoveIn(HUD *hud);
 
     static void EnableRingFlash();
     static int32 CharacterIndexFromID(int32 characterID);

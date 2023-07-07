@@ -44,6 +44,7 @@ void PauseMenu::Update()
 
     this->trianglesLeftAnimator.Process();
     this->trianglesRightAnimator.Process();
+    this->checkerboardBGAnimator.Process();
 }
 
 void PauseMenu::LateUpdate()
@@ -125,6 +126,8 @@ void PauseMenu::Create(void *data)
         // sets these all to 0 on create
         this->timer       = 0;
         this->pauseTimer  = 0;
+        this->inkEffect   = INK_NONE;
+        this->alpha       = 0;
         //sets the triangleSpeed to 10 on create, will slowly go down or go up when sliding in or away respectively
         this->triangleSpeed  = TO_FIXED(10);
         // sets the centerSpeed to 10 on create, will slowly go down or go up when sliding in or away respectively
@@ -781,6 +784,17 @@ void PauseMenu::DrawStartPause()
 
     Vector2 drawPos;
 
+    // checkerboard bg
+    this->inkEffect = INK_ALPHA;
+    // increases alpha for the checkerboard
+    if (this->alpha < 96) {
+        this->alpha += 8;
+    }
+    drawPos.x = 0;
+    drawPos.y = 0;
+    this->checkerboardBGAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 8, false, 0);
+    this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
+
     // side triangles
     // have to use triangleLeftPos which is set in create unfortunately
     // i would rather use local drawing variables like in drawpausemenu but cant bc it would just be set back to its pase position after every attempt of moving as a result of it going every frame
@@ -790,6 +804,7 @@ void PauseMenu::DrawStartPause()
     // however that would set its position to fixed(56) and itd be farther than whats wanted which is annoying
     // in this case the speed reaches 0 a little before it reaches its end, so it stops moving a little before but id rather have that then it going too far, which would happen
     // if i increased the speed anymore as a result of what ive mentioned above, ill just have to settle for the closest i can get unfortunately
+    this->inkEffect = INK_NONE;
     drawPos.x = triangleLeftPos.x;
     drawPos.y = triangleLeftPos.y;
     this->trianglesLeftAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 1, false, 0);
@@ -860,6 +875,14 @@ void PauseMenu::DrawPauseMenu()
     // idle resting positions
     Vector2 drawPos;
 
+    // checkerboard bg
+    this->inkEffect = INK_ALPHA;
+    drawPos.x = 0;
+    drawPos.y = 0;
+    this->checkerboardBGAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 8, false, 0);
+    this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
+
+    this->inkEffect = INK_NONE;
     // side triangles
     drawPos.x = -TO_FIXED(1);
     drawPos.y = TO_FIXED(0);
@@ -945,6 +968,18 @@ void PauseMenu::DrawEndPause()
 
     Vector2 drawPos;
 
+    // checkerboard bg
+    this->inkEffect = INK_ALPHA;
+    // decreases alpha for the checkerboard
+    if (this->alpha <= 96) {
+        this->alpha -= 8;
+    }
+    drawPos.x = 0;
+    drawPos.y = 0;
+    this->checkerboardBGAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 8, false, 0);
+    this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
+
+    this->inkEffect = INK_NONE;
     drawPos.x = triangleLeftPos.x;
     drawPos.y = triangleLeftPos.y;
     this->trianglesLeftAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 1, false, 0);

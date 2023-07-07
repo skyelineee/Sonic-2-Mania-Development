@@ -278,12 +278,12 @@ void StarPost::CheckCollisions()
                                     break;
 
                                 case 2:
-                                    this->starAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
+                                    this->starAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
                                     spawnStars = true;
                                     break;
 
                                 case 3:
-                                    this->starAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
+                                    this->starAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
                                     spawnStars = true;
                                     break;
                             }

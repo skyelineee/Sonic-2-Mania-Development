@@ -65,6 +65,7 @@ struct PauseMenu : RSDK::GameObject::Entity {
     RSDK::Animator emeraldsAnimator;
     RSDK::Animator trianglesLeftAnimator;
     RSDK::Animator trianglesRightAnimator;
+    RSDK::Animator checkerboardBGAnimator;
 
 
     // ==============================

@@ -115,7 +115,7 @@ void HUD::Draw()
             // Draw ":"
             lifePos.x                         = timeOffset.x + TO_FIXED(52);
             lifePos.y                         = timeOffset.y - TO_FIXED(2);
-            this->hudElementsAnimator.frameID = this->showMilliseconds ? 12 : 20;
+            this->hudElementsAnimator.frameID = this->showMilliseconds ? 5 : 20;
             this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
             this->numbersAnimator.frameID = 0;
@@ -279,7 +279,7 @@ void HUD::Draw()
 
         if (globals->useManiaBehavior) {
             // Draw Life Icon "X"
-            this->hudElementsAnimator.frameID = 14;
+            this->hudElementsAnimator.frameID = 6;
             this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
             // Draw Lives
@@ -292,7 +292,7 @@ void HUD::Draw()
         else { // Draw Life Name
             this->lifeNamesAnimator.DrawSprite(&lifePos, true);
 
-            this->hudElementsAnimator.frameID = 14; // 'x'
+            this->hudElementsAnimator.frameID = 6; // 'x'
             // Draw "x"
             this->hudElementsAnimator.DrawSprite(&lifePos, true);
 
@@ -537,18 +537,22 @@ void HUD::State_MoveOut()
     ringsOffset = &this->ringsOffset;
     lifeOffset  = &this->lifeOffset;
 
-    scoreOffset->x -= TO_FIXED(8);
-    if (timeOffset->x - scoreOffset->x > TO_FIXED(16))
-        timeOffset->x -= TO_FIXED(8);
+    if (scoreOffset->x > -TO_FIXED(112))
+        scoreOffset->x -= TO_FIXED(8);
 
-    if (ringsOffset->x - timeOffset->x > TO_FIXED(16))
-        ringsOffset->x -= TO_FIXED(8);
+    if (timeOffset->x > -TO_FIXED(168))
+        timeOffset->x -= TO_FIXED(12);
 
-    if (lifeOffset->x - ringsOffset->x > TO_FIXED(16))
-        lifeOffset->x -= TO_FIXED(8);
+    if (ringsOffset->x > -TO_FIXED(224))
+        ringsOffset->x -= TO_FIXED(16);
 
-    if (lifeOffset->x < -TO_FIXED(80)) {
-        this->Destroy();
+    if (lifeOffset->x > -TO_FIXED(280))
+        lifeOffset->x -= TO_FIXED(20);
+
+    if (globals->gameMode != MODE_TIMEATTACK) { // this is done because the replay prompts in time attack are done with hud, but if its destroyed then they will not appear, this is just a simple way of getting around it
+        if (lifeOffset->x <= -TO_FIXED(280)) {
+            this->Destroy();
+        }
     }
 }
 
@@ -569,15 +573,15 @@ int32 HUD::CharacterIndexFromID(int32 characterID)
     return id;
 }
 
-void HUD::MoveIn()
+void HUD::MoveIn(HUD *hud)
 {
-    this->maxOffset = this->scoreOffset.x;
-    this->scoreOffset.x -= TO_FIXED(0x100);
-    this->timeOffset.x -= TO_FIXED(0x110);
-    this->ringsOffset.x -= TO_FIXED(0x120);
-    this->lifeOffset.x -= TO_FIXED(0x130);
+    hud->maxOffset = hud->scoreOffset.x;
+    hud->scoreOffset.x -= TO_FIXED(0x100);
+    hud->timeOffset.x -= TO_FIXED(0x110);
+    hud->ringsOffset.x -= TO_FIXED(0x120);
+    hud->lifeOffset.x -= TO_FIXED(0x130);
 
-    this->state.Set(&HUD::State_MoveIn);
+    hud->state.Set(&HUD::State_MoveIn);
 }
 
 #if RETRO_INCLUDE_EDITOR

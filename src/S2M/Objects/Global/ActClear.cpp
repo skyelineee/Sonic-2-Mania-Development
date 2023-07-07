@@ -27,7 +27,14 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(ActClear);
 
-void ActClear::Update() { this->state.Run(this); }
+void ActClear::Update() 
+{ 
+    this->state.Run(this); 
+    this->trianglesLeftAnimator.Process();
+    this->trianglesRightAnimator.Process();
+    this->checkerboardBGAnimator.Process();
+}
+
 void ActClear::LateUpdate() {}
 void ActClear::StaticUpdate()
 {
@@ -42,208 +49,149 @@ void ActClear::Draw()
     int32 minutes      = 0;
     int32 offset       = 0;
 
-    drawPos.x  = this->gotThroughPos.x;
-    drawPos.y  = this->gotThroughPos.y;
+    // this is where all of the sprites will be drawn based on their individual positions for every frame (their individual positions being altered by
+    // sliding in or away)
 
-    if ((GET_CHARACTER_ID(1)) == ID_KNUCKLES) {
-        int32 center = TO_FIXED(screenInfo->center.x + 16);
+    // checkboard doesnt move at all, so doesnt need its own position variable
+    this->inkEffect = INK_ALPHA; // set to alpha for the checkerboard only
+    drawPos.x       = 0;
+    drawPos.y       = 0;
+    this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
 
-        drawPos.x  = 2 * this->gotThroughPos.x + center;
+    this->inkEffect = INK_NONE; // set back to none afterwards
+    // left triangles position
+    drawPos.x = this->triangleLeftPos.x;
+    drawPos.y = this->triangleLeftPos.y;
+    this->trianglesLeftAnimator.DrawSprite(&drawPos, true);
 
-        drawPos.x  = 2 * this->playerNamePos.x + center;
-        drawPos.y  = this->playerNamePos.y;
+    // right triangles position
+    drawPos.x = this->triangleRightPos.x;
+    drawPos.y = this->triangleRightPos.y;
+    this->trianglesRightAnimator.DrawSprite(&drawPos, true);
 
-        drawPos.x = this->playerNamePos.x + center;
-        drawPos.y = this->playerNamePos.y;
-        this->playerNameCardAnimator.DrawSprite(&drawPos, true);
-        this->playerNameAnimator.DrawSprite(&drawPos, true);
+    // player name position
+    drawPos.x                       = this->playerNamePos.x;
+    drawPos.y                       = this->playerNamePos.y;
+    this->scoreCardAnimator.frameID = 15;
+    this->scoreCardAnimator.DrawSprite(&drawPos, true);
+    this->playerNameAnimator.DrawSprite(&drawPos, true);
 
+    // got position
+    drawPos.x                        = this->gotPos.x;
+    drawPos.y                        = this->gotPos.y;
+    if (GET_CHARACTER_ID(1) == ID_KNUCKLES) {
         this->gotThroughAnimator.frameID = 2;
-        this->gotThroughAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x                        = this->gotThroughPos.x + center;
-        drawPos.y                        = this->gotThroughPos.y;
-        this->gotThroughAnimator.frameID = 3;
-        this->gotThroughAnimator.DrawSprite(&drawPos, true);
-        this->actNumCardAnimator.DrawSprite(&drawPos, true);
-        this->actNumAnimator.DrawSprite(&drawPos, true);
-
-        offset = center - TO_FIXED(10);
     }
     else {
-        int32 center = TO_FIXED(screenInfo->center.x + 16);
-
-        drawPos.x  = 2 * this->gotThroughPos.x + center;
-
-        drawPos.x  = 2 * this->playerNamePos.x + center;
-        drawPos.y  = this->playerNamePos.y;
-
-        drawPos.x = this->playerNamePos.x + center;
-        drawPos.y = this->playerNamePos.y;
-        this->playerNameCardAnimator.DrawSprite(&drawPos, true);
-        this->playerNameAnimator.DrawSprite(&drawPos, true);
-
         this->gotThroughAnimator.frameID = 0;
-        this->gotThroughAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x                        = this->gotThroughPos.x + center;
-        drawPos.y                        = this->gotThroughPos.y;
-        this->gotThroughAnimator.frameID = 1;
-        this->actNumCardAnimator.DrawSprite(&drawPos, true);
-        this->gotThroughAnimator.DrawSprite(&drawPos, true);
-        this->actNumAnimator.DrawSprite(&drawPos, true);
-
-        offset = center + TO_FIXED(6);
     }
+    this->gotThroughAnimator.DrawSprite(&drawPos, true);
 
-    // Draw "Time" Bonus Sprite
-    drawPos.x                         = offset + this->timeBonusPos.x - TO_FIXED(100);
-    drawPos.y                         = this->timeBonusPos.y;
-    this->hudElementsAnimator.frameID = 1;
+    // through position
+    drawPos.x                        = this->throughPos.x;
+    drawPos.y                        = this->throughPos.y;
+    this->gotThroughAnimator.frameID = 1;
+    this->gotThroughAnimator.DrawSprite(&drawPos, true);
+
+    // act position
+    drawPos.x                       = this->actPos.x;
+    drawPos.y                       = this->actPos.y;
+    this->scoreCardAnimator.frameID = 16;
+    this->scoreCardAnimator.DrawSprite(&drawPos, true);
+    this->actNumAnimator.DrawSprite(&drawPos, true);
+
     if (globals->gameMode != MODE_TIMEATTACK) {
+        // time bonus position
+        drawPos.x                         = this->timeBonusPos.x;
+        drawPos.y                         = this->timeBonusPos.y;
+        this->hudElementsAnimator.frameID = 7;
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
+        drawPos.x                       = timeNumPos.x;
+        drawPos.y                       = timeNumPos.y;
+        this->scoreCardAnimator.frameID = 14;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        DrawNumbers(&drawPos, this->timeBonus, 0); // draw time bonus
+
+        // ring bonus position
+        drawPos.x                         = this->ringBonusPos.x;
+        drawPos.y                         = this->ringBonusPos.y;
+        this->hudElementsAnimator.frameID = 8;
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+        drawPos.x                       = ringNumPos.x;
+        drawPos.y                       = ringNumPos.y;
+        this->scoreCardAnimator.frameID = 14;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        DrawNumbers(&drawPos, this->ringBonus, 0); // draw ring bonus
+
+        // cool bonus position
+        drawPos.x                         = this->coolBonusPos.x;
+        drawPos.y                         = this->coolBonusPos.y;
+        this->hudElementsAnimator.frameID = 9;
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+        drawPos.x                       = coolNumPos.x;
+        drawPos.y                       = coolNumPos.y;
+        this->scoreCardAnimator.frameID = 14;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        DrawNumbers(&drawPos, this->coolBonus, 0); // draw cool bonus
+
+        // total score position
+        drawPos.x                         = this->totalScorePos.x;
+        drawPos.y                         = this->totalScorePos.y;
+        this->hudElementsAnimator.frameID = 10;
+        this->hudElementsAnimator.DrawSprite(&drawPos, true);
+        drawPos.x                       = totalNumPos.x;
+        drawPos.y                       = totalNumPos.y;
+        this->scoreCardAnimator.frameID = 14;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        DrawNumbers(&drawPos, this->totalScore, 0); // draw total score
     }
     else {
-        drawPos.y += TO_FIXED(14);
+        // time position
+        drawPos.x                         = this->timeBonusPos.x;
+        drawPos.y                         = this->timeBonusPos.y + TO_FIXED(16);
+        this->hudElementsAnimator.frameID = 11;
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
-    }
-
-    // Draw "Bonus" Sprite
-    drawPos.x += TO_FIXED(50);
-    if (globals->gameMode != MODE_TIMEATTACK) {
-        this->hudElementsAnimator.frameID = 8; // "Bonus"
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-    }
-
-    // Draw Time Bonus BG thingy
-    this->hudElementsAnimator.frameID = 10;
-    drawPos.x += TO_FIXED(62);
-    this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
-    this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-    drawPos.x += TO_FIXED(67);
-    drawPos.y += TO_FIXED(14);
-
-    if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x -= TO_FIXED(98);
+        drawPos.x                       = timeNumPos.x;
+        drawPos.y                       = timeNumPos.y + TO_FIXED(16);
+        this->scoreCardAnimator.frameID = 17;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        drawPos.x -= TO_FIXED(96);
         drawPos.y -= TO_FIXED(14);
-        // Draw Current Time
-        DrawTime(&drawPos, sceneInfo->minutes, sceneInfo->seconds, sceneInfo->milliseconds);
-    }
-    else {
-        DrawNumbers(&drawPos, this->timeBonus, 0); // Draw Time Bonus
-    }
+        DrawTime(&drawPos, sceneInfo->minutes, sceneInfo->seconds, sceneInfo->milliseconds); // draw time
 
-    // Draw Ring Bonus
-    drawPos.x = offset + this->ringBonusPos.x - TO_FIXED(100);
-    drawPos.y = this->ringBonusPos.y;
-    if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.y += TO_FIXED(14);
-        this->hudElementsAnimator.frameID = 17; // "Best"
-    }
-    else {
-        this->hudElementsAnimator.frameID = 5; // "Ring"
-    }
-
-    this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-    drawPos.x += TO_FIXED(50);
-    if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x -= TO_FIXED(10);
-        this->hudElementsAnimator.frameID = 20; // "Time"
+        // best time position
+        drawPos.x                         = this->ringBonusPos.x;
+        drawPos.y                         = this->ringBonusPos.y + TO_FIXED(16);
+        this->hudElementsAnimator.frameID = 12;
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
-        drawPos.x += TO_FIXED(10);
-    }
-    else {
-        this->hudElementsAnimator.frameID = 8; // "Bonus"
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-    }
-
-    // Draw Ring Bonus BG thingy
-    this->hudElementsAnimator.frameID = 10;
-    drawPos.x += TO_FIXED(62);
-    this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
-    this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-    drawPos.x += TO_FIXED(67);
-    drawPos.y += TO_FIXED(14);
-    if (globals->gameMode == MODE_TIMEATTACK) { // Draw Best Time
+        drawPos.x                       = ringNumPos.x;
+        drawPos.y                       = ringNumPos.y + TO_FIXED(16);
+        this->scoreCardAnimator.frameID = 17;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        // draw best time
         TimeAttackData::GetUnpackedTime(this->time, &minutes, &seconds, &milliseconds);
-        drawPos.x -= TO_FIXED(98);
+        drawPos.x -= TO_FIXED(96);
         drawPos.y -= TO_FIXED(14);
         if (!this->isNewRecord || (this->isNewRecord && (Zone::sVars->timer & 8)))
             DrawTime(&drawPos, minutes, seconds, milliseconds);
-    }
-    else {
-        DrawNumbers(&drawPos, this->ringBonus, 0);
-    }
 
-    if (this->showCoolBonus) { // Draw Cool Bonus
-        drawPos.x = offset + this->coolBonusPos.x - TO_FIXED(100);
-        drawPos.y = this->coolBonusPos.y;
-        if (globals->gameMode == MODE_TIMEATTACK) {
-            drawPos.y += TO_FIXED(14);
-            this->hudElementsAnimator.frameID = 18; // "Rank"
-        }
-        else {
-            this->hudElementsAnimator.frameID = 15; // "Cool"
-        }
-
+        // rank position
+        drawPos.x                         = this->coolBonusPos.x;
+        drawPos.y                         = this->coolBonusPos.y + TO_FIXED(16);
+        this->hudElementsAnimator.frameID = 13;
         this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x += TO_FIXED(50);
-        if (globals->gameMode != MODE_TIMEATTACK) {
-            this->hudElementsAnimator.frameID = 8; // "Bonus"
-            this->hudElementsAnimator.DrawSprite(&drawPos, true);
+        drawPos.x                       = coolNumPos.x;
+        drawPos.y                       = coolNumPos.y + TO_FIXED(16);
+        this->scoreCardAnimator.frameID = 17;
+        this->scoreCardAnimator.DrawSprite(&drawPos, true);
+        // draw rank
+        if (!TimeAttackData::sVars->personalRank) {
+            this->numbersAnimator.frameID = 16;
+            this->numbersAnimator.DrawSprite(&drawPos, true);
         }
-
-        // Draw Cool Bonus BG thingy
-        this->hudElementsAnimator.frameID = 10;
-        drawPos.x += TO_FIXED(62);
-        this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        drawPos.x += TO_FIXED(67);
-        drawPos.y += TO_FIXED(14);
-
-        if (globals->gameMode != MODE_TIMEATTACK) {
-            DrawNumbers(&drawPos, this->coolBonus, 0); // Draw Cool bonus
+        else if (!this->achievedRank || (this->achievedRank && (Zone::sVars->timer & 8))) {
+            DrawNumbers(&drawPos, TimeAttackData::sVars->personalRank, 0);
         }
-        else {
-            // Draw Rank
-            if (!TimeAttackData::sVars->personalRank) {
-                this->numbersAnimator.frameID = 16;
-                this->numbersAnimator.DrawSprite(&drawPos, true);
-
-                drawPos.x -= TO_FIXED(9);
-            }
-            else if (!this->achievedRank || (this->achievedRank && (Zone::sVars->timer & 8)))
-                DrawNumbers(&drawPos, TimeAttackData::sVars->personalRank, 0);
-        }
-    }
-
-    drawPos.x = this->totalScorePos.x;
-    drawPos.y = this->totalScorePos.y;
-
-    if (globals->gameMode == MODE_TIMEATTACK) {
-        // Draw World Rank
-    }
-    else {
-        // Draw Total Score
-        drawPos.x                         = offset + this->totalScorePos.x - TO_FIXED(68);
-        this->hudElementsAnimator.frameID = 9; // "Total"
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        // Draw Total Score BG thingy
-        this->hudElementsAnimator.frameID = 10;
-        drawPos.x += TO_FIXED(52);
-        this->scoreNumCardAnimator.DrawSprite(&drawPos, true);
-        this->hudElementsAnimator.DrawSprite(&drawPos, true);
-
-        // Draw Total Score
-        drawPos.x += TO_FIXED(67);
-        drawPos.y += TO_FIXED(14);
-        DrawNumbers(&drawPos, this->totalScore, 0);
     }
 }
 
@@ -255,9 +203,23 @@ void ActClear::Create(void *data)
         this->active    = ACTIVE_NORMAL;
         this->visible   = true;
         this->drawGroup = Zone::sVars->hudDrawGroup;
-        this->state.Set(&ActClear::State_EnterText);
+        // ink effect is set to none on creation, no transparency
+        this->inkEffect = INK_NONE;
+        // sets the alpha to 0 on creation for the checkerboard, shouldnt affect anything else as their ink effect is none
+        this->alpha     = 0; // should increase or decrease for the sliding in and away
+        // this is where the results start sliding in
+        this->state.Set(&ActClear::State_EnterResults);
         this->stageFinishTimer = 0;
         this->newRecordTimer   = 0;
+        this->slidingInTimer   = 0;
+        this->slidingOutTimer = 0;
+        // initial speeds, will slowly decrease or increase depending on if its sliding in or away
+        // these are all set to the same amount, but they start decreasing at different times so they need to be different unfortunately
+        this->topTextSpeed = TO_FIXED(25);
+        this->timeBonusSpeed = TO_FIXED(25);
+        this->ringBonusSpeed = TO_FIXED(25);
+        this->coolBonusSpeed = TO_FIXED(25);
+        this->totalScoreSpeed = TO_FIXED(25);
         Music::ClearMusicStack();
         Music::PlayTrack(Music::TRACK_ACTCLEAR);
 
@@ -306,23 +268,74 @@ void ActClear::Create(void *data)
             this->isNewRecord  = false;
         }
 
+        // base positions before sliding in
+        // each position is usually moved away by like 300 pixels so they all move at the same pace
         this->showCoolBonus   = true;
-        this->playerNamePos.x = TO_FIXED(224);
-        this->playerNamePos.y = TO_FIXED(88);
-        this->gotThroughPos.x = -TO_FIXED(224);
-        this->gotThroughPos.y = TO_FIXED(112);
-        this->timeBonusPos.x  = TO_FIXED(488);
-        this->timeBonusPos.y  = TO_FIXED(120);
-        this->ringBonusPos.x  = TO_FIXED(776);
-        this->ringBonusPos.y  = TO_FIXED(136);
-        this->coolBonusPos.x  = TO_FIXED(1064);
-        this->coolBonusPos.y  = TO_FIXED(152);
-        this->totalScorePos.x = -TO_FIXED(1352);
-        this->totalScorePos.y = TO_FIXED(192);
+        triangleLeftPos.x     = -TO_FIXED(300);
+        triangleLeftPos.y     = TO_FIXED(0);
+        triangleRightPos.x    = TO_FIXED(678);
+        triangleRightPos.y    = TO_FIXED(0);
+        this->playerNamePos.x = -TO_FIXED(168);
+        this->playerNamePos.y = TO_FIXED(54);
+        this->gotPos.x        = -TO_FIXED(80);
+        this->gotPos.y        = TO_FIXED(54);
+        this->throughPos.x    = TO_FIXED(480);
+        this->throughPos.y    = TO_FIXED(82);
+        this->actPos.x        = TO_FIXED(602);
+        this->actPos.y        = TO_FIXED(82);
+        this->timeBonusPos.x  = -TO_FIXED(182);
+        this->timeBonusPos.y  = TO_FIXED(122);
+        this->ringBonusPos.x  = -TO_FIXED(182);
+        this->ringBonusPos.y  = TO_FIXED(138);
+        this->coolBonusPos.x  = -TO_FIXED(182);
+        this->coolBonusPos.y  = TO_FIXED(154);
+        this->totalScorePos.x = -TO_FIXED(158);
+        this->totalScorePos.y = TO_FIXED(194);
+        this->timeNumPos.x   = TO_FIXED(600);
+        this->timeNumPos.y   = TO_FIXED(136);
+        this->ringNumPos.x   = TO_FIXED(600);
+        this->ringNumPos.y   = TO_FIXED(152);
+        this->coolNumPos.x   = TO_FIXED(600);
+        this->coolNumPos.y   = TO_FIXED(168);
+        this->totalNumPos.x  = TO_FIXED(570);
+        this->totalNumPos.y  = TO_FIXED(208);
 
+        // final resting positions lol 
+        /*
+        triangleLeftPos.x     = TO_FIXED(0);
+        triangleLeftPos.y     = TO_FIXED(0);
+        triangleRightPos.x    = TO_FIXED(378);
+        triangleRightPos.y    = TO_FIXED(0);
+        this->playerNamePos.x = TO_FIXED(132);
+        this->playerNamePos.y = TO_FIXED(54);
+        this->gotPos.x        = TO_FIXED(220);
+        this->gotPos.y        = TO_FIXED(54);
+        this->throughPos.x    = TO_FIXED(180);
+        this->throughPos.y    = TO_FIXED(82);
+        this->actPos.x        = TO_FIXED(302);
+        this->actPos.y        = TO_FIXED(82);
+        this->timeBonusPos.x  = TO_FIXED(118);
+        this->timeBonusPos.y  = TO_FIXED(122);
+        this->ringBonusPos.x  = TO_FIXED(118);
+        this->ringBonusPos.y  = TO_FIXED(138);
+        this->coolBonusPos.x  = TO_FIXED(118);
+        this->coolBonusPos.y  = TO_FIXED(154);
+        this->totalScorePos.x = TO_FIXED(142);
+        this->totalScorePos.y = TO_FIXED(194);
+        this->scoreNumPos.x   = TO_FIXED(300);
+        this->scoreNumPos.y   = TO_FIXED(136);
+        */
+
+        //setting animators
         this->hudElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
         this->numbersAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
-        this->timeElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 12);
+        this->timeElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 5);
+        this->gotThroughAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
+        this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, Zone::sVars->actID > 0);
+        this->scoreCardAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
+        this->trianglesLeftAnimator.SetAnimation(sVars->aniFrames, 12, true, 0);
+        this->trianglesRightAnimator.SetAnimation(sVars->aniFrames, 13, true, 0);
+        this->checkerboardBGAnimator.SetAnimation(sVars->aniFrames, 14, true, 0);
 
         switch (GET_CHARACTER_ID(1)) {
             default:
@@ -336,19 +349,6 @@ void ActClear::Create(void *data)
 
             case ID_KNUCKLES: this->playerNameAnimator.SetAnimation(sVars->aniFrames, 3, true, 2); break;
         }
-
-        this->gotThroughAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
-        this->actNumCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 5);
-        this->playerNameCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 6);
-        this->scoreNumCardAnimator.SetAnimation(sVars->aniFrames, 5, true, 7);
-
-
-        // Used in cases like OOZ1 outro where the act clear actually happens in AIZ2
-        if (sVars->displayedActID <= 0)
-            this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, Zone::sVars->actID > 0);
-        else
-            this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, sVars->displayedActID - 1);
-
     }
 }
 
@@ -371,69 +371,132 @@ void ActClear::StageLoad()
     sVars->victoryTimer   = 0;
 }
 
-void ActClear::State_EnterText()
-{
-    SET_CURRENT_STATE();
-
-    if (this->playerNamePos.x > 0)
-        this->playerNamePos.x -= TO_FIXED(16);
-
-    if (this->gotThroughPos.x < 0)
-        this->gotThroughPos.x += TO_FIXED(16);
-
-    if (!this->timer && Zone::sVars->shouldRecoverPlayers)
-        SetupForceOnScreenP2();
-
-    if (++this->timer == 48) {
-        this->timer = 0;
-        this->state.Set(&ActClear::State_AdjustText);
-    }
-
-    CheckPlayerVictory();
-}
-
-void ActClear::State_AdjustText()
-{
-    SET_CURRENT_STATE();
-
-    this->playerNamePos.y -= 0x8000;
-    this->gotThroughPos.y -= 0x8000;
-
-    if (++this->timer == 48) {
-        this->timer = 0;
-        this->state.Set(&ActClear::State_EnterResults);
-    }
-
-    CheckPlayerVictory();
-}
 void ActClear::State_EnterResults()
 {
     SET_CURRENT_STATE();
 
-    if (this->timeBonusPos.x > 0)
-        this->timeBonusPos.x -= TO_FIXED(16);
+    // im aware its probably really ugly to be using multiple speed values, but im not sure how else to get them to all start moving at different times but at the same pace so
+    // if i used only 1 speed value but had them all still start moving at different times, the speed would be too low to really do anything on the later ones as a result of it subtracting every frame
 
-    if (this->ringBonusPos.x > 0)
-        this->ringBonusPos.x -= TO_FIXED(16);
-
-    if (this->coolBonusPos.x > 0)
-        this->coolBonusPos.x -= TO_FIXED(16);
-
-    if (this->totalScorePos.x < -TO_FIXED(8)) {
-        this->totalScorePos.x += TO_FIXED(16);
+    // gets the hud object and sets its state to moving out (dont need it visible here lmao)
+    for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
+        hud->state.Set(&HUD::State_MoveOut);
     }
-    else {
-        if (globals->gameMode == MODE_TIMEATTACK) {
-            sVars->bufferMove_CB.Run(this);
 
-            HUD::sVars->showTAPrompt = true;
-            sVars->hasSavedReplay    = false;
-            this->newRecordTimer     = 240;
-            this->state.Set(&ActClear::State_ShowResultsTA);
-            Stage::SetScene("Presentation", "Menu");
+    // increases alpha for the checkerboard
+    if (this->alpha < 96) {
+        this->alpha += 8;
+    }
+
+    // moves the ai assist player on screen so it doesnt get stuck
+    if (!this->timer && Zone::sVars->shouldRecoverPlayers)
+        SetupForceOnScreenP2();
+
+    // these pull in right at the start of the act clear so it doesnt need a timer to start
+    // decreases the top text speed by 1 every frame if its above 0
+    if (this->topTextSpeed > 0) {
+        this->topTextSpeed -= TO_FIXED(1);
+    }
+    // makes sure top text speed never gets below 0 and starts moving in the wrong direction
+    if (this->topTextSpeed < 0) {
+        this->topTextSpeed = 0;
+    }
+
+    
+    // triangle movement
+    if (triangleLeftPos.x < TO_FIXED(0)) {
+        triangleLeftPos.x += this->topTextSpeed; // these come in at the same time as the top text so fortunately can use the same speed value
+    }
+    if (triangleRightPos.x > TO_FIXED(378)) {
+        triangleRightPos.x -= this->topTextSpeed;
+    }
+
+    // top text movement
+    if (this->playerNamePos.x < TO_FIXED(132)) {
+        this->playerNamePos.x += this->topTextSpeed;
+    }
+    if (this->gotPos.x < TO_FIXED(220)) {
+        this->gotPos.x += this->topTextSpeed;
+    }
+    if (this->throughPos.x > TO_FIXED(180)) {
+        this->throughPos.x -= this->topTextSpeed;
+    }
+    if (this->actPos.x > TO_FIXED(302)) {
+        this->actPos.x -= this->topTextSpeed;
+    }
+
+    // bonus text movement
+    if (++this->slidingInTimer >= 48) {
+        // time bonus speed
+        if (this->timeBonusSpeed > 0) {
+            this->timeBonusSpeed -= TO_FIXED(1);
+        }
+        if (this->timeBonusSpeed < 0) {
+            this->timeBonusSpeed = 0;
+        }
+        // time bonus movement
+        if (this->timeBonusPos.x < TO_FIXED(118) || this->timeNumPos.x > TO_FIXED(300)) {
+            this->timeBonusPos.x += this->timeBonusSpeed;
+            this->timeNumPos.x -= this->timeBonusSpeed;
+        }
+        if (this->slidingInTimer >= 64) {
+            // ring bonus speed
+            if (this->ringBonusSpeed > 0) {
+                this->ringBonusSpeed -= TO_FIXED(1);
+            }
+            if (this->ringBonusSpeed < 0) {
+                this->ringBonusSpeed = 0;
+            }
+            // ring bonus movement
+            if (this->ringBonusPos.x < TO_FIXED(118) || this->ringNumPos.x > TO_FIXED(300)) {
+                this->ringBonusPos.x += this->ringBonusSpeed;
+                this->ringNumPos.x -= this->ringBonusSpeed;
+            }
+            if (this->slidingInTimer >= 80) {
+                // cool bonus speed
+                if (this->coolBonusSpeed > 0) {
+                    this->coolBonusSpeed -= TO_FIXED(1);
+                }
+                if (this->coolBonusSpeed < 0) {
+                    this->coolBonusSpeed = 0;
+                }
+                // cool bonus movement
+                if (this->coolBonusPos.x < TO_FIXED(118) || this->coolNumPos.x > TO_FIXED(300)) {
+                    this->coolBonusPos.x += this->coolBonusSpeed;
+                    this->coolNumPos.x -= this->coolBonusSpeed;
+                }
+            }
+        }
+    }
+
+    if (this->slidingInTimer >= 96) {
+        // total score speed
+        if (this->totalScoreSpeed > 0) {
+            this->totalScoreSpeed -= TO_FIXED(1);
+        }
+        if (this->totalScoreSpeed < 0) {
+            this->totalScoreSpeed = 0;
+        }
+        // total score movement
+        if (this->totalScorePos.x < TO_FIXED(142) || this->totalNumPos.x > TO_FIXED(270)) {
+            this->totalScorePos.x += this->totalScoreSpeed;
+            this->totalNumPos.x -= this->totalScoreSpeed;
         }
         else {
-            this->state.Set(&ActClear::State_ScoreShownDelay);
+            if (this->slidingInTimer >= 128) {
+                if (globals->gameMode == MODE_TIMEATTACK) {
+                    sVars->bufferMove_CB.Run(this);
+
+                    HUD::sVars->showTAPrompt = true;
+                    sVars->hasSavedReplay    = false;
+                    this->newRecordTimer     = 240;
+                    this->state.Set(&ActClear::State_ShowResultsTA);
+                    Stage::SetScene("Presentation", "Menu");
+                }
+                else {
+                    this->state.Set(&ActClear::State_ScoreShownDelay);
+                }
+            }
         }
     }
 
@@ -611,52 +674,116 @@ void ActClear::State_EndEvent()
 {
     SET_CURRENT_STATE();
 
-    this->playerNamePos.x += TO_FIXED(32);
-    this->gotThroughPos.x -= TO_FIXED(32);
+    // this does not work bc apparently state_moveout actually destroys the object lmao
+    // im not sure how to get it to move back in after a moveout, creating a new one doesnt work as it gets set in its default position i assume so
+    for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
+        HUD::MoveIn(hud);
+    }
 
-    if (this->playerNamePos.x > TO_FIXED(64))
-        this->timeBonusPos.x += TO_FIXED(32);
+    // decreases alpha for the checkerboard
+    if (this->alpha <= 96) {
+        this->alpha -= 8;
+    }
 
-    if (this->timeBonusPos.x > TO_FIXED(64))
-        this->ringBonusPos.x += TO_FIXED(32);
+    if (this->topTextSpeed >= 0) {
+        this->topTextSpeed += TO_FIXED(1);
+    }
+    if (this->topTextSpeed < 0) {
+        this->topTextSpeed = 0;
+    }
 
-    if (this->ringBonusPos.x > TO_FIXED(64))
-        this->coolBonusPos.x += TO_FIXED(32);
+    // triangle movement
+    triangleLeftPos.x -= this->topTextSpeed;
+    triangleRightPos.x += this->topTextSpeed;
 
-    if (this->coolBonusPos.x > TO_FIXED(64))
-        this->totalScorePos.x -= TO_FIXED(32);
+    // top text movement
+    this->playerNamePos.x -= this->topTextSpeed;
+    this->gotPos.x -= this->topTextSpeed;
+    this->throughPos.x += this->topTextSpeed;
+    this->actPos.x += this->topTextSpeed;
 
-    if (this->totalScorePos.x < -TO_FIXED(512)) {
-        if (sVars->displayedActID <= 0) {
-            if (!Zone::sVars->stageFinishCallback.Matches(nullptr)) {
-                if (Zone::sVars->shouldRecoverPlayers) {
-                    this->timer = 0;
-                    this->state.Set(&ActClear::State_RecoverPlayers);
+    // bonus text movement
+    if (++this->slidingOutTimer >= 8) {
+        // time bonus speed
+        if (this->timeBonusSpeed >= 0) {
+            this->timeBonusSpeed += TO_FIXED(1);
+        }
+        if (this->timeBonusSpeed < 0) {
+            this->timeBonusSpeed = 0;
+        }
+        // time bonus movement
+        this->timeBonusPos.x -= this->timeBonusSpeed;
+        this->timeNumPos.x += this->timeBonusSpeed;
+        if (this->slidingOutTimer >= 16) {
+            // ring bonus speed
+            if (this->ringBonusSpeed >= 0) {
+                this->ringBonusSpeed += TO_FIXED(1);
+            }
+            if (this->ringBonusSpeed < 0) {
+                this->ringBonusSpeed = 0;
+            }
+            // ring bonus movement
+            this->ringBonusPos.x -= this->ringBonusSpeed;
+            this->ringNumPos.x += this->ringBonusSpeed;
+            if (this->slidingOutTimer >= 24) {
+                // cool bonus speed
+                if (this->coolBonusSpeed >= 0) {
+                    this->coolBonusSpeed += TO_FIXED(1);
                 }
-                else {
-                    for (auto animal : GameObject::GetEntities<Animals>(FOR_ACTIVE_ENTITIES)) {
-                        if (animal->behaviour == Animals::BehaveFollow)
-                            animal->behaviour = Animals::BehaveFree;
+                if (this->coolBonusSpeed < 0) {
+                    this->coolBonusSpeed = 0;
+                }
+                // cool bonus movement
+                this->coolBonusPos.x -= this->coolBonusSpeed;
+                this->coolNumPos.x += this->coolBonusSpeed;
+            }
+        }
+    }
+
+    if (this->slidingOutTimer >= 32) {
+        // total score speed
+        if (this->totalScoreSpeed >= 0) {
+            this->totalScoreSpeed += TO_FIXED(1);
+        }
+        if (this->totalScoreSpeed < 0) {
+            this->totalScoreSpeed = 0;
+        }
+        // total score movement
+        this->totalScorePos.x -= this->totalScoreSpeed;
+        this->totalNumPos.x += this->totalScoreSpeed;
+
+        if (this->totalScorePos.x < -TO_FIXED(512)) {
+            if (sVars->displayedActID <= 0) {
+                if (!Zone::sVars->stageFinishCallback.Matches(nullptr)) {
+                    if (Zone::sVars->shouldRecoverPlayers) {
+                        this->timer = 0;
+                        this->state.Set(&ActClear::State_RecoverPlayers);
                     }
-                    Zone::sVars->stageFinishCallback.Run(this);
-                    Zone::sVars->stageFinishCallback.Set(nullptr);
+                    else {
+                        for (auto animal : GameObject::GetEntities<Animals>(FOR_ACTIVE_ENTITIES)) {
+                            if (animal->behaviour == Animals::BehaveFollow)
+                                animal->behaviour = Animals::BehaveFree;
+                        }
+                        Zone::sVars->stageFinishCallback.Run(this);
+                        Zone::sVars->stageFinishCallback.Set(nullptr);
+                    }
                 }
             }
-        }
-        else {
-            sVars->finished         = true;
-            sVars->displayedActID   = 0;
-            sceneInfo->milliseconds = 0;
-            sceneInfo->seconds      = 0;
-            sceneInfo->minutes      = 0;
-            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-                player->ringExtraLife = 100;
-                player->rings         = 0;
+            else {
+                sVars->finished         = true;
+                sVars->displayedActID   = 0;
+                sceneInfo->milliseconds = 0;
+                sceneInfo->seconds      = 0;
+                sceneInfo->minutes      = 0;
+                for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+                    player->ringExtraLife = 100;
+                    player->rings         = 0;
+                }
             }
-        }
 
-        if (!this->state.Matches(&ActClear::State_RecoverPlayers))
-            this->Destroy();
+            if (!this->state.Matches(&ActClear::State_RecoverPlayers))
+                this->Destroy();
+        }
     }
 }
 

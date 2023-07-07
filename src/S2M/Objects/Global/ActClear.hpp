@@ -46,7 +46,14 @@ struct ActClear : RSDK::GameObject::Entity {
     // ==============================
     RSDK::StateMachine<ActClear> state;
     int32 timer;
+    int32 topTextSpeed;
+    int32 timeBonusSpeed;
+    int32 ringBonusSpeed;
+    int32 coolBonusSpeed;
+    int32 totalScoreSpeed;
     int32 stageFinishTimer;
+    int32 slidingInTimer;
+    int32 slidingOutTimer;
     int32 timeBonus;
     int32 ringBonus;
     int32 coolBonus;
@@ -57,21 +64,30 @@ struct ActClear : RSDK::GameObject::Entity {
     uint8 isNewRecord;
     uint8 showCoolBonus;
     RSDK::Vector2 playerNamePos;
-    RSDK::Vector2 gotThroughPos;
+    RSDK::Vector2 gotPos;
+    RSDK::Vector2 throughPos;
+    RSDK::Vector2 actPos;
     RSDK::Vector2 timeBonusPos;
     RSDK::Vector2 ringBonusPos;
     RSDK::Vector2 coolBonusPos;
     RSDK::Vector2 totalScorePos;
+    RSDK::Vector2 timeNumPos;
+    RSDK::Vector2 ringNumPos;
+    RSDK::Vector2 coolNumPos;
+    RSDK::Vector2 totalNumPos;
+    RSDK::Vector2 triangleLeftPos;
+    RSDK::Vector2 triangleRightPos;
     Player *targetPlayer;
     RSDK::Animator hudElementsAnimator;
     RSDK::Animator numbersAnimator;
     RSDK::Animator playerNameAnimator;
-    RSDK::Animator playerNameCardAnimator;
     RSDK::Animator gotThroughAnimator;
     RSDK::Animator actNumAnimator;
-    RSDK::Animator actNumCardAnimator;
     RSDK::Animator timeElementsAnimator;
-    RSDK::Animator scoreNumCardAnimator;
+    RSDK::Animator scoreCardAnimator;
+    RSDK::Animator trianglesLeftAnimator;
+    RSDK::Animator trianglesRightAnimator;
+    RSDK::Animator checkerboardBGAnimator;
     int32 listPos;
 
     // ==============================
@@ -99,8 +115,6 @@ struct ActClear : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void State_EnterText();
-    void State_AdjustText();
     void State_EnterResults();
     void State_ScoreShownDelay();
     void State_TallyScore();

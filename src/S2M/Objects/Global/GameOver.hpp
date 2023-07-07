@@ -28,10 +28,17 @@ struct GameOver : RSDK::GameObject::Entity {
     // ==============================
     RSDK::StateMachine<GameOver> state;
     int32 timer;
+    int32 triangleSpeed;
+    int32 centerSpeed;
     int32 playerID;
     int32 targetPos;
     RSDK::Vector2 gameOverPos;
+    RSDK::Vector2 triangleLeftPos;
+    RSDK::Vector2 triangleRightPos;
     RSDK::Animator animator;
+    RSDK::Animator trianglesLeftAnimator;
+    RSDK::Animator trianglesRightAnimator;
+    RSDK::Animator checkerboardBGAnimator;
 
     // ==============================
     // EVENTS
@@ -58,8 +65,8 @@ struct GameOver : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
+    static void SaveGameCallback(bool32 success);
     void State_MoveIn();
-    void State_WaitComp();
     void State_Wait();
     void State_MoveOut();
 
