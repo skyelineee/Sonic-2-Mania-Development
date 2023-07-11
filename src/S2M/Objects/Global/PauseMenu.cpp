@@ -623,6 +623,9 @@ void PauseMenu::State_ForcedPause()
 {
     String textBuffer;
 
+    // this is currently bugged
+    // after forcepausing, the game unpauses for every frame anyway, but since the controller is still disconnected, it pauses again, resulting in a loop
+    // this isnt like gamebreaking bc if you reconnect the controller during this it unpauses just fine and you can play, but still annoying and needs to be fixed
     if (this->timer == 1) {
         UIControl::sVars->inputLocked = false;
         if (sVars->controllerDisconnect) {

@@ -457,11 +457,11 @@ void SaveMenu::SaveButton_ActionCB()
             Stage::SetScene("Presentation", "Level Select");
         }
         else {
-            Stage::SetScene("Mania Mode", "Ocean Wind Zone");
+            Stage::SetScene("Adventure Mode", "Ocean Wind Zone");
         }
     }
     else {
-        Stage::SetScene("Mania Mode", "");
+        Stage::SetScene("Adventure Mode", "");
         sceneInfo->listPos += Zone::GetZoneListPos(saveSlot->saveZoneID, Zone::Act1, saveSlot->frameID);
     }
 

@@ -276,14 +276,12 @@
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="Objects\Menu\ExtrasMenu.cpp" />
-    <ClCompile Include="Objects\Menu\LogoSetup.cpp" />
     <ClCompile Include="Objects\Menu\MainMenu.cpp" />
     <ClCompile Include="Objects\Menu\ManiaModeMenu.cpp" />
     <ClCompile Include="Objects\Menu\MenuSetup.cpp" />
     <ClCompile Include="Objects\Menu\OptionsMenu.cpp" />
     <ClCompile Include="Objects\Menu\SaveMenu.cpp" />
     <ClCompile Include="Objects\Menu\SaveMenuIconBG.cpp" />
-    <ClCompile Include="Objects\Menu\Sega.cpp" />
     <ClCompile Include="Objects\Menu\TAMenuIconBG.cpp" />
     <ClCompile Include="Objects\Menu\TimeAttackMenu.cpp" />
     <ClCompile Include="Objects\Menu\UIButton.cpp" />
@@ -348,6 +346,12 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Objects\Title\LogoSetup.cpp" />
+    <ClCompile Include="Objects\Title\Sega.cpp" />
+    <ClCompile Include="Objects\Title\TitleLogo.cpp" />
+    <ClCompile Include="Objects\Title\TitleSetup.cpp" />
+    <ClCompile Include="Objects\Title\TitleSonic.cpp" />
+    <ClCompile Include="Objects\Title\Twinkle.cpp" />
     <ClCompile Include="S2M.cpp" />
     <ClCompile Include="Objects\Global\Player.cpp" />
     <ClCompile Include="Objects\Test\TestObject.cpp">
@@ -440,14 +444,12 @@
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\Menu\ExtrasMenu.hpp" />
-    <ClInclude Include="Objects\Menu\LogoSetup.hpp" />
     <ClInclude Include="Objects\Menu\MainMenu.hpp" />
     <ClInclude Include="Objects\Menu\ManiaModeMenu.hpp" />
     <ClInclude Include="Objects\Menu\MenuSetup.hpp" />
     <ClInclude Include="Objects\Menu\OptionsMenu.hpp" />
     <ClInclude Include="Objects\Menu\SaveMenu.hpp" />
     <ClInclude Include="Objects\Menu\SaveMenuIconBG.hpp" />
-    <ClInclude Include="Objects\Menu\Sega.hpp" />
     <ClInclude Include="Objects\Menu\TAMenuIconBG.hpp" />
     <ClInclude Include="Objects\Menu\TimeAttackMenu.hpp" />
     <ClInclude Include="Objects\Menu\UIButton.hpp" />
@@ -516,6 +518,12 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Objects\Title\LogoSetup.hpp" />
+    <ClInclude Include="Objects\Title\Sega.hpp" />
+    <ClInclude Include="Objects\Title\TitleLogo.hpp" />
+    <ClInclude Include="Objects\Title\TitleSetup.hpp" />
+    <ClInclude Include="Objects\Title\TitleSonic.hpp" />
+    <ClInclude Include="Objects\Title\Twinkle.hpp" />
     <ClInclude Include="S2M.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

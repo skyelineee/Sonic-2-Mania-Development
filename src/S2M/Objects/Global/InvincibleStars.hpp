@@ -30,7 +30,7 @@ struct InvincibleStars : RSDK::GameObject::Entity {
     int32 starAngle[2];
     int32 starFrame[2];
     int32 starOffset;
-    RSDK::Animator starAnimator[4];
+    RSDK::Animator starAnimator[5];
 
     // ==============================
     // EVENTS

@@ -319,7 +319,7 @@ void HP_SpecialClear::State_ExitResults()
     if (this->timer < 0) {
         SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
-        Stage::SetScene("Mania Mode", "");
+        Stage::SetScene("Adventure Mode", "");
         sceneInfo->listPos = saveRAM->storedStageID;
 
         this->state.Set(&HP_SpecialClear::State_Failed);

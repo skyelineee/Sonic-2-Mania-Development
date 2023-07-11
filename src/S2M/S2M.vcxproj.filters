@@ -32,6 +32,9 @@
     <Filter Include="Source Files\Objects\Special">
       <UniqueIdentifier>{9ac6363e-0380-4bf0-a957-86cdf116e305}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Title">
+      <UniqueIdentifier>{ce0d9b5c-b906-41c4-9a18-255b226f97d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -202,9 +205,6 @@
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp">
       <Filter>Source Files\Objects\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\LogoSetup.cpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Common\BGSwitch.cpp">
       <Filter>Source Files\Objects\Common</Filter>
     </ClCompile>
@@ -252,9 +252,6 @@
     </ClCompile>
     <ClCompile Include="Objects\Common\Water.cpp">
       <Filter>Source Files\Objects\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Menu\Sega.cpp">
-      <Filter>Source Files\Objects\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIPicture.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
@@ -411,6 +408,24 @@
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIButtonLabel.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\LogoSetup.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\Sega.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\Twinkle.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\TitleLogo.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\TitleSetup.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Title\TitleSonic.cpp">
+      <Filter>Source Files\Objects\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -588,9 +603,6 @@
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp">
       <Filter>Source Files\Objects\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\LogoSetup.hpp">
-      <Filter>Source Files\Objects\Menu</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Common\BGSwitch.hpp">
       <Filter>Source Files\Objects\Common</Filter>
     </ClInclude>
@@ -638,9 +650,6 @@
     </ClInclude>
     <ClInclude Include="Objects\Common\Water.hpp">
       <Filter>Source Files\Objects\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Menu\Sega.hpp">
-      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Menu\UIPicture.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
@@ -797,6 +806,24 @@
     </ClInclude>
     <ClInclude Include="Objects\Menu\UIButtonLabel.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\LogoSetup.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\Sega.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\Twinkle.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\TitleLogo.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\TitleSetup.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Title\TitleSonic.hpp">
+      <Filter>Source Files\Objects\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

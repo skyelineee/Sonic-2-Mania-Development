@@ -19,6 +19,7 @@ void InvincibleStars::Update()
     this->starAnimator[1].Process();
     this->starAnimator[2].Process();
     this->starAnimator[3].Process();
+    this->starAnimator[4].Process();
 
     this->starFrame[0] = (this->starAngle[0] + 1) % 12;
     this->starFrame[1] = (this->starAngle[1] + 1) % 10;
@@ -114,9 +115,10 @@ void InvincibleStars::Draw()
     drawPos.y = (Math::Sin512(this->starAngle[0]) << this->starOffset) + this->starPos[0].y;
     this->starAnimator[0].DrawSprite(&drawPos, false);
 
+    // changing animator for big red star lol
     drawPos.x = (Math::Cos512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].x;
     drawPos.y = (Math::Sin512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].y;
-    this->starAnimator[0].DrawSprite(&drawPos, false);
+    this->starAnimator[4].DrawSprite(&drawPos, false);
 }
 
 void InvincibleStars::Create(void *data)
@@ -141,6 +143,7 @@ void InvincibleStars::Create(void *data)
         this->starAnimator[1].SetAnimation(sVars->aniFrames, 1, true, 0);
         this->starAnimator[2].SetAnimation(sVars->aniFrames, 2, true, 0);
         this->starAnimator[3].SetAnimation(sVars->aniFrames, 3, true, 0);
+        this->starAnimator[4].SetAnimation(sVars->aniFrames, 4, true, 0);
     }
 }
 

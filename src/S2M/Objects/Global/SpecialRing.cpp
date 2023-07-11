@@ -262,7 +262,7 @@ void SpecialRing::State_Warp()
             sceneInfo->listPos += saveRAM->nextSpecialStage;
         }
         else {
-            // Stage::SetScene("Mania Mode", "Hidden Palace Zone");
+            // Stage::SetScene("Adventure Mode", "Hidden Palace Zone");
             Stage::SetScene("Special Stage", "");
             sceneInfo->listPos += 7 + saveRAM->nextSpecialStage;
         }

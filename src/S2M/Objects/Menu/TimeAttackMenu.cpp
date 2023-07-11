@@ -627,7 +627,7 @@ void TimeAttackMenu::LoadScene()
     globals->gameMode   = MODE_TIMEATTACK;
     globals->medalMods  = 0;
 
-    Stage::SetScene("Mania Mode", "");
+    Stage::SetScene("Adventure Mode", "");
     sceneInfo->listPos += TimeAttackData::GetZoneListPos(param->zoneID, param->actID, param->characterID);
 
     switch (param->characterID) {
