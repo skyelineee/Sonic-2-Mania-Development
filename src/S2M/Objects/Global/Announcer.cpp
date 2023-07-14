@@ -137,7 +137,7 @@ void Announcer::State_Countdown()
             this->playerID--;
             if (!this->playerID) {
                 sVars->finishedCountdown     = true;
-                sceneInfo->timeEnabled       = true;
+                //sceneInfo->timeEnabled       = true; countdown isnt used for competition so this line isnt needed
             }
         }
         else {

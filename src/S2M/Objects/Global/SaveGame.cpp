@@ -432,6 +432,12 @@ void SaveGame::SaveGameState()
     }
 }
 
+bool32 SaveGame::AllChaosEmeralds() // added this for the special ring to work properly lol, this is only for chaos emeralds not super but shouldnt matter really
+{
+    SaveRAM *saveRAM = SaveGame::GetSaveRAM();
+    return saveRAM->collectedEmeralds == 0b01111111;
+}
+
 bool32 SaveGame::GetEmeralds(EmeraldCheckTypes type)
 {
     if (type > SaveGame::EmeraldAny2)

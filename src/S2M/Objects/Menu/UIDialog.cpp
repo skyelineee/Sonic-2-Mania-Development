@@ -185,6 +185,15 @@ void UIDialog::AddButton(uint8 frame, UIDialog *dialog, RSDK::Action<void> callb
             button->descriptionFrameID = 0;
         }
 
+        if (globals->gameMode == MODE_TIMEATTACK) { // this is a simple fix to an issue where the dialog buttons were bugged on ONLY the save replay prompt for some reason, no idea why
+            button->buttonListID       = 7;
+            button->buttonFrameID      = 0;
+            button->nameListID         = 9;
+            button->nameFrameID        = frame;
+            button->descriptionListID  = 7;
+            button->descriptionFrameID = 0;
+        }
+
         if (frame == DIALOG_CONTINUE)
             button->size.x = 0x640000;
         else

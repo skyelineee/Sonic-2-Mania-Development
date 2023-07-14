@@ -24,6 +24,7 @@ void SpecialRing::LateUpdate() {}
 void SpecialRing::StaticUpdate() {}
 void SpecialRing::Draw()
 {
+    this->inkEffect = INK_NONE;
     if (this->state.Matches(&SpecialRing::State_Flash)) {
         this->direction = this->warpAnimator.frameID > 8;
         this->warpAnimator.DrawSprite(NULL, false);
@@ -33,11 +34,10 @@ void SpecialRing::Draw()
             // do super colors
         }
 
-        auto type = this->enabled ? Graphics::Scene3D::SolidColor_Shaded_Blended : Graphics::Scene3D::Wireframe_Shaded;
-
-        sVars->sceneIndex.Prepare();
-        sVars->sceneIndex.AddModel(sVars->modelIndex, type, &this->matWorld, &this->matNormal, this->ringColor);
-        sVars->sceneIndex.Draw();
+        if (!this->enabled) {
+            this->inkEffect = INK_ALPHA;
+        }
+        this->ringAnimator.DrawSprite(nullptr, false);
     }
 }
 
@@ -61,22 +61,28 @@ void SpecialRing::Create(void *data)
         }
 
         if (this->enabled)
-            this->ringColor = 0xF0F000;
+            this->ringAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
         else
-            this->ringColor = 0x609090;
+            this->ringAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
+
+        if (data) {
+            this->ringAnimator.SetAnimation(sVars->aniFrames, 0, true, 0); // if its created through debug mode, set the animation to unused ring
+        }
 
         this->active        = ACTIVE_BOUNDS;
         this->visible       = true;
         this->updateRange.x = TO_FIXED(144);
         this->updateRange.y = TO_FIXED(144);
         this->drawFX        = FX_FLIP;
+        this->inkEffect     = INK_NONE;
+        this->alpha         = 192;
         if (this->planeFilter > 0 && ((uint8)this->planeFilter - 1) & 2)
             this->drawGroup = Zone::sVars->objectDrawGroup[1];
         else
             this->drawGroup = Zone::sVars->objectDrawGroup[0];
         this->state.Set(&SpecialRing::State_Idle);
 
-        this->warpAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
+        this->warpAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
     }
 }
 
@@ -84,20 +90,10 @@ void SpecialRing::StageLoad()
 {
     sVars->aniFrames.Load("Global/SpecialRing.bin", SCOPE_STAGE);
 
-    sVars->modelIndex.Load("Global/SpecialRing.bin", SCOPE_STAGE);
-    sVars->sceneIndex.Create("View:SpecialRing", 512, SCOPE_STAGE);
-
     sVars->hitbox.left   = -18;
     sVars->hitbox.top    = -18;
     sVars->hitbox.right  = 18;
     sVars->hitbox.bottom = 18;
-
-    // sets diffuse colour (overrides)
-    sVars->sceneIndex.SetDiffuseColor(0xA0, 0xA0, 0xA0);
-    // sets diffuse intensity (0-8 means more diffuse, any more and it'll start darkening to black (9-12), any greater than 11 is full black)
-    sVars->sceneIndex.SetDiffuseIntensity(8, 8, 8);
-    // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
-    sVars->sceneIndex.SetSpecularIntensity(14, 14, 14);
 
     sVars->sfxSpecialRing.Get("Global/SpecialRing.wav");
     sVars->sfxSpecialWarp.Get("Global/SpecialWarp.wav");
@@ -141,11 +137,15 @@ void SpecialRing::StageLoad()
     }
 }
 
-void SpecialRing::DebugSpawn() { GameObject::Create<SpecialRing>(true, this->position.x, this->position.y); }
+void SpecialRing::DebugSpawn() 
+{ 
+    SpecialRing *specialRing = GameObject::Create<SpecialRing>(INT_TO_VOID(true), this->position.x, this->position.y);
+    specialRing->enabled     = true;
+}
 
 void SpecialRing::DebugDraw()
 {
-    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 16);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 13);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
@@ -153,27 +153,25 @@ void SpecialRing::State_Idle()
 {
     SET_CURRENT_STATE();
 
-    this->angleZ = (this->angleZ + 4) & 0x3FF;
-    this->angleY = (this->angleY + 4) & 0x3FF;
-
     Vector2 range;
     range.x = (128 << 16);
     range.y = (128 << 16);
-    if (!this->CheckOnScreen(&range))
-        this->scale.x = 0;
+    // leaving scale here cause it sorta acts as a timer to enter the ring
+    if (!this->CheckOnScreen(&range)) {
+        this->scale.x      = 0;
+        // sets the frame back to 0 when it leaves the screen
+        if (this->enabled)
+            this->ringAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
+        else
+            this->ringAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
+    }
+    else 
+        this->ringAnimator.Process(); // processes (plays) the animation when its on screen
 
     if (this->scale.x >= 0x140)
         this->scale.x = 0x140;
     else
         this->scale.x += ((0x168 - this->scale.x) >> 5);
-
-    this->matTransform.ScaleXYZ(this->scale.x, this->scale.x, this->scale.x);
-    this->matTransform.TranslateXYZ(this->position.x, this->position.y, 0, false);
-    this->matWorld.RotateXYZ(0, this->angleY, this->angleZ);
-    Matrix::Multiply(&this->matWorld, &this->matWorld, &this->matTransform);
-    this->matTempRot.RotateX(0x1E0);
-    this->matNormal.RotateXYZ(0, this->angleY, this->angleZ);
-    Matrix::Multiply(&this->matNormal, &this->matNormal, &this->matTempRot);
 
     if (this->enabled && this->scale.x > 0x100) {
         for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
@@ -184,13 +182,30 @@ void SpecialRing::State_Idle()
 
                     SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
+                    // rings spawned via debug mode give you 50 rings, always
+                    if (!SaveGame::AllChaosEmeralds() && this->id) {
+                        player->visible        = false;
+                        player->active         = ACTIVE_NEVER;
+                        sceneInfo->timeEnabled = false;
+                    }
+                    else {
+                        player->GiveRings(50, true);
+                    }
+
+                    if (this->id > 0) {
+                        if (!SaveGame::AllChaosEmeralds())
+                            globals->specialRingID = this->id;
+
+                        SaveGame::SetCollectedSpecialRing(this->id);
+                    }
+
                     if (this->id >= 1) {
                         globals->specialRingID = this->id;
                         SaveGame::SetCollectedSpecialRing(this->id);
                     }
 
                     // rings spawned via debug mode give you 50 rings, always
-                    if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)
+                    /*if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)
                         || (SaveGame::GetEmeralds(SaveGame::EmeraldAny) && !SaveGame::GetEmerald(SaveGame::AllowSuperEmeralds)
                             && !SaveGame::GetEmerald(SaveGame::VisitedHPZ))) {
                         player->GiveRings(50, true);
@@ -199,7 +214,7 @@ void SpecialRing::State_Idle()
                         player->visible        = false;
                         player->active         = ACTIVE_NEVER;
                         sceneInfo->timeEnabled = false;
-                    }
+                    }*/
 
                     sVars->sfxSpecialRing.Play(false, 0xFE);
                 }
@@ -225,7 +240,7 @@ void SpecialRing::State_Flash()
             sparkle->active    = ACTIVE_NORMAL;
             sparkle->visible   = false;
             sparkle->drawGroup = Zone::sVars->objectDrawGroup[0];
-            sparkle->animator.SetAnimation(sVars->aniFrames, i % 3 + 2, true, 0);
+            sparkle->animator.SetAnimation(Ring::sVars->aniFrames, i % 3 + 2, true, 0);
             int32 cnt = sparkle->animator.frameCount;
             if (sparkle->animator.animationID == 2) {
                 sparkle->alpha = 0xE0;
@@ -239,7 +254,15 @@ void SpecialRing::State_Flash()
         this->sparkleRadius -= (8 << 16);
     }
 
-    if (this->warpAnimator.frameID == this->warpAnimator.frameCount - 1) {
+    SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
+    // rings spawned via debug mode give you 50 rings, always
+    if (SaveGame::AllChaosEmeralds() || !this->id) {
+        this->warpTimer++;
+        if (this->warpTimer == 20) {
+            this->Destroy();
+        }
+    }
+    else if (this->warpAnimator.frameID == this->warpAnimator.frameCount - 1) {
         this->warpTimer = 0;
         this->visible   = false;
         this->state.Set(&SpecialRing::State_Warp);

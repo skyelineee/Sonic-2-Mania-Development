@@ -22,8 +22,6 @@ struct SpecialRing : RSDK::GameObject::Entity {
         RSDK::Hitbox hitbox;
         RSDK::SoundFX sfxSpecialRing;
         RSDK::SoundFX sfxSpecialWarp;
-        RSDK::Graphics::Mesh modelIndex;
-        RSDK::Graphics::Scene3D sceneIndex;
     };
 
     // ==============================
@@ -36,15 +34,9 @@ struct SpecialRing : RSDK::GameObject::Entity {
     int32 warpTimer;
     int32 sparkleRadius;
     RSDK::Animator warpAnimator;
-    int32 angleZ;
-    int32 angleY;
+    RSDK::Animator ringAnimator;
     bool32 enabled;
-    RSDK::Matrix matTempRot;
-    RSDK::Matrix matTransform;
-    RSDK::Matrix matWorld;
-    RSDK::Matrix matNormal;
     bool32 disableHPZ;
-    color ringColor;
 
     // ==============================
     // EVENTS
