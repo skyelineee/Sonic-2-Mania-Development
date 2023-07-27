@@ -779,7 +779,7 @@ void Water::BubbleFinishPopBehavior()
                             int32 anim = player->animator.animationID;
                             if (player->characterID == ID_TAILS) {
                                 canBreathe = anim != Player::ANI_FLY && anim != Player::ANI_FLY_TIRED && anim != Player::ANI_FLY_LIFT
-                                             && anim != Player::ANI_FLY_LIFT_DOWN && anim != Player::ANI_SWIM && anim != Player::ANI_SWIM_LIFT;
+                                    && anim != Player::ANI_SWIM && anim != Player::ANI_SWIM_LIFT;
                             }
                             else if (player->characterID == ID_KNUCKLES) {
                                 canBreathe = anim != Player::ANI_LEDGE_PULL_UP && anim != Player::ANI_GLIDE && anim != Player::ANI_GLIDE_SLIDE

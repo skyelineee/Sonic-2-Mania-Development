@@ -416,7 +416,7 @@ void Player::LateUpdate()
                     this->tailDirection = this->direction;
                     break;
 
-                case ANI_HANG_MOVE:
+                case ANI_HANG:
                     if (this->spriteType == ManiaSprites) {
                         this->tailAnimator.SetAnimation(this->tailFrames, 6, false, 0);
                         this->tailDirection = this->direction;
@@ -424,19 +424,6 @@ void Player::LateUpdate()
                     else {
                         this->tailAnimator.SetAnimation(nullptr, 0, false, 0);
                     }
-                    break;
-
-                case ANI_FLY:
-                case ANI_FLY_TIRED:
-                case ANI_FLY_LIFT:
-                case ANI_FLY_LIFT_DOWN:
-                case ANI_FLY_LIFT_TIRED:
-                    this->tailAnimator.SetAnimation(this->tailFrames, 8, false, 0);
-                    this->tailDirection = this->direction;
-                    if (this->velocity.y < 0)
-                        this->tailAnimator.speed = 2;
-                    else
-                        this->tailAnimator.speed = 1;
                     break;
 
                 default: this->tailAnimator.SetAnimation(nullptr, 0, false, 0); break;
@@ -4300,7 +4287,7 @@ void Player::State_TailsFlight()
                     if ((this->velocity.y < 0 && globals->gravityDir == CMODE_FLOOR) || (this->velocity.y > 0 && globals->gravityDir == CMODE_ROOF))
                         this->animator.SetAnimation(this->aniFrames, ANI_FLY_LIFT, false, 0);
                     else
-                        this->animator.SetAnimation(this->aniFrames, ANI_FLY_LIFT_DOWN, false, 0);
+                        this->animator.SetAnimation(this->aniFrames, ANI_FLY, false, 0); // check
                 }
 
                 if ((this->velocity.y >= 0 && globals->gravityDir == CMODE_FLOOR) || (this->velocity.y <= 0 && globals->gravityDir == CMODE_ROOF))
@@ -6866,7 +6853,7 @@ bool32 Player::CheckAttacking(RSDK::GameObject::Entity *entity)
 
         case ID_TAILS:
             if (!attacking && entity) {
-                attacking = anim == ANI_FLY || anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT || anim == ANI_FLY_LIFT_DOWN;
+                attacking = anim == ANI_FLY || anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT;
                 switch (globals->gravityDir) {
                     default: break;
 
@@ -7141,7 +7128,7 @@ bool32 Player::ProjectileHurt(RSDK::GameObject::Entity *entity)
         case ID_SONIC: break;
 
         case ID_TAILS:
-            if (anim == ANI_FLY || anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT || anim == ANI_FLY_LIFT_DOWN) {
+            if (anim == ANI_FLY || anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT) {
                 switch (globals->gravityDir) {
                     default: break;
 
