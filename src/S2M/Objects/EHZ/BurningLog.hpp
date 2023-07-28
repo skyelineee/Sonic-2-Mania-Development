@@ -4,46 +4,32 @@
 namespace GameLogic
 {
 
-struct Soundboard : RSDK::GameObject::Entity {
+struct BurningLog : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
-    enum PlayFlags {
-        PlayNever,
-        PlayOnStart,
-        PlayOnFinish,
-    };
 
     // ==============================
     // STRUCTS
     // ==============================
-    struct SoundInfo {
-        uint16 playFlags;
-        RSDK::SoundFX sfx;
-        uint16 loopPoint;
-    };
 
     // ==============================
     // STATIC VARS
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        int32 sfxCount;
-        RSDK::SoundFX sfxList[32];
-        int32 sfxLoopPoint[32];
-        SoundInfo (*sfxCheckCallback[32])();
-        void (*sfxUpdateCallback[32])(int32 sfxID);
-        bool32 sfxIsPlaying[32];
-        int32 sfxChannel[32];
-        int32 sfxPlayingTimer[32];
-        int32 sfxFadeOutTimer[32];
-        int32 sfxFadeOutDuration[32];
+        RSDK::SpriteAnimation aniFrames;
+        RSDK::Hitbox hitboxPlatform;
+        RSDK::Hitbox hitboxFlame;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
+
+    RSDK::Animator animator;
+    int32 timer;
 
     // ==============================
     // EVENTS
@@ -56,9 +42,6 @@ struct Soundboard : RSDK::GameObject::Entity {
 
     static void StaticUpdate();
     static void StageLoad();
-#if RETRO_REV0U
-    static void StaticLoad(Static *sVars);
-#endif
     static void Serialize();
 
 #if RETRO_INCLUDE_EDITOR
@@ -70,13 +53,10 @@ struct Soundboard : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static uint8 LoadSfx(SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID));
-    static uint8 LoadSfx(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID)); // mania version of function
-
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(Soundboard);
+    RSDK_DECLARE(BurningLog);
 };
 } // namespace GameLogic

@@ -427,6 +427,12 @@
     <ClCompile Include="Objects\Title\TitleSonic.cpp">
       <Filter>Source Files\Objects\Title</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\EHZ\BurningLog.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\EHZ\CorkscrewPath.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -824,6 +830,12 @@
     </ClInclude>
     <ClInclude Include="Objects\Title\TitleSonic.hpp">
       <Filter>Source Files\Objects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\BurningLog.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\CorkscrewPath.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

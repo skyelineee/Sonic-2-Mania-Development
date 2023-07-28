@@ -106,6 +106,26 @@ uint8 Soundboard::LoadSfx(SoundInfo (*checkCallback)(), void (*updateCallback)(i
     return sfxID;
 }
 
+uint8 Soundboard::LoadSfx(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32))
+{
+    if (!sVars)
+        return -1;
+    if (sVars->sfxCount >= 32)
+        return -1;
+
+    int32 sfxID = sVars->sfxCount;
+
+    sVars->sfxList[sfxID].Get(sfxName);
+    sVars->sfxLoopPoint[sfxID]       = loopPoint;
+    sVars->sfxCheckCallback[sfxID]   = checkCallback;
+    sVars->sfxUpdateCallback[sfxID]  = updateCallback;
+    sVars->sfxFadeOutDuration[sfxID] = 0;
+    sVars->sfxList[sfxID].Stop();
+
+    ++sVars->sfxCount;
+    return sfxID;
+}
+
 #if RETRO_INCLUDE_EDITOR
 void Soundboard::EditorDraw() {}
 

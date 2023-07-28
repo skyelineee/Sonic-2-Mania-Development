@@ -4,46 +4,35 @@
 namespace GameLogic
 {
 
-struct Soundboard : RSDK::GameObject::Entity {
+struct CorkscrewPath : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
-    enum PlayFlags {
-        PlayNever,
-        PlayOnStart,
-        PlayOnFinish,
-    };
 
     // ==============================
     // STRUCTS
     // ==============================
-    struct SoundInfo {
-        uint16 playFlags;
-        RSDK::SoundFX sfx;
-        uint16 loopPoint;
-    };
 
     // ==============================
     // STATIC VARS
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        int32 sfxCount;
-        RSDK::SoundFX sfxList[32];
-        int32 sfxLoopPoint[32];
-        SoundInfo (*sfxCheckCallback[32])();
-        void (*sfxUpdateCallback[32])(int32 sfxID);
-        bool32 sfxIsPlaying[32];
-        int32 sfxChannel[32];
-        int32 sfxPlayingTimer[32];
-        int32 sfxFadeOutTimer[32];
-        int32 sfxFadeOutDuration[32];
+        int32 frameTable[24];
+        RSDK::SpriteAnimation aniFrames; // probably editor-only
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
+
+    int32 period;
+    int32 xSize; // length to the (left/right) edges from the center
+    int32 amplitude;
+    int32 activePlayers;
+    RSDK::Animator animator; // also probably editor-only
+
 
     // ==============================
     // EVENTS
@@ -70,13 +59,10 @@ struct Soundboard : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static uint8 LoadSfx(SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID));
-    static uint8 LoadSfx(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID)); // mania version of function
-
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(Soundboard);
+    RSDK_DECLARE(CorkscrewPath);
 };
 } // namespace GameLogic

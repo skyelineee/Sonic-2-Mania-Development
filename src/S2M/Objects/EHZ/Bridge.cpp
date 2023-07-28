@@ -6,6 +6,7 @@
 
 #include "S2M.hpp"
 #include "Bridge.hpp"
+#include "BurningLog.hpp"
 #include "Global/Player.hpp"
 #include "Global/Zone.hpp"
 #include "Global/DebugMode.hpp"
@@ -19,13 +20,12 @@ RSDK_REGISTER_OBJECT(Bridge);
 void Bridge::Update()
 {
     if (this->stoodEntityCount) {
-        if (this->timer < 0x80) {
+        if (this->timer < 0x80)
             this->timer += 8;
-        }
     }
     else {
         if (this->timer) {
-            this->stoodEntity = (Bridge *)-1;
+            this->stoodEntity = (Entity *)-1;
             this->timer -= 8;
         }
         else {
@@ -39,15 +39,14 @@ void Bridge::Update()
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
     {
         Hitbox *playerHitbox = player->GetHitbox();
-        if (player->state.Matches(&Player::State_KnuxLedgePullUp)) {
+        if (player->state.Matches(&Player::State_KnuxLedgePullUp))
             continue;
-        }
+
         Bridge::HandleCollisions(player, this, playerHitbox, true, true);
     }
 
-    if (this->burnOffset != 0xFF) {
+    if (this->burnOffset != 0xFF)
         Bridge::Burn(this->burnOffset);
-    }
 }
 
 void Bridge::LateUpdate() {}
@@ -99,10 +98,7 @@ void Bridge::Create(void *data)
     this->updateRange.y = 0x800000;
     this->stoodEntity   = (Entity *)-1;
     this->burnOffset    = 0xFF;
-    this->animator.SetAnimation(&sVars->aniFrames, 0, true, 0);
-
-    if (data) 
-        this->length = (uint8)VOID_TO_INT(data) - 1;
+    this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
 }
 
 void Bridge::StageLoad()
@@ -116,44 +112,16 @@ void Bridge::StageLoad()
 
 void Bridge::DebugDraw()
 {
-    DebugMode::sVars->itemTypeCount = 19;
-    int32 len = DebugMode::sVars->itemType;
-    int32 temp2 = len;
-    len <<= 19;
-    len = -len;
-    len += this->position.x;
-    len += 0x80000;
-
-    int32 temp1 = 0;
-    Vector2 bridgePos;
-
-    bridgePos.x = len;
-    bridgePos.y = this->position.y;
-
-    while (temp1 < temp2) {
-        DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
-        DebugMode::sVars->animator.DrawSprite(&bridgePos, false);
-        len += 0x100000;
-        temp1++;
-    }
-
-    if (temp1 == 0) {
-        DebugMode::sVars->animator.DrawSprite(NULL, false);
-    }
+    Vector2 drawPos;
+    drawPos.x = this->position.x;
+    drawPos.y = this->position.y;
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
+    DebugMode::sVars->animator.DrawSprite(&drawPos, false);
 }
 
 void Bridge::DebugSpawn()
 {
-    Bridge *bridge  = GameObject::Create<Bridge>(1 + DebugMode::sVars->itemType, this->position.x, this->position.y);
-    DebugMode::sVars->itemTypeCount = 19;
-    int32 len = DebugMode::sVars->itemType;
-
-    bridge->startPos = len;
-    bridge->startPos <<= 19;
-    bridge->endPos = bridge->startPos;
-    bridge->startPos = -bridge->startPos;
-    bridge->startPos += bridge->position.x;
-    bridge->endPos += bridge->position.x;
+    Bridge *bridge = GameObject::Create<Bridge>(nullptr, this->position.x, this->position.y);
 }
 
 void Bridge::Burn(int32 offset)
@@ -164,13 +132,13 @@ void Bridge::Burn(int32 offset)
     int32 ang    = 0x80000;
     for (int32 i = 0; i < size; ++i) {
         int32 sine = Math::Sin512((ang << 7) / this->stoodPos);
-        Bridge *burningLog = GameObject::Create<Bridge>(INT_TO_VOID(8 * abs(off++) + 16), spawnX, (this->bridgeDepth * sine >> 9) + this->position.y);
+        GameObject::Create<BurningLog>(INT_TO_VOID(8 * abs(off++) + 16), spawnX, (this->bridgeDepth * sine >> 9) + this->position.y);
         ang += 0x100000;
         spawnX += 0x100000;
     }
 
     int32 id = size;
-    Bridge *burningLog = GameObject::Create<Bridge>(INT_TO_VOID(8 * abs(id++ - offset) + 16), spawnX, this->bridgeDepth + this->position.y);
+    GameObject::Create<BurningLog>(INT_TO_VOID(8 * abs(id++ - offset) + 16), spawnX, this->bridgeDepth + this->position.y);
 
     spawnX        = this->endPos - 0x80000;
     int32 divisor = this->endPos - this->startPos - this->stoodPos;
@@ -179,7 +147,7 @@ void Bridge::Burn(int32 offset)
         off = offset - id;
         for (; id < this->length; ++id, --off) {
             int32 spawnY = (this->bridgeDepth * Math::Sin512((ang << 7) / divisor) >> 9) + this->position.y;
-            Bridge *burningLog = GameObject::Create<Bridge>(INT_TO_VOID(8 * abs(this->length - abs(off) - offset) + 16), spawnX, spawnY);
+            GameObject::Create<BurningLog>(INT_TO_VOID(8 * abs(this->length - abs(off) - offset) + 16), spawnX, spawnY);
             ang += 0x100000;
             spawnX -= 0x100000;
         }
@@ -189,8 +157,10 @@ void Bridge::Burn(int32 offset)
 
 bool32 Bridge::HandleCollisions(void *e, Bridge *self, Hitbox *entityHitbox, bool32 updateVars, bool32 isPlayer)
 {
-    Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
+    Player *player1 = GameObject::Get<Player>(SLOT_PLAYER1);
 
+    // use EntityPlayer as the type so we can access player variables if needed
+    // if `isPlayer` is false, then only base entity variables will be accessed
     Player *entity = (Player *)e;
 
     bool32 bridgeCollided = false;
@@ -228,9 +198,9 @@ bool32 Bridge::HandleCollisions(void *e, Bridge *self, Hitbox *entityHitbox, boo
 
                 bool32 collided = false;
                 if (isPlayer)
-                    collided = player->CheckCollisionTouch(self, &hitboxBridge);
+                    collided = entity->CheckCollisionTouch(self, &hitboxBridge);
                 else
-                    collided = this->CheckCollisionTouchBox(&hitboxBridge, entity, entityHitbox);
+                    collided = self->CheckCollisionTouchBox(&hitboxBridge, entity, entityHitbox);
 
                 if (collided) {
                     entity->position.y = hitY + self->position.y - (entityHitbox->bottom << 16);
@@ -245,7 +215,7 @@ bool32 Bridge::HandleCollisions(void *e, Bridge *self, Hitbox *entityHitbox, boo
                         if (isPlayer)
                             entity->flailing = false;
 
-                        if (entity == player) {
+                        if (entity == player1) {
                             if (self->stoodEntity != (void *)-1 && self->stoodEntity != (void *)-2) {
                                 int32 distance    = self->endPos - self->startPos;
                                 self->stoodPos    = entity->position.x - self->startPos;
@@ -341,8 +311,9 @@ void Bridge::EditorDraw()
 
 void Bridge::EditorLoad()
 {
-    if (Stage::CheckSceneFolder("EHZ"))
+    if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Bridge.bin", SCOPE_STAGE);
+    }
 }
 #endif
 
@@ -351,5 +322,6 @@ void Bridge::Serialize()
     RSDK_EDITABLE_VAR(Bridge, VAR_UINT8, length);
     RSDK_EDITABLE_VAR(Bridge, VAR_BOOL, burnable);
 }
+
 
 } // namespace GameLogic
