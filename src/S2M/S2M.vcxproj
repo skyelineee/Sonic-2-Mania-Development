@@ -217,6 +217,8 @@
     <ClCompile Include="Objects\EHZ\Buzzer.cpp" />
     <ClCompile Include="Objects\EHZ\Coconuts.cpp" />
     <ClCompile Include="Objects\EHZ\CorkscrewPath.cpp" />
+    <ClCompile Include="Objects\EHZ\EggDriller.cpp" />
+    <ClCompile Include="Objects\EHZ\EHZEggman.cpp" />
     <ClCompile Include="Objects\EHZ\EHZSetup.cpp" />
     <ClCompile Include="Objects\EHZ\Masher.cpp" />
     <ClCompile Include="Objects\Global\ActClear.cpp" />
@@ -386,6 +388,8 @@
     <ClInclude Include="Objects\EHZ\Buzzer.hpp" />
     <ClInclude Include="Objects\EHZ\Coconuts.hpp" />
     <ClInclude Include="Objects\EHZ\CorkscrewPath.hpp" />
+    <ClInclude Include="Objects\EHZ\EggDriller.hpp" />
+    <ClInclude Include="Objects\EHZ\EHZEggman.hpp" />
     <ClInclude Include="Objects\EHZ\EHZSetup.hpp" />
     <ClInclude Include="Objects\EHZ\Masher.hpp" />
     <ClInclude Include="Objects\Global\ActClear.hpp" />

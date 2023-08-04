@@ -433,6 +433,12 @@
     <ClCompile Include="Objects\EHZ\CorkscrewPath.cpp">
       <Filter>Source Files\Objects\EHZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\EHZ\EggDriller.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\EHZ\EHZEggman.cpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -835,6 +841,12 @@
       <Filter>Source Files\Objects\EHZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\EHZ\CorkscrewPath.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\EggDriller.hpp">
+      <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EHZ\EHZEggman.hpp">
       <Filter>Source Files\Objects\EHZ</Filter>
     </ClInclude>
   </ItemGroup>
