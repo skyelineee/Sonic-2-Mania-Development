@@ -178,7 +178,7 @@ void EHZEggman::State_AwaitPlayer()
 		car->boundsL -= screenPosition;
 	}
     car->boundsR = this->position.x + 0x1500000;
-	car->car = car; // assigns the car pointer to this entity
+    car->car  = car;
     car->eggman  = this; // assigns eggman pointer for this egg driller entity to this ehzeggman entity
 
 	// Drrrrrill
@@ -186,7 +186,6 @@ void EHZEggman::State_AwaitPlayer()
 	EggDriller *drill = GameObject::Get<EggDriller>(sceneInfo->entitySlot + 2);
 	GameObject::Reset(sceneInfo->entitySlot + 2, EggDriller::sVars->classID, INT_TO_VOID(Drill));
 	drill->car = car; // sets the new drill entity car pointer to the previous entity created
-	drill->drill = drill;
 	car->drill = drill; // sets the car entity drill pointer to this drill
 
 	// Back Wheel
@@ -196,7 +195,6 @@ void EHZEggman::State_AwaitPlayer()
 	backWheel->xOffset = -0x2C0000;
 	car->wheel[0] = backWheel; // car needs its wheel assigned as the car functions use em
 	backWheel->car = car;
-	backWheel->eggman = car->eggman; // sets the wheel entity's eggman pointer to the same entity as car's eggman
 	
 	// Front Wheel 1
 	//object[+3].type = TypeName[Eggman Wheel]
@@ -205,7 +203,6 @@ void EHZEggman::State_AwaitPlayer()
 	frontWheel->xOffset = -0xC0000;
 	car->wheel[1] = frontWheel;
 	frontWheel->car = car;
-	frontWheel->eggman = car->eggman;
 	
 	// Front Wheel 2
 	//object[+4].type = TypeName[Eggman Wheel]
@@ -214,7 +211,6 @@ void EHZEggman::State_AwaitPlayer()
 	frontWheel2->xOffset = 0x1C0000;
 	car->wheel[2] = frontWheel2;
 	frontWheel2->car = car;
-	frontWheel2->eggman = car->eggman;
 	
 	this->position.x += 0x1580000;
 	this->position.y -= 0x13F0000;
@@ -248,8 +244,10 @@ void EHZEggman::State_StartCar()
 
 		this->state.Set(&EHZEggman::State_InCar);
 		for (auto driller : GameObject::GetEntities<EggDriller>(FOR_ALL_ENTITIES)){ // gets all the egg drillers, but only uses the car type
-			driller->car->velocity.x = -0x20000;
-			driller->car->state.Set(&EggDriller::Car_Driving);
+			if (driller->type == Car) {
+				driller->velocity.x = -0x20000;
+				driller->state.Set(&EggDriller::Car_Driving);
+			}
 		}
 	}
 }

@@ -50,8 +50,8 @@ void EggDriller::Draw()
 { 
 	this->backWheelAnimator.DrawSprite(nullptr, false); 
 	Vector2 carPosition;
-	carPosition.x = this->position.x;
-	carPosition.y = this->drawPos.y;
+	carPosition.x = car->position.x;
+	carPosition.y = car->drawPos.y;
 	this->carAnimator.DrawSprite(&carPosition, false); 
 	//this->carAnimator.DrawSprite(nullptr, false); 
 	this->drillAnimator.DrawSprite(nullptr, false); 
@@ -102,27 +102,27 @@ void EggDriller::StageLoad()
 
 void EggDriller::Car_SelfDriving()
 {
-    car->position.x -= 0x10000;
+    this->position.x -= 0x10000;
 
-	car->timer++;
+	this->timer++;
 	// if the timer hits 321, sets the state to eggman coming in
-	if (car->timer == 321) {
-		car->timer = 0;
-		car->state.Set(&EggDriller::Car_EggmanEnter);
+	if (this->timer == 321) {
+		this->timer = 0;
+		this->state.Set(&EggDriller::Car_EggmanEnter);
 	}
 
 	// review
 	Vector2 exhaustPos;
-	exhaustPos.x = car->position.x;
+	exhaustPos.x = this->position.x;
 	if (Zone::sVars->timer &= 15) {
-		if (car->direction == FLIP_NONE) {
+		if (this->direction == FLIP_NONE) {
 			exhaustPos.x += 0x2E0000;
 		}
 		else {
 			exhaustPos.x -= 0x2E0000;
 		}
 
-		exhaustPos.y = car->drawPos.y -= 0x40000;
+		exhaustPos.y = this->drawPos.y -= 0x40000;
 		//CreateTempObject(TypeName[Exhaust Puff], 0, temp0, temp1);
 		//object[tempObjectPos].yvel = -0x10000;
 	}
@@ -132,12 +132,12 @@ void EggDriller::Car_EggmanEnter() {}
 
 void EggDriller::Car_Driving()
 {
-	car->position.x += car->velocity.x;
+	this->position.x += this->velocity.x;
 
-		// changes direction when the car gets out of bounds
-		if (car->position.x <= car->boundsL) {
-			car->velocity.x = -car->velocity.x;
-			car->direction         ^= FLIP_X; // whats the difference between ^= and =??? doing car->direction ^= FLIP_X works but not when its just car->direction = FLIP_X
+		// changes direction when the this gets out of bounds
+		if (this->position.x <= this->boundsL) {
+			this->velocity.x = -this->velocity.x;
+			this->direction         ^= FLIP_X; // whats the difference between ^= and =??? doing this->direction ^= FLIP_X works but not when its just this->direction = FLIP_X
 			wheel[0]->direction    ^= FLIP_X; // back wheel
 			eggman->direction      ^= FLIP_X;
 			drill->direction       ^= FLIP_X;
@@ -148,8 +148,8 @@ void EggDriller::Car_Driving()
 			if (eggman->health == 1) {
 				if (drill->state.Matches(&EggDriller::Drill_Attached)) {
 					drill->state.Set(&EggDriller::Drill_Fired);
-					drill->position.x = car->position.x;
-					if (car->direction == FLIP_NONE) {
+					drill->position.x = this->position.x;
+					if (this->direction == FLIP_NONE) {
 						drill->position.x -= 0x360000;
 						drill->velocity.x = -0x30000;
 					}
@@ -161,10 +161,10 @@ void EggDriller::Car_Driving()
 			}
 		}
 
-		// changes direction when the car gets out of bounds
-		if (car->position.x >= car->boundsR) {
-			car->velocity.x = -car->velocity.x;
-			car->direction         ^= FLIP_X;
+		// changes direction when the this gets out of bounds
+		if (this->position.x >= this->boundsR) {
+			this->velocity.x = -this->velocity.x;
+			this->direction         ^= FLIP_X;
 			wheel[0]->direction    ^= FLIP_X; // back wheel
 			eggman->direction      ^= FLIP_X;
 			drill->direction       ^= FLIP_X;
@@ -175,8 +175,8 @@ void EggDriller::Car_Driving()
 			if (eggman->health == 1) {
 				if (drill->state.Matches(&EggDriller::Drill_Attached)) {
 					drill->state.Set(&EggDriller::Drill_Fired);
-					drill->position.x = car->position.x;
-					if (car->direction == FLIP_NONE) {
+					drill->position.x = this->position.x;
+					if (this->direction == FLIP_NONE) {
 						drill->position.x -= 0x360000;
 						drill->velocity.x = -0x30000;
 					}
@@ -189,22 +189,22 @@ void EggDriller::Car_Driving()
 		}
 
 		// Handle eggman pos
-		eggman->position.x = car->position.x;
-		eggman->position.y = car->drawPos.y;
+		eggman->position.x = this->position.x;
+		eggman->position.y = this->drawPos.y;
 		eggman->position.y -= 0x80000;
 
 		// review
 		Vector2 exhaustPos;
-		exhaustPos.x = car->position.x;
+		exhaustPos.x = this->position.x;
 		if (Zone::sVars->timer &= 15) {
-			if (car->direction == FLIP_NONE) {
+			if (this->direction == FLIP_NONE) {
 				exhaustPos.x += 0x2E0000;
 			}
 			else {
 				exhaustPos.x -= 0x2E0000;
 			}
 
-			exhaustPos.y = car->drawPos.y - 0x40000;
+			exhaustPos.y = this->drawPos.y - 0x40000;
 			//CreateTempObject(TypeName[Exhaust Puff], 0, temp0, temp1)
 			//object[tempObjectPos].yvel = -0x10000
 		}
@@ -218,16 +218,16 @@ void EggDriller::Car_Destroyed() {}
 
 void EggDriller::Drill_Attached()
 {
-	drill->position.x = car->position.x;
-	if (drill->direction == FLIP_NONE) {
-		drill->position.x -= 0x360000;
+	this->position.x = car->position.x;
+	if (this->direction == FLIP_NONE) {
+		this->position.x -= 0x360000;
 	}
 	else {
-		drill->position.x += 0x360000;
+		this->position.x += 0x360000;
 	}
 
-	drill->position.y = car->drawPos.y; // car->drawPos.y;
-	drill->position.y += 0x80000;
+	this->position.y = car->drawPos.y; // car->drawPos.y;
+	this->position.y += 0x80000;
 
 	/*if (car->state > EggDriller::Car_EggmanEnter) { // this is for the drill animation i think but i dont htink its needed
 		object.timer++
@@ -244,11 +244,11 @@ void EggDriller::Drill_Idle() {}
 
 void EggDriller::Drill_Fired()
 {
-	drill->position.x += drill->velocity.x;
+	this->position.x += this->velocity.x;
 
-	drill->timer++;
-	if (drill->timer == 18) {
-		drill->timer = 0;
+	this->timer++;
+	if (this->timer == 18) {
+		this->timer = 0;
 	}
 
 	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
@@ -256,13 +256,13 @@ void EggDriller::Drill_Fired()
     range.x = screen->size.x << 16;
     range.y = screen->size.y << 16;
 
-	if (drill->CheckOnScreen(&range)) {
-		if (drill->isDrillOOB == true) {
-			drill->Destroy();
+	if (this->CheckOnScreen(&range)) {
+		if (this->isDrillOOB == true) {
+			this->Destroy();
 		}
 	}
 	else {
-		drill->isDrillOOB = true;
+		this->isDrillOOB = true;
 	}
 }
 
