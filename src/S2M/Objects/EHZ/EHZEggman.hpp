@@ -16,18 +16,14 @@ struct EHZEggman : RSDK::GameObject::Entity {
         Idle,
         Laugh,
         Hit,
-        Defeated,
         Toasted,
-        Panic,
     };
 
     enum EHZHeliAnimations {
         Active = 7,
         Stop = 8,
         Retracting = 9,
-        None = 10,
-        Extending = 11,
-        Exit = 12,
+        Extending = 10,
     };
 
     // ==============================
@@ -57,6 +53,7 @@ struct EHZEggman : RSDK::GameObject::Entity {
     bool32 didHitPlayer;
     RSDK::StateMachine<EHZEggman> state;
     RSDK::Animator helicopterAnimator;
+    RSDK::Animator seatAnimator;
     RSDK::Animator eggmanAnimator;
     RSDK::Animator mobileAnimator;
     //EggDriller *backWheel;   // object[-1]

@@ -43,8 +43,6 @@ struct EggDriller : RSDK::GameObject::Entity {
     int32 drillTimer;
     int32 wheelTimer;
     int32 xOffset;
-    RSDK::Vector2 drawPos;
-    RSDK::Vector2 carPos;
     int32 boundsL;
     int32 boundsR;
     bool32 isDrillOOB;

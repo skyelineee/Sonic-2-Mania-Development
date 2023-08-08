@@ -45,6 +45,7 @@ void Explosion::StageLoad()
     sVars->aniFrames.Load("Global/Explosions.bin", SCOPE_STAGE);
 
     sVars->sfxDestroy.Get("Global/Destroy.wav");
+    sVars->sfxExplosion.Get("Stage/Explosion.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

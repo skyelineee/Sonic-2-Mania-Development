@@ -26,10 +26,10 @@ void EHZEggman::Update()
 			this->invincibilityTimer--;
 			int32 invincible = GET_BIT(this->invincibilityTimer, 0); // assuming this stops the palette from flashing again when the invincility timer is still up
 			if (invincible == true) { // Palette flashing when hit
-				paletteBank[0].SetEntry(192, 0xE0E0E0);
+				paletteBank[0].SetEntry(210, 0xE0E0E0);
 			}
 			else {
-				paletteBank[0].SetEntry(192, 0x000000);
+				paletteBank[0].SetEntry(210, 0x000000);
 			}
 		}
 
@@ -50,15 +50,14 @@ void EHZEggman::Update()
 					this->health--;
 					if (this->health == 0) {
 						currentPlayer->score += 1000;
-						this->eggmanAnimator.SetAnimation(sVars->aniFrames, Defeated, false, 0);
+						this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0);
 						this->exploding = true;
 						this->state.Set(&EHZEggman::State_Explode); //this->state++;
 
 						// The Car!!!!
 						for (auto driller : GameObject::GetEntities<EggDriller>(FOR_ALL_ENTITIES) ){ // gets all egg driller entities, does stuff with both the car and drill types
 							driller->car->state.Set(&EggDriller::Car_Explode); //car->state++;
-							driller->car->velocity.y = -0x18000;
-							driller->car->position.y = driller->car->drawPos.y;
+							driller->car->velocity.y = -0x18000; // sets the y velocity for the car bounce
 
 							if (driller->drill->state.Matches(&EggDriller::Drill_Attached)) {
 								driller->drill->state.Set(&EggDriller::Drill_Fired);
@@ -82,14 +81,13 @@ void EHZEggman::Update()
 	}
 
 	if (this->exploding == true) { // checks at any point if the object is exploding yet lol
-		// review
-		if (Zone::sVars->timer &= 7) {
+		if ((Zone::sVars->timer &= 7) == 0) {
 			Vector2 explosionPos;
-			explosionPos.x = this->position.x + Math::Rand(-48, 96) << 16;
-			explosionPos.y = this->position.y + Math::Rand(-24, 48) << 16;
+			explosionPos.x = this->position.x + Math::Rand(TO_FIXED(-48), TO_FIXED(48));
+			explosionPos.y = this->position.y + Math::Rand(TO_FIXED(-24), TO_FIXED(24));
 
-			Explosion *explosion = GameObject::Create<Explosion>(nullptr, explosionPos.x, explosionPos.y);
-			explosion->drawGroup = 5;
+			Explosion *explosion = GameObject::Create<Explosion>(INT_TO_VOID(Explosion::Type2), explosionPos.x, explosionPos.y);
+			explosion->drawGroup = 4;
 			explosion->sVars->sfxExplosion.Play(false, 255);
 		}
 	}
@@ -98,6 +96,9 @@ void EHZEggman::Update()
 	if (this->eggmanAnimator.animationID == Hit || this->eggmanAnimator.animationID == Laugh) {
 		if (this->eggmanAnimator.frameID == this->eggmanAnimator.frameCount - 1) {
 			this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
+		}
+		if (this->health == 0) { // way of fixing an issue of him still laughing and getting stuck on the idle animation if he dies while hes in the middle of playing it
+			this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0); 
 		}
     }
 
@@ -111,8 +112,8 @@ void EHZEggman::LateUpdate() {}
 void EHZEggman::StaticUpdate() {}
 void EHZEggman::Draw()
 {
-	Vector2 drawPos = this->position;
-	this->helicopterAnimator.DrawSprite(&drawPos, false);
+	this->helicopterAnimator.DrawSprite(nullptr, false);
+	this->seatAnimator.DrawSprite(nullptr, false);
 	this->eggmanAnimator.DrawSprite(nullptr, false);
     this->mobileAnimator.DrawSprite(nullptr, false);
 }
@@ -123,7 +124,8 @@ void EHZEggman::Create(void *data)
 		this->active = ACTIVE_BOUNDS;
 		this->drawFX = FX_FLIP;
         this->visible = true;
-		this->drawGroup = 3;
+		this->drawGroup = 2;
+		this->seatAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
 		this->mobileAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
         this->state.Set(&EHZEggman::State_AwaitPlayer);
 	}
@@ -133,6 +135,7 @@ void EHZEggman::StageLoad()
 { 
 	sVars->aniFrames.Load("Eggman/EggMobile.bin", SCOPE_STAGE);
 	sVars->helicopterSFX.Get("Stage/Helicopter.wav");
+	sVars->bossHitSFX.Get("Stage/BossHit.wav");
     sVars->hitbox.left   = -24;
     sVars->hitbox.top    = -24;
     sVars->hitbox.right  = 24;
@@ -150,12 +153,12 @@ void EHZEggman::PlayHeliSFX()
 
 void EHZEggman::State_AwaitPlayer()
 {
-	//Zone::sVars->playerBoundActiveL[0] = true;
-    //Zone::sVars->playerBoundActiveR[0] = true;
-    //Zone::sVars->playerBoundActiveB[0] = true;
-    //Zone::sVars->cameraBoundsL[0]      = FROM_FIXED(this->position.x) - screenInfo->center.x;
-    //Zone::sVars->cameraBoundsR[0]      = FROM_FIXED(this->position.x) + screenInfo->center.x;
-    //Zone::sVars->cameraBoundsB[0]      = FROM_FIXED(this->position.y);
+	Zone::sVars->playerBoundActiveL[0] = true;
+    Zone::sVars->playerBoundActiveR[0] = true;
+    Zone::sVars->playerBoundActiveB[0] = true;
+    Zone::sVars->cameraBoundsL[0]      = FROM_FIXED(this->position.x) - screenInfo->center.x;
+    Zone::sVars->cameraBoundsR[0]      = FROM_FIXED(this->position.x) + screenInfo->center.x;
+    Zone::sVars->cameraBoundsB[0]      = FROM_FIXED(this->position.y);
 
     this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
     this->helicopterAnimator.SetAnimation(sVars->aniFrames, Active, false, 0);
@@ -174,7 +177,7 @@ void EHZEggman::State_AwaitPlayer()
      // camera[0] position in v4, i think this is the equivalent?
 	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 	if (screen->position.x < screenPosition) {
-		screenPosition -= screen->position.x << 16;
+		screenPosition -= screen->position.x;
 		car->boundsL -= screenPosition;
 	}
     car->boundsR = this->position.x + 0x1500000;
@@ -186,6 +189,7 @@ void EHZEggman::State_AwaitPlayer()
 	EggDriller *drill = GameObject::Get<EggDriller>(sceneInfo->entitySlot + 2);
 	GameObject::Reset(sceneInfo->entitySlot + 2, EggDriller::sVars->classID, INT_TO_VOID(Drill));
 	drill->car = car; // sets the new drill entity car pointer to the previous entity created
+	drill->drill = drill;
 	car->drill = drill; // sets the car entity drill pointer to this drill
 
 	// Back Wheel
@@ -195,6 +199,7 @@ void EHZEggman::State_AwaitPlayer()
 	backWheel->xOffset = -0x2C0000;
 	car->wheel[0] = backWheel; // car needs its wheel assigned as the car functions use em
 	backWheel->car = car;
+	backWheel->drill = drill;
 	
 	// Front Wheel 1
 	//object[+3].type = TypeName[Eggman Wheel]
@@ -203,6 +208,7 @@ void EHZEggman::State_AwaitPlayer()
 	frontWheel->xOffset = -0xC0000;
 	car->wheel[1] = frontWheel;
 	frontWheel->car = car;
+	frontWheel->drill = drill;
 	
 	// Front Wheel 2
 	//object[+4].type = TypeName[Eggman Wheel]
@@ -211,6 +217,7 @@ void EHZEggman::State_AwaitPlayer()
 	frontWheel2->xOffset = 0x1C0000;
 	car->wheel[2] = frontWheel2;
 	frontWheel2->car = car;
+	frontWheel2->drill = drill;
 	
 	this->position.x += 0x1580000;
 	this->position.y -= 0x13F0000;
@@ -260,27 +267,33 @@ void EHZEggman::State_Explode()
 	if (this->timer == 180) {
 		this->timer = 0;
         this->helicopterAnimator.SetAnimation(sVars->aniFrames, Extending, false, 0);
-        this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0);
 		this->exploding = false;
 		this->state.Set(&EHZEggman::State_ExitCar);
-		//ResetObjectEntity(SLOT_MUSICEVENT_BOSS, TypeName[Music Event], MUSICEVENT_FADETOSTAGE, 0, 0)
-		//object[SLOT_MUSICEVENT_BOSS].priority = PRIORITY_ACTIVE
-		Zone::sVars->cameraBoundsR[0] = SceneLayer::GetTileLayer(0)->width << 7; // stage.newXBoundary2 = temp0;
+        Music::ClearMusicStack();
+        Music::PlayTrack(Music::TRACK_STAGE);
+        Zone::sVars->playerBoundActiveR[0] = false;
+        Vector2 layerSize;
+        Zone::sVars->fgLayer[0].Size(&layerSize, true); // i assume this gets the size of the first fg layer (low) and sets the layerSize variable to it
+        Zone::sVars->cameraBoundsR[0] = layerSize.x; // sets the right camera bound to the stage size
 	}
 }
 
-void EHZEggman::State_ExitCar() {}
+void EHZEggman::State_ExitCar() { this->state.Set(&EHZEggman::State_Flee); }
 
 void EHZEggman::State_Flee()
 {
 	EHZEggman::PlayHeliSFX();
 	this->position.y -= 0x10000;
+    if (this->helicopterAnimator.animationID == Extending) {
+		if (this->helicopterAnimator.frameID == this->helicopterAnimator.frameCount - 1) {
+			this->helicopterAnimator.SetAnimation(sVars->aniFrames, Active, false, 0);
+		}
+    }	
 
 	this->timer++;
 	if (this->timer == 96) {
 		this->timer = 0;
-		this->direction = FLIP_NONE; // FACING_LEFT in v4
-		this->eggmanAnimator.SetAnimation(sVars->aniFrames, Panic, false, 0);
+		this->direction = FLIP_X; // FACING_LEFT in v4
 		this->state.Set(&EHZEggman::State_Escape);
 	}
 }
@@ -296,7 +309,7 @@ void EHZEggman::State_Escape()
 	}
 	this->position.x += 0x60000;
 
-	if (this->position.x >= ((screenInfo->clipBound_X2 += 128) <<= 16)) {
+	if (!this->CheckOnScreen(&range)) {
 		this->Destroy();
 	}
 }
