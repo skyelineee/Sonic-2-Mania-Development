@@ -35,6 +35,9 @@
     <Filter Include="Source Files\Objects\Title">
       <UniqueIdentifier>{ce0d9b5c-b906-41c4-9a18-255b226f97d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\CPZ">
+      <UniqueIdentifier>{4abfa5b1-b25f-4f6d-b007-0857cd713f17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -438,6 +441,12 @@
     </ClCompile>
     <ClCompile Include="Objects\EHZ\EHZEggman.cpp">
       <Filter>Source Files\Objects\EHZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\CPZEggman.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\ChemicalDropper.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -848,6 +857,12 @@
     </ClInclude>
     <ClInclude Include="Objects\EHZ\EHZEggman.hpp">
       <Filter>Source Files\Objects\EHZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\CPZEggman.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\ChemicalDropper.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
