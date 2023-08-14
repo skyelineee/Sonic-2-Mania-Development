@@ -41,7 +41,6 @@ void CPZEggman::Update()
                 }
 
                 if (currentPlayer->CheckBadnikTouch(this, &sVars->hitbox) && currentPlayer->CheckBossHit(this)) {
-                    // currentPlayer->Hurt(this);
                     this->health--;
                     if (this->health == 0) {
                         currentPlayer->score += 1000;
@@ -127,13 +126,10 @@ void CPZEggman::Oscillate() { this->position.y = BadnikHelpers::Oscillate(this, 
 
 void CPZEggman::State_AwaitPlayer()
 {
-	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 	Zone::sVars->playerBoundActiveL[0] = true;
     Zone::sVars->playerBoundActiveR[0] = true;
-    Zone::sVars->playerBoundActiveB[0] = false;
     Zone::sVars->cameraBoundsL[0]      = FROM_FIXED(this->position.x) - screenInfo->center.x;
     Zone::sVars->cameraBoundsR[0]      = FROM_FIXED(this->position.x) + screenInfo->center.x;
-    Zone::sVars->cameraBoundsB[0]      = FROM_FIXED(this->position.y) + screenInfo->center.y;
 
     this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
     Music::ClearMusicStack();
@@ -143,19 +139,13 @@ void CPZEggman::State_AwaitPlayer()
     //object[+1].type = TypeName[Chemical Dropper];
     ChemicalDropper *dropper = GameObject::Get<ChemicalDropper>(sceneInfo->entitySlot + 1);
     GameObject::Reset(sceneInfo->entitySlot + 1, ChemicalDropper::sVars->classID, INT_TO_VOID(true)); // this resets it so the objects creation can be properly started, it does nothing otherwise
-	dropper->boundsL = this->position.x;
-	dropper->boundsL -= 0x700000;
-	dropper->boundsR = this->position.x;
-    dropper->boundsR += 0x700000;
-	int32 temp0 = screen->center.x;
-	temp0 += 256;
-	temp0 <<= 16;
-	this->position.x += temp0;
+	dropper->boundsL = this->position.x - 0x700000;
+    dropper->boundsR = this->position.x + 0x700000;
+    this->position.x += (screenInfo->center.x + 256) << 16;
 	dropper->position.x = this->position.x;
 	dropper->position.y = this->position.y;
 	dropper->originPos.x = this->position.x;
 	dropper->originPos.y = this->position.y;
-	dropper->active = ACTIVE_NORMAL;
     dropper->main = dropper;
 
 	this->flameAnimator.SetAnimation(sVars->aniFrames, Active, true, 0);
@@ -222,11 +212,6 @@ void CPZEggman::State_Flee()
 		this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, true, 0);
 		this->flameAnimator.SetAnimation(sVars->aniFrames, Explode, true, 0);
 		this->direction = FLIP_X; // FACING_LEFT in v4
-		this->active = ACTIVE_NORMAL;
-		// why is this done twice????
-		Vector2 layerSize;
-		Zone::sVars->fgLayer[0].Size(&layerSize, true); // gets the layer size of the fg and sets layerSize to it
-        Zone::sVars->cameraBoundsR[0] = layerSize.x;
 		this->state.Set(&CPZEggman::State_Escape);
 	}
 }
@@ -242,7 +227,6 @@ void CPZEggman::State_Escape()
     range.y = screen->size.y << 16;
 	if (!this->CheckOnScreen(&range)) {
 		this->Destroy();
-		this->active = ACTIVE_BOUNDS;
     }
 }
 

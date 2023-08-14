@@ -17,6 +17,19 @@ struct ChemicalDropper : RSDK::GameObject::Entity {
         Splash,
     };
 
+    enum DropperAnims {
+        AniMachine,
+        AniTube,
+        AniDroplet,
+        AniDropper,
+        AniHatch,
+        AniEmpty,
+        AniChemicals,
+        AniDebris,
+        AniDrop,
+        AniSplash,
+    };
+
     // ==============================
     // STRUCTS
     // ==============================
@@ -31,8 +44,7 @@ struct ChemicalDropper : RSDK::GameObject::Entity {
         RSDK::SoundFX splashSFX;
         int32 tubeFrames[18];
         int32 dropletFrames[19];
-        int32 dropperFrames[3];
-        int32 hatchFrames[6];
+        int32 dropperFrames[4];
     };
 
     // ==============================
