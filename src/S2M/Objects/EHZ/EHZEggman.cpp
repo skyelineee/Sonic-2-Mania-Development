@@ -300,16 +300,12 @@ void EHZEggman::State_Flee()
 
 void EHZEggman::State_Escape()
 {
-    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-    Vector2 range;
-    range.x = screen->size.x << 16;
-    range.y = screen->size.y << 16;
-	if (this->CheckOnScreen(&range)) {
+	if (this->CheckOnScreen(nullptr)) {
 		EHZEggman::PlayHeliSFX();
 	}
 	this->position.x += 0x60000;
 
-	if (!this->CheckOnScreen(&range)) {
+	if (!this->CheckOnScreen(nullptr)) {
 		this->Destroy();
 	}
 }

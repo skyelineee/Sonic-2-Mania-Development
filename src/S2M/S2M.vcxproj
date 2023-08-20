@@ -196,6 +196,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GameAPI\CPP\GameAPI\Game.cpp" />
+    <ClCompile Include="Objects\ARZ\ArrowLauncher.cpp" />
+    <ClCompile Include="Objects\ARZ\ARZSetup.cpp" />
+    <ClCompile Include="Objects\ARZ\BreakoffPillar.cpp" />
+    <ClCompile Include="Objects\ARZ\ChopChop.cpp" />
+    <ClCompile Include="Objects\ARZ\Grounder.cpp" />
+    <ClCompile Include="Objects\ARZ\Wisp.cpp" />
     <ClCompile Include="Objects\Common\BGSwitch.cpp" />
     <ClCompile Include="Objects\Common\BreakableWall.cpp" />
     <ClCompile Include="Objects\Common\Button.cpp" />
@@ -369,6 +375,12 @@
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameObjects.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameVariables.hpp" />
+    <ClInclude Include="Objects\ARZ\ArrowLauncher.hpp" />
+    <ClInclude Include="Objects\ARZ\ARZSetup.hpp" />
+    <ClInclude Include="Objects\ARZ\BreakoffPillar.hpp" />
+    <ClInclude Include="Objects\ARZ\ChopChop.hpp" />
+    <ClInclude Include="Objects\ARZ\Grounder.hpp" />
+    <ClInclude Include="Objects\ARZ\Wisp.hpp" />
     <ClInclude Include="Objects\Common\BGSwitch.hpp" />
     <ClInclude Include="Objects\Common\BreakableWall.hpp" />
     <ClInclude Include="Objects\Common\Button.hpp" />

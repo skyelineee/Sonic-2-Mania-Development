@@ -69,8 +69,7 @@ void Buzzer::Create(void *data)
 
 void Buzzer::StageLoad()
 {
-    if (Stage::CheckSceneFolder("EHZ"))
-        sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
+    sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
 
     sVars->hitboxBadnik.left = -16;
     sVars->hitboxBadnik.top = -12;
@@ -266,8 +265,7 @@ void Buzzer::EditorDraw(void)
 
 void Buzzer::EditorLoad(void)
 {
-    if (Stage::CheckSceneFolder("EHZ"))
-        sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
+    sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, direction);
     RSDK_ENUM_VAR("Left");

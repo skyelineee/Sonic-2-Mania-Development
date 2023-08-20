@@ -14,9 +14,6 @@
     <Filter Include="Source Files\Objects\Test">
       <UniqueIdentifier>{2be99c0d-94c8-4d2e-b41c-8c3713865335}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Objects\Common">
-      <UniqueIdentifier>{598146be-572f-4aca-b8bc-1c39e9bd7e13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects\Global">
       <UniqueIdentifier>{4e4dbb54-14b3-4307-baa0-915160d6c09c}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,12 @@
     </Filter>
     <Filter Include="Source Files\Objects\CPZ">
       <UniqueIdentifier>{4abfa5b1-b25f-4f6d-b007-0857cd713f17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\ARZ">
+      <UniqueIdentifier>{3a3960a2-1e7e-4ed3-84b0-b2cce3d35281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Common">
+      <UniqueIdentifier>{598146be-572f-4aca-b8bc-1c39e9bd7e13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +450,24 @@
     </ClCompile>
     <ClCompile Include="Objects\CPZ\ChemicalDropper.cpp">
       <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\Grounder.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\ChopChop.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\Wisp.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\BreakoffPillar.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\ArrowLauncher.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ARZ\ARZSetup.cpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -863,6 +884,24 @@
     </ClInclude>
     <ClInclude Include="Objects\CPZ\ChemicalDropper.hpp">
       <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\Grounder.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\ChopChop.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\Wisp.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\BreakoffPillar.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\ArrowLauncher.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ARZ\ARZSetup.hpp">
+      <Filter>Source Files\Objects\ARZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

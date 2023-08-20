@@ -25,11 +25,7 @@ void ChemicalDropper::Update()
         this->position.y += this->velocity.y;
 		this->velocity.y += 0x3800;
 		
-		ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-		Vector2 range;
-		range.x = screen->size.x << 16;
-		range.y = screen->size.y << 16;
-		if (!this->CheckOnScreen(&range)) {
+		if (!this->CheckOnScreen(nullptr)) {
 			this->Destroy();
 		}
 		
@@ -49,11 +45,7 @@ void ChemicalDropper::Update()
 		this->position.y += this->velocity.y;
         this->velocity.y += 0x3800;
 		
-		ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-        Vector2 range;
-        range.x = screen->size.x << 16;
-        range.y = screen->size.y << 16;
-        if (!this->CheckOnScreen(&range)) {
+        if (!this->CheckOnScreen(nullptr)) {
 			this->Destroy();
 		}
 
@@ -410,11 +402,7 @@ void ChemicalDropper::State_Debris()
 	this->position.x += this->velocity.x;
 	this->position.y += this->velocity.y;
 	this->velocity.y += 0x3800;
-    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-    Vector2 range;
-    range.x = screen->size.x << 16;
-    range.y = screen->size.y << 16;
-    if (!this->CheckOnScreen(&range)) {
+    if (!this->CheckOnScreen(nullptr)) {
 		this->Destroy();
 	}
 }

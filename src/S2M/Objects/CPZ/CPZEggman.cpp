@@ -221,11 +221,7 @@ void CPZEggman::State_Escape()
 	this->position.x += 0x40000;
 	this->originPos.y -= 0x4000;
 	CPZEggman::Oscillate();
-	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-    Vector2 range;
-    range.x = screen->size.x << 16;
-    range.y = screen->size.y << 16;
-	if (!this->CheckOnScreen(&range)) {
+	if (!this->CheckOnScreen(nullptr)) {
 		this->Destroy();
     }
 }

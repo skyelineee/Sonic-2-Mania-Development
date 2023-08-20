@@ -28,6 +28,7 @@
 #include "BoundsMarker.hpp"
 #include "GameOver.hpp"
 #include "Common/Water.hpp"
+#include "ARZ/ARZSetup.hpp"
 
 #include "Helpers/FXFade.hpp"
 #include "Helpers/BadnikHelpers.hpp"
@@ -801,6 +802,12 @@ void Player::StageLoad()
     sVars->activeSuperTailsPalette_Water  = sVars->superTailsPalette;
     sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
     sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
+
+    if (ARZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
+        sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette_Water;
+        sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette_Water;
+        sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette_Water;
+    }
 
     sVars->canSuperCB = nullptr;
 
@@ -7245,6 +7252,37 @@ void Player::StaticLoad(Static *sVars)
                                  0xF098B0, 0xF0B0C8, 0xB30626, 0xE12808, 0xF06090, 0xF080A0, 0xF098B0, 0xF0B0C8, 0xF0C0C8 };
 
     memcpy(sVars->superKnuxPalette, superKnuxPalette, sizeof(superKnuxPalette));
+
+    if (ARZSetup::sVars) { // if its ARZ, load these water player colors
+        // ---------------
+        // SUPER SONIC WATER
+        // ---------------
+
+        color superSonicPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superSonicPalette_Water, superSonicPalette_Water, sizeof(superSonicPalette_Water));
+
+        // ---------------
+        // SUPER TAILS WATER
+        // ---------------
+
+        color superTailsPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superTailsPalette_Water, superTailsPalette_Water, sizeof(superTailsPalette_Water));
+
+        // ---------------
+        // SUPER KNUCKLES WATER
+        // ---------------
+
+        color superKnuxPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                           0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
+    }
+
+    //
 
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };
     memcpy(sVars->spindashChargeSpeeds, chargeSpeeds, sizeof(chargeSpeeds));

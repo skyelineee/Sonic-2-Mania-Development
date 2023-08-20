@@ -288,11 +288,7 @@ void EggDriller::Drill_Fired()
 		this->timer = 0;
 	}
 
-	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-    Vector2 range;
-    range.x = screen->size.x << 16;
-    range.y = screen->size.y << 16;
-	if (this->CheckOnScreen(&range)) {
+	if (this->CheckOnScreen(nullptr)) {
 		if (this->isDrillOOB == true) {
 			this->Destroy();
 		}
@@ -332,11 +328,7 @@ void EggDriller::Wheel_Bounce()
 	this->position.y += this->velocity.y;
 	this->velocity.y += 0x3800; // this adds the velocity every frame so the wheel slowly goes more and more down until it hits the ground and the velocity gets reversed
 
-	ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-    Vector2 range;
-    range.x = screen->size.x << 16;
-    range.y = screen->size.y << 16;
-	if (!this->CheckOnScreen(&range)) {
+	if (!this->CheckOnScreen(nullptr)) {
 		this->Destroy();
 	}
 }

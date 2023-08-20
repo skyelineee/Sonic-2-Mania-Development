@@ -568,7 +568,7 @@ void ItemBox::GivePowerup()
 
         case ItemBox::Super:
             player->GiveRings(50, false);
-            player->TryTransform(false, Player::TransformHyper);
+            player->TryTransform(false, Player::TransformSuper);
             break;
 
         case ItemBox::Stock: {
