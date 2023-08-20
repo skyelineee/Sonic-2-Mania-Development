@@ -6,6 +6,7 @@
 
 #include "BreakoffPillar.hpp"
 #include "Global/Player.hpp"
+#include "Global/DebugMode.hpp"
 #include "Global/Zone.hpp"
 
 using namespace RSDK;
@@ -82,6 +83,20 @@ void BreakoffPillar::StageLoad()
     sVars->idleHitbox.top    = -256;
     sVars->idleHitbox.right  = 128;
     sVars->idleHitbox.bottom = 256;
+
+	DebugMode::AddObject(sVars->classID, &BreakoffPillar::DebugSpawn, &BreakoffPillar::DebugDraw);
+}
+
+void BreakoffPillar::DebugSpawn() { GameObject::Create<BreakoffPillar>(nullptr, this->position.x, this->position.y); }
+
+void BreakoffPillar::DebugDraw()
+{
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 1);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 2);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
 void BreakoffPillar::State_AwaitPlayer()

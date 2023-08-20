@@ -6,6 +6,8 @@
 
 #include "ChopChop.hpp"
 #include "Global/Player.hpp"
+#include "Global/Zone.hpp"
+#include "Global/DebugMode.hpp"
 #include "Common/Water.hpp"
 
 using namespace RSDK;
@@ -92,6 +94,17 @@ void ChopChop::StageLoad()
     sVars->hitboxRange.top    = -32;
     sVars->hitboxRange.right  = 16;
     sVars->hitboxRange.bottom = 32;
+
+	DebugMode::AddObject(sVars->classID, &ChopChop::DebugSpawn, &ChopChop::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
+}
+
+void ChopChop::DebugSpawn() { GameObject::Create<ChopChop>(nullptr, this->position.x, this->position.y); }
+
+void ChopChop::DebugDraw()
+{
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, Swim, true, 0);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
 void ChopChop::Setup()

@@ -68,7 +68,7 @@ void Wisp::DebugSpawn() { GameObject::Create<Wisp>(nullptr, this->position.x, th
 
 void Wisp::DebugDraw()
 {
-    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, false, 0);
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 

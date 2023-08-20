@@ -70,6 +70,10 @@ struct Grounder : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
+    void DebugSpawn();
+    void DebugDraw();
+
+    // STATES
     void State_Hidden();
     void State_Appear();
     void State_Moving();

@@ -65,6 +65,9 @@ struct ArrowLauncher : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
+    
+    void DebugSpawn();
+    void DebugDraw();
 
     // STATES
     void State_AwaitPlayer();

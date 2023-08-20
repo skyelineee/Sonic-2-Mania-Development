@@ -62,6 +62,10 @@ struct BreakoffPillar : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
+    void DebugSpawn();
+    void DebugDraw();
+
+    // STATES
     void State_AwaitPlayer();
     void State_Shaking();
     void State_Falling();

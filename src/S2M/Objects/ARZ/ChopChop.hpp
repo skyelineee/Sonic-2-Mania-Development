@@ -61,6 +61,8 @@ struct ChopChop : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
+    void DebugSpawn();
+    void DebugDraw();
     void Setup();
 
     // STATES

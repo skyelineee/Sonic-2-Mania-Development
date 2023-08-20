@@ -7,6 +7,7 @@
 #include "ArrowLauncher.hpp"
 #include "Global/Player.hpp"
 #include "Global/Zone.hpp"
+#include "Global/DebugMode.hpp"
 
 using namespace RSDK;
 
@@ -97,6 +98,16 @@ void ArrowLauncher::StageLoad()
     sVars->idleHitbox.top    = -256;
     sVars->idleHitbox.right  = 64;
     sVars->idleHitbox.bottom = 256;
+
+	DebugMode::AddObject(sVars->classID, &ArrowLauncher::DebugSpawn, &ArrowLauncher::DebugDraw);
+}
+
+void ArrowLauncher::DebugSpawn() { GameObject::Create<ArrowLauncher>(nullptr, this->position.x, this->position.y); }
+
+void ArrowLauncher::DebugDraw()
+{
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, Idle, true, 0);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
 void ArrowLauncher::State_AwaitPlayer()

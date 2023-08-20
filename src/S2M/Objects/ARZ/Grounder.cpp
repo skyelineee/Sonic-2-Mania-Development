@@ -7,6 +7,7 @@
 #include "Grounder.hpp"
 #include "Global/Player.hpp"
 #include "Global/Zone.hpp"
+#include "Global/DebugMode.hpp"
 
 using namespace RSDK;
 
@@ -129,6 +130,22 @@ void Grounder::StageLoad()
     sVars->hiddenHitbox.top    = -256;
     sVars->hiddenHitbox.right  = 96;
     sVars->hiddenHitbox.bottom = 256;
+
+	DebugMode::AddObject(sVars->classID, &Grounder::DebugSpawn, &Grounder::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
+}
+
+void Grounder::DebugSpawn()
+{
+	Grounder *grounder = GameObject::Create<Grounder>(nullptr, this->position.x, this->position.y); 
+	grounder->type     = 1;
+
+}
+
+void Grounder::DebugDraw()
+{
+    DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, Moving, true, 0);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
 void Grounder::State_Hidden()
