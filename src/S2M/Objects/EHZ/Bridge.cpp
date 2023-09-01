@@ -87,18 +87,20 @@ void Bridge::Draw()
 
 void Bridge::Create(void *data)
 {
-    this->visible = true;
-    ++this->length;
-    this->drawGroup     = Zone::sVars->objectDrawGroup[0];
-    this->active        = ACTIVE_BOUNDS;
-    int32 len           = this->length << 19;
-    this->startPos      = this->position.x - len;
-    this->endPos        = len + this->position.x;
-    this->updateRange.x = len;
-    this->updateRange.y = 0x800000;
-    this->stoodEntity   = (Entity *)-1;
-    this->burnOffset    = 0xFF;
-    this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
+    if (!sceneInfo->inEditor) {
+        this->visible = true;
+        ++this->length;
+        this->drawGroup     = Zone::sVars->objectDrawGroup[0];
+        this->active        = ACTIVE_BOUNDS;
+        int32 len           = this->length << 19;
+        this->startPos      = this->position.x - len;
+        this->endPos        = len + this->position.x;
+        this->updateRange.x = len;
+        this->updateRange.y = 0x800000;
+        this->stoodEntity   = (Entity *)-1;
+        this->burnOffset    = 0xFF;
+        this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
+    }
 }
 
 void Bridge::StageLoad()
@@ -112,17 +114,11 @@ void Bridge::StageLoad()
 
 void Bridge::DebugDraw()
 {
-    Vector2 drawPos;
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
     DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
-    DebugMode::sVars->animator.DrawSprite(&drawPos, false);
+    DebugMode::sVars->animator.DrawSprite(nullptr, false);
 }
 
-void Bridge::DebugSpawn()
-{
-    Bridge *bridge = GameObject::Create<Bridge>(nullptr, this->position.x, this->position.y);
-}
+void Bridge::DebugSpawn() { GameObject::Create<Bridge>(nullptr, this->position.x, this->position.y); }
 
 void Bridge::Burn(int32 offset)
 {

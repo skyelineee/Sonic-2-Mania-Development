@@ -59,6 +59,12 @@ void Player::Update()
     if (this->sidekick)
         this->HandleSidekickRespawn();
 
+    if (this->animator.animationID == ANI_AIRCURL) { // sets the animation to jump when the air curl animation is finished
+        if (this->animator.frameID == this->animator.frameCount - 1) {
+            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
+        }
+    }
+
     if (this->classID == sVars->classID) {
         if (this->camera) {
             if (this->scrollDelay > 0) {
@@ -3407,33 +3413,13 @@ void Player::State_Air()
         if (this->animator.animationID != ANI_JUMP) {
             if (globals->gravityDir == CMODE_ROOF) {
                 if (this->velocity.y > 0 && this->jumpPress) {
-                    this->airCurlTimer = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.animationID == ANI_AIRCURL) {
-                        if (this->airCurlTimer >= 60) {
-                            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-                            this->airCurlTimer = 0;
-                        }
-                        else {
-                            this->airCurlTimer += 1;
-                        }
-                    }
                     this->velocity.y >>= 1;
                 }
             }
             else if (globals->gravityDir == CMODE_FLOOR) {
                 if (this->velocity.y < 0 && this->jumpPress) {
-                    this->airCurlTimer = 0;
                     this->animator.SetAnimation(this->aniFrames, ANI_AIRCURL, false, 0);
-                    if (this->animator.animationID == ANI_AIRCURL) {
-                        if (this->airCurlTimer >= 60) {
-                            this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
-                            this->airCurlTimer = 0;
-                        }
-                        else {
-                            this->airCurlTimer += 1;
-                        }
-                    }
                     this->velocity.y >>= 1;
                 }
             }

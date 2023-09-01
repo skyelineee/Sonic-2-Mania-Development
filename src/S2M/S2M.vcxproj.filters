@@ -41,6 +41,9 @@
     <Filter Include="Source Files\Objects\Common">
       <UniqueIdentifier>{598146be-572f-4aca-b8bc-1c39e9bd7e13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\CNZ">
+      <UniqueIdentifier>{5f3a9926-c599-41aa-98e8-58d180384ba2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -468,6 +471,48 @@
     </ClCompile>
     <ClCompile Include="Objects\ARZ\ARZSetup.cpp">
       <Filter>Source Files\Objects\ARZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\TargetBumper.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\CircleBumper.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\SlotDisplay.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\SlotMachine.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\SlotPrize.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\Flipper.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\VFlipper.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\Plunger.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\ConveyorBelt.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\CNZSetup.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\SnakeBlock.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\TriBumper.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\Crawl.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CNZ\CNZSpotlight.cpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -902,6 +947,48 @@
     </ClInclude>
     <ClInclude Include="Objects\ARZ\ARZSetup.hpp">
       <Filter>Source Files\Objects\ARZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\TargetBumper.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\CircleBumper.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\SlotDisplay.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\SlotMachine.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\SlotPrize.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\Flipper.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\VFlipper.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\Plunger.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\ConveyorBelt.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\CNZSetup.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\SnakeBlock.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\TriBumper.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\Crawl.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CNZ\CNZSpotlight.hpp">
+      <Filter>Source Files\Objects\CNZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

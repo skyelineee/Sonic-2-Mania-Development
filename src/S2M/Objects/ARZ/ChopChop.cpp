@@ -52,8 +52,7 @@ void ChopChop::Update()
 
 	for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (player->CheckBadnikTouch(this, &sVars->hitboxBadnik)) {
-            if (player->CheckBadnikBreak(this, true)) {
-            }
+            player->CheckBadnikBreak(this, true);
         }
     }
 

@@ -52,11 +52,6 @@ struct Player : RSDK::GameObject::Entity {
         ANI_ABILITY_5,
         ANI_ABILITY_6,
         ANI_ABILITY_7,
-        ANI_ABILITY_8,
-        ANI_ABILITY_9,
-        ANI_ABILITY_10,
-        ANI_ABILITY_11,
-        ANI_ABILITY_12,
 
         // Sonic Ability Anim Aliases
         ANI_DROPDASH            = ANI_ABILITY_0,
@@ -280,7 +275,6 @@ struct Player : RSDK::GameObject::Entity {
     int32 invincibleTimer;
     int32 speedShoesTimer;
     int32 blinkTimer;
-    int32 airCurlTimer;
     int32 scrollDelay;
     int32 skidding;
     int32 pushing;
