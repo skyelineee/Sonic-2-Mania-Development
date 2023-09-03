@@ -44,6 +44,9 @@
     <Filter Include="Source Files\Objects\CNZ">
       <UniqueIdentifier>{5f3a9926-c599-41aa-98e8-58d180384ba2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\HTZ">
+      <UniqueIdentifier>{2b65bfe6-41b5-427a-a8aa-6c688e00a6d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -513,6 +516,30 @@
     </ClCompile>
     <ClCompile Include="Objects\CNZ\CNZSpotlight.cpp">
       <Filter>Source Files\Objects\CNZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\HTZSetup.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\RisingLava.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\Rexon.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\Sol.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\AIZRockPile.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\SeeSaw.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\ZipLine.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HTZ\Spiker.cpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -989,6 +1016,30 @@
     </ClInclude>
     <ClInclude Include="Objects\CNZ\CNZSpotlight.hpp">
       <Filter>Source Files\Objects\CNZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\HTZSetup.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\RisingLava.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\Rexon.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\Sol.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\AIZRockPile.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\SeeSaw.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\ZipLine.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HTZ\Spiker.hpp">
+      <Filter>Source Files\Objects\HTZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

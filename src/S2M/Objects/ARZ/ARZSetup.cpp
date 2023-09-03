@@ -30,7 +30,7 @@ void ARZSetup::StaticUpdate()
     }
 
     if (!(Zone::sVars->timer & 1)) {
-        for (int32 layerID = 6; layerID <= 7; ++layerID) SceneLayer::GetTileLayer(layerID)->deformationOffsetW++;
+        for (int32 layerID = Zone::sVars->fgLayer[0].id; layerID <= Zone::sVars->fgLayer[1].id; ++layerID) SceneLayer::GetTileLayer(layerID)->deformationOffsetW++;
     }
 }
 
@@ -49,7 +49,7 @@ void ARZSetup::StageLoad()
     Water::sVars->waterPalette = 1;
 
     // All Layers between FG Low & FG High get foreground water deformation applied 
-    for (int32 layerID = 6; layerID <= 7; ++layerID) { // used to be Zone::sVars->fgLayer[0] and [1], but it doesnt work here like it does in mania as the layers were uint16 there, but are now RSDK::SceneLayer
+    for (int32 layerID = Zone::sVars->fgLayer[0].id; layerID <= Zone::sVars->fgLayer[1].id; ++layerID) {
         TileLayer *layer   = SceneLayer::GetTileLayer(layerID);
         int32 *deformDataW = layer->deformationDataW;
 

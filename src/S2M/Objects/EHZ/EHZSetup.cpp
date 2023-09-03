@@ -82,6 +82,7 @@ void EHZSetup::HandleActTransition()
 
 void EHZSetup::StageFinish_EndAct2() {}
 
+#if RETRO_REV0U
 void EHZSetup::StaticLoad(Static* sVars)
 {
     RSDK_INIT_STATIC_VARS(EHZSetup);
@@ -92,6 +93,7 @@ void EHZSetup::StaticLoad(Static* sVars)
     memcpy(sVars->deformation, deformation, sizeof(deformation));
 
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void EHZSetup::EditorDraw() {}

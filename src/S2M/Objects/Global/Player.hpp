@@ -487,6 +487,7 @@ struct Player : RSDK::GameObject::Entity {
     // Damage
     void Hit(bool32 forceKill = false);
     bool32 Hurt(RSDK::GameObject::Entity *entity, bool32 forceKill = false);
+    bool32 HurtFlip();
     bool32 FireHurt(RSDK::GameObject::Entity *entity);
     bool32 CheckAttacking(RSDK::GameObject::Entity *entity);
     bool32 CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *entityHitbox, bool32 enableHyperList = true);

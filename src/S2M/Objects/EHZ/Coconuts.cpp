@@ -26,15 +26,6 @@ void Coconuts::LateUpdate() {}
 
 void Coconuts::StaticUpdate() {}
 
-void Coconuts::StaticLoad(Static *sVars)
-{
-    RSDK_INIT_STATIC_VARS(Coconuts);
-
-    int32 throwDelays[] = { 32, 24, 16, 40, 32, 16 };
-
-    memcpy(sVars->throwDelays, throwDelays, sizeof(throwDelays));
-}
-
 void Coconuts::Draw()
 {
     this->animator.DrawSprite(NULL, false);
@@ -290,6 +281,17 @@ void Coconuts::EditorLoad()
     RSDK_ACTIVE_VAR(sVars, direction);
     RSDK_ENUM_VAR("Left");
     RSDK_ENUM_VAR("Right");
+}
+#endif
+
+#if RETRO_REV0U
+void Coconuts::StaticLoad(Static *sVars)
+{
+    RSDK_INIT_STATIC_VARS(Coconuts);
+
+    int32 throwDelays[] = { 32, 24, 16, 40, 32, 16 };
+
+    memcpy(sVars->throwDelays, throwDelays, sizeof(throwDelays));
 }
 #endif
 

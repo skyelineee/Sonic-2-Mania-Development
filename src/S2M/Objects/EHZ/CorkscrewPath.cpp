@@ -95,6 +95,7 @@ void CorkscrewPath::Create(void *data)
 
 void CorkscrewPath::StageLoad() {}
 
+#if RETRO_REV0U
 void CorkscrewPath::StaticLoad(Static *sVars)
 {
     RSDK_INIT_STATIC_VARS(CorkscrewPath);
@@ -103,6 +104,7 @@ void CorkscrewPath::StaticLoad(Static *sVars)
 
     memcpy(sVars->frameTable, frameTable, sizeof(frameTable));
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void CorkscrewPath::EditorDraw()

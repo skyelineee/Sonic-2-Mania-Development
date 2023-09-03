@@ -522,6 +522,7 @@ void BreakableWall::CheckBreak_BurrowFloor()
                         canBreak = false;
 
                     if (canBreak && !player->sidekick) {
+                        sVars->sfxLedgeBreak.Play();
                         player->onGround = false;
 
                         if (this->state.Matches(&BreakableWall::State_BurrowFloorUp)) {

@@ -6823,6 +6823,20 @@ bool32 Player::Hurt(RSDK::GameObject::Entity *entity, bool32 forceKill)
     this->Hit(forceKill);
     return true;
 }
+
+bool32 Player::HurtFlip()
+{
+    if (this->state.Matches(&Player::State_Hurt) || this->state.Matches(&Player::State_Death) || this->state.Matches(&Player::State_Drown) || this->invincibleTimer
+        || this->blinkTimer > 0) {
+        return false;
+    }
+
+    this->velocity.x = this->direction != FLIP_NONE ? 0x20000 : -0x20000;
+    this->Hit();
+
+    return true;
+}
+
 bool32 Player::FireHurt(RSDK::GameObject::Entity *entity)
 {
     if (this->shield == Shield::Fire)
