@@ -397,6 +397,8 @@ struct Player : RSDK::GameObject::Entity {
     void HandleGroundAnimation();
     void HandleGroundMovement();
     void HandleGroundRotation();
+    void HandleAirRotation();
+    void HandleAirMovement();
     void HandleAirFriction();
     void HandleRollDeceleration();
     void CheckStartFlyCarry(Player *leader);
@@ -449,6 +451,7 @@ struct Player : RSDK::GameObject::Entity {
     void State_TubeRoll();
     void State_TubeAirRoll();
     void State_TransportTube();
+    void State_WaterSlide();
     void State_WaterCurrent();
     void State_GroundFalse();
     void State_Transform();

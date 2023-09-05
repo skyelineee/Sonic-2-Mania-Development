@@ -30,7 +30,7 @@ struct Platform : RSDK::GameObject::Entity {
         TrackReact,
         Clacker,
         Child,
-        Null,
+        DipRock,
     };
 
     enum CollisionTypes {
@@ -152,6 +152,7 @@ struct Platform : RSDK::GameObject::Entity {
     void State_DoorSlide();
     void State_PathReact();
     void State_Child();
+    void State_DipRock();
     void State_SwingReact();
     void State_Swing2();
     void State_SwingWait();

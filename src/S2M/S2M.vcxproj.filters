@@ -47,6 +47,9 @@
     <Filter Include="Source Files\Objects\HTZ">
       <UniqueIdentifier>{2b65bfe6-41b5-427a-a8aa-6c688e00a6d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\HPZ">
+      <UniqueIdentifier>{78e5f7d5-4b91-4252-bce2-e1645803618a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -540,6 +543,39 @@
     </ClCompile>
     <ClCompile Include="Objects\HTZ\Spiker.cpp">
       <Filter>Source Files\Objects\HTZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\RailRocket.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\Pendulum.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\HPZSetup.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\WaterGush.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\Redz.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\Stegway.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\Batbot.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\SpinBooster.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\Springboard.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\HPZ\Jellygnite.cpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Common\FallTrigger.cpp">
+      <Filter>Source Files\Objects\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1040,6 +1076,39 @@
     </ClInclude>
     <ClInclude Include="Objects\HTZ\Spiker.hpp">
       <Filter>Source Files\Objects\HTZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\RailRocket.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\Pendulum.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\HPZSetup.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\WaterGush.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\Redz.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\Stegway.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\Batbot.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\SpinBooster.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\Springboard.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\HPZ\Jellygnite.hpp">
+      <Filter>Source Files\Objects\HPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Common\FallTrigger.hpp">
+      <Filter>Source Files\Objects\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

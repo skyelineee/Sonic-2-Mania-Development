@@ -108,6 +108,9 @@ void Bridge::StageLoad()
     if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Bridge.bin", SCOPE_STAGE);
     }
+    else if (Stage::CheckSceneFolder("HPZ") || Stage::CheckSceneFolder("PPZ")) {
+        sVars->aniFrames.Load("HPZ/Bridge.bin", SCOPE_STAGE);
+    }
 
     DebugMode::AddObject(sVars->classID, &Bridge::DebugSpawn, &Bridge::DebugDraw);
 }
@@ -309,6 +312,9 @@ void Bridge::EditorLoad()
 {
     if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Bridge.bin", SCOPE_STAGE);
+    }
+    else if (Stage::CheckSceneFolder("HPZ") || Stage::CheckSceneFolder("PPZ")) {
+        sVars->aniFrames.Load("HPZ/Bridge.bin", SCOPE_STAGE);
     }
 }
 #endif

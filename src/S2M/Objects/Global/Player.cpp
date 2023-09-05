@@ -29,6 +29,7 @@
 #include "GameOver.hpp"
 #include "Common/Water.hpp"
 #include "ARZ/ARZSetup.hpp"
+#include "HPZ/HPZSetup.hpp"
 
 #include "Helpers/FXFade.hpp"
 #include "Helpers/BadnikHelpers.hpp"
@@ -809,7 +810,7 @@ void Player::StageLoad()
     sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
     sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
 
-    if (ARZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
+    if (ARZSetup::sVars || HPZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
         sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette_Water;
         sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette_Water;
         sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette_Water;
@@ -2154,6 +2155,40 @@ void Player::HandleGroundRotation()
         this->rotation &= 0x1FF;
     }
 }
+
+void Player::HandleAirRotation()
+{
+    if (this->rotation >= 0x100) {
+        if (this->rotation < 0x200)
+            this->rotation += 4;
+        else
+            this->rotation = 0;
+    }
+    else {
+        if (this->rotation > 0)
+            this->rotation -= 4;
+        else
+            this->rotation = 0;
+    }
+}
+
+void Player::HandleAirMovement()
+{
+    Player::Gravity_True();
+
+    this->velocity.y += this->gravityStrength;
+
+    if (this->velocity.y < this->jumpCap && this->animator.animationID == ANI_JUMP && !this->jumpHold && this->applyJumpCap) {
+        this->velocity.x -= this->velocity.x >> 5;
+        this->velocity.y = this->jumpCap;
+    }
+
+    this->collisionMode = CMODE_FLOOR;
+    this->pushing       = 0;
+
+    Player::HandleAirRotation();
+}
+
 void Player::HandleAirFriction()
 {
     if (this->velocity.y > -0x40000 && this->velocity.y < 0)
@@ -2254,8 +2289,8 @@ void Player::HandleRollDeceleration()
                 if ((this->groundVel >= 0 && initialVel <= 0) || (this->groundVel <= 0 && initialVel >= 0)) {
                     this->groundVel = 0;
                     this->state.Set(&Player::State_Ground);
-                    // this->animator.SetAnimation(this->aniFrames, ANI_IDLE, true, 0);
-                    // this->position.y += this->jumpOffset;
+                    this->animator.SetAnimation(this->aniFrames, ANI_IDLE, true, 0);
+                    this->position.y += this->jumpOffset;
                 }
             }
             else {
@@ -5646,7 +5681,7 @@ void Player::State_Victory()
     this->drownTimer   = 0;
 
     if (!this->onGround) {
-        Player::HandleAirFriction();
+        Player::HandleAirMovement();
     }
 
     if (this->onGround) {
@@ -5750,6 +5785,30 @@ void Player::State_TransportTube()
             else if (this->groundVel < 0)
                 this->tailDirection |= FLIP_X;
         }
+    }
+}
+
+void Player::State_WaterSlide()
+{
+    // simplified this state from mania as the hpz waterslide has a constant speed rather than a slope dependent one
+    if (!this->onGround) {
+        this->state.Set(&Player::State_Air);
+        Player::HandleAirMovement();
+    }
+    else {
+        Player::Gravity_False();
+
+        this->groundVel   = 550000;
+        this->direction   = FLIP_NONE;
+        this->controlLock = 30;
+        this->animator.SetAnimation(this->aniFrames, ANI_FLUME, false, 0);
+    }
+
+    if (this->jumpPress) {
+        this->Action_Jump();
+
+        if ((this->angle < 0x80 && this->velocity.x > 0) || (this->angle <= 0x80 && this->velocity.x < 0))
+            this->velocity.x += (this->jumpStrength + (this->jumpStrength >> 1)) * Math::Sin256(this->angle) >> 8;
     }
 }
 
@@ -7282,6 +7341,34 @@ void Player::StaticLoad(Static *sVars)
         memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
     }
 
+    if (HPZSetup::sVars) { // if its HPZ, load these water player colors
+        // ---------------
+        // SUPER SONIC WATER
+        // ---------------
+
+        color superSonicPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superSonicPalette_Water, superSonicPalette_Water, sizeof(superSonicPalette_Water));
+
+        // ---------------
+        // SUPER TAILS WATER
+        // ---------------
+
+        color superTailsPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superTailsPalette_Water, superTailsPalette_Water, sizeof(superTailsPalette_Water));
+
+        // ---------------
+        // SUPER KNUCKLES WATER
+        // ---------------
+
+        color superKnuxPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+                                           0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
+    }
     //
 
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };

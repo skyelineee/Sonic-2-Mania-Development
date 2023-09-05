@@ -331,7 +331,7 @@ void ActClear::Create(void *data)
         this->numbersAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
         this->timeElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 5);
         this->gotThroughAnimator.SetAnimation(sVars->aniFrames, 4, true, 0);
-        this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, Zone::sVars->actID > 0);
+        this->actNumAnimator.SetAnimation(sVars->aniFrames, 5, true, Zone::sVars->actID);
         this->scoreCardAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
         this->trianglesLeftAnimator.SetAnimation(sVars->aniFrames, 12, true, 0);
         this->trianglesRightAnimator.SetAnimation(sVars->aniFrames, 13, true, 0);

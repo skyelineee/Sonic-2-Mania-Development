@@ -221,6 +221,7 @@
     <ClCompile Include="Objects\Common\Button.cpp" />
     <ClCompile Include="Objects\Common\CollapsingPlatform.cpp" />
     <ClCompile Include="Objects\Common\Decoration.cpp" />
+    <ClCompile Include="Objects\Common\FallTrigger.cpp" />
     <ClCompile Include="Objects\Common\FlingRamp.cpp" />
     <ClCompile Include="Objects\Common\ForceSpin.cpp" />
     <ClCompile Include="Objects\Common\ForceUnstick.cpp" />
@@ -230,6 +231,8 @@
     <ClCompile Include="Objects\Common\PlatformControl.cpp" />
     <ClCompile Include="Objects\Common\PlatformNode.cpp" />
     <ClCompile Include="Objects\Common\ScreenWrap.cpp" />
+    <ClCompile Include="Objects\Common\SpinBooster.cpp" />
+    <ClCompile Include="Objects\Common\Springboard.cpp" />
     <ClCompile Include="Objects\Common\TilePlatform.cpp" />
     <ClCompile Include="Objects\Common\Water.cpp" />
     <ClCompile Include="Objects\CPZ\ChemicalDropper.cpp" />
@@ -301,6 +304,14 @@
     <ClCompile Include="Objects\Helpers\ReplayDB.cpp" />
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
+    <ClCompile Include="Objects\HPZ\Batbot.cpp" />
+    <ClCompile Include="Objects\HPZ\HPZSetup.cpp" />
+    <ClCompile Include="Objects\HPZ\Jellygnite.cpp" />
+    <ClCompile Include="Objects\HPZ\Pendulum.cpp" />
+    <ClCompile Include="Objects\HPZ\RailRocket.cpp" />
+    <ClCompile Include="Objects\HPZ\Redz.cpp" />
+    <ClCompile Include="Objects\HPZ\Stegway.cpp" />
+    <ClCompile Include="Objects\HPZ\WaterGush.cpp" />
     <ClCompile Include="Objects\HTZ\AIZRockPile.cpp" />
     <ClCompile Include="Objects\HTZ\HTZSetup.cpp" />
     <ClCompile Include="Objects\HTZ\Rexon.cpp" />
@@ -422,6 +433,7 @@
     <ClInclude Include="Objects\Common\Button.hpp" />
     <ClInclude Include="Objects\Common\CollapsingPlatform.hpp" />
     <ClInclude Include="Objects\Common\Decoration.hpp" />
+    <ClInclude Include="Objects\Common\FallTrigger.hpp" />
     <ClInclude Include="Objects\Common\FlingRamp.hpp" />
     <ClInclude Include="Objects\Common\ForceSpin.hpp" />
     <ClInclude Include="Objects\Common\ForceUnstick.hpp" />
@@ -431,6 +443,8 @@
     <ClInclude Include="Objects\Common\PlatformControl.hpp" />
     <ClInclude Include="Objects\Common\PlatformNode.hpp" />
     <ClInclude Include="Objects\Common\ScreenWrap.hpp" />
+    <ClInclude Include="Objects\Common\SpinBooster.hpp" />
+    <ClInclude Include="Objects\Common\Springboard.hpp" />
     <ClInclude Include="Objects\Common\TilePlatform.hpp" />
     <ClInclude Include="Objects\Common\Water.hpp" />
     <ClInclude Include="Objects\CPZ\ChemicalDropper.hpp" />
@@ -503,6 +517,14 @@
     <ClInclude Include="Objects\Helpers\ReplayDB.hpp" />
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
+    <ClInclude Include="Objects\HPZ\Batbot.hpp" />
+    <ClInclude Include="Objects\HPZ\HPZSetup.hpp" />
+    <ClInclude Include="Objects\HPZ\Jellygnite.hpp" />
+    <ClInclude Include="Objects\HPZ\Pendulum.hpp" />
+    <ClInclude Include="Objects\HPZ\RailRocket.hpp" />
+    <ClInclude Include="Objects\HPZ\Redz.hpp" />
+    <ClInclude Include="Objects\HPZ\Stegway.hpp" />
+    <ClInclude Include="Objects\HPZ\WaterGush.hpp" />
     <ClInclude Include="Objects\HTZ\AIZRockPile.hpp" />
     <ClInclude Include="Objects\HTZ\HTZSetup.hpp" />
     <ClInclude Include="Objects\HTZ\Rexon.hpp" />

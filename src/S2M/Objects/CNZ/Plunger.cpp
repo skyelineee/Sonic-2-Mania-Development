@@ -134,7 +134,7 @@ void Plunger::Update()
                     currentPlayer->stateGravity.Set(&Player::Gravity_False);
 				    currentPlayer->animator.SetAnimation(currentPlayer->aniFrames, Player::ANI_JUMP, false, 0);
 				    currentPlayer->position.x 		    = this->position.x;
-				    currentPlayer->position.y 	        = currentPlayer->animator.GetHitbox(0)->bottom;
+				    currentPlayer->position.y 	        = currentPlayer->GetHitbox()->bottom;
 				    currentPlayer->position.y           = (-currentPlayer->position.y << 16) - 0x1C0000;
 				    currentPlayer->position.y 		   += (this->compression & 0xFFFF0000) + this->position.y;   
 				    currentPlayer->velocity.x 			= 0;

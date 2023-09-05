@@ -311,7 +311,15 @@ void Platform::Create(void *data)
             this->updateRange.y = 0x800000;
             break;
 
-        case Platform::Null: break;
+        case Platform::DipRock:
+            this->updateRange.x = TO_FIXED(128);
+            this->updateRange.y = (abs(this->amplitude.y) + 0x2000) << 10;
+            if (!this->speed)
+                this->speed = 1;
+            this->amplitude.y = this->amplitude.y << 10;
+            this->velocity.y  = this->speed << 16;
+            this->state.Set(&Platform::State_DipRock);
+            break;
     }
 
     if (this->frameID >= 0) {
@@ -924,6 +932,20 @@ void Platform::State_Child()
 
     this->velocity.x = this->drawPos.x + drawX;
     this->velocity.y = this->drawPos.y + drawY;
+}
+
+void Platform::State_DipRock()
+{
+    if (this->stood) {
+        this->drawPos.y += this->velocity.y;
+        if (this->drawPos.y > this->centerPos.y + this->amplitude.y)
+            this->drawPos.y = this->centerPos.y + this->amplitude.y;
+    }
+    else {
+        this->drawPos.y -= this->velocity.y;
+        if (this->drawPos.y < this->centerPos.y)
+            this->drawPos.y = this->centerPos.y;
+    }
 }
 
 void Platform::State_Push_SlideOffL()
@@ -2437,7 +2459,7 @@ void Platform::EditorDraw()
         case Path:
         case PathReact:
         case Child:
-        case Null:
+        case DipRock:
             this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
             if (sVars->aniFrames.Matches(nullptr)) {
                 Graphics::DrawRect(this->drawPos.x - 0x200000, this->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0u, 0xFF, INK_NONE, false);

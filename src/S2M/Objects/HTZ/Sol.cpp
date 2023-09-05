@@ -464,8 +464,8 @@ void Sol::EditorLoad()
     sVars->aniFrames.Load("HTZ/Sol.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(sVars, direction);
-    RSDK_ENUM_VAR("Left", FLIP_NONE);
-    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Left");
+    RSDK_ENUM_VAR("Right");
 }
 #endif
 
@@ -474,6 +474,4 @@ void Sol::Serialize()
     RSDK_EDITABLE_VAR(Sol, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(Sol, VAR_BOOL, fireOrbs);
 }
-
-
 } // namespace GameLogic
