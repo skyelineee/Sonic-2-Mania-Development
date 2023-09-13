@@ -7,6 +7,7 @@
 #include "CNZSetup.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -71,6 +72,29 @@ void CNZSetup::StageLoad()
     sVars->background = SceneLayer::GetTileLayer(0);
     for (int32 i = 0; i < 1024; ++i) {
         sVars->background->deformationData[i] = sVars->deformationTable[i & 63];
+    }
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Casino Night", "doggy", "doggy", characterImage, characterText);
     }
 }
 

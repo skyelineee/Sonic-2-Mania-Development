@@ -50,6 +50,9 @@
     <Filter Include="Source Files\Objects\HPZ">
       <UniqueIdentifier>{78e5f7d5-4b91-4252-bce2-e1645803618a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DiscordGameSDK">
+      <UniqueIdentifier>{8795c7d6-1ef2-4f96-9de4-8d76f057a2db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -576,6 +579,54 @@
     </ClCompile>
     <ClCompile Include="Objects\Common\FallTrigger.cpp">
       <Filter>Source Files\Objects\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\achievement_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\activity_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\application_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\core.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\image_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\lobby_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\network_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\overlay_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\relationship_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\storage_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\store_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\types.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\user_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DiscordGameSDK\cpp\voice_manager.cpp">
+      <Filter>DiscordGameSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Helpers\RPCHelpers.cpp">
+      <Filter>Source Files\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Global\RPUpdate.cpp">
+      <Filter>Source Files\Objects\Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1109,6 +1160,63 @@
     </ClInclude>
     <ClInclude Include="Objects\Common\FallTrigger.hpp">
       <Filter>Source Files\Objects\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\achievement_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\activity_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\application_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\core.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\discord.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\event.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\ffi.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\image_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\lobby_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\network_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\overlay_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\relationship_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\storage_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\store_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\types.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\user_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DiscordGameSDK\cpp\voice_manager.h">
+      <Filter>DiscordGameSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Helpers\RPCHelpers.hpp">
+      <Filter>Source Files\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Global\RPUpdate.hpp">
+      <Filter>Source Files\Objects\Global</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

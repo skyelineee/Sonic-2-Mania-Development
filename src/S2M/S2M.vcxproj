@@ -150,14 +150,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DiscordGameSDK/cpp/;$(SolutionDir)GameAPI/CPP/GameAPI/;$(ProjectDir);$(ProjectDir)Objects/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DiscordGameSDK/lib/x86_64/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
@@ -195,6 +195,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\DiscordGameSDK\cpp\achievement_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\activity_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\application_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\core.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\image_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\lobby_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\network_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\overlay_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\relationship_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\storage_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\store_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\types.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\user_manager.cpp" />
+    <ClCompile Include="..\DiscordGameSDK\cpp\voice_manager.cpp" />
     <ClCompile Include="..\GameAPI\CPP\GameAPI\Game.cpp" />
     <ClCompile Include="Objects\ARZ\ArrowLauncher.cpp" />
     <ClCompile Include="Objects\ARZ\ARZSetup.cpp" />
@@ -269,6 +283,7 @@
     <ClCompile Include="Objects\Global\PlaneSwitch.cpp" />
     <ClCompile Include="Objects\Global\ReplayRecorder.cpp" />
     <ClCompile Include="Objects\Global\Ring.cpp" />
+    <ClCompile Include="Objects\Global\RPUpdate.cpp" />
     <ClCompile Include="Objects\Global\SaveGame.cpp" />
     <ClCompile Include="Objects\Global\ScoreBonus.cpp" />
     <ClCompile Include="Objects\Global\Shield.cpp" />
@@ -302,6 +317,7 @@
     <ClCompile Include="Objects\Helpers\PlayerHelpers.cpp" />
     <ClCompile Include="Objects\Helpers\PlayerProbe.cpp" />
     <ClCompile Include="Objects\Helpers\ReplayDB.cpp" />
+    <ClCompile Include="Objects\Helpers\RPCHelpers.cpp" />
     <ClCompile Include="Objects\Helpers\Soundboard.cpp" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.cpp" />
     <ClCompile Include="Objects\HPZ\Batbot.cpp" />
@@ -405,6 +421,23 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\DiscordGameSDK\cpp\achievement_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\activity_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\application_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\core.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\discord.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\event.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\ffi.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\image_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\lobby_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\network_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\overlay_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\relationship_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\storage_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\store_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\types.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\user_manager.h" />
+    <ClInclude Include="..\DiscordGameSDK\cpp\voice_manager.h" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameObjects.hpp" />
     <ClInclude Include="..\GameAPI\CPP\GameAPI\GameVariables.hpp" />
@@ -482,6 +515,7 @@
     <ClInclude Include="Objects\Global\Player.hpp" />
     <ClInclude Include="Objects\Global\ReplayRecorder.hpp" />
     <ClInclude Include="Objects\Global\Ring.hpp" />
+    <ClInclude Include="Objects\Global\RPUpdate.hpp" />
     <ClInclude Include="Objects\Global\SaveGame.hpp" />
     <ClInclude Include="Objects\Global\ScoreBonus.hpp" />
     <ClInclude Include="Objects\Global\Shield.hpp" />
@@ -515,6 +549,7 @@
     <ClInclude Include="Objects\Helpers\PlayerHelpers.hpp" />
     <ClInclude Include="Objects\Helpers\PlayerProbe.hpp" />
     <ClInclude Include="Objects\Helpers\ReplayDB.hpp" />
+    <ClInclude Include="Objects\Helpers\RPCHelpers.hpp" />
     <ClInclude Include="Objects\Helpers\Soundboard.hpp" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.hpp" />
     <ClInclude Include="Objects\HPZ\Batbot.hpp" />

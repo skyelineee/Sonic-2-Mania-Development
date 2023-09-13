@@ -618,7 +618,7 @@ void Zone::StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
 void Zone::GoBonus_Pinball()
 {
     SaveGame::sVars->saveRAM->storedStageID = sceneInfo->listPos;
-    Stage::SetScene("Bonus Stages", "Gachapon Bonus");
+    Stage::SetScene("Bonus Stages", "Gachapon Bonus"); // lol S3 leftover
     StartFadeOut(10, 0xF0F0F0);
 }
 

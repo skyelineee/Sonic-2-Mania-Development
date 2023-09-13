@@ -7,6 +7,7 @@
 #include "S2M.hpp"
 #include "LogoSetup.hpp"
 #include "Menu/UIPicture.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -59,6 +60,8 @@ void LogoSetup::StageLoad()
             default: break;
         }
     }
+
+    SetPresence("", "Watching Logos", "doggy", "doggy", "", "");
 }
 
 bool32 LogoSetup::ImageCallback()

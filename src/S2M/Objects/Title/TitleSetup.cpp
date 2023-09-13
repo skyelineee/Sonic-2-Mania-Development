@@ -12,6 +12,7 @@
 #include "Global/Music.hpp"
 #include "Global/Zone.hpp"
 #include "Helpers/TimeAttackData.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -62,9 +63,10 @@ void TitleSetup::Create(void *data)
 
 void TitleSetup::StageLoad()
 {
-    String presence;
-    Localization::GetString(&presence, Localization::RPC_Title);
-    API::RichPresence::Set(PRESENCE_TITLE, &presence);
+    //String presence;
+    //Localization::GetString(&presence, Localization::RPC_Title);
+    //API::RichPresence::Set(PRESENCE_TITLE, &presence);
+    SetPresence("", "In Title Screen", "doggy", "doggy", "", "");
 
     API::Storage::SetNoSave(false);
 

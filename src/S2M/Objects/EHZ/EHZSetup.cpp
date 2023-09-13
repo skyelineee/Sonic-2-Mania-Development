@@ -7,6 +7,7 @@
 #include "S2M.hpp"
 #include "EHZSetup.hpp"
 #include "Helpers/CutsceneRules.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
 
@@ -58,6 +59,28 @@ void EHZSetup::StageLoad()
                 Zone::sVars->stageFinishCallback.Set(&EHZSetup::StageFinish_EndAct1);
             }
         }
+        // only does this set of rich presence if not in time attack, there is a different message for that
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Emerald Hill", "doggy", "doggy", characterImage, characterText);
     }
 
     sVars->background = SceneLayer::GetTileLayer(0);

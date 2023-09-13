@@ -7,6 +7,7 @@
 #include "S2M.hpp"
 #include "ARZSetup.hpp"
 #include "Helpers/CutsceneRules.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
 #include "Common/Water.hpp"
@@ -96,6 +97,30 @@ void ARZSetup::StageLoad()
 
             deformDataW += 0x100; // ?
         }
+    }
+
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Aquatic Ruin", "doggy", "doggy", characterImage, characterText);
     }
 }
 

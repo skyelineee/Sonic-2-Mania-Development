@@ -7,6 +7,7 @@
 #include "S2M.hpp"
 #include "HPZSetup.hpp"
 #include "Helpers/CutsceneRules.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
 #include "Common/Water.hpp"
@@ -64,36 +65,6 @@ void HPZSetup::StaticUpdate()
             }
         }
     }
-
-    //HCZSetup->waterslidingPlayerCount = 0;
-    //foreach_active(Player, player)
-    //{
-    //    RSDK.GetEntitySlot(player);
-    //    if (player->state != Player_State_Static) {
-    //        Hitbox *hitbox = Player_GetHitbox(player);
-    //        uint16 tile =
-    //            RSDK.GetTile(Zone->fgLayer[1], player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
-    //
-    //        if (((tile >= 226 && tile <= 244) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
-    //            if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
-    //                if (player->onGround) {
-    //                    if (player->state != Player_State_WaterSlide) {
-    //                        player->interaction    = true;
-    //                        player->tileCollisions = TILECOLLISION_DOWN;
-    //                        player->position.y += player->jumpOffset;
-    //                        player->nextGroundState = StateMachine_None;
-    //                        player->state           = Player_State_WaterSlide;
-    //                    }
-    //
-    //                    if (player->onGround)
-    //                        ++HCZSetup->waterslidingPlayerCount;
-    //                }
-    //                else if (player->animator.animationID == ANI_FLUME)
-    //                    ++HCZSetup->waterslidingPlayerCount;
-    //            }
-    //        }
-    //    }
-    //}
 }
 
 void HPZSetup::Draw() {}
@@ -158,6 +129,30 @@ void HPZSetup::StageLoad()
 
             deformDataW += 0x100; // ?
         }
+    }
+
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Hidden Palace", "doggy", "doggy", characterImage, characterText);
     }
 }
 

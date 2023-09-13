@@ -7,6 +7,7 @@
 #include "HTZSetup.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -43,6 +44,30 @@ void HTZSetup::StageLoad()
 {
     Animals::sVars->animalTypes[0] = Animals::Locky;
     Animals::sVars->animalTypes[1] = Animals::Wocky;
+
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Hill Top", "doggy", "doggy", characterImage, characterText);
+    }
 }
 
 void HTZSetup::GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tile, uint8 *flags)

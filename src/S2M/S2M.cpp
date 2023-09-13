@@ -1,4 +1,5 @@
 #include "S2M.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -41,6 +42,8 @@ void GlobalVariables::Init(void *g)
 
     globals->gravityDir        = CMODE_FLOOR;
     globals->tileCollisionMode = TILECOLLISION_DOWN;
+
+    InitDiscord(); // initializes the discord core at startup
 }
 
 void InitModAPI(void) {  }

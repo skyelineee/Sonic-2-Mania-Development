@@ -10,6 +10,7 @@
 #include "UILoadingIcon.hpp"
 #include "ManiaModeMenu.hpp"
 #include "Helpers/LogHelpers.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/Music.hpp"
 
@@ -61,9 +62,9 @@ void MenuSetup::StaticUpdate()
                 mainMenu->selectionDisabled = false;
                 sVars->initializedAPI       = true;
 
-                String message;
-                Localization::GetString(&message, Localization::RPC_Menu);
-                API::RichPresence::Set(PRESENCE_MENU, &message);
+                //String message;
+                //Localization::GetString(&message, Localization::RPC_Menu);
+                //API::RichPresence::Set(PRESENCE_MENU, &message);
             }
         }
         else {
@@ -155,6 +156,8 @@ void MenuSetup::StageLoad()
     for (auto fade : GameObject::GetEntities<FXFade>(FOR_ALL_ENTITIES)) {
         MenuSetup::sVars->fxFade = fade;
     }
+
+    SetPresence("", "In Menus", "doggy", "doggy", "", "");
 }
 
 void MenuSetup::StartTransition(void (*callback)(), int32 delay)

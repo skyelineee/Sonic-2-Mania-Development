@@ -20,6 +20,7 @@
 #include "Helpers/LogHelpers.hpp"
 #include "Helpers/TimeAttackData.hpp"
 #include "Helpers/ReplayDB.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "Global/Localization.hpp"
 #include "Global/ReplayRecorder.hpp"
 #include "Global/Music.hpp"
@@ -630,12 +631,32 @@ void TimeAttackMenu::LoadScene()
     Stage::SetScene("Adventure Mode", "");
     sceneInfo->listPos += TimeAttackData::GetZoneListPos(param->zoneID, param->actID, param->characterID);
 
+    const char *playingAsText  = "";
+    const char *characterImage = "";
+    const char *characterText  = "";
     switch (param->characterID) {
-        case 1: globals->playerID = ID_SONIC; break;
-        case 2: globals->playerID = ID_TAILS; break;
-        case 3: globals->playerID = ID_KNUCKLES; break;
+        case 1:
+            globals->playerID = ID_SONIC;
+            playingAsText     = "Playing as Sonic";
+            characterImage    = "sonic";
+            characterText     = "Sonic";
+            break;
+        case 2:
+            globals->playerID = ID_TAILS;
+            playingAsText     = "Playing as Tails";
+            characterImage    = "tails";
+            characterText     = "Tails";
+            break;
+        case 3: 
+            globals->playerID = ID_KNUCKLES; 
+            playingAsText     = "Playing as Knuckles";
+            characterImage    = "knuckles";
+            characterText     = "Knuckles";
+            break;
         default: break;
     }
+
+    SetPresence(playingAsText, "In Time Attack", "doggy", "doggy", characterImage, characterText);
 
     Stage::LoadScene();
 }
