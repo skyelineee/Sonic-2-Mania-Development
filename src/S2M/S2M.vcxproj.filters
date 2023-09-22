@@ -53,6 +53,9 @@
     <Filter Include="DiscordGameSDK">
       <UniqueIdentifier>{8795c7d6-1ef2-4f96-9de4-8d76f057a2db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\DEZ">
+      <UniqueIdentifier>{5197dbf1-4a83-49b9-915a-e38ed4b9501c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -627,6 +630,33 @@
     </ClCompile>
     <ClCompile Include="Objects\Global\RPUpdate.cpp">
       <Filter>Source Files\Objects\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\PopOut.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\MetalArm.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\FlasherMKII.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\Tubinaut.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\Blastoid.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\Press.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\JacobsLadder.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\Crate.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DEZ\DEZSetup.cpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1217,6 +1247,33 @@
     </ClInclude>
     <ClInclude Include="Objects\Global\RPUpdate.hpp">
       <Filter>Source Files\Objects\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\PopOut.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\MetalArm.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\FlasherMKII.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\Tubinaut.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\Blastoid.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\Press.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\JacobsLadder.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\Crate.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DEZ\DEZSetup.hpp">
+      <Filter>Source Files\Objects\DEZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
