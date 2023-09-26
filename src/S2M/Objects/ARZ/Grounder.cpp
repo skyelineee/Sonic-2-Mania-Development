@@ -120,6 +120,8 @@ void Grounder::Create(void *data)
 void Grounder::StageLoad()
 {
 	sVars->aniFrames.Load("ARZ/Grounder.bin", SCOPE_STAGE);
+	sVars->sfxLedgeBreak.Get("Stage/LedgeBreak.wav");
+
     sVars->hitboxBadnik.left   = -12;
     sVars->hitboxBadnik.top    = -20;
     sVars->hitboxBadnik.right  = 12;
@@ -210,6 +212,7 @@ void Grounder::State_Hidden()
 			brick9->brickFrame = 0;
 
 			this->TileGrip(Zone::sVars->collisionLayers, CMODE_FLOOR, this->collisionPlane, 0, 20 << 16, 8);
+			this->animator.SetAnimation(sVars->aniFrames, Appear, false, 0);
 			this->state.Set(&Grounder::State_Appear);
 		}
 	}
@@ -219,7 +222,7 @@ void Grounder::State_Appear()
 {
 	this->timer++;
 	if (this->timer == 8) {
-        this->animator.SetAnimation(sVars->aniFrames, Appear, false, 0);
+		sVars->sfxLedgeBreak.Play();
 	}
 
 	if (this->timer == 18) {

@@ -29,6 +29,7 @@ struct Grounder : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX sfxLedgeBreak;
         RSDK::Hitbox hitboxBadnik;
         RSDK::Hitbox hiddenHitbox;
     };

@@ -21,7 +21,7 @@ void ArrowLauncher::Update()
         if (this->timer > 0) {
             this->timer--;
             if (this->timer == 15) {
-                // PlaySfx(SfxName[Small Fireball], false);
+                sVars->firedSFX.Play(false, 255);
             }
         }
 		
@@ -88,6 +88,8 @@ void ArrowLauncher::Create(void *data)
 void ArrowLauncher::StageLoad()
 {
     sVars->aniFrames.Load("ARZ/ArrowLauncher.bin", SCOPE_STAGE);
+    sVars->firedSFX.Get("Stage/SmallFireball.wav");
+    sVars->swishSFX.Get("Stage/Swish.wav");
 
 	sVars->arrowHitbox.left   = -8;
     sVars->arrowHitbox.top    = -4;
@@ -133,7 +135,7 @@ void ArrowLauncher::State_Activate()
 		this->state.Set(&ArrowLauncher::State_FireArrow);
 		this->timer = 0;
 		this->animator.SetAnimation(sVars->aniFrames, Launch, false, 0);
-		//PlaySfx(SfxName[Swish], false);
+        sVars->swishSFX.Play(false, 255);
 	}
 }
 

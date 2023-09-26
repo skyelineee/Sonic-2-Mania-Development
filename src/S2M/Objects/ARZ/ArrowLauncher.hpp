@@ -29,6 +29,8 @@ struct ArrowLauncher : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX firedSFX;
+        RSDK::SoundFX swishSFX;
         RSDK::Hitbox idleHitbox;
         RSDK::Hitbox arrowHitbox;
     };
