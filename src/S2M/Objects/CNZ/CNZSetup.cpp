@@ -31,6 +31,7 @@ void CNZSetup::StaticUpdate()
         paletteBank[0].Rotate(232, 234, true);
         paletteBank[0].Rotate(181, 183, true);
         paletteBank[0].Rotate(185, 187, true);
+        paletteBank[0].Rotate(189, 191, true);
         paletteBank[0].Rotate(197, 199, false);
 
         sVars->paletteIndex1++;

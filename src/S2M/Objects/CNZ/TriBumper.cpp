@@ -15,6 +15,7 @@ RSDK_REGISTER_OBJECT(TriBumper);
 
 // this object also needs forceunsticks on the walls where its used, as if its not the player will stick to the wall tiles and it can get trapped inside the bumper, 
 // dont know what v4 did exactly to avoid this
+// also i probably messed something up porting this and i dont really wanna redo it either so ill just work with it lol
 
 void TriBumper::Update() 
 {

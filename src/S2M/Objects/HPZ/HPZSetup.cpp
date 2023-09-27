@@ -152,7 +152,12 @@ void HPZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Hidden Palace", "doggy", "doggy", characterImage, characterText);
+        if (Stage::CheckSceneFolder("HPZ")) {
+            SetPresence(playingAsText, "In Hidden Palace", "doggy", "doggy", characterImage, characterText);
+        }
+        else if (Stage::CheckSceneFolder("PPZ")) {
+            SetPresence(playingAsText, "In Proto Palace", "doggy", "doggy", characterImage, characterText);
+        }
     }
 }
 

@@ -837,7 +837,7 @@ void Player::StageLoad()
         // SUPER SONIC WATER
         // ---------------
 
-        color superSonicPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+        color superSonicPalette_Water[] = { 0x500074, 0x6E009E, 0x8F02CD, 0xBF06FF, 0xD52EFF, 0xDD74FF, 0x000000, 0x000000, 0x000000,
                                             0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
 
         memcpy(sVars->superSonicPalette_Water, superSonicPalette_Water, sizeof(superSonicPalette_Water));
@@ -846,7 +846,7 @@ void Player::StageLoad()
         // SUPER TAILS WATER
         // ---------------
 
-        color superTailsPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+        color superTailsPalette_Water[] = { 0x62008D, 0x7300A6, 0x9A04DD, 0xD215FF, 0xD84AFF, 0xDF81FF, 0x000000, 0x000000, 0x000000,
                                             0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
 
         memcpy(sVars->superTailsPalette_Water, superTailsPalette_Water, sizeof(superTailsPalette_Water));
@@ -855,7 +855,7 @@ void Player::StageLoad()
         // SUPER KNUCKLES WATER
         // ---------------
 
-        color superKnuxPalette_Water[] = { 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+        color superKnuxPalette_Water[] = { 0x5A0083, 0x6F009F, 0x8602C1, 0xB406FF, 0xD31FFF, 0xDD74FF, 0x000000, 0x000000, 0x000000,
                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
 
         memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
