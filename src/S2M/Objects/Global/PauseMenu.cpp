@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------
 // RSDK Project: Sonic 2 Mania
 // Object Description: PauseMenu Object
-// Object Author: Ducky
+// Object Author: AChickMcNuggie
 // ---------------------------------------------------------------------
 
 #include "PauseMenu.hpp"

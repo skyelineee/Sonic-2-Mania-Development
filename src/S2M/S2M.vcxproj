@@ -416,6 +416,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Objects\SSZ\Bomb.cpp" />
+    <ClCompile Include="Objects\SSZ\Caterkiller.cpp" />
+    <ClCompile Include="Objects\SSZ\Pinata.cpp" />
+    <ClCompile Include="Objects\SSZ\RollerMKII.cpp" />
+    <ClCompile Include="Objects\SSZ\SeltzerBottle.cpp" />
+    <ClCompile Include="Objects\SSZ\SeltzerWater.cpp" />
+    <ClCompile Include="Objects\SSZ\SinkTrash.cpp" />
+    <ClCompile Include="Objects\SSZ\SSZSetup.cpp" />
+    <ClCompile Include="Objects\SSZ\Vultron.cpp" />
     <ClCompile Include="Objects\Title\LogoSetup.cpp" />
     <ClCompile Include="Objects\Title\Sega.cpp" />
     <ClCompile Include="Objects\Title\TitleLogo.cpp" />
@@ -657,6 +666,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Objects\SSZ\Bomb.hpp" />
+    <ClInclude Include="Objects\SSZ\Caterkiller.hpp" />
+    <ClInclude Include="Objects\SSZ\Pinata.hpp" />
+    <ClInclude Include="Objects\SSZ\RollerMKII.hpp" />
+    <ClInclude Include="Objects\SSZ\SeltzerBottle.hpp" />
+    <ClInclude Include="Objects\SSZ\SeltzerWater.hpp" />
+    <ClInclude Include="Objects\SSZ\SinkTrash.hpp" />
+    <ClInclude Include="Objects\SSZ\SSZSetup.hpp" />
+    <ClInclude Include="Objects\SSZ\Vultron.hpp" />
     <ClInclude Include="Objects\Test\TestObject.hpp">
       <SubType>
       </SubType>

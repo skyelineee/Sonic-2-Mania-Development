@@ -56,6 +56,9 @@
     <Filter Include="Source Files\Objects\DEZ">
       <UniqueIdentifier>{5197dbf1-4a83-49b9-915a-e38ed4b9501c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\SSZ">
+      <UniqueIdentifier>{4a0b4171-3cb1-44ad-8dca-e68387a6cd9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -657,6 +660,33 @@
     </ClCompile>
     <ClCompile Include="Objects\DEZ\DEZSetup.cpp">
       <Filter>Source Files\Objects\DEZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\SeltzerBottle.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\RollerMKII.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\Vultron.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\Caterkiller.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\Bomb.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\Pinata.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\SinkTrash.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\SeltzerWater.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SSZ\SSZSetup.cpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1274,6 +1304,33 @@
     </ClInclude>
     <ClInclude Include="Objects\DEZ\DEZSetup.hpp">
       <Filter>Source Files\Objects\DEZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\SeltzerBottle.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\RollerMKII.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\Vultron.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\Caterkiller.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\Bomb.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\Pinata.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\SinkTrash.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\SeltzerWater.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SSZ\SSZSetup.hpp">
+      <Filter>Source Files\Objects\SSZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
