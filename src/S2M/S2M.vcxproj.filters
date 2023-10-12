@@ -59,6 +59,9 @@
     <Filter Include="Source Files\Objects\SSZ">
       <UniqueIdentifier>{4a0b4171-3cb1-44ad-8dca-e68387a6cd9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\SFZ">
+      <UniqueIdentifier>{d505db56-19c1-483e-9de6-a915c00a363e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -687,6 +690,15 @@
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZSetup.cpp">
       <Filter>Source Files\Objects\SSZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SFZ\Tornado.cpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SFZ\TornadoPath.cpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SFZ\SCZSetup.cpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1331,6 +1343,15 @@
     </ClInclude>
     <ClInclude Include="Objects\SSZ\SSZSetup.hpp">
       <Filter>Source Files\Objects\SSZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SFZ\Tornado.hpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SFZ\TornadoPath.hpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SFZ\SCZSetup.hpp">
+      <Filter>Source Files\Objects\SFZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

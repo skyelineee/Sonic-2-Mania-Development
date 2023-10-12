@@ -380,6 +380,9 @@
     <ClCompile Include="Objects\Menu\UITransition.cpp" />
     <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Menu\UIWinSize.cpp" />
+    <ClCompile Include="Objects\SFZ\SCZSetup.cpp" />
+    <ClCompile Include="Objects\SFZ\Tornado.cpp" />
+    <ClCompile Include="Objects\SFZ\TornadoPath.cpp" />
     <ClCompile Include="Objects\Special\HP_Background.cpp">
       <SubType>
       </SubType>
@@ -630,6 +633,9 @@
     <ClInclude Include="Objects\Menu\UITransition.hpp" />
     <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Menu\UIWinSize.hpp" />
+    <ClInclude Include="Objects\SFZ\SCZSetup.hpp" />
+    <ClInclude Include="Objects\SFZ\Tornado.hpp" />
+    <ClInclude Include="Objects\SFZ\TornadoPath.hpp" />
     <ClInclude Include="Objects\Special\HP_Background.hpp">
       <SubType>
       </SubType>
