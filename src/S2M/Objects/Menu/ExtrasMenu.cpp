@@ -217,7 +217,7 @@ void ExtrasMenu::Start_LevelSelect()
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_LEVELSELECT;
 
-    Stage::SetScene("Presentation", "Title Screen");
+    Stage::SetScene("Presentation", "LSelect");
     Stage::LoadScene();
 }
 
@@ -232,7 +232,7 @@ void ExtrasMenu::Start_ExtraLevels()
     strcpy(param->menuTag, "Extras");
     param->menuSelection       = MenuParam::EXTRAS_SELECTION_EXTRALEVELS;
 
-    Stage::SetScene("Presentation", "Title Screen");
+    Stage::SetScene("Presentation", "LSelect Extras");
     Stage::LoadScene();
 }
 

@@ -700,6 +700,15 @@
     <ClCompile Include="Objects\SFZ\SCZSetup.cpp">
       <Filter>Source Files\Objects\SFZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\LevelSelect.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIText.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\ThanksSetup.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -1352,6 +1361,15 @@
     </ClInclude>
     <ClInclude Include="Objects\SFZ\SCZSetup.hpp">
       <Filter>Source Files\Objects\SFZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\LevelSelect.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIText.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\ThanksSetup.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

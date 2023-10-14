@@ -26,7 +26,7 @@ void UIPicture::Draw()
     if (this->zonePalette)
         paletteBank[0].Copy((zonePalette >> 3) + 1, 32 * zonePalette, 224, 32);
 
-    this->animator.DrawSprite(NULL, false);
+    this->animator.DrawSprite(nullptr, false);
 }
 
 void UIPicture::Create(void *data)
@@ -34,8 +34,9 @@ void UIPicture::Create(void *data)
     this->animator.SetAnimation(sVars->aniFrames, listID, true, frameID);
 
     if (!sceneInfo->inEditor) {
-        if (Stage::CheckSceneFolder("Menu")) {
-            this->active    = ACTIVE_BOUNDS;
+        if (Stage::CheckSceneFolder("Menu") || Stage::CheckSceneFolder("LSelect") || Stage::CheckSceneFolder("LSelect2")
+            || Stage::CheckSceneFolder("LSelectEx") || Stage::CheckSceneFolder("Thanks")) {
+            this->active    = ACTIVE_NORMAL;
             this->visible   = true;
             this->drawGroup = 2;
             if (this->rotSpeed) {
@@ -58,13 +59,15 @@ void UIPicture::StageLoad()
         sVars->aniFrames.Load("UI/UIPicture.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("Logos"))
         sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
+    else if (Stage::CheckSceneFolder("Thanks"))
+        sVars->aniFrames.Load("LSelect/Icons.bin", SCOPE_STAGE);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void UIPicture::EditorDraw()
 {
     this->animator.SetAnimation(sVars->aniFrames, listID, true, frameID);
-    this->animator.DrawSprite(NULL, false);
+    this->animator.DrawSprite(nullptr, false);
 }
 
 void UIPicture::EditorLoad()
@@ -73,6 +76,8 @@ void UIPicture::EditorLoad()
         sVars->aniFrames.Load("UI/UIPicture.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("Logos"))
         sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
+    else if (Stage::CheckSceneFolder("Thanks"))
+        sVars->aniFrames.Load("LSelect/Icons.bin", SCOPE_STAGE);
 }
 #endif
 

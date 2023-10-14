@@ -346,6 +346,7 @@
     <ClCompile Include="Objects\HTZ\Spiker.cpp" />
     <ClCompile Include="Objects\HTZ\ZipLine.cpp" />
     <ClCompile Include="Objects\Menu\ExtrasMenu.cpp" />
+    <ClCompile Include="Objects\Menu\LevelSelect.cpp" />
     <ClCompile Include="Objects\Menu\MainMenu.cpp" />
     <ClCompile Include="Objects\Menu\ManiaModeMenu.cpp" />
     <ClCompile Include="Objects\Menu\MenuSetup.cpp" />
@@ -353,6 +354,7 @@
     <ClCompile Include="Objects\Menu\SaveMenu.cpp" />
     <ClCompile Include="Objects\Menu\SaveMenuIconBG.cpp" />
     <ClCompile Include="Objects\Menu\TAMenuIconBG.cpp" />
+    <ClCompile Include="Objects\Menu\ThanksSetup.cpp" />
     <ClCompile Include="Objects\Menu\TimeAttackMenu.cpp" />
     <ClCompile Include="Objects\Menu\UIButton.cpp" />
     <ClCompile Include="Objects\Menu\UIButtonLabel.cpp" />
@@ -377,6 +379,7 @@
     <ClCompile Include="Objects\Menu\UISubHeading.cpp" />
     <ClCompile Include="Objects\Menu\UITABanner.cpp" />
     <ClCompile Include="Objects\Menu\UITAZoneModule.cpp" />
+    <ClCompile Include="Objects\Menu\UIText.cpp" />
     <ClCompile Include="Objects\Menu\UITransition.cpp" />
     <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Menu\UIWinSize.cpp" />
@@ -599,6 +602,7 @@
     <ClInclude Include="Objects\HTZ\Spiker.hpp" />
     <ClInclude Include="Objects\HTZ\ZipLine.hpp" />
     <ClInclude Include="Objects\Menu\ExtrasMenu.hpp" />
+    <ClInclude Include="Objects\Menu\LevelSelect.hpp" />
     <ClInclude Include="Objects\Menu\MainMenu.hpp" />
     <ClInclude Include="Objects\Menu\ManiaModeMenu.hpp" />
     <ClInclude Include="Objects\Menu\MenuSetup.hpp" />
@@ -606,6 +610,7 @@
     <ClInclude Include="Objects\Menu\SaveMenu.hpp" />
     <ClInclude Include="Objects\Menu\SaveMenuIconBG.hpp" />
     <ClInclude Include="Objects\Menu\TAMenuIconBG.hpp" />
+    <ClInclude Include="Objects\Menu\ThanksSetup.hpp" />
     <ClInclude Include="Objects\Menu\TimeAttackMenu.hpp" />
     <ClInclude Include="Objects\Menu\UIButton.hpp" />
     <ClInclude Include="Objects\Menu\UIButtonLabel.hpp" />
@@ -630,6 +635,7 @@
     <ClInclude Include="Objects\Menu\UISubHeading.hpp" />
     <ClInclude Include="Objects\Menu\UITABanner.hpp" />
     <ClInclude Include="Objects\Menu\UITAZoneModule.hpp" />
+    <ClInclude Include="Objects\Menu\UIText.hpp" />
     <ClInclude Include="Objects\Menu\UITransition.hpp" />
     <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Menu\UIWinSize.hpp" />
