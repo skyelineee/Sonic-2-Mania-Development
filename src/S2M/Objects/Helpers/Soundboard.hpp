@@ -71,7 +71,7 @@ struct Soundboard : RSDK::GameObject::Entity {
     // ==============================
 
     static uint8 LoadSfx(SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID));
-    static uint8 LoadSfx(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID)); // mania version of function
+    static uint8 LoadSfxName(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32 sfxID)); // mania version of function
 
     // ==============================
     // DECLARATION

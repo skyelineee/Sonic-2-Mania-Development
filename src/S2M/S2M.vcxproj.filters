@@ -62,6 +62,9 @@
     <Filter Include="Source Files\Objects\SFZ">
       <UniqueIdentifier>{d505db56-19c1-483e-9de6-a915c00a363e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\OOZ">
+      <UniqueIdentifier>{24e24788-29a1-4a97-8dde-70776a8236d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -708,6 +711,27 @@
     </ClCompile>
     <ClCompile Include="Objects\Menu\ThanksSetup.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\Aquis.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\Octus.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\BallCannon.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\GasPlatform.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\PushSpring.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\OOZSetup.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\OOZ\Fan.cpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1370,6 +1394,27 @@
     </ClInclude>
     <ClInclude Include="Objects\Menu\ThanksSetup.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\Aquis.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\Octus.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\BallCannon.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\GasPlatform.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\PushSpring.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\OOZSetup.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\OOZ\Fan.hpp">
+      <Filter>Source Files\Objects\OOZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

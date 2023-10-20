@@ -122,6 +122,29 @@ void MetalArm::Create(void *data)
 void MetalArm::StageLoad()
 {
     sVars->aniFrames.Load("DEZ/MetalArm.bin", SCOPE_STAGE);
+
+    Soundboard::LoadSfx(MetalArm::SfxCheck_MetalArm, nullptr);
+}
+
+Soundboard::SoundInfo MetalArm::SfxCheck_MetalArm()
+{
+    int32 activeCount = 0;
+
+    for (auto arm : GameObject::GetEntities<MetalArm>(FOR_ACTIVE_ENTITIES))
+    {
+        if (arm->state.Matches(&MetalArm::State_MoveToHold) || arm->state.Matches(&MetalArm::State_MoveToStart))
+            ++activeCount;
+    }
+
+    //return activeCount > 0;
+    SoundFX armSFX;
+    armSFX.Get("DEZ/MetalArm.wav");
+    Soundboard::SoundInfo info = {};
+    info.playFlags             = activeCount > 0;
+    info.sfx                   = armSFX;
+    info.loopPoint             = true;
+
+    return info;
 }
 
 Vector2 MetalArm::GetArmPosition()

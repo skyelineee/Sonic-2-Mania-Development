@@ -1,15 +1,16 @@
 #pragma once
 #include "S2M.hpp"
-#include "Helpers/Soundboard.hpp"
 
 namespace GameLogic
 {
 
-struct MetalArm : RSDK::GameObject::Entity {
+struct PushSpring : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
+
+    enum PushSpringTypes { PUSHSPRING_V, PUSHSPRING_H };
 
     // ==============================
     // STRUCTS
@@ -21,32 +22,23 @@ struct MetalArm : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX sfxPush;
+        RSDK::SoundFX sfxSpring;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
 
-    RSDK::StateMachine<MetalArm> state;
-    int32 startAngleA;
-    int32 startAngleB;
-    int32 endAngleA;
-    int32 endAngleB;
-    int32 durationA;
-    int32 durationB;
-    int32 holdDuration;
-    RSDK::Vector2 armAngle;
-    uint8 stoodPlayers;
-    RSDK::Vector2 startPos;
-    int32 moveTimer;
-    int32 holdTimer;
-    RSDK::Vector2 armPosition;
-    RSDK::Vector2 moveOffset;
+    RSDK::StateMachine<PushSpring> state;
+    RSDK::StateMachine<PushSpring> stateDraw;
+    RSDK::StateMachine<PushSpring> stateCollide;
+    uint8 type;
+    int32 pushOffset;
+    int32 timer;
     RSDK::Hitbox hitbox;
-    RSDK::Animator baseAnimator;
-    RSDK::Animator armAAnimator;
-    RSDK::Animator armBAnimator;
-    RSDK::Animator platformAnimator;
+    bool32 beingPushed;
+    RSDK::Animator animator;
 
     // ==============================
     // EVENTS
@@ -70,18 +62,24 @@ struct MetalArm : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static Soundboard::SoundInfo SfxCheck_MetalArm();
-    RSDK::Vector2 GetArmPosition();
-    void CheckPlayerCollisions();
-    void State_Idle();
-    void State_MoveToHold();
-    void State_Holding();
-    void State_MoveToStart();
+    void Collide_Top();
+    void Collide_Bottom();
+    void Collide_Left();
+    void Collide_Right();
+
+    void Draw_Top();
+    void Draw_Bottom();
+    void Draw_Left();
+    void Draw_Right();
+
+    void State_WaitForPushed();
+    void State_BeingPushed();
+    void State_PushRecoil();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(MetalArm);
+    RSDK_DECLARE(PushSpring);
 };
 } // namespace GameLogic

@@ -383,6 +383,13 @@
     <ClCompile Include="Objects\Menu\UITransition.cpp" />
     <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Menu\UIWinSize.cpp" />
+    <ClCompile Include="Objects\OOZ\Aquis.cpp" />
+    <ClCompile Include="Objects\OOZ\BallCannon.cpp" />
+    <ClCompile Include="Objects\OOZ\Fan.cpp" />
+    <ClCompile Include="Objects\OOZ\GasPlatform.cpp" />
+    <ClCompile Include="Objects\OOZ\Octus.cpp" />
+    <ClCompile Include="Objects\OOZ\OOZSetup.cpp" />
+    <ClCompile Include="Objects\OOZ\PushSpring.cpp" />
     <ClCompile Include="Objects\SFZ\SCZSetup.cpp" />
     <ClCompile Include="Objects\SFZ\Tornado.cpp" />
     <ClCompile Include="Objects\SFZ\TornadoPath.cpp" />
@@ -639,6 +646,13 @@
     <ClInclude Include="Objects\Menu\UITransition.hpp" />
     <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Menu\UIWinSize.hpp" />
+    <ClInclude Include="Objects\OOZ\Aquis.hpp" />
+    <ClInclude Include="Objects\OOZ\BallCannon.hpp" />
+    <ClInclude Include="Objects\OOZ\Fan.hpp" />
+    <ClInclude Include="Objects\OOZ\GasPlatform.hpp" />
+    <ClInclude Include="Objects\OOZ\Octus.hpp" />
+    <ClInclude Include="Objects\OOZ\OOZSetup.hpp" />
+    <ClInclude Include="Objects\OOZ\PushSpring.hpp" />
     <ClInclude Include="Objects\SFZ\SCZSetup.hpp" />
     <ClInclude Include="Objects\SFZ\Tornado.hpp" />
     <ClInclude Include="Objects\SFZ\TornadoPath.hpp" />

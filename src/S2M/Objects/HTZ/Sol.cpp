@@ -8,6 +8,7 @@
 #include "Global/Player.hpp"
 #include "Global/DebugMode.hpp"
 #include "Global/Zone.hpp"
+#include "OOZ/OOZSetup.hpp"
 
 using namespace RSDK;
 
@@ -142,7 +143,6 @@ void Sol::HandlePlayerHurt()
         if (player->CheckCollisionTouch(this, &sVars->hitboxOrb)) {
             if (player->shield != Player::Shield_Fire) {
                 player->Hurt(this);
-                // player->ElementHurt(this, Player::Shield_Fire);
             }
         }
     }
@@ -327,32 +327,32 @@ void Sol::State_ActiveFireball()
             tile = Zone::sVars->fgLayer[0].GetTile(spawnX >> 20, (spawnY - 0x10000) >> 20);
 
         int32 tileFlags = tile.GetFlags(0);
-        //if (((tileFlags == OOZ_TFLAGS_OILSTRIP || tileFlags == OOZ_TFLAGS_OILSLIDE) && collided) || tileFlags == OOZ_TFLAGS_OILPOOL) {
-        //    this->position.x = spawnX - 0x40000;
-        //    this->position.y = spawnY - 0x80000;
-        //    this->rotation   = 0;
-        //    this->velocity.x = -0x40000;
-        //    this->velocity.y = 0;
-        //    this->mainAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
-        //    this->state.Set(&Sol::State_FireballOilFlame);
-        //
-        //    Sol *sol  = GameObject::Create<Sol>(INT_TO_VOID(true), spawnX, spawnY - 0x80000);
-        //    sol->velocity.x = 0x40000;
-        //    sol->velocity.y = 0;
-        //    sol->mainAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
-        //    sol->state.Set(&Sol::State_FireballOilFlame);
-        //    sol->oscillateAngle = sol->position.x & 0xF00000;
-        //
-        //    if (tileFlags == OOZ_TFLAGS_OILPOOL) {
-        //        this->position.y = (this->position.y & 0xFFF00000) + 0x20000;
-        //        sol->position.y  = (sol->position.y & 0xFFF00000) + 0x20000;
-        //        sol->state.Set(&Sol::State_OilFlame);
-        //        this->state.Set(&Sol::State_OilFlame);
-        //    }
-        //    else {
-        //        this->position.y -= 0x80000;
-        //    }
-        //}
+        if (((tileFlags == OOZSetup::OOZ_TFLAGS_OILSTRIP || tileFlags == OOZSetup::OOZ_TFLAGS_OILSLIDE) && collided) || tileFlags == OOZSetup::OOZ_TFLAGS_OILPOOL) {
+            this->position.x = spawnX - 0x40000;
+            this->position.y = spawnY - 0x80000;
+            this->rotation   = 0;
+            this->velocity.x = -0x40000;
+            this->velocity.y = 0;
+            this->mainAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
+            this->state.Set(&Sol::State_FireballOilFlame);
+        
+            Sol *sol  = GameObject::Create<Sol>(INT_TO_VOID(true), spawnX, spawnY - 0x80000);
+            sol->velocity.x = 0x40000;
+            sol->velocity.y = 0;
+            sol->mainAnimator.SetAnimation(sVars->aniFrames, 3, true, 0);
+            sol->state.Set(&Sol::State_FireballOilFlame);
+            sol->oscillateAngle = sol->position.x & 0xF00000;
+        
+            if (tileFlags == OOZSetup::OOZ_TFLAGS_OILPOOL) {
+                this->position.y = (this->position.y & 0xFFF00000) + 0x20000;
+                sol->position.y  = (sol->position.y & 0xFFF00000) + 0x20000;
+                sol->state.Set(&Sol::State_OilFlame);
+                this->state.Set(&Sol::State_OilFlame);
+            }
+            else {
+                this->position.y -= 0x80000;
+            }
+        }
 
         if (this->interaction)
             Sol::HandlePlayerHurt();
@@ -373,6 +373,8 @@ void Sol::State_FlameDissipate()
 
 void Sol::State_FireballOilFlame()
 {
+    OOZSetup *setup = GameObject::Get<OOZSetup>(sceneInfo->entitySlot);
+
     if (this->CheckOnScreen(&this->updateRange)) {
         bool32 collided = this->TileGrip(Zone::sVars->collisionLayers, CMODE_FLOOR, 1, 0, 0x80000, 16);
         if (!collided)
@@ -391,22 +393,22 @@ void Sol::State_FireballOilFlame()
             tile = Zone::sVars->fgLayer[0].GetTile(this->position.x >> 20, (this->position.y + 0x70000) >> 20);
 
         int32 tileFlags = tile.GetFlags(0);
-        //if (tileFlags == OOZ_TFLAGS_NORMAL || tileFlags == OOZ_TFLAGS_OILFALL) {
-        //    if (collided) {
-        //        this->mainAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
-        //        this->state.Set(&Sol::State_FlameDissipate);
-        //    }
-        //    else {
-        //        this->state.Set(&Sol::State_ActiveFireball);
-        //    }
-        //}
-        //else {
-        //    this->position.y -= 0x80000;
-        //    if ((this->position.x & 0xF00000) != this->oscillateAngle)
-        //        //OOZSetup::StartFire((this->position.x & 0xFFF00000) + 0x70000, this->position.y & 0xFFFF0000, this->rotation >> 1);
-        //
-        //    this->oscillateAngle = this->position.x & 0xF00000;
-        //}
+        if (tileFlags == OOZSetup::OOZ_TFLAGS_NORMAL || tileFlags == OOZSetup::OOZ_TFLAGS_OILFALL) {
+            if (collided) {
+                this->mainAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
+                this->state.Set(&Sol::State_FlameDissipate);
+            }
+            else {
+                this->state.Set(&Sol::State_ActiveFireball);
+            }
+        }
+        else {
+            this->position.y -= 0x80000;
+            if ((this->position.x & 0xF00000) != this->oscillateAngle)
+                setup->StartFire((this->position.x & 0xFFF00000) + 0x70000, this->position.y & 0xFFFF0000, this->rotation >> 1);
+        
+            this->oscillateAngle = this->position.x & 0xF00000;
+        }
 
         this->position.x += this->velocity.x;
         this->position.y += 0x80000;
@@ -422,21 +424,23 @@ void Sol::State_FireballOilFlame()
 
 void Sol::State_OilFlame()
 {
+    OOZSetup *setup = GameObject::Get<OOZSetup>(sceneInfo->entitySlot);
+
     if (this->CheckOnScreen(&this->updateRange)) {
         Tile tile = Zone::sVars->fgLayer[1].GetTile(this->position.x >> 20, (this->position.y + 0xF0000) >> 20);
         if (tile.id == (uint16)-1)
             tile = Zone::sVars->fgLayer[0].GetTile(this->position.x >> 20, (this->position.y + 0xF0000) >> 20);
 
-        //if (tile.GetFlags(0) == OOZ_TFLAGS_OILPOOL) {
-        //    if ((this->position.x & 0xF00000) != this->oscillateAngle)
-        //        //OOZSetup::StartFire((this->position.x & 0xFFF00000) + 0x70000, this->position.y & 0xFFFF0000, this->rotation >> 1);
-        //
-        //    this->oscillateAngle = this->position.x & 0xF00000;
-        //}
-        //else {
-        //    this->mainAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
-        //    this->state.Set(&Sol::State_FlameDissipate);
-        //}
+        if (tile.GetFlags(0) == OOZSetup::OOZ_TFLAGS_OILPOOL) {
+            if ((this->position.x & 0xF00000) != this->oscillateAngle)
+                setup->StartFire((this->position.x & 0xFFF00000) + 0x70000, this->position.y & 0xFFFF0000, this->rotation >> 1);
+        
+            this->oscillateAngle = this->position.x & 0xF00000;
+        }
+        else {
+            this->mainAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
+            this->state.Set(&Sol::State_FlameDissipate);
+        }
 
         this->position.x += this->velocity.x;
 

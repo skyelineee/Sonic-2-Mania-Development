@@ -1,11 +1,10 @@
 #pragma once
 #include "S2M.hpp"
-#include "Helpers/Soundboard.hpp"
 
 namespace GameLogic
 {
 
-struct MetalArm : RSDK::GameObject::Entity {
+struct Aquis : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
@@ -20,33 +19,25 @@ struct MetalArm : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
+        RSDK::Hitbox hitboxBadnik;
+        RSDK::Hitbox hitboxRange;
+        RSDK::Hitbox hitboxProjectile;
         RSDK::SpriteAnimation aniFrames;
+        RSDK::SoundFX sfxShot;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
 
-    RSDK::StateMachine<MetalArm> state;
-    int32 startAngleA;
-    int32 startAngleB;
-    int32 endAngleA;
-    int32 endAngleB;
-    int32 durationA;
-    int32 durationB;
-    int32 holdDuration;
-    RSDK::Vector2 armAngle;
-    uint8 stoodPlayers;
+    RSDK::StateMachine<Aquis> state;
+    int32 timer;
+    uint8 playerInRange;
+    int32 remainingTurns;
     RSDK::Vector2 startPos;
-    int32 moveTimer;
-    int32 holdTimer;
-    RSDK::Vector2 armPosition;
-    RSDK::Vector2 moveOffset;
-    RSDK::Hitbox hitbox;
-    RSDK::Animator baseAnimator;
-    RSDK::Animator armAAnimator;
-    RSDK::Animator armBAnimator;
-    RSDK::Animator platformAnimator;
+    uint8 startDir;
+    RSDK::Animator mainAnimator;
+    RSDK::Animator wingAnimator;
 
     // ==============================
     // EVENTS
@@ -70,18 +61,25 @@ struct MetalArm : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static Soundboard::SoundInfo SfxCheck_MetalArm();
-    RSDK::Vector2 GetArmPosition();
+    void DebugSpawn();
+    void DebugDraw();
+
     void CheckPlayerCollisions();
+    void CheckOffScreen();
+
+    void State_Init();
     void State_Idle();
-    void State_MoveToHold();
-    void State_Holding();
-    void State_MoveToStart();
+    void State_Moving();
+    void State_Shoot();
+    void State_Turning();
+    void State_Flee();
+
+    void State_Shot();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(MetalArm);
+    RSDK_DECLARE(Aquis);
 };
 } // namespace GameLogic

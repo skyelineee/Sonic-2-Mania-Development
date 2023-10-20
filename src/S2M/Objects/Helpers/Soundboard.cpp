@@ -106,7 +106,7 @@ uint8 Soundboard::LoadSfx(SoundInfo (*checkCallback)(), void (*updateCallback)(i
     return sfxID;
 }
 
-uint8 Soundboard::LoadSfx(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32))
+uint8 Soundboard::LoadSfxName(const char *sfxName, uint32 loopPoint, SoundInfo (*checkCallback)(), void (*updateCallback)(int32))
 {
     if (!sVars)
         return -1;
