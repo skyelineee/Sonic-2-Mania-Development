@@ -733,6 +733,36 @@
     <ClCompile Include="Objects\OOZ\Fan.cpp">
       <Filter>Source Files\Objects\OOZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\CPZ\TransportTube.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\TubeSpring.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\Staircase.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\SpeedBooster.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\RotatingStair.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\ChemicalBall.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\Grabber.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\Spiny.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\CPZSetup.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\TippingPlatform.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -1415,6 +1445,36 @@
     </ClInclude>
     <ClInclude Include="Objects\OOZ\Fan.hpp">
       <Filter>Source Files\Objects\OOZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\TransportTube.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\TubeSpring.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\Staircase.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\SpeedBooster.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\RotatingStair.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\ChemicalBall.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\Grabber.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\Spiny.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\CPZSetup.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\TippingPlatform.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

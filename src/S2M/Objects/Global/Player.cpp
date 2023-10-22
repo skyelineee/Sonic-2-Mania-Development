@@ -30,6 +30,7 @@
 #include "Common/Water.hpp"
 #include "ARZ/ARZSetup.hpp"
 #include "HPZ/HPZSetup.hpp"
+#include "CPZ/CPZSetup.hpp"
 
 #include "Helpers/FXFade.hpp"
 #include "Helpers/BadnikHelpers.hpp"
@@ -832,7 +833,7 @@ void Player::StageLoad()
         memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
     }
 
-    if (HPZSetup::sVars) { // if its HPZ, load these water player colors
+    if (HPZSetup::sVars || CPZSetup::sVars) { // if its HPZ or CPZ, load these water player colors
         // ---------------
         // SUPER SONIC WATER
         // ---------------
@@ -870,7 +871,7 @@ void Player::StageLoad()
     sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
     sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
 
-    if (ARZSetup::sVars || HPZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
+    if (ARZSetup::sVars || HPZSetup::sVars || CPZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
         sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette_Water;
         sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette_Water;
         sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette_Water;

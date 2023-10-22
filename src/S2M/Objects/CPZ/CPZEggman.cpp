@@ -105,7 +105,7 @@ void CPZEggman::Create(void *data)
 		this->active = ACTIVE_BOUNDS;
 		this->drawFX = FX_FLIP;
         this->visible = true;
-		this->drawGroup = 4;
+		this->drawGroup = 2;
 		this->seatAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
 		this->mobileAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
         this->state.Set(&CPZEggman::State_AwaitPlayer);

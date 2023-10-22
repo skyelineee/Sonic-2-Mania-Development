@@ -169,7 +169,7 @@ void ChemicalDropper::Create(void *data)
             this->drawFX    = FX_FLIP;
 			this->active    = ACTIVE_NORMAL;
             this->visible   = true;
-            this->drawGroup = 4;
+            this->drawGroup = 2;
             this->state.Set(&ChemicalDropper::State_MoveRight);
             this->dropperAnim.Set(&ChemicalDropper::Dani_Closed);
             this->machineAnim.Set(&ChemicalDropper::Mani_Idle);
