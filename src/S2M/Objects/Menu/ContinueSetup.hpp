@@ -4,17 +4,11 @@
 namespace GameLogic
 {
 
-struct GasPlatform : RSDK::GameObject::Entity {
+struct ContinueSetup : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
-
-    enum GasPlatformTypes {
-        GASPLATFORM_INTERVAL,
-        GASPLATFORM_CONTACT,
-        GASPLATFORM_BOSS,
-    };
 
     // ==============================
     // STRUCTS
@@ -25,42 +19,29 @@ struct GasPlatform : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        RSDK::Hitbox hitboxGas;
-        RSDK::Vector2 range;
-        RSDK::SoundFX sfxGasPop;
-        RSDK::SoundFX sfxSpring;
+        RSDK::Animator animator;
+        RSDK::SoundFX sfxAccept;
+        uint16 countIndex[10];
+        uint16 sceneIndex;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
 
-    //MANIA_PLATFORM_BASE
-    RSDK::StateMachine<GasPlatform> state;
-    RSDK::StateMachine<GasPlatform> stateCollide;
-    int32 type;
-    RSDK::Vector2 amplitude;
-    int32 speed;
-    bool32 hasTension;
-    int8 frameID;
-    uint8 collision;
-    RSDK::Vector2 tileOrigin;
-    RSDK::Vector2 centerPos;
-    RSDK::Vector2 drawPos;
-    RSDK::Vector2 collisionOffset;
-    int32 stood;
+    RSDK::StateMachine<ContinueSetup> state;
     int32 timer;
-    int32 stoodAngle;
-    uint8 stoodPlayers;
-    uint8 pushPlayersL;
-    uint8 pushPlayersR;
-    RSDK::Hitbox hitbox;
-    RSDK::Animator animator;
-    int32 childCount;
-
-    uint16 interval;
-    uint16 intervalOffset;
-    RSDK::Animator gasAnimator;
+    int32 secondTimer;
+    int32 countTimer;
+    int32 rotationX;
+    int32 unused1;
+    int32 numberColor;
+    bool32 showContinues;
+    RSDK::Matrix matTemp;
+    RSDK::Matrix matTranslate;
+    RSDK::Matrix matRotateX;
+    RSDK::Matrix matRotateY;
+    RSDK::Matrix matFinal;
 
     // ==============================
     // EVENTS
@@ -84,15 +65,15 @@ struct GasPlatform : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void PopPlatform();
-    void State_Popped();
-    void State_SpringCooldown();
-    void State_Shaking();
+    void State_FadeIn();
+    void State_HandleCountdown();
+    void State_ContinueGame();
+    void State_ReturnToMenu();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(GasPlatform);
+    RSDK_DECLARE(ContinueSetup);
 };
 } // namespace GameLogic

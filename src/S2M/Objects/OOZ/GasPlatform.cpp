@@ -9,6 +9,7 @@
 #include "Common/Platform.hpp"
 
 // will forever be incomplete bc idk how to deal with the shared platform stuff the original object does in mania so no collision ig
+// nvm its done now i figured it out
 using namespace RSDK;
 
 namespace GameLogic
@@ -34,11 +35,11 @@ void GasPlatform::Update()
                             player->state.Set(&Player::State_Static);
                             player->velocity.x = 0;
                             player->groundVel  = 0;
-                
+
                             GasPlatform::PopPlatform();
                         }
                     }
-                
+
                     ++playerID;
                 }
                 break;
@@ -46,13 +47,8 @@ void GasPlatform::Update()
         }
     }
 
-    // Platform::Update();
-    this->state.Run(this);
-
-    if (this->classID) {
-        if (this->animator.frameDuration)
-            this->animator.Process();
-    }
+    Platform *platform = (Platform *)this;
+    platform->Update();
 }
 
 void GasPlatform::LateUpdate() {}
@@ -74,25 +70,15 @@ void GasPlatform::Create(void *data)
 
     this->frameID   = 2;
     this->collision = Platform::C_Platform;
-    // Platform::Create(nullptr);
-    // messy i know but i dont know how to do the weird platform stuff the original does so
-    this->active    = ACTIVE_BOUNDS;
-    this->visible   = true;
-    this->drawGroup = Zone::sVars->objectDrawGroup[0] + 1;
-    this->centerPos = this->position;
-    this->drawPos   = this->position;
-    this->updateRange.x = 0x800000;
-    this->updateRange.y = 0x800000;
-    this->animator.SetAnimation(Platform::sVars->aniFrames, 0, true, 0);
-    this->animator.frameID = this->frameID;
-
+    Platform *platform = (Platform *)this;
+    platform->Create(nullptr);
     this->gasAnimator.SetAnimation(Platform::sVars->aniFrames, 2, true, 0);
 
-    // this->stateCollide.Set(&Platform::Collision_Solid);
+    this->stateCollide.Set(&Platform::Collision_Solid);
     this->state.Set(&Platform::State_Fixed);
 }
 
-void GasPlatform::StageLoad()
+void GasPlatform::StageLoad(void)
 {
     sVars->hitboxGas.top    = -16;
     sVars->hitboxGas.left   = -16;
@@ -144,6 +130,7 @@ void GasPlatform::State_Popped()
         for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
         {
             if (player->CheckCollisionTouch(this, &sVars->hitboxGas)) {
+                // player->ElementHurt(this, Player::Shield_Fire);
                 if (player->shield != Player::Shield_Fire) {
                     player->Hurt(this);
                 }
@@ -198,6 +185,7 @@ void GasPlatform::State_SpringCooldown()
     for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
     {
         if (player->CheckCollisionTouch(this, &sVars->hitboxGas)) {
+            // player->ElementHurt(this, Player::Shield_Fire);
             if (player->shield != Player::Shield_Fire) {
                 player->Hurt(this);
             }
@@ -217,7 +205,7 @@ void GasPlatform::State_Shaking()
 {
     this->drawPos.x = (Math::Rand(-1, 1) << 16) + this->centerPos.x;
     this->drawPos.y = (Math::Rand(-2, 2) << 16) + this->centerPos.y;
-                      
+
     if (this->timer <= 0) {
         sVars->sfxGasPop.Play(false, 255);
         this->active     = ACTIVE_NORMAL;

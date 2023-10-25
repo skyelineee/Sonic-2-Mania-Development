@@ -11,6 +11,7 @@
 #include "Global/Explosion.hpp"
 #include "Global/Zone.hpp"
 #include "Helpers/Soundboard.hpp"
+#include "Helpers/RPCHelpers.hpp"
 #include "HTZ/Sol.hpp"
 
 using namespace RSDK;
@@ -255,6 +256,31 @@ void OOZSetup::StageLoad()
 
     sVars->splashFrames.Load("OOZ/Splash.bin", SCOPE_STAGE);
     sVars->animator.SetAnimation(sVars->splashFrames, 0, true, 0);
+
+
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Oil Ocean", "doggy", "doggy", characterImage, characterText);
+    }
 
 
     // oh my god i finally learned how to actually use soundboard

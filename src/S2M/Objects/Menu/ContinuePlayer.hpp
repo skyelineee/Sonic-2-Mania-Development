@@ -4,16 +4,21 @@
 namespace GameLogic
 {
 
-struct GasPlatform : RSDK::GameObject::Entity {
+struct ContinuePlayer : RSDK::GameObject::Entity {
 
     // ==============================
     // ENUMS
     // ==============================
 
-    enum GasPlatformTypes {
-        GASPLATFORM_INTERVAL,
-        GASPLATFORM_CONTACT,
-        GASPLATFORM_BOSS,
+    enum ContinuePlayerAniIDs {
+        CONTPLR_ANI_IDLE_SONIC,
+        CONTPLR_ANI_REACT_SONIC,
+        CONTPLR_ANI_IDLE_TAILS,
+        CONTPLR_ANI_REACT_TAILS,
+        CONTPLR_ANI_IDLE_KNUX,
+        CONTPLR_ANI_REACT_KNUX,
+        CONTPLR_ANI_IDLE_AI,
+        CONTPLR_ANI_ICON,
     };
 
     // ==============================
@@ -25,42 +30,25 @@ struct GasPlatform : RSDK::GameObject::Entity {
     // ==============================
 
     struct Static : RSDK::GameObject::Static {
-        RSDK::Hitbox hitboxGas;
-        RSDK::Vector2 range;
-        RSDK::SoundFX sfxGasPop;
-        RSDK::SoundFX sfxSpring;
+        RSDK::SpriteAnimation aniFrames;
+        RSDK::SpriteAnimation playerAniFrames;
+        RSDK::SpriteAnimation tailAniFrames;
+        RSDK::SoundFX sfxRoll;
+        RSDK::SoundFX sfxCharge;
+        RSDK::SoundFX sfxRelease;
     };
 
     // ==============================
     // INSTANCE VARS
     // ==============================
 
-    //MANIA_PLATFORM_BASE
-    RSDK::StateMachine<GasPlatform> state;
-    RSDK::StateMachine<GasPlatform> stateCollide;
-    int32 type;
-    RSDK::Vector2 amplitude;
-    int32 speed;
-    bool32 hasTension;
-    int8 frameID;
-    uint8 collision;
-    RSDK::Vector2 tileOrigin;
-    RSDK::Vector2 centerPos;
-    RSDK::Vector2 drawPos;
-    RSDK::Vector2 collisionOffset;
-    int32 stood;
+    RSDK::StateMachine<ContinuePlayer> state;
+    bool32 isPlayer2;
     int32 timer;
-    int32 stoodAngle;
-    uint8 stoodPlayers;
-    uint8 pushPlayersL;
-    uint8 pushPlayersR;
-    RSDK::Hitbox hitbox;
+    int32 unused1;
+    int32 unused2;
     RSDK::Animator animator;
-    int32 childCount;
-
-    uint16 interval;
-    uint16 intervalOffset;
-    RSDK::Animator gasAnimator;
+    RSDK::SpriteAnimation aniFrames;
 
     // ==============================
     // EVENTS
@@ -84,15 +72,16 @@ struct GasPlatform : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void PopPlatform();
-    void State_Popped();
-    void State_SpringCooldown();
-    void State_Shaking();
+    void HandleDashAnim();
+
+    void State_Idle();
+    void State_ChargeDash();
+    void State_DashRelease();
 
     // ==============================
     // DECLARATION
     // ==============================
 
-    RSDK_DECLARE(GasPlatform);
+    RSDK_DECLARE(ContinuePlayer);
 };
 } // namespace GameLogic

@@ -763,6 +763,21 @@
     <ClCompile Include="Objects\CPZ\TippingPlatform.cpp">
       <Filter>Source Files\Objects\CPZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\DASetup.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\DAControl.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\UIInfoLabel.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\ContinuePlayer.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\ContinueSetup.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -1475,6 +1490,21 @@
     </ClInclude>
     <ClInclude Include="Objects\CPZ\TippingPlatform.hpp">
       <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\DASetup.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\DAControl.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIInfoLabel.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\ContinuePlayer.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\ContinueSetup.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

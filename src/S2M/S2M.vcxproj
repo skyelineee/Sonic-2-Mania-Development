@@ -355,6 +355,10 @@
     <ClCompile Include="Objects\HTZ\Sol.cpp" />
     <ClCompile Include="Objects\HTZ\Spiker.cpp" />
     <ClCompile Include="Objects\HTZ\ZipLine.cpp" />
+    <ClCompile Include="Objects\Menu\ContinuePlayer.cpp" />
+    <ClCompile Include="Objects\Menu\ContinueSetup.cpp" />
+    <ClCompile Include="Objects\Menu\DAControl.cpp" />
+    <ClCompile Include="Objects\Menu\DASetup.cpp" />
     <ClCompile Include="Objects\Menu\ExtrasMenu.cpp" />
     <ClCompile Include="Objects\Menu\LevelSelect.cpp" />
     <ClCompile Include="Objects\Menu\MainMenu.cpp" />
@@ -375,6 +379,7 @@
     <ClCompile Include="Objects\Menu\UIControl.cpp" />
     <ClCompile Include="Objects\Menu\UIDialog.cpp" />
     <ClCompile Include="Objects\Menu\UIDiorama.cpp" />
+    <ClCompile Include="Objects\Menu\UIInfoLabel.cpp" />
     <ClCompile Include="Objects\Menu\UIKeyBinder.cpp" />
     <ClCompile Include="Objects\Menu\UILoadingIcon.cpp" />
     <ClCompile Include="Objects\Menu\UIOptionPanel.cpp" />
@@ -628,6 +633,10 @@
     <ClInclude Include="Objects\HTZ\Sol.hpp" />
     <ClInclude Include="Objects\HTZ\Spiker.hpp" />
     <ClInclude Include="Objects\HTZ\ZipLine.hpp" />
+    <ClInclude Include="Objects\Menu\ContinuePlayer.hpp" />
+    <ClInclude Include="Objects\Menu\ContinueSetup.hpp" />
+    <ClInclude Include="Objects\Menu\DAControl.hpp" />
+    <ClInclude Include="Objects\Menu\DASetup.hpp" />
     <ClInclude Include="Objects\Menu\ExtrasMenu.hpp" />
     <ClInclude Include="Objects\Menu\LevelSelect.hpp" />
     <ClInclude Include="Objects\Menu\MainMenu.hpp" />
@@ -648,6 +657,7 @@
     <ClInclude Include="Objects\Menu\UIControl.hpp" />
     <ClInclude Include="Objects\Menu\UIDialog.hpp" />
     <ClInclude Include="Objects\Menu\UIDiorama.hpp" />
+    <ClInclude Include="Objects\Menu\UIInfoLabel.hpp" />
     <ClInclude Include="Objects\Menu\UIKeyBinder.hpp" />
     <ClInclude Include="Objects\Menu\UILoadingIcon.hpp" />
     <ClInclude Include="Objects\Menu\UIOptionPanel.hpp" />
