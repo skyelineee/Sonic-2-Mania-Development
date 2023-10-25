@@ -6,7 +6,6 @@ namespace GameLogic
 
 struct UIControl;
 struct UIInfoLabel;
-struct FXFade;
 struct Music;
 
 struct DASetup : RSDK::GameObject::Entity {
@@ -32,7 +31,6 @@ struct DASetup : RSDK::GameObject::Entity {
         UIControl *control;
         UIInfoLabel *trackSelLabel;
         UIInfoLabel *trackTitleLabel;
-        FXFade *fxFade;
         Music *trackList[64];
         RSDK::SoundFX sfxEmerald;
         RSDK::SoundFX sfxMedal;
@@ -43,6 +41,10 @@ struct DASetup : RSDK::GameObject::Entity {
     // ==============================
     // INSTANCE VARS
     // ==============================
+
+    RSDK::StateMachine<DASetup> state;
+    RSDK::StateMachine<DASetup> stateDraw;
+    int32 timer;
 
     // ==============================
     // EVENTS
@@ -65,6 +67,9 @@ struct DASetup : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
+
+    void State_Idle();
+    void Draw_Fade();
 
     static void DisplayTrack(int32 trackID);
     static void SetupUI();

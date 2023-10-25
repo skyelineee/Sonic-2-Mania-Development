@@ -29,7 +29,9 @@ struct ContinueSetup : RSDK::GameObject::Entity {
     // INSTANCE VARS
     // ==============================
 
+    RSDK::StateMachine<ContinueSetup> stateDraw;
     RSDK::StateMachine<ContinueSetup> state;
+    int32 fadeTimer;
     int32 timer;
     int32 secondTimer;
     int32 countTimer;
@@ -64,6 +66,8 @@ struct ContinueSetup : RSDK::GameObject::Entity {
     // ==============================
     // FUNCTIONS
     // ==============================
+
+    void Draw_Fade();
 
     void State_FadeIn();
     void State_HandleCountdown();

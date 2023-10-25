@@ -13,15 +13,29 @@
 #include "Global/Music.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Helpers/RPCHelpers.hpp"
-#include "Helpers/FXFade.hpp"
 
 using namespace RSDK;
 
+// changed the fading system here bc the mania method wasnt working here, i think the fxfade object just works differently here compared to mania so
 namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(DASetup);
 
-void DASetup::Update() {}
+void DASetup::Update()
+{
+    this->state.Run(this);
+
+    if (sVars->returnToMenu) {
+        Music::FadeOut(0.02);
+        if (this->timer >= 1024) {
+            Stage::SetScene("Presentation", "Menu");
+            Stage::LoadScene();
+        }
+        else {
+            this->timer += 16;
+        }
+    }
+}
 
 void DASetup::LateUpdate() {}
 
@@ -30,12 +44,6 @@ void DASetup::StaticUpdate()
     if (!sVars->initialized) {
         DASetup::SetupUI();
         sVars->initialized = true;
-    }
-
-    if (sVars->returnToMenu && (sVars->fxFade->timer >= 512)) {
-        Music::FadeOut(0.02);
-        Stage::SetScene("Presentation", "Menu");
-        Stage::LoadScene();
     }
 
     UIControl *control = sVars->control;
@@ -56,9 +64,21 @@ void DASetup::StaticUpdate()
     }
 }
 
-void DASetup::Draw() {}
+void DASetup::Draw() { this->stateDraw.Run(this); }
 
-void DASetup::Create(void *data) {}
+void DASetup::Create(void *data)
+{
+    if (!sceneInfo->inEditor) {
+        this->active    = ACTIVE_ALWAYS;
+        this->visible   = true;
+        this->drawGroup = 12;
+        this->drawFX    = FX_FLIP;
+        this->state.Set(&DASetup::State_Idle);
+        this->stateDraw.Set(&DASetup::Draw_Fade);
+
+        this->timer = 0x300;
+    }
+}
 
 void DASetup::StageLoad()
 {
@@ -94,6 +114,26 @@ void DASetup::StageLoad()
 
     SetPresence("", "In Cabaret", "doggy", "doggy", "", "");
 }
+
+void DASetup::State_Idle()
+{
+    if (this->timer <= 0) {
+        this->timer = 0;
+        this->stateDraw.Set(nullptr);
+    }
+    else {
+        this->timer -= 16;
+    }
+
+    if (!sVars->returnToMenu && UIControl::sVars->anyBackPress) {
+        sVars->returnToMenu = true;
+
+        this->state.Set(nullptr);
+        this->stateDraw.Set(&DASetup::Draw_Fade);
+    }
+}
+
+void DASetup::Draw_Fade() { Graphics::FillScreen(0x000000, this->timer, this->timer - 128, this->timer - 256); }
 
 void DASetup::DisplayTrack(int32 trackID)
 {
@@ -165,17 +205,6 @@ void DASetup::State_ManageControl()
                 }
             //}
         }
-    }
-
-    if (!sVars->returnToMenu && UIControl::sVars->anyBackPress) {
-        sVars->returnToMenu = true;
-
-        FXFade *fade = GameObject::Create<FXFade>(0x000000, 0, 0);
-        sVars->fxFade = fade;
-        fade->state.Set(&FXFade::State_FadeOut);
-        fade->active = ACTIVE_ALWAYS;
-        fade->speedIn  = 14;
-        fade->speedOut = 0;
     }
 }
 

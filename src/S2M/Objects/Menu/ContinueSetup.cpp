@@ -65,6 +65,8 @@ void ContinueSetup::Draw()
         sVars->animator.DrawSprite(&drawPos, true);
         drawPos.x += 0x140000;
     }
+
+    this->stateDraw.Run(this);
 }
 
 void ContinueSetup::Create(void *data)
@@ -79,9 +81,11 @@ void ContinueSetup::Create(void *data)
         this->numberColor   = 0xFF00FF;
         this->showContinues = true;
         this->state.Set(&ContinueSetup::State_FadeIn);
+        this->stateDraw.Set(&ContinueSetup::Draw_Fade);
         this->updateRange.x = 0x4000000;
-
         this->updateRange.y = 0x4000000;
+
+        this->fadeTimer = 0x300;
         switch (GET_CHARACTER_ID(1)) {
             default:
             case ID_SONIC: sVars->animator.SetAnimation(ContinuePlayer::sVars->aniFrames, ContinuePlayer::CONTPLR_ANI_ICON, true, 0); break;
@@ -110,11 +114,18 @@ void ContinueSetup::StageLoad()
     sVars->sfxAccept.Get("Global/MenuAccept.wav");
 }
 
+void ContinueSetup::Draw_Fade() { Graphics::FillScreen(0x000000, this->fadeTimer, this->fadeTimer - 128, this->fadeTimer - 256); }
+
 void ContinueSetup::State_FadeIn()
 {
-    if (++this->timer >= 8 && !RSDKTable->GetEntityCount(FXFade::sVars->classID, true)) {
+    if (this->fadeTimer <= 0) {
         this->timer = 0;
+        this->fadeTimer = 0;
         this->state.Set(&ContinueSetup::State_HandleCountdown);
+        this->stateDraw.Set(nullptr);
+    }
+    else {
+        this->fadeTimer -= 16;
     }
 }
 

@@ -66,7 +66,7 @@ void ContinuePlayer::Create(void *data)
     }
 }
 
-void ContinuePlayer::StageLoad(void)
+void ContinuePlayer::StageLoad()
 {
     sVars->aniFrames.Load("Players/Continue.bin", SCOPE_STAGE);
 
