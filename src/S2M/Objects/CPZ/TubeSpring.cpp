@@ -45,6 +45,11 @@ void TubeSpring::Create(void *data)
     this->type           = Spring::TubeSpring;
     this->animator.speed = 0;
     this->state.Set(&TubeSpring::State_Idle);
+
+    this->hitbox.left   = -16;
+    this->hitbox.top    = 12;
+    this->hitbox.right  = 16;
+    this->hitbox.bottom = 48;
 }
 
 void TubeSpring::StageLoad()
@@ -53,11 +58,6 @@ void TubeSpring::StageLoad()
 
     sVars->sfxSpring.Get("Global/Spring.wav");
     sVars->sfxExit.Get("Tube/Exit.wav");
-
-    sVars->hitbox.left   = -16;
-    sVars->hitbox.top    = 12;
-    sVars->hitbox.right  = 16;
-    sVars->hitbox.bottom = 48;
 }
 
 // needed to port this state from the spring object cause i cant call it the same way you could in C lol
@@ -286,7 +286,7 @@ bool32 TubeSpring::HandleInteractions(bool32 setState)
         if (player->CheckValidState()) {
             bool32 interactStore = player->interaction;
             player->interaction  = true;
-            if (!player->CheckCollisionTouch(this, &sVars->hitbox)) {
+            if (!player->CheckCollisionTouch(this, &this->hitbox)) {
                 player->interaction = interactStore;
                 continue;
             }

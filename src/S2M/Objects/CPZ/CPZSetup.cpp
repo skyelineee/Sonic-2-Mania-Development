@@ -10,6 +10,8 @@
 #include "Common/Water.hpp"
 #include "Common/Decoration.hpp"
 #include "Common/ParallaxSprite.hpp"
+#include "Helpers/CutsceneRules.hpp"
+#include "Helpers/RPCHelpers.hpp"
 
 using namespace RSDK;
 
@@ -17,11 +19,11 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(CPZSetup);
 
-void CPZSetup::Update(void) {}
+void CPZSetup::Update() {}
 
-void CPZSetup::LateUpdate(void) {}
+void CPZSetup::LateUpdate() {}
 
-void CPZSetup::StaticUpdate(void)
+void CPZSetup::StaticUpdate()
 {
     // Animate the converyor belt thingys in the background
     if (!(Zone::sVars->timer & 3)) {
@@ -79,17 +81,61 @@ void CPZSetup::StageLoad()
     Animals::sVars->animalTypes[0] = Animals::Locky;
     Animals::sVars->animalTypes[1] = Animals::Pocky;
 
-    if (Zone::sVars->actID) {
-    }
-    else {
+    if (globals->gameMode != MODE_TIMEATTACK) {
+        if (Zone::sVars->actID) {
+
+            if (globals->atlEnabled) {
+                if (!CutsceneRules::CheckStageReload())
+                    CPZSetup::HandleActTransition();
+            }
+
+            if (CutsceneRules::CheckAct2()) {
+                //Zone::sVars->stageFinishCallback.Set(&CPZSetup::StageFinish_EndAct2);
+            }
+        }
+        else {
+            if (CutsceneRules::CheckAct1()) {
+                Zone::sVars->shouldRecoverPlayers = true;
+                Zone::sVars->stageFinishCallback.Set(&CPZSetup::StageFinish_EndAct1);
+            }
+        }
+        const char *playingAsText  = "";
+        const char *characterImage = "";
+        const char *characterText  = "";
+        switch (GET_CHARACTER_ID(1)) {
+            case ID_SONIC:
+                playingAsText  = "Playing as Sonic";
+                characterImage = "sonic";
+                characterText  = "Sonic";
+                break;
+            case ID_TAILS:
+                playingAsText  = "Playing as Tails";
+                characterImage = "tails";
+                characterText  = "Tails";
+                break;
+            case ID_KNUCKLES:
+                playingAsText  = "Playing as Knuckles";
+                characterImage = "knuckles";
+                characterText  = "Knuckles";
+                break;
+        }
+        SetPresence(playingAsText, "In Chemical Plant", "doggy", "doggy", characterImage, characterText);
     }
 }
 
 void CPZSetup::StageFinish_EndAct1()
 {
     SceneLayer::GetTileLayer(0);
-    Zone::StoreEntities(Vector2(TO_FIXED(screenInfo->position.x + screenInfo->center.x), TO_FIXED(screenInfo->size.y + screenInfo->position.y)));
+    Zone::StoreEntities(Vector2(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0])));
     Stage::LoadScene();
+}
+
+void CPZSetup::HandleActTransition()
+{
+    Zone::sVars->cameraBoundsL[0] = 320 - screenInfo->center.x;
+    Zone::sVars->cameraBoundsB[0] = 370;
+
+    Zone::ReloadEntities(Vector2(TO_FIXED(320), TO_FIXED(370)), true);
 }
 
 void CPZSetup::StageFinish_EndAct2() {}

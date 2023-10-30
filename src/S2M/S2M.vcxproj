@@ -216,6 +216,7 @@
     <ClCompile Include="Objects\ARZ\ChopChop.cpp" />
     <ClCompile Include="Objects\ARZ\Grounder.cpp" />
     <ClCompile Include="Objects\ARZ\Wisp.cpp" />
+    <ClCompile Include="Objects\Bonus\BonusTitleCard.cpp" />
     <ClCompile Include="Objects\CNZ\CircleBumper.cpp" />
     <ClCompile Include="Objects\CNZ\CNZSetup.cpp" />
     <ClCompile Include="Objects\CNZ\CNZSpotlight.cpp" />
@@ -254,6 +255,7 @@
     <ClCompile Include="Objects\CPZ\CPZEggman.cpp" />
     <ClCompile Include="Objects\CPZ\CPZSetup.cpp" />
     <ClCompile Include="Objects\CPZ\Grabber.cpp" />
+    <ClCompile Include="Objects\CPZ\OneWayDoor.cpp" />
     <ClCompile Include="Objects\CPZ\RotatingStair.cpp" />
     <ClCompile Include="Objects\CPZ\SpeedBooster.cpp" />
     <ClCompile Include="Objects\CPZ\Spiny.cpp" />
@@ -453,6 +455,16 @@
     <ClCompile Include="Objects\SSZ\SinkTrash.cpp" />
     <ClCompile Include="Objects\SSZ\SSZSetup.cpp" />
     <ClCompile Include="Objects\SSZ\Vultron.cpp" />
+    <ClCompile Include="Objects\SWZ\BouncePlant.cpp" />
+    <ClCompile Include="Objects\SWZ\Dragonfly.cpp" />
+    <ClCompile Include="Objects\SWZ\GymBar.cpp" />
+    <ClCompile Include="Objects\SWZ\PetalPile.cpp" />
+    <ClCompile Include="Objects\SWZ\Rhinobot.cpp" />
+    <ClCompile Include="Objects\SWZ\Snowflakes.cpp" />
+    <ClCompile Include="Objects\SWZ\Splats.cpp" />
+    <ClCompile Include="Objects\SWZ\SWZSetup.cpp" />
+    <ClCompile Include="Objects\SWZ\UncurlPlant.cpp" />
+    <ClCompile Include="Objects\SWZ\WallBumper.cpp" />
     <ClCompile Include="Objects\Title\LogoSetup.cpp" />
     <ClCompile Include="Objects\Title\Sega.cpp" />
     <ClCompile Include="Objects\Title\TitleLogo.cpp" />
@@ -493,6 +505,7 @@
     <ClInclude Include="Objects\ARZ\ChopChop.hpp" />
     <ClInclude Include="Objects\ARZ\Grounder.hpp" />
     <ClInclude Include="Objects\ARZ\Wisp.hpp" />
+    <ClInclude Include="Objects\Bonus\BonusTitleCard.hpp" />
     <ClInclude Include="Objects\CNZ\CircleBumper.hpp" />
     <ClInclude Include="Objects\CNZ\CNZSetup.hpp" />
     <ClInclude Include="Objects\CNZ\CNZSpotlight.hpp" />
@@ -531,6 +544,7 @@
     <ClInclude Include="Objects\CPZ\CPZEggman.hpp" />
     <ClInclude Include="Objects\CPZ\CPZSetup.hpp" />
     <ClInclude Include="Objects\CPZ\Grabber.hpp" />
+    <ClInclude Include="Objects\CPZ\OneWayDoor.hpp" />
     <ClInclude Include="Objects\CPZ\RotatingStair.hpp" />
     <ClInclude Include="Objects\CPZ\SpeedBooster.hpp" />
     <ClInclude Include="Objects\CPZ\Spiny.hpp" />
@@ -731,6 +745,16 @@
     <ClInclude Include="Objects\SSZ\SinkTrash.hpp" />
     <ClInclude Include="Objects\SSZ\SSZSetup.hpp" />
     <ClInclude Include="Objects\SSZ\Vultron.hpp" />
+    <ClInclude Include="Objects\SWZ\BouncePlant.hpp" />
+    <ClInclude Include="Objects\SWZ\Dragonfly.hpp" />
+    <ClInclude Include="Objects\SWZ\GymBar.hpp" />
+    <ClInclude Include="Objects\SWZ\PetalPile.hpp" />
+    <ClInclude Include="Objects\SWZ\Rhinobot.hpp" />
+    <ClInclude Include="Objects\SWZ\Snowflakes.hpp" />
+    <ClInclude Include="Objects\SWZ\Splats.hpp" />
+    <ClInclude Include="Objects\SWZ\SWZSetup.hpp" />
+    <ClInclude Include="Objects\SWZ\UncurlPlant.hpp" />
+    <ClInclude Include="Objects\SWZ\WallBumper.hpp" />
     <ClInclude Include="Objects\Test\TestObject.hpp">
       <SubType>
       </SubType>

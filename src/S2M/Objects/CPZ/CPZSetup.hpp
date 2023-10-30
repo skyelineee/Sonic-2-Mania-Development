@@ -67,8 +67,9 @@ struct CPZSetup : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void StageFinish_EndAct1(void);
-    void StageFinish_EndAct2(void);
+    static void StageFinish_EndAct1();
+    static void HandleActTransition();
+    static void StageFinish_EndAct2();
 
     // ==============================
     // DECLARATION

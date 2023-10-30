@@ -180,7 +180,7 @@ void ChemicalDropper::Create(void *data)
 void ChemicalDropper::StageLoad()
 {
 	sVars->aniFrames.Load("CPZ/Boss.bin", SCOPE_STAGE);
-    sVars->splashSFX.Get(""); // fix
+    sVars->splashSFX.Get("Stage/ChemSplash.wav");
     sVars->dropHitbox.left   = -6;
     sVars->dropHitbox.top    = -6;
     sVars->dropHitbox.right  = 6;

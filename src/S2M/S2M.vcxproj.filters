@@ -65,6 +65,12 @@
     <Filter Include="Source Files\Objects\OOZ">
       <UniqueIdentifier>{24e24788-29a1-4a97-8dde-70776a8236d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Bonus">
+      <UniqueIdentifier>{c381a3bf-6f68-4396-8276-c83a3e6b5ed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\SWZ">
+      <UniqueIdentifier>{3ebde6c0-bb8f-443f-bf64-33b6b2820a51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="S2M.cpp">
@@ -777,6 +783,42 @@
     </ClCompile>
     <ClCompile Include="Objects\Menu\ContinueSetup.cpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Bonus\BonusTitleCard.cpp">
+      <Filter>Source Files\Objects\Bonus</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CPZ\OneWayDoor.cpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\Snowflakes.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\Dragonfly.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\Rhinobot.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\Splats.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\WallBumper.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\BouncePlant.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\UncurlPlant.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\PetalPile.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\GymBar.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SWZ\SWZSetup.cpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1505,6 +1547,42 @@
     </ClInclude>
     <ClInclude Include="Objects\Menu\ContinueSetup.hpp">
       <Filter>Source Files\Objects\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Bonus\BonusTitleCard.hpp">
+      <Filter>Source Files\Objects\Bonus</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CPZ\OneWayDoor.hpp">
+      <Filter>Source Files\Objects\CPZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\Snowflakes.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\Dragonfly.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\Rhinobot.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\Splats.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\WallBumper.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\BouncePlant.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\UncurlPlant.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\PetalPile.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\GymBar.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SWZ\SWZSetup.hpp">
+      <Filter>Source Files\Objects\SWZ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

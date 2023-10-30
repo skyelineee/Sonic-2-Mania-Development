@@ -23,7 +23,6 @@ struct TubeSpring : RSDK::GameObject::Entity {
         RSDK::SpriteAnimation aniFrames;
         RSDK::SoundFX sfxSpring;
         RSDK::SoundFX sfxExit;
-        RSDK::Hitbox hitbox;
     };
 
     // ==============================

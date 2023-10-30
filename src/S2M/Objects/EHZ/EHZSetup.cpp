@@ -8,8 +8,10 @@
 #include "EHZSetup.hpp"
 #include "Helpers/CutsceneRules.hpp"
 #include "Helpers/RPCHelpers.hpp"
+#include "Helpers/FXFade.hpp"
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
+#include "Global/EggPrison.hpp"
 
 using namespace RSDK;
 
@@ -31,6 +33,29 @@ void EHZSetup::StaticUpdate()
         sVars->paletteTimer -= 256;
         paletteBank[0].Rotate(170, 173, true);
     }
+
+    if (sVars->cutsceneActivated) {
+        for (int32 p = 0; p < Player::sVars->playerCount; ++p) {
+            Player *player                     = GameObject::Get<Player>(p);
+            Zone::sVars->playerBoundActiveR[p] = false;
+            for (auto prison : GameObject::GetEntities<EggPrison>(FOR_ALL_ENTITIES)) {
+                prison->notSolid = true;
+            }
+            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+                player->right = true;
+            }
+        }
+        if (++sVars->cutsceneTimer >= 180) {
+            FXFade *fade    = GameObject::Create<FXFade>(0x000000, 0, 0);
+            fade->drawGroup = Zone::sVars->hudDrawGroup + 1;
+            fade->active    = ACTIVE_ALWAYS;
+            fade->state.Set(&FXFade::State_FadeOut);
+            fade->speedIn = 1;
+            if (sVars->cutsceneTimer >= 260) {
+                Stage::LoadScene();
+            }
+        }
+    }
 }
 void EHZSetup::Draw() {}
 
@@ -40,6 +65,8 @@ void EHZSetup::StageLoad()
 {
     Animals::sVars->animalTypes[0] = Animals::Flicky;
     Animals::sVars->animalTypes[1] = Animals::Ricky;
+
+    sVars->cutsceneActivated = false;
 
     if (globals->gameMode != MODE_TIMEATTACK) {
         if (Zone::sVars->actID) {
@@ -101,9 +128,36 @@ void EHZSetup::HandleActTransition()
     Zone::sVars->cameraBoundsB[0] = 694;
 
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(694)), true);
+
+    TileLayer *bg1 = SceneLayer::GetTileLayer(0);
+    bg1->scrollPos * bg1->parallaxFactor;
+    for (int32 s = 0; s < bg1->scrollInfoCount; ++s) {
+        bg1->scrollInfo[s].scrollPos += 0x29A000 * bg1->scrollInfo[s].parallaxFactor;
+    }
+
+    TileLayer *bg2 = SceneLayer::GetTileLayer(1);
+    bg2->scrollPos * bg2->parallaxFactor;
+    for (int32 s = 0; s < bg2->scrollInfoCount; ++s) {
+        bg2->scrollInfo[s].scrollPos += 0x299000 * bg2->scrollInfo[s].parallaxFactor;
+    }
+
+    TileLayer *bg3 = SceneLayer::GetTileLayer(2);
+    bg3->scrollPos * bg3->parallaxFactor;
+    for (int32 s = 0; s < bg3->scrollInfoCount; ++s) {
+        bg3->scrollInfo[s].scrollPos += 0x299000 * bg3->scrollInfo[s].parallaxFactor;
+    }
 }
 
-void EHZSetup::StageFinish_EndAct2() {}
+void EHZSetup::StageFinish_EndAct2()
+{
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+        player->state.Set(&Player::State_Ground);
+        if (!player->sidekick) {
+            player->stateInput.Set(nullptr);
+        }
+    }
+    sVars->cutsceneActivated = true;
+}
 
 #if RETRO_REV0U
 void EHZSetup::StaticLoad(Static* sVars)

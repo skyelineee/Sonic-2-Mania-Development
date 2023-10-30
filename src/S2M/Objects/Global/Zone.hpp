@@ -4,6 +4,8 @@
 namespace GameLogic
 {
 
+#define ZONE_RAND(min, max) RSDKTable->RandSeeded(min, max, &Zone::sVars->randSeed)
+
 // kinda just adding it here since its kinda relevant, may move elsewhere idk
 struct StageFolderInfo {
     char stageFolder[64];

@@ -26,10 +26,10 @@ void EHZEggman::Update()
 			this->invincibilityTimer--;
 			int32 invincible = GET_BIT(this->invincibilityTimer, 0); // assuming this stops the palette from flashing again when the invincility timer is still up
 			if (invincible) { // Palette flashing when hit
-				paletteBank[0].SetEntry(210, 0xE0E0E0);
+				paletteBank[0].SetEntry(189, 0xE0E0E0);
 			}
 			else {
-				paletteBank[0].SetEntry(210, 0x000000);
+				paletteBank[0].SetEntry(189, 0x000000);
 			}
 		}
 

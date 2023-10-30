@@ -107,7 +107,7 @@ void Water::Create(void *data)
                 this->active    = ACTIVE_NORMAL;
                 this->drawGroup = Zone::sVars->hudDrawGroup - 1;
                 if (this->surfaceWaves) {
-                    if (globals->gameSpriteStyle == GAME_S3K) {
+                    if (globals->gameSpriteStyle == GAME_SM) {
                         this->inkEffect = INK_ALPHA;
                         this->alpha     = 0xA0;
                     }
