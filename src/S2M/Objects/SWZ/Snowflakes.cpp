@@ -132,7 +132,7 @@ void Snowflakes::Draw()
 
 void Snowflakes::Create(void *data)
 {
-    this->active        = ACTIVE_NORMAL;
+    this->active        = ACTIVE_ALWAYS;
     this->drawGroup     = Zone::sVars->objectDrawGroup[0];
     this->visible       = true;
     this->drawFX        = FX_FLIP;
@@ -142,7 +142,12 @@ void Snowflakes::Create(void *data)
 
 void Snowflakes::StageLoad()
 {
-    sVars->aniFrames.Load("SWZ/Leaves.bin", SCOPE_STAGE);
+    if (Stage::CheckSceneFolder("SWZ")) {
+        sVars->aniFrames.Load("SWZ/Leaves.bin", SCOPE_STAGE);
+    }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Snowflakes.bin", SCOPE_STAGE);
+    }
 
     sVars->active = ACTIVE_ALWAYS;
 }

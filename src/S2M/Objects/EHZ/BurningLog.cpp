@@ -61,8 +61,12 @@ void BurningLog::Create(void *data)
 
 void BurningLog::StageLoad()
 {
-    if (Stage::CheckSceneFolder("EHZ"))
+    if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Fireball.bin", SCOPE_STAGE);
+    }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Fireball.bin", SCOPE_STAGE);
+    }
 
     sVars->hitboxPlatform.left   = -8;
     sVars->hitboxPlatform.top    = -8;

@@ -69,7 +69,12 @@ void Buzzer::Create(void *data)
 
 void Buzzer::StageLoad()
 {
-    sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
+    if (Stage::CheckSceneFolder("EHZ")) {
+        sVars->aniFrames.Load("EHZ/Buzzer.bin", SCOPE_STAGE);
+    }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Buzzer.bin", SCOPE_STAGE);
+    }
 
     sVars->hitboxBadnik.left = -16;
     sVars->hitboxBadnik.top = -12;

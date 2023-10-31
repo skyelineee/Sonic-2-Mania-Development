@@ -105,11 +105,14 @@ void Bridge::Create(void *data)
 
 void Bridge::StageLoad()
 {
-    if (Stage::CheckSceneFolder("EHZ")) {
+    if (Stage::CheckSceneFolder("EHZ") || Stage::CheckSceneFolder("EEHZ")) {
         sVars->aniFrames.Load("EHZ/Bridge.bin", SCOPE_STAGE);
     }
     else if (Stage::CheckSceneFolder("HPZ") || Stage::CheckSceneFolder("PPZ")) {
         sVars->aniFrames.Load("HPZ/Bridge.bin", SCOPE_STAGE);
+    }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Bridge.bin", SCOPE_STAGE);
     }
 
     DebugMode::AddObject(sVars->classID, &Bridge::DebugSpawn, &Bridge::DebugDraw);

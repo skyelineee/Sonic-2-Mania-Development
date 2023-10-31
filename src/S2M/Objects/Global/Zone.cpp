@@ -40,7 +40,8 @@ GameLogic::StageFolderInfo GameLogic::stageList[] = {
     { "OOZ", "OOZ", 9, 0, false, false, false },          { "OOZ", "OOZ", 9, 1, false, true, false },   { "MTZ", "MTZ", 10, 0, false, false, false },        
     { "MTZ", "MTZ", 10, 1, false, true, false },          { "CCZ", "CCZ", 11, 0, false, false, false }, { "CCZ", "CCZ", 11, 1, false, true, false },
     { "SCZ", "SCZ", 12, 0, true, true, false },           { "DEZ", "DEZ", 13, 0, false, false, false }, { "DEZ", "DEZ", 13, 1, false, true, false },        
-    { "HPZ", "HPZ", 14, 0, true, false, false },          { "PPZ", "PPZ", 15, 0, true, false, false }
+    { "HPZ", "HPZ", 14, 0, true, false, false },          { "PPZ", "PPZ", 15, 0, true, false, false },  { "HEHZ", "HEHZ", 16, 0, false, false, false },
+    { "HEHZ", "HEHZ", 16, 1, false, false, false }
 };
 
 void GameLogic::StrCopy(char *dest, uint32 destSize, const char *src)

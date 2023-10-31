@@ -288,13 +288,8 @@ void EggDriller::Drill_Fired()
 		this->timer = 0;
 	}
 
-	if (this->CheckOnScreen(nullptr)) {
-		if (this->isDrillOOB == true) {
-			this->Destroy();
-		}
-	}
-	else {
-		this->isDrillOOB = true;
+	if (++this->drillTimer >= 320) {
+		this->Destroy();
 	}
 }
 

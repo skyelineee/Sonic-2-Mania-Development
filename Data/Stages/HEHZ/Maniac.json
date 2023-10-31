@@ -1,0 +1,23 @@
+{
+  "RedirectSpriteDataFolder": null,
+  "ForegroundLower": null,
+  "ForegroundHigher": null,
+  "WaterColor": "",
+  "SpritePaths": null,
+  "EncoreACTFile": null,
+  "EntityRenderSwaps": null,
+  "Positions": null,
+  "ObjectHashes": [
+    "FXAniTiles",
+    "EHZSetup",
+    "Buzzer",
+    "Coconuts",
+    "Masher"
+  ],
+  "AttributeHashes": [
+    "tileID",
+    "animate",
+    "disable",
+    "controlFlag"
+  ]
+}

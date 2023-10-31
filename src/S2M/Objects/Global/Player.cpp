@@ -5902,26 +5902,25 @@ void Player::State_Transform()
         this->abilityValues[6] = 0;
         this->abilityValues[7] = 0;
         this->abilityValues[5] = true;
+    }
 
-        if (this->hyperAbilityState == Player::HyperStateNone) {
-            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
-            sparkle->Reset(SuperSparkle::sVars->classID, this);
-            sparkle->timer = 13;
+    if (this->hyperAbilityState == Player::HyperStateNone) {
+        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+        sparkle->Reset(SuperSparkle::sVars->classID, this);
+        sparkle->timer = 13;
 
-            if (globals->useManiaBehavior) {
-                ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
-                trail->Reset(ImageTrail::sVars->classID, this);
-            }
-        }
-        else {
-            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
-            sparkle->Reset(SuperSparkle::sVars->classID, this);
-            sparkle->timer = 13;
-
+        if (globals->useManiaBehavior) {
             ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
             trail->Reset(ImageTrail::sVars->classID, this);
         }
+    }
+    else {
+        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+        sparkle->Reset(SuperSparkle::sVars->classID, this);
+        sparkle->timer = 13;
 
+        ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
+        trail->Reset(ImageTrail::sVars->classID, this);
     }
 
     bool32 done = false;

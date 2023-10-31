@@ -46,6 +46,9 @@ void Masher::StageLoad()
     if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Masher.bin", SCOPE_STAGE);
     }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Masher.bin", SCOPE_STAGE);
+    }
 
     sVars->hitboxBadnik.left   = -12;
     sVars->hitboxBadnik.top    = -14;

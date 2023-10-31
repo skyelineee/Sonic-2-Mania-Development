@@ -61,6 +61,9 @@ void Coconuts::StageLoad()
     if (Stage::CheckSceneFolder("EHZ")) {
         sVars->aniFrames.Load("EHZ/Coconuts.bin", SCOPE_STAGE);
     }
+    else if (Stage::CheckSceneFolder("HEHZ")) {
+        sVars->aniFrames.Load("HEHZ/Coconuts.bin", SCOPE_STAGE);
+    }
 
     sVars->hitboxBadnik.left   = -8;
     sVars->hitboxBadnik.top    = -16;
