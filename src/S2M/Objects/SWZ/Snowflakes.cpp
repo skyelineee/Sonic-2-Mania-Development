@@ -9,6 +9,7 @@
 #include "SWZSetup.hpp"
 #include "Global/HUD.hpp"
 #include "Global/ActClear.hpp"
+#include "EHZ/EHZSetup.hpp"
 
 using namespace RSDK;
 
@@ -139,17 +140,21 @@ void Snowflakes::Create(void *data)
 {
 
     if (globals->atlEnabled) {
+        SWZSetup::Static* store = SWZSetup::sVars;
+        if (sVars->holiday) {
+            store = (SWZSetup::Static*)EHZSetup::sVars; // this works bc same spot
+        }
         Vector2 prePos = position;
-        GameObject::Copy(this, SWZSetup::sVars->snowflakeStorage, true);
+        GameObject::Copy(this, store->snowflakeStorage, true);
         position = prePos;
         for (int i = 0; i < 0x40; ++i) {
             if (positions[i].x || positions[i].y) {
-                positions[i].y += SWZSetup::sVars->snowflakeYOff;
+                positions[i].y += store->snowflakeYOff;
             }
         }
-        basis        = SWZSetup::sVars->snowflakeBasis;
-        addend       = SWZSetup::sVars->snowflakeAddend;
-        sVars->count = SWZSetup::sVars->snowflakeCount;
+        basis        = store->snowflakeBasis;
+        addend       = store->snowflakeAddend;
+        sVars->count = store->snowflakeCount;
     }
     else {
         this->active        = ACTIVE_ALWAYS;
@@ -168,9 +173,11 @@ void Snowflakes::StageLoad()
 {
     if (Stage::CheckSceneFolder("SWZ")) {
         sVars->aniFrames.Load("SWZ/Leaves.bin", SCOPE_STAGE);
+        sVars->holiday = false;
     }
     else if (Stage::CheckSceneFolder("HEHZ")) {
         sVars->aniFrames.Load("HEHZ/Snowflakes.bin", SCOPE_STAGE);
+        sVars->holiday = true;
     }
 
     sVars->active = ACTIVE_ALWAYS;

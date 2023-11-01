@@ -20,7 +20,7 @@ struct Snowflakes : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         uint8 count;
-        int32 unused;
+        bool32 holiday;
         RSDK::SpriteAnimation aniFrames;
     };
 

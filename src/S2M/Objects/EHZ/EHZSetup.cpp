@@ -13,6 +13,7 @@
 #include "Global/Animals.hpp"
 #include "Global/EggPrison.hpp"
 #include "Global/HUD.hpp"
+#include "SWZ/Snowflakes.hpp"
 
 using namespace RSDK;
 
@@ -119,16 +120,40 @@ void EHZSetup::StageLoad()
 
 void EHZSetup::StageFinish_EndAct1()
 {
-    Zone::StoreEntities(Vector2(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0])));
+    Vector2 offset(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0]));
+    Zone::StoreEntities(offset);
+
+    if (Stage::CheckSceneFolder("HEHZ")) {
+        // copy first Snowflakes (should be the only Snowflakes)
+        Snowflakes *snowflake = *GameObject::GetEntities<Snowflakes>(RSDK::FOR_ACTIVE_ENTITIES).begin();
+        sVars->snowflakeCount = Snowflakes::sVars->count;
+        for (int i = 0; i < 0x40; ++i) {
+            if (snowflake->positions[i].x || snowflake->positions[i].y) {
+                snowflake->positions[i].y -= offset.y;
+            }
+        }
+
+        sVars->snowflakeBasis = screenInfo->position.x;
+
+        GameObject::Copy(sVars->snowflakeStorage, snowflake, false);
+    }
+
     Stage::LoadScene();
 }
-
 void EHZSetup::HandleActTransition()
 {
     Zone::sVars->cameraBoundsL[0] = 256 - screenInfo->center.x;
     Zone::sVars->cameraBoundsB[0] = 694;
 
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(694)), true);
+
+    if (Stage::CheckSceneFolder("HEHZ")) {
+        Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);
+        camera->SetCameraBoundsXY(); // force screen pos, this doesn't cause any artifacts thankfully
+
+        sVars->snowflakeAddend = screenInfo->position.x;
+        sVars->snowflakeYOff   = TO_FIXED(694);
+    }
 
     TileLayer *bg1 = SceneLayer::GetTileLayer(0);
     bg1->scrollPos *= bg1->parallaxFactor;

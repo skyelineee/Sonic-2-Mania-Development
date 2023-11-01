@@ -8,6 +8,11 @@ struct EHZSetup : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         int32 paletteTimer;
+        int32 snowflakeStorage[0x400]; // according to globals this is how big
+        int32 snowflakeCount;
+        int32 snowflakeBasis;  // the screenInfo from before transition
+        int32 snowflakeAddend; // the screenInfo from after transition
+        int32 snowflakeYOff;
         RSDK::TileLayer *background;
         int32 deformation[64];
         bool32 cutsceneActivated;
