@@ -31,11 +31,11 @@ void PauseMenu::Update()
 {
     this->state.Run(this);
 
-    //sets the pause menu position to the center of the screen
+    // sets the pause menu position to the center of the screen
     this->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
     this->position.y = (screenInfo->position.y + screenInfo->center.y) << 16;
 
-    //sets the button and control positions every frame
+    // sets the button and control positions every frame
     if (this->manager) {
         this->manager->position.x = this->position.x;
         this->manager->position.y = this->position.y;
@@ -124,38 +124,40 @@ void PauseMenu::Create(void *data)
     if (!sceneInfo->inEditor) {
         this->active = ACTIVE_ALWAYS;
         // sets these all to 0 on create
-        this->timer       = 0;
-        this->pauseTimer  = 0;
-        this->inkEffect   = INK_NONE;
-        this->alpha       = 0;
-        //sets the triangleSpeed to 10 on create, will slowly go down or go up when sliding in or away respectively
-        this->triangleSpeed  = TO_FIXED(10);
+        this->timer      = 0;
+        this->pauseTimer = 0;
+        this->inkEffect  = INK_NONE;
+        this->alpha      = 0;
+        // sets the triangleSpeed to 10 on create, will slowly go down or go up when sliding in or away respectively
+        this->triangleSpeed = TO_FIXED(10);
         // sets the centerSpeed to 10 on create, will slowly go down or go up when sliding in or away respectively
-        this->centerSpeed  = TO_FIXED(21);
+        this->centerSpeed = TO_FIXED(21);
 
-        //grabs current screen
+        // grabs current screen
         ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
-        // i would draw all of these relative to the entity rather than the screen, however it seems the pausemenus position is set after create so setting stuff to this->position here doesnt work
-        // i tried to solve it by setting all of these to the screeninfo position and center like the uicontrol does, however if i do it like that, the visuals can be placed wrong as
-        // the center of the screen changes in the stage due to what the player is doing, so screen relative it is
-        // base positions for sprites for sliding in
-        triangleLeftPos.x        = -TO_FIXED(46);
-        triangleLeftPos.y        = TO_FIXED(0);
-        triangleRightPos.x       = TO_FIXED(424);
-        triangleRightPos.y       = TO_FIXED(0);
-        bgCirclePos.x            = screen->center.x << 16;
-        bgCirclePos.y            = screen->center.y << 16;
+        // i would draw all of these relative to the entity rather than the screen, however it seems the pausemenus position is set after create so
+        // setting stuff to this->position here doesnt work i tried to solve it by setting all of these to the screeninfo position and center like the
+        // uicontrol does, however if i do it like that, the visuals can be placed wrong as the center of the screen changes in the stage due to what
+        // the player is doing, so screen relative it is base positions for sprites for sliding in
+        triangleLeftPos.x  = -TO_FIXED(46);
+        triangleLeftPos.y  = TO_FIXED(0);
+        triangleRightPos.x = TO_FIXED(424);
+        triangleRightPos.y = TO_FIXED(0);
+        bgCirclePos.x      = screen->center.x << 16;
+        bgCirclePos.y      = screen->center.y << 16;
         // kept getting a warning when trying to do these circlepos.y on the same line so just subtracted it afterwards lol
-        bgCirclePos.y            -= TO_FIXED(210);
-        pauseTextPos.x           = screen->center.x << 16;
-        pauseTextPos.y           = screen->center.y << 16;
-        // same position as circlepos so it moves at the same speed and position, while also offsetted by negative 70 pixels as the pause text is 70 pixels above
-        pauseTextPos.y           -= TO_FIXED(280);
-        emeraldsPos.x            = screen->center.x << 16;
-        emeraldsPos.y            = screen->center.y << 16;
-        // same position as circlepos so it moves at the same speed and position, while also offsetted by positive 62 pixels as the emeralds are 62 pixels below
-        emeraldsPos.y            -= TO_FIXED(148);
+        bgCirclePos.y -= TO_FIXED(210);
+        pauseTextPos.x = screen->center.x << 16;
+        pauseTextPos.y = screen->center.y << 16;
+        // same position as circlepos so it moves at the same speed and position, while also offsetted by negative 70 pixels as the pause text is 70
+        // pixels above
+        pauseTextPos.y -= TO_FIXED(280);
+        emeraldsPos.x = screen->center.x << 16;
+        emeraldsPos.y = screen->center.y << 16;
+        // same position as circlepos so it moves at the same speed and position, while also offsetted by positive 62 pixels as the emeralds are 62
+        // pixels below
+        emeraldsPos.y -= TO_FIXED(148);
 
         if (data == INT_TO_VOID(true)) {
             this->visible   = true;
@@ -193,10 +195,10 @@ void PauseMenu::SetupMenu()
     Vector2 size;
     size.x = screenInfo->size.x << 16;
     size.y = screenInfo->size.y << 16;
-    //resets the pause menu control, i assume to not leave anything leftover from previous pauses
+    // resets the pause menu control, i assume to not leave anything leftover from previous pauses
     RSDKTable->ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl::sVars->classID, &size);
 
-    //sets the position to the center of the screen
+    // sets the position to the center of the screen
     UIControl *control = GameObject::Get<UIControl>(SLOT_PAUSEMENU_UICONTROL);
 
     control->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
@@ -222,16 +224,16 @@ void PauseMenu::SetupMenu()
     for (; i < PAUSEMENU_BUTTON_COUNT; ++i) {
         if (!this->buttonPtrs[i])
             break;
-        UIButton *button = this->buttonPtrs[i];
-        button->parent         = (Entity *)control;
-        control->buttons[i]    = button;
+        UIButton *button    = this->buttonPtrs[i];
+        button->parent      = (Entity *)control;
+        control->buttons[i] = button;
     }
     control->buttonCount = i;
 }
 
 void PauseMenu::SetupTintTable()
 {
-    //sets the tint color table, tho im gonna be honest i have no idea what its actually doing with all of these operators and hex numbers
+    // sets the tint color table, tho im gonna be honest i have no idea what its actually doing with all of these operators and hex numbers
     for (int32 i = 0; i < 0x10000; ++i) {
         uint32 r = (0x20F * (i >> 11) + 23) >> 6;
         uint32 g = (0x103 * ((i >> 5) & 0x3F) + 33) >> 6;
@@ -257,26 +259,26 @@ void PauseMenu::AddButton(uint8 id, Action<void> action)
         button->position.x = (screenInfo->position.x + screenInfo->center.x) << 16;
         button->position.y = (screenInfo->position.y + screenInfo->center.y) << 16;
         button->actionCB.Set(&PauseMenu::ActionCB_Button);
-        button->size.x             = 0;
-        button->size.y             = 0;
-        button->buttonListID       = 3;
-        button->buttonFrameID      = 0;
-        button->nameListID         = 5;
-        button->nameFrameID        = id + 1;
-        button->descriptionListID  = 7;
-        button->descriptionFrameID = 0; // empty frame (no descriptions are needed)
+        button->size.x                 = 0;
+        button->size.y                 = 0;
+        button->buttonListID           = 3;
+        button->buttonFrameID          = 0;
+        button->nameListID             = 5;
+        button->nameFrameID            = id + 1;
+        button->descriptionListID      = 7;
+        button->descriptionFrameID     = 0;    // empty frame (no descriptions are needed)
         button->visibleArrowHorizontal = true; // lol
-        button->align              = UIButton::ALIGN_LEFT;
-        button->drawGroup          = this->drawGroup;
-        button->active             = ACTIVE_ALWAYS;
-        this->buttonPtrs[buttonID] = button;
+        button->align                  = UIButton::ALIGN_LEFT;
+        button->drawGroup              = this->drawGroup;
+        button->active                 = ACTIVE_ALWAYS;
+        this->buttonPtrs[buttonID]     = button;
         ++this->buttonCount;
     }
 }
 
 void PauseMenu::ClearButtons(PauseMenu *entity)
 {
-    //destroys the pause menu control and buttons if there are any present, destroys the actual pause menu entity itself at the end
+    // destroys the pause menu control and buttons if there are any present, destroys the actual pause menu entity itself at the end
     if (entity->manager)
         entity->manager->Destroy();
 
@@ -292,19 +294,20 @@ void PauseMenu::HandleButtonPositions()
 {
     Vector2 pos;
     pos = this->position;
-    // button y positions are now based on the buttonPos position which is changed rather than the pausemenu entity position, which is great as now it follows the rest of the pause menu
+    // button y positions are now based on the buttonPos position which is changed rather than the pausemenu entity position, which is great as now it
+    // follows the rest of the pause menu
     pos.y = this->buttonPos.y - TO_FIXED(36);
 
     for (int32 i = 0; i < this->buttonCount; ++i) {
         if (!this->buttonPtrs[i])
             break;
 
-        UIButton *button = this->buttonPtrs[i];
-        button->startPos.x     = pos.x;
-        button->startPos.y     = pos.y;
-        button->position.x     = pos.x;
-        button->position.y     = pos.y;
-        //adds 30 pixels to the y position for every button in the control
+        UIButton *button   = this->buttonPtrs[i];
+        button->startPos.x = pos.x;
+        button->startPos.y = pos.y;
+        button->position.x = pos.x;
+        button->position.y = pos.y;
+        // adds 30 pixels to the y position for every button in the control
         pos.y += TO_FIXED(30);
     }
 }
@@ -345,8 +348,7 @@ void PauseMenu::FocusCamera()
         return;
 
     LogHelpers::Print("FocusCamera(): triggerPlayer = %d", this->triggerPlayer);
-    for (auto cameraPtr : GameObject::GetEntities<Camera>(FOR_ALL_ENTITIES))
-    {
+    for (auto cameraPtr : GameObject::GetEntities<Camera>(FOR_ALL_ENTITIES)) {
         int32 id         = RSDKTable->GetEntitySlot(cameraPtr);
         int32 prevScreen = cameraPtr->screenID;
         if (id - SLOT_CAMERA1 == this->triggerPlayer) {
@@ -362,12 +364,12 @@ void PauseMenu::FocusCamera()
 
 void PauseMenu::UpdateCameras()
 {
-    // i think this sets the pause camera bounds to whichever player pauses? this would only happen in competition i think which isnt here so shouldnt ever be used
+    // i think this sets the pause camera bounds to whichever player pauses? this would only happen in competition i think which isnt here so shouldnt
+    // ever be used
     if (!Camera::sVars)
         return;
 
-    for (auto camera : GameObject::GetEntities<Camera>(FOR_ALL_ENTITIES))
-    {
+    for (auto camera : GameObject::GetEntities<Camera>(FOR_ALL_ENTITIES)) {
         camera->screenID = RSDKTable->GetEntitySlot(camera) - SLOT_CAMERA1;
         camera->SetCameraBoundsXY();
     }
@@ -399,13 +401,13 @@ bool32 PauseMenu::IsDisconnected()
 {
     int32 id = Input::GetInputDeviceID(Input::CONT_P1 + this->triggerPlayer);
 
-    //looks for an currently assigned input device, if it cant find one it sets forced disconnect to true
+    // looks for an currently assigned input device, if it cant find one it sets forced disconnect to true
     return Input::IsInputDeviceAssigned(id) || sVars->forcedDisconnect;
 }
 
 uint8 PauseMenu::GetPlayerCount()
 {
-    MenuParam *param            = MenuParam::GetMenuParam();
+    MenuParam *param = MenuParam::GetMenuParam();
 
     return 1;
 }
@@ -441,7 +443,7 @@ void PauseMenu::ExitButtonCB()
 
     String msg;
     int32 strID = Localization::AreYouSure;
-    //loads the lose progress warning string if youre not currently watching a replay, otherwise loads the previous string without the warning
+    // loads the lose progress warning string if youre not currently watching a replay, otherwise loads the previous string without the warning
     if (!ReplayRecorder::sVars || !ReplayRecorder::sVars->isReplaying)
         strID = Localization::QuitWarningLoseProgress;
     Localization::GetString(&msg, strID);
@@ -469,10 +471,10 @@ void PauseMenu::RestartDialog_YesCB()
     }
     Music::Stop();
 
-    //creates another pause entity with it set to fading out? i would think itd just be easier to create an fxfade object instead unless im wrong
-    int32 x                  = (screenInfo->position.x + screenInfo->center.x) << 16;
-    int32 y                  = (screenInfo->position.y + screenInfo->center.y) << 16;
-    PauseMenu *fadeout       = GameObject::Create<PauseMenu>(INT_TO_VOID(true), x, y);
+    // creates another pause entity with it set to fading out? i would think itd just be easier to create an fxfade object instead unless im wrong
+    int32 x            = (screenInfo->position.x + screenInfo->center.x) << 16;
+    int32 y            = (screenInfo->position.y + screenInfo->center.y) << 16;
+    PauseMenu *fadeout = GameObject::Create<PauseMenu>(INT_TO_VOID(true), x, y);
     fadeout->fadeoutCB.Set(&PauseMenu::RestartFadeCB);
     fadeout->state.Set(&PauseMenu::State_HandleFadeout);
 }
@@ -482,8 +484,8 @@ void PauseMenu::ExitDialog_YesCB()
     GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
 
     UIDialog::sVars->activeDialog->parent->state.Set(nullptr);
-    globals->recallEntities               = false;
-    globals->initCoolBonus                = false;
+    globals->recallEntities = false;
+    globals->initCoolBonus  = false;
 
     // this resets the checkpoints i think so you dont end up loading in a random one when picking another stage after exiting
     if (StarPost::sVars) {
@@ -494,9 +496,9 @@ void PauseMenu::ExitDialog_YesCB()
     }
     Music::Stop();
 
-    int32 x                  = (screenInfo->position.x + screenInfo->center.x) << 16;
-    int32 y                  = (screenInfo->position.y + screenInfo->center.y) << 16;
-    PauseMenu *fadeout       = GameObject::Create<PauseMenu>(INT_TO_VOID(true), x, y);
+    int32 x            = (screenInfo->position.x + screenInfo->center.x) << 16;
+    int32 y            = (screenInfo->position.y + screenInfo->center.y) << 16;
+    PauseMenu *fadeout = GameObject::Create<PauseMenu>(INT_TO_VOID(true), x, y);
     fadeout->fadeoutCB.Set(&PauseMenu::ExitFadeCB);
     fadeout->state.Set(&PauseMenu::State_HandleFadeout);
 }
@@ -527,12 +529,12 @@ void PauseMenu::ExitFadeCB()
 
 void PauseMenu::ActionCB_Button()
 {
-    //gets the uicontrol of the pause menu
+    // gets the uicontrol of the pause menu
     PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
     UIControl *manager   = pauseMenu->manager;
 
-    //if the button id is 0 or higher and its less than the total buttoncount
-    //then run the action of whatever button is pressed
+    // if the button id is 0 or higher and its less than the total buttoncount
+    // then run the action of whatever button is pressed
     if (manager->buttonID >= 0 && manager->buttonID < manager->buttonCount) {
         pauseMenu->buttonActions[manager->buttonID].Run(pauseMenu);
     }
@@ -540,10 +542,11 @@ void PauseMenu::ActionCB_Button()
 
 void PauseMenu::State_SetupButtons()
 {
-    this->timer                 = 0;
+    this->timer             = 0;
     sVars->forcedDisconnect = false;
 
-    //if the controller is suddenly disconnected, force a pause (which is empty i believe it just freezes the game with the bg tint so things dont happen while its disconnected)
+    // if the controller is suddenly disconnected, force a pause (which is empty i believe it just freezes the game with the bg tint so things dont
+    // happen while its disconnected)
     if (sVars->controllerDisconnect || sVars->signOutDetected) {
         if (sVars->controllerDisconnect)
             this->disconnectCheck.Set(&PauseMenu::IsDisconnected);
@@ -554,8 +557,8 @@ void PauseMenu::State_SetupButtons()
     }
     else {
         sVars->sfxAccept.Play(false, 255);
-        
-        //sets the action of each added button
+
+        // sets the action of each added button
         Action<void> callbackResume;
         callbackResume.Set(&PauseMenu::ResumeButtonCB);
         PauseMenu::AddButton(0, callbackResume);
@@ -576,7 +579,7 @@ void PauseMenu::State_SetupButtons()
         this->state.Set(&PauseMenu::State_StartPause);
         this->stateDraw.Set(&PauseMenu::Draw_RegularPause);
 
-        //assigns p2 to the pause menu if they start it i think?
+        // assigns p2 to the pause menu if they start it i think?
         if (globals->gameMode < MODE_TIMEATTACK && Input::GetInputDeviceID(Input::CONT_P2) == (uint32)Input::INPUT_AUTOASSIGN)
             Input::AssignInputSlotToDevice(Input::CONT_P2, Input::INPUT_NONE);
     }
@@ -587,33 +590,34 @@ void PauseMenu::State_SetupButtons()
 void PauseMenu::State_StartPause()
 {
     if (this->timer >= 32) {
-        this->timer               = 0;
+        this->timer                   = 0;
         UIControl::sVars->inputLocked = false;
         UIControl::SetMenuLostFocus(this->manager);
         this->state.Set(&PauseMenu::State_Paused);
     }
     else {
         Vector2 pos;
-       
-        //i would think this is supposed to make the tinted background fade in when paused due to the timer, but it seems to just pop in with no easing so idk
+
+        // i would think this is supposed to make the tinted background fade in when paused due to the timer, but it seems to just pop in with no
+        // easing so idk
         int32 alpha = 32 * this->timer;
         MathHelpers::Lerp2Sin1024(&pos, MAX(0, alpha), -TO_FIXED(240), 0, 0, 0);
 
         MathHelpers::Lerp2Sin1024(&pos, MAX(0, alpha), TO_FIXED(232), 0, 0, 0);
 
         ++this->timer;
-        this->tintAlpha           = alpha;
+        this->tintAlpha = alpha;
     }
 }
 
 void PauseMenu::State_Paused()
 {
-    //sets tintalpha to max bc at this point everything should have come in
-    this->tintAlpha           = 0xFF;
+    // sets tintalpha to max bc at this point everything should have come in
+    this->tintAlpha = 0xFF;
 
-    //if you press the pause button again and no dialog is up then the game unpauses
+    // if you press the pause button again and no dialog is up then the game unpauses
     UIControl *manager = this->manager;
-    if (Unknown_pausePress && !manager->dialogHasFocus) {
+    if (Unknown_pausePress && !manager->dialogHasFocus && !manager->sVars->inputLocked) {
         PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
         pauseMenu->state.Set(&PauseMenu::State_Resume);
     }
@@ -624,13 +628,14 @@ void PauseMenu::State_ForcedPause()
     String textBuffer;
 
     // this is currently bugged
-    // after forcepausing, the game unpauses for every frame anyway, but since the controller is still disconnected, it pauses again, resulting in a loop
-    // this isnt like gamebreaking bc if you reconnect the controller during this it unpauses just fine and you can play, but still annoying and needs to be fixed
+    // after forcepausing, the game unpauses for every frame anyway, but since the controller is still disconnected, it pauses again, resulting in a
+    // loop this isnt like gamebreaking bc if you reconnect the controller during this it unpauses just fine and you can play, but still annoying and
+    // needs to be fixed
     if (this->timer == 1) {
         UIControl::sVars->inputLocked = false;
         if (sVars->controllerDisconnect) {
-            //loads the strings for reconnecting the controller on the uidialog
-            //idk why if its switch it doesnt say wireless tho wouldnt most be using joycons which are wireless???
+            // loads the strings for reconnecting the controller on the uidialog
+            // idk why if its switch it doesnt say wireless tho wouldnt most be using joycons which are wireless???
             int32 strID = Localization::ReconnectWirelessController;
             if (SKU->platform == PLATFORM_SWITCH)
                 strID = Localization::ReconnectController;
@@ -667,7 +672,8 @@ void PauseMenu::State_ForcedPause()
     ++this->timer;
     if (!UIDialog::sVars->activeDialog) {
         if (this->forcePaused) {
-            //unpauses the game when the dialog is gone and its force paused, which would happen after you press the dialog button which means a controller is reconnected
+            // unpauses the game when the dialog is gone and its force paused, which would happen after you press the dialog button which means a
+            // controller is reconnected
             Stage::SetEngineState(ENGINESTATE_REGULAR);
             PauseMenu::ClearButtons(GameObject::Get<PauseMenu>(SLOT_PAUSEMENU));
             PauseMenu::ResumeSound();
@@ -696,12 +702,12 @@ void PauseMenu::State_Resume()
     if (!this->timer && globals->gameMode < MODE_TIMEATTACK && !Input::GetInputDeviceID(Input::CONT_P2))
         Input::AssignInputSlotToDevice(Input::CONT_P2, Input::INPUT_AUTOASSIGN);
 
-    //locks the control once a button is pressed and starts its action
+    // locks the control once a button is pressed and starts its action
     UIControl::sVars->inputLocked = true;
 
     if (this->timer >= 32) {
-        //resumes everything as normal and destroys the pause menu with the clear buttons function
-        this->timer               = 0;
+        // resumes everything as normal and destroys the pause menu with the clear buttons function
+        this->timer = 0;
         Stage::SetEngineState(ENGINESTATE_REGULAR);
         PauseMenu::ClearButtons(GameObject::Get<PauseMenu>(SLOT_PAUSEMENU));
         PauseMenu::ResumeSound();
@@ -709,29 +715,29 @@ void PauseMenu::State_Resume()
     else {
         Vector2 pos;
 
-        //again i assume this is spuposed to make the bg tint fade away but it just kinda disappears with no easing so idk
+        // again i assume this is spuposed to make the bg tint fade away but it just kinda disappears with no easing so idk
         int32 percent = 0x20 * this->timer;
         MathHelpers::Lerp2Sin1024(&pos, MAX(0, percent), 0, 0, -TO_FIXED(240), 0);
 
         MathHelpers::Lerp2Sin1024(&pos, MAX(0, percent), 0, 0, TO_FIXED(232), 0);
 
-        this->tintAlpha           = ((0x100 - this->timer) << 32) / 32;
+        this->tintAlpha = ((0x100 - this->timer) << 32) / 32;
         ++this->timer;
     }
 }
 
 void PauseMenu::State_SetupTitleFade()
 {
-    PauseMenu *pauseMenu       = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
-    pauseMenu->timer           = 0;
-    pauseMenu->fadeTimer       = 0;
+    PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
+    pauseMenu->timer     = 0;
+    pauseMenu->fadeTimer = 0;
     pauseMenu->state.Set(&PauseMenu::State_FadeToTitle);
 }
 
 void PauseMenu::State_FadeToTitle()
 {
-    //i think this happens when the user is signed out and it returns to the title screen, as the exit button goes to the main menu
-    //however this should never happen here as there arent any users LOL
+    // i think this happens when the user is signed out and it returns to the title screen, as the exit button goes to the main menu
+    // however this should never happen here as there arent any users LOL
     if (!UIDialog::sVars->activeDialog) {
         if (!this->timer) {
             this->paused = true;
@@ -772,9 +778,9 @@ void PauseMenu::DrawStartPause()
         this->triangleSpeed = 0;
     }
 
-    // this is probably ugly but i need a different speed value for the sprites in the middle, as they have a far greater distance to travel and the previous one ends too soon
-    // i tried just adding a constant to_fixed value to the original triangle speed for the middle objects, but it still reaches 0 at the same time and just starts to move by a fixed 8 pixels alone every frame
-    // which makes the movement look very ugly and unnatural
+    // this is probably ugly but i need a different speed value for the sprites in the middle, as they have a far greater distance to travel and the
+    // previous one ends too soon i tried just adding a constant to_fixed value to the original triangle speed for the middle objects, but it still
+    // reaches 0 at the same time and just starts to move by a fixed 8 pixels alone every frame which makes the movement look very ugly and unnatural
     if (this->centerSpeed > 0) {
         this->centerSpeed -= TO_FIXED(1);
     }
@@ -800,16 +806,17 @@ void PauseMenu::DrawStartPause()
 
     // side triangles
     // have to use triangleLeftPos which is set in create unfortunately
-    // i would rather use local drawing variables like in drawpausemenu but cant bc it would just be set back to its pase position after every attempt of moving as a result of it going every frame
-    // i dont know if its possible to get it to stop at exactly 0 with this method of easing, adding or subtracting a fixed amount if its
-    // under or above a certain position usually makes it end either a little too far or not far enough from whatever exact position is wanted
-    // for example, if you want it to stop moving at position fixed(50), and it increases by 8 every frame, you could have it be at 48, and then it adds another 8 bc it is still currently under 50
-    // however that would set its position to fixed(56) and itd be farther than whats wanted which is annoying
-    // in this case the speed reaches 0 a little before it reaches its end, so it stops moving a little before but id rather have that then it going too far, which would happen
-    // if i increased the speed anymore as a result of what ive mentioned above, ill just have to settle for the closest i can get unfortunately
+    // i would rather use local drawing variables like in drawpausemenu but cant bc it would just be set back to its pase position after every attempt
+    // of moving as a result of it going every frame i dont know if its possible to get it to stop at exactly 0 with this method of easing, adding or
+    // subtracting a fixed amount if its under or above a certain position usually makes it end either a little too far or not far enough from
+    // whatever exact position is wanted for example, if you want it to stop moving at position fixed(50), and it increases by 8 every frame, you
+    // could have it be at 48, and then it adds another 8 bc it is still currently under 50 however that would set its position to fixed(56) and itd
+    // be farther than whats wanted which is annoying in this case the speed reaches 0 a little before it reaches its end, so it stops moving a little
+    // before but id rather have that then it going too far, which would happen if i increased the speed anymore as a result of what ive mentioned
+    // above, ill just have to settle for the closest i can get unfortunately
     this->inkEffect = INK_NONE;
-    drawPos.x = triangleLeftPos.x;
-    drawPos.y = triangleLeftPos.y;
+    drawPos.x       = triangleLeftPos.x;
+    drawPos.y       = triangleLeftPos.y;
     this->trianglesLeftAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 1, false, 0);
     this->trianglesLeftAnimator.DrawSprite(&drawPos, true);
     // adds to the left triangle position by whatever the triangle speed currently is if its below 0 (0 should be the final resting position)
@@ -834,7 +841,8 @@ void PauseMenu::DrawStartPause()
     drawPos.y = bgCirclePos.y - TO_FIXED(11);
     this->bgCircleAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 0, true, 1);
     this->bgCircleAnimator.DrawSprite(&drawPos, true);
-    // adds to the bg circles positions by whatever the centerspeed currently is if its above the current pausemenu.y position (that should be the final resting position)
+    // adds to the bg circles positions by whatever the centerspeed currently is if its above the current pausemenu.y position (that should be the
+    // final resting position)
     if (bgCirclePos.y < TO_FIXED(screen->center.y)) {
         bgCirclePos.y += this->centerSpeed;
     }
@@ -843,16 +851,18 @@ void PauseMenu::DrawStartPause()
     drawPos.y = pauseTextPos.y;
     this->pauseTextAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 5, true, 0);
     this->pauseTextAnimator.DrawSprite(&drawPos, true);
-    // adds to the pause text position by whatever the centerspeed currently is if its 70 pixels or higher above the pausemenu.y position (that should be the final resting position)
+    // adds to the pause text position by whatever the centerspeed currently is if its 70 pixels or higher above the pausemenu.y position (that should
+    // be the final resting position)
     if (pauseTextPos.y < TO_FIXED(screen->center.y) - TO_FIXED(70)) {
         pauseTextPos.y += this->centerSpeed;
     }
 
-    drawPos.x = emeraldsPos.x;
-    drawPos.y = emeraldsPos.y;
+    drawPos.x                  = emeraldsPos.x;
+    drawPos.y                  = emeraldsPos.y;
     SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
     this->emeraldsAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 6, true, 0);
-    // i still dont know how get_bit works or what exactly this code is doing but i do know this is how to get the correct amount of emeralds displaying, so it is what it is
+    // i still dont know how get_bit works or what exactly this code is doing but i do know this is how to get the correct amount of emeralds
+    // displaying, so it is what it is
     for (int32 e = 0; e < 7; ++e) {
         if (GET_BIT(saveRAM->collectedEmeralds, e)) {
             this->emeraldsAnimator.frameID = e;
@@ -862,12 +872,14 @@ void PauseMenu::DrawStartPause()
         }
     }
     this->emeraldsAnimator.DrawSprite(&drawPos, true);
-    // adds to the emerald count position by whatever the centerspeed currently is if its higher above 62 pixels below the pausemenu.y position (that should be the final resting position)
+    // adds to the emerald count position by whatever the centerspeed currently is if its higher above 62 pixels below the pausemenu.y position (that
+    // should be the final resting position)
     if (emeraldsPos.y < TO_FIXED(screen->center.y) + TO_FIXED(62)) {
         emeraldsPos.y += this->centerSpeed;
     }
 
-    // adds to the button position by whatever the centerspeed currently is if its above the pausemenu.y position (that should be the final resting position)
+    // adds to the button position by whatever the centerspeed currently is if its above the pausemenu.y position (that should be the final resting
+    // position)
     if (this->buttonPos.y < this->position.y) {
         this->buttonPos.y += this->centerSpeed;
     }
@@ -880,8 +892,8 @@ void PauseMenu::DrawPauseMenu()
 
     // checkerboard bg
     this->inkEffect = INK_ALPHA;
-    drawPos.x = 0;
-    drawPos.y = 0;
+    drawPos.x       = 0;
+    drawPos.y       = 0;
     this->checkerboardBGAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 8, false, 0);
     this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
 
@@ -889,19 +901,20 @@ void PauseMenu::DrawPauseMenu()
     // side triangles
     drawPos.x = -TO_FIXED(1);
     drawPos.y = TO_FIXED(0);
-    // leaving this as a note for myself, set forceApply to FALSE if you want the animation to actually play properly LMAO, otherwise it just seems to reset every frame
+    // leaving this as a note for myself, set forceApply to FALSE if you want the animation to actually play properly LMAO, otherwise it just seems to
+    // reset every frame
     this->trianglesLeftAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 1, false, 0);
     this->trianglesLeftAnimator.DrawSprite(&drawPos, true);
 
     drawPos.x = TO_FIXED(379);
 
-    //i would use just one animator for these but apparently the animation cant play if i do that so two different triangle animators it is
+    // i would use just one animator for these but apparently the animation cant play if i do that so two different triangle animators it is
     this->trianglesRightAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 2, false, 0);
     this->trianglesRightAnimator.DrawSprite(&drawPos, true);
 
     drawPos = this->position;
 
-    //bg circles
+    // bg circles
     this->bgCircleAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 0, true, 0);
     this->bgCircleAnimator.DrawSprite(&drawPos, false);
 
@@ -915,11 +928,12 @@ void PauseMenu::DrawPauseMenu()
     this->pauseTextAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 5, true, 0);
     this->pauseTextAnimator.DrawSprite(&drawPos, false);
 
-    //emeralds
-    drawPos.y = this->position.y + TO_FIXED(62);
+    // emeralds
+    drawPos.y                  = this->position.y + TO_FIXED(62);
     SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
     this->emeraldsAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 6, true, 0);
-    // i still dont know how get_bit works or what exactly this code is doing but i do know this is how to get the correct amount of emeralds displaying, so it is what it is
+    // i still dont know how get_bit works or what exactly this code is doing but i do know this is how to get the correct amount of emeralds
+    // displaying, so it is what it is
     for (int32 e = 0; e < 7; ++e) {
         if (GET_BIT(saveRAM->collectedEmeralds, e)) {
             this->emeraldsAnimator.frameID = e;
@@ -930,7 +944,7 @@ void PauseMenu::DrawPauseMenu()
     }
     this->emeraldsAnimator.DrawSprite(&drawPos, false);
 
-    //changes the button animation depending on if its selected or not
+    // changes the button animation depending on if its selected or not
     for (int32 i = 0; i < this->buttonCount; ++i) {
         if (!this->buttonPtrs[i])
             break;
@@ -949,10 +963,11 @@ void PauseMenu::DrawPauseMenu()
 }
 
 void PauseMenu::DrawEndPause()
-{ 
+{
     // pretty much just a reverse of drawstartpause lol
     // increases the speed instead of decreasing it
-    // if checks arent needed for the positions as theyre all supposed to go off screen and not visible anyway, and the entity is destroyed moments later
+    // if checks arent needed for the positions as theyre all supposed to go off screen and not visible anyway, and the entity is destroyed moments
+    // later
     if (this->triangleSpeed >= 0) {
         this->triangleSpeed += TO_FIXED(1);
     }
@@ -983,8 +998,8 @@ void PauseMenu::DrawEndPause()
     this->checkerboardBGAnimator.DrawSprite(&drawPos, true);
 
     this->inkEffect = INK_NONE;
-    drawPos.x = triangleLeftPos.x;
-    drawPos.y = triangleLeftPos.y;
+    drawPos.x       = triangleLeftPos.x;
+    drawPos.y       = triangleLeftPos.y;
     this->trianglesLeftAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 1, false, 0);
     this->trianglesLeftAnimator.DrawSprite(&drawPos, true);
     triangleLeftPos.x -= this->triangleSpeed;
@@ -1010,8 +1025,8 @@ void PauseMenu::DrawEndPause()
     this->pauseTextAnimator.DrawSprite(&drawPos, true);
     pauseTextPos.y += this->centerSpeed;
 
-    drawPos.x = emeraldsPos.x;
-    drawPos.y = emeraldsPos.y;
+    drawPos.x                  = emeraldsPos.x;
+    drawPos.y                  = emeraldsPos.y;
     SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
     this->emeraldsAnimator.SetAnimation(UIWidgets::sVars->buttonFrames, 6, true, 0);
     for (int32 e = 0; e < 7; ++e) {
@@ -1030,12 +1045,13 @@ void PauseMenu::DrawEndPause()
 
 void PauseMenu::Draw_RegularPause()
 {
-    //actually draws the bg tint and sets it up with the lookup table
+    // actually draws the bg tint and sets it up with the lookup table
     if (!this->state.Matches(&PauseMenu::State_HandleFadeout)) {
         RSDKTable->SetTintLookupTable(sVars->tintLookupTable);
         Graphics::DrawRect(0, 0, screenInfo->size.x, screenInfo->size.y, 0, this->tintAlpha, INK_TINT, true);
 
-        // calls the start draw function whenever first paused, and after 32 frames it will be set to the idle function if the current state isnt resuming
+        // calls the start draw function whenever first paused, and after 32 frames it will be set to the idle function if the current state isnt
+        // resuming
         if (this->pauseTimer >= 32) {
             if (!this->state.Matches(&PauseMenu::State_Resume)) {
                 PauseMenu::DrawPauseMenu();
@@ -1055,8 +1071,8 @@ void PauseMenu::Draw_RegularPause()
 
 void PauseMenu::Draw_ForcePause()
 {
-    //actually draws the bg tint and sets it up with the lookup table
-    //ONLY draws the bg tint with none of the other pause menu stuff, as a forced pause's only purpose is to have the controller be reconnected
+    // actually draws the bg tint and sets it up with the lookup table
+    // ONLY draws the bg tint with none of the other pause menu stuff, as a forced pause's only purpose is to have the controller be reconnected
     if (!this->state.Matches(&PauseMenu::State_HandleFadeout)) {
         RSDKTable->SetTintLookupTable(sVars->tintLookupTable);
         Graphics::DrawRect(0, 0, screenInfo->size.x, screenInfo->size.y, 0, this->tintAlpha, INK_TINT, true);

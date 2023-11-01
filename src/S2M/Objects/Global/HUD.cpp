@@ -23,7 +23,7 @@ void HUD::Update()
 {
     this->enableTimeFlash = false;
     this->enableRingFlash = false;
-    
+
     if (sceneInfo->minutes == 9 && !(globals->medalMods & MEDAL_NOTIMEOVER))
         this->enableTimeFlash = true;
 
@@ -262,7 +262,7 @@ void HUD::Draw()
         if (GET_CHARACTER_ID(1) == ID_SONIC && player->superState == Player::SuperStateSuper) {
             lifeIconAnimator.frameID += 3;
         }
-        
+
         if (GET_CHARACTER_ID(1) == ID_SONIC && player->superState == Player::SuperStateDone) {
             lifeIconAnimator.frameID = 0;
         }
@@ -312,15 +312,22 @@ void HUD::Create(void *data)
         this->visible   = true;
         this->drawGroup = Zone::sVars->hudDrawGroup;
 
-        this->scoreOffset.x  = TO_FIXED(16);
-        this->scoreOffset.y  = TO_FIXED(12);
-        this->timeOffset.x   = TO_FIXED(16);
-        this->timeOffset.y   = TO_FIXED(28);
-        this->ringsOffset.x  = TO_FIXED(16);
-        this->ringsOffset.y  = TO_FIXED(44);
-        this->lifeOffset.x   = TO_FIXED(16);
-        this->lifeOffset.y   = (screenInfo->size.y - 12) << 16;
+        // this->scoreOffset.x = TO_FIXED(16);
+        this->scoreOffset.y = TO_FIXED(12);
+
+        // this->timeOffset.x = TO_FIXED(16);
+        this->timeOffset.y = TO_FIXED(28);
+
+        // this->ringsOffset.x = TO_FIXED(16);
+        this->ringsOffset.y = TO_FIXED(44);
+
+        // this->lifeOffset.x = TO_FIXED(16);
+        this->lifeOffset.y = (screenInfo->size.y - 12) << 16;
+
         this->actionPromptPos = -TO_FIXED(32);
+
+        MoveIn(this);
+        state.Set(nullptr);
 
         for (int32 p = 0; p < PLAYER_COUNT; ++p) {
             this->vsScoreOffsets[p].x = this->scoreOffset.x;
@@ -357,12 +364,14 @@ void HUD::Create(void *data)
 
 void HUD::StageLoad()
 {
-    switch GET_CHARACTER_ID(1) {
-        default: break;
-        case ID_SONIC: sVars->aniFrames.Load("Global/HUDSonic.bin", SCOPE_STAGE); break;
-        case ID_TAILS: sVars->aniFrames.Load("Global/HUDTails.bin", SCOPE_STAGE); break;
-        case ID_KNUCKLES: sVars->aniFrames.Load("Global/HUDKnux.bin", SCOPE_STAGE); break;
-    }
+    switch
+        GET_CHARACTER_ID(1)
+        {
+            default: break;
+            case ID_SONIC: sVars->aniFrames.Load("Global/HUDSonic.bin", SCOPE_STAGE); break;
+            case ID_TAILS: sVars->aniFrames.Load("Global/HUDTails.bin", SCOPE_STAGE); break;
+            case ID_KNUCKLES: sVars->aniFrames.Load("Global/HUDKnux.bin", SCOPE_STAGE); break;
+        }
     sVars->superButtonFrames.Load("Global/SuperButtons.bin", SCOPE_STAGE);
 
     sVars->sfxClick.Get("Stage/Click.wav");
@@ -462,18 +471,19 @@ void HUD::GetButtonFrame(RSDK::Animator *animator, int32 buttonID)
     int32 gamepadType = UIButtonPrompt::GetGamepadType();
     if (API::GetConfirmButtonFlip() && buttonID <= 1)
         buttonID ^= 1;
-    
+
     // Gamepad
-    if (gamepadType != UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD && (gamepadType < UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_FR || gamepadType > UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_SP)) {
+    if (gamepadType != UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD
+        && (gamepadType < UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_FR || gamepadType > UIButtonPrompt::UIBUTTONPROMPT_KEYBOARD_SP)) {
         animator->SetAnimation(sVars->superButtonFrames, gamepadType, true, buttonID);
     }
     else {
         // Keyboard
         Player *player = GameObject::Get<Player>(SLOT_PLAYER1);
-    
+
         int32 id     = Input::GetInputDeviceID(player->controllerID);
         int32 contID = id == Input::INPUT_UNASSIGNED ? Input::CONT_P1 : player->controllerID;
-    
+
         int32 map = 0;
         switch (buttonID) {
             default: break;
@@ -483,7 +493,7 @@ void HUD::GetButtonFrame(RSDK::Animator *animator, int32 buttonID)
             case 3: map = controllerInfo[contID].keyY.keyMap; break;
             case 4: map = controllerInfo[contID].keyStart.keyMap; break;
         }
-    
+
         int32 frame = UIButtonPrompt::MappingsToFrame(map);
         animator->SetAnimation(sVars->superButtonFrames, 1, true, frame);
     }
@@ -499,61 +509,41 @@ void HUD::State_MoveIn()
 {
     SET_CURRENT_STATE();
 
-    StateMachine<HUD> *state = nullptr;
-    Vector2 *scoreOffset = nullptr, *timeOffset = nullptr, *ringsOffset = nullptr, *lifeOffset = nullptr;
-    int32 *max = nullptr;
+    if (scoreOffset.x < TO_FIXED(16))
+        scoreOffset.x += TO_FIXED(16 - moveTimer);
 
-    state       = &this->state;
-    scoreOffset = &this->scoreOffset;
-    timeOffset  = &this->timeOffset;
-    ringsOffset = &this->ringsOffset;
-    lifeOffset  = &this->lifeOffset;
-    max         = &this->maxOffset;
+    if (timeOffset.x < TO_FIXED(16) && moveTimer >= 8)
+        timeOffset.x += TO_FIXED(28 - moveTimer);
 
-    if (scoreOffset->x < *max)
-        scoreOffset->x += TO_FIXED(8);
+    if (ringsOffset.x < TO_FIXED(16) && moveTimer >= 16)
+        ringsOffset.x += TO_FIXED(38 - moveTimer);
 
-    if (timeOffset->x < *max)
-        timeOffset->x += TO_FIXED(8);
+    if (lifeOffset.x < TO_FIXED(16) && moveTimer >= 32)
+        lifeOffset.x += TO_FIXED(55 - moveTimer);
+    else if (moveTimer >= 32)
+        state.Set(nullptr);
 
-    if (ringsOffset->x < *max)
-        ringsOffset->x += TO_FIXED(8);
-
-    if (lifeOffset->x < *max)
-        lifeOffset->x += TO_FIXED(8);
-    else
-        state->Set(nullptr);
+    moveTimer++;
 }
 void HUD::State_MoveOut()
 {
     SET_CURRENT_STATE();
 
-    Vector2 *scoreOffset = nullptr, *timeOffset = nullptr, *ringsOffset = nullptr, *lifeOffset = nullptr;
-    StateMachine<HUD> *state = nullptr;
+    moveTimer++;
 
-    state       = &this->state;
-    scoreOffset = &this->scoreOffset;
-    timeOffset  = &this->timeOffset;
-    ringsOffset = &this->ringsOffset;
-    lifeOffset  = &this->lifeOffset;
+    if (scoreOffset.x > -TO_FIXED(112))
+        scoreOffset.x -= TO_FIXED(moveTimer); // 16
 
-    if (scoreOffset->x > -TO_FIXED(112))
-        scoreOffset->x -= TO_FIXED(8);
+    if (timeOffset.x > -TO_FIXED(176) && moveTimer >= 8)
+        timeOffset.x -= TO_FIXED(moveTimer - 8); // 28
 
-    if (timeOffset->x > -TO_FIXED(168))
-        timeOffset->x -= TO_FIXED(12);
+    if (ringsOffset.x > -TO_FIXED(224) && moveTimer >= 16)
+        ringsOffset.x -= TO_FIXED(moveTimer - 16); // 38
 
-    if (ringsOffset->x > -TO_FIXED(224))
-        ringsOffset->x -= TO_FIXED(16);
-
-    if (lifeOffset->x > -TO_FIXED(280))
-        lifeOffset->x -= TO_FIXED(20);
-
-    if (globals->gameMode != MODE_TIMEATTACK) { // this is done because the replay prompts in time attack are done with hud, but if its destroyed then they will not appear, this is just a simple way of getting around it
-        if (lifeOffset->x <= -TO_FIXED(280)) {
-            this->Destroy();
-        }
-    }
+    if (lifeOffset.x > -TO_FIXED(284) && moveTimer >= 32)
+        lifeOffset.x -= TO_FIXED(moveTimer - 32); // 55
+    else if (moveTimer >= 32)
+        state.Set(nullptr);
 }
 
 void HUD::EnableRingFlash()
@@ -573,13 +563,25 @@ int32 HUD::CharacterIndexFromID(int32 characterID)
     return id;
 }
 
+void HUD::MoveOut(HUD *hud)
+{
+    hud->moveTimer = 0;
+    hud->state.Set(&HUD::State_MoveOut);
+}
+
 void HUD::MoveIn(HUD *hud)
 {
-    hud->maxOffset = hud->scoreOffset.x;
-    hud->scoreOffset.x -= TO_FIXED(0x100);
-    hud->timeOffset.x -= TO_FIXED(0x110);
-    hud->ringsOffset.x -= TO_FIXED(0x120);
-    hud->lifeOffset.x -= TO_FIXED(0x130);
+    // taken from letting it run manually with manual tweaking
+    hud->scoreOffset.x = -TO_FIXED(120);
+    hud->timeOffset.x  = -TO_FIXED(194);
+    hud->ringsOffset.x = -TO_FIXED(237);
+    hud->lifeOffset.x  = -TO_FIXED(260); // except 4 this one this one wants to be quirky
+    hud->moveTimer     = 0;
+
+    // hud->scoreOffset.x = TO_FIXED(16);
+    // hud->timeOffset.x  = TO_FIXED(16);
+    // hud->ringsOffset.x = TO_FIXED(16);
+    // hud->lifeOffset.x  = TO_FIXED(16);
 
     hud->state.Set(&HUD::State_MoveIn);
 }

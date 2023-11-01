@@ -32,8 +32,7 @@ struct Shield : RSDK::GameObject::Entity {
         AniBubbleAttackDAdd,
         AniBubbleAttackD,
         AniBubbleAttackUpAdd,
-        AniBubbleAttackUp,
-        AniInsta,
+        AniInsta
     };
 
     // ==============================

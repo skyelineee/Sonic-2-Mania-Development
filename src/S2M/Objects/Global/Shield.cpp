@@ -213,8 +213,10 @@ void Shield::State_Insta()
     if (this->player)
         this->player->invincibleTimer = 1;
 
-    if (this->shieldAnimator.frameID == this->shieldAnimator.frameCount - 1)
+    if (this->shieldAnimator.frameID == this->shieldAnimator.frameCount - 1) {
+        this->state.Init(); // no more
         this->Destroy();
+    }
 }
 void Shield::State_BubbleDrop()
 {

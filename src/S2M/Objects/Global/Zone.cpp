@@ -21,6 +21,7 @@
 #include "Animals.hpp"
 #include "Helpers/LogHelpers.hpp"
 #include "Common/Decoration.hpp"
+#include "HUD.hpp"
 
 using namespace RSDK;
 
@@ -31,16 +32,21 @@ int32 GameLogic::dynamicPathUnknown;
 
 // stageFolder, spriteFolder, zoneID, actID, noActID, isSavable, useFolderIDs
 GameLogic::StageFolderInfo GameLogic::stageList[] = {
-    { "LSelect", "LSelect", -1, 0, false, false, false }, { "Blueprint", "Blueprint", 0, 0, true, true, false },   { "EHZ", "EHZ", 1, 0, false, false, false },
-    { "EHZ", "EHZ", 1, 1, false, true, false },           { "CPZ", "CPZ", 2, 0, false, false, false },  { "CPZ", "CPZ", 2, 1, false, true, false },
-    { "ARZ", "ARZ", 3, 0, false, false, false },          { "ARZ", "ARZ", 3, 1, false, true, false },   { "SWZ", "SWZ", 4, 0, false, false, false },
-    { "SWZ", "SWZ", 4, 1, false, true, false },           { "CNZ", "CNZ", 5, 0, false, false, false },  { "CNZ", "CNZ", 5, 1, false, true, false },
-    { "HTZ", "HTZ", 6, 0, false, false, false },          { "HTZ", "HTZ", 6, 1, false, true, false },   { "MCZ", "MCZ", 7, 0, false, false, false },
-    { "MCZ", "MCZ", 7, 1, false, true, false },           { "SSZ", "SSZ", 8, 0, false, false, false },  { "SSZ", "SSZ", 8, 1, false, true, false },
-    { "OOZ", "OOZ", 9, 0, false, false, false },          { "OOZ", "OOZ", 9, 1, false, true, false },   { "MTZ", "MTZ", 10, 0, false, false, false },        
-    { "MTZ", "MTZ", 10, 1, false, true, false },          { "CCZ", "CCZ", 11, 0, false, false, false }, { "CCZ", "CCZ", 11, 1, false, true, false },
-    { "SCZ", "SCZ", 12, 0, true, true, false },           { "DEZ", "DEZ", 13, 0, false, false, false }, { "DEZ", "DEZ", 13, 1, false, true, false },        
-    { "HPZ", "HPZ", 14, 0, true, false, false },          { "PPZ", "PPZ", 15, 0, true, false, false },  { "HEHZ", "HEHZ", 16, 0, false, false, false },
+    { "LSelect", "LSelect", -1, 0, false, false, false }, { "Blueprint", "Blueprint", 0, 0, true, true, false },
+    { "EHZ", "EHZ", 1, 0, false, false, false },          { "EHZ", "EHZ", 1, 1, false, true, false },
+    { "CPZ", "CPZ", 2, 0, false, false, false },          { "CPZ", "CPZ", 2, 1, false, true, false },
+    { "ARZ", "ARZ", 3, 0, false, false, false },          { "ARZ", "ARZ", 3, 1, false, true, false },
+    { "SWZ", "SWZ", 4, 0, false, false, false },          { "SWZ", "SWZ", 4, 1, false, true, false },
+    { "CNZ", "CNZ", 5, 0, false, false, false },          { "CNZ", "CNZ", 5, 1, false, true, false },
+    { "HTZ", "HTZ", 6, 0, false, false, false },          { "HTZ", "HTZ", 6, 1, false, true, false },
+    { "MCZ", "MCZ", 7, 0, false, false, false },          { "MCZ", "MCZ", 7, 1, false, true, false },
+    { "SSZ", "SSZ", 8, 0, false, false, false },          { "SSZ", "SSZ", 8, 1, false, true, false },
+    { "OOZ", "OOZ", 9, 0, false, false, false },          { "OOZ", "OOZ", 9, 1, false, true, false },
+    { "MTZ", "MTZ", 10, 0, false, false, false },         { "MTZ", "MTZ", 10, 1, false, true, false },
+    { "CCZ", "CCZ", 11, 0, false, false, false },         { "CCZ", "CCZ", 11, 1, false, true, false },
+    { "SCZ", "SCZ", 12, 0, true, true, false },           { "DEZ", "DEZ", 13, 0, false, false, false },
+    { "DEZ", "DEZ", 13, 1, false, true, false },          { "HPZ", "HPZ", 14, 0, true, false, false },
+    { "PPZ", "PPZ", 15, 0, true, false, false },          { "HEHZ", "HEHZ", 16, 0, false, false, false },
     { "HEHZ", "HEHZ", 16, 1, false, false, false }
 };
 
@@ -559,7 +565,6 @@ void Zone::ReloadEntities(RSDK::Vector2 offset, bool32 setATLBounds)
 
         entity->position.x = storedEntity->position.x + offset.x;
         entity->position.y = storedEntity->position.y + offset.y;
-
     }
 
     // clear ATL data, we dont wanna do it again
@@ -568,17 +573,17 @@ void Zone::ReloadEntities(RSDK::Vector2 offset, bool32 setATLBounds)
     // if we're allowing the new boundary, update our camera to use ATL bounds instead of the default ones
     sVars->setATLBounds = setATLBounds;
     if (setATLBounds) {
-        Player *player         = GameObject::Get<Player>(SLOT_PLAYER1);
-        player->camera         = NULL;
-        Camera *camera         = GameObject::Get<Camera>(SLOT_CAMERA1);
-        camera->position.x     = offset.x;
-        camera->position.y     = offset.y;
+        Player *player     = GameObject::Get<Player>(SLOT_PLAYER1);
+        player->camera     = NULL;
+        Camera *camera     = GameObject::Get<Camera>(SLOT_CAMERA1);
+        camera->position.x = offset.x;
+        camera->position.y = offset.y;
         camera->state.Set(nullptr);
-        camera->target         = nullptr;
-        camera->boundsL        = (offset.x >> 16) - screenInfo->center.x;
-        camera->boundsR        = (offset.x >> 16) + screenInfo->center.x;
-        camera->boundsT        = (offset.y >> 16) - screenInfo->size.y;
-        camera->boundsB        = offset.y >> 16;
+        camera->target                = nullptr;
+        camera->boundsL               = (offset.x >> 16) - screenInfo->center.x;
+        camera->boundsR               = (offset.x >> 16) + screenInfo->center.x;
+        camera->boundsT               = (offset.y >> 16) - screenInfo->size.y;
+        camera->boundsB               = offset.y >> 16;
         Camera::sVars->centerBounds.x = TO_FIXED(8);
         Camera::sVars->centerBounds.y = TO_FIXED(4);
     }
@@ -651,15 +656,12 @@ void Zone::State_Fade()
     }
 }
 
-
-
 void Zone::ApplyWorldBounds()
 {
     if (sVars->setATLBounds) {
         Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);
 
-        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-        {
+        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
             int32 camWorldL = camera->boundsL << 16;
             if (player->position.x - TO_FIXED(10) <= camWorldL) {
                 player->position.x = camWorldL + TO_FIXED(10);

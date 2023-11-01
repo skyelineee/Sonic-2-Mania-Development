@@ -14,6 +14,7 @@
 #include "ItemBox.hpp"
 #include "ScoreBonus.hpp"
 #include "GameOver.hpp"
+#include "HUD.hpp"
 
 #include "Helpers/DrawHelpers.hpp"
 #include "Helpers/MathHelpers.hpp"
@@ -333,8 +334,8 @@ void SignPost::HandleSpin()
 void SignPost::HandleSparkles()
 {
     if (!(Zone::sVars->timer & 3)) {
-        Ring *sparkle = GameObject::Create<Ring>(0, this->position.x + Math::Rand(-0x180000, 0x180000),
-                                                   (this->position.y + Math::Rand(-0x200000, 0x80000)));
+        Ring *sparkle =
+            GameObject::Create<Ring>(0, this->position.x + Math::Rand(-0x180000, 0x180000), (this->position.y + Math::Rand(-0x200000, 0x80000)));
         sparkle->state.Set(&Ring::State_Sparkle);
         sparkle->stateDraw.Set(&Ring::Draw_Sparkle);
         sparkle->active  = ACTIVE_NORMAL;
@@ -416,40 +417,40 @@ void SignPost::CheckTouch()
             this->activePlayers |= 1 << p;
         }
         else {
-             if (!p) {
-                 if (!((1 << p) & this->activePlayers)) {
-                     bool32 passedSignpost = false;
-                     passedSignpost = player->position.x > this->position.x;
+            if (!p) {
+                if (!((1 << p) & this->activePlayers)) {
+                    bool32 passedSignpost = false;
+                    passedSignpost        = player->position.x > this->position.x;
 
-                     if (passedSignpost) {
-                         sVars->sfxSignPost.Play();
-                         this->active = ACTIVE_NORMAL;
-                         if (player->superState == Player::SuperStateSuper)
-                             player->superState = Player::SuperStateFadeOut;
+                    if (passedSignpost) {
+                        sVars->sfxSignPost.Play();
+                        this->active = ACTIVE_NORMAL;
+                        if (player->superState == Player::SuperStateSuper)
+                            player->superState = Player::SuperStateFadeOut;
 
-                         int32 vel = 0;
-                         if (player->onGround)
-                             vel = player->groundVel;
-                         else
-                             vel = player->velocity.x;
+                        int32 vel = 0;
+                        if (player->onGround)
+                            vel = player->groundVel;
+                        else
+                            vel = player->velocity.x;
 
-                         this->velocity.y      = -(vel >> 1);
-                         this->gravityStrength = vel / 96;
-                         sceneInfo->timeEnabled = false;
-                         if (vel >= 0x40000 && globals->useManiaBehavior) {
-                             this->state.Set(&SignPost::State_FlyUp);
-                         }
-                         else {
-                             Music::FadeOut(0.025f);
-                             this->state.Set(&SignPost::State_Spin);
-                         }
-                     }
+                        this->velocity.y       = -(vel >> 1);
+                        this->gravityStrength  = vel / 96;
+                        sceneInfo->timeEnabled = false;
+                        if (vel >= 0x40000 && globals->useManiaBehavior) {
+                            this->state.Set(&SignPost::State_FlyUp);
+                        }
+                        else {
+                            Music::FadeOut(0.025f);
+                            this->state.Set(&SignPost::State_Spin);
+                        }
+                    }
 
-                     this->playerPosStore[p].x = player->position.x;
-                     this->playerPosStore[p].y = player->position.y;
-                 }
-             }
-         }
+                    this->playerPosStore[p].x = player->position.x;
+                    this->playerPosStore[p].y = player->position.y;
+                }
+            }
+        }
     }
 }
 
@@ -485,6 +486,13 @@ void SignPost::State_Spin()
     HandleSparkles();
     this->facePlateAnimator.Process();
     this->eggPlateAnimator.Process();
+
+    if (this->spinCount == 1) {
+        for (auto hud : GameObject::GetEntities<HUD>(FOR_ACTIVE_ENTITIES)) {
+            if (!hud->state.Matches(&HUD::State_MoveOut))
+                HUD::MoveOut(hud);
+        }
+    }
 
     if (!this->spinCount) {
         this->velocity.y = 0;
@@ -635,7 +643,7 @@ void SignPost::State_Landed_Classic()
             }
         }
         else {
-            this->zdepth                    = 1;
+            this->zdepth                   = 1;
             this->eggPlateAnimator.frameID = 4;
             this->eggPlateAnimator.speed   = 0;
             this->type                     = SignPost::Decoration;

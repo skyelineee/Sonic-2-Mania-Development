@@ -27,9 +27,9 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(ActClear);
 
-void ActClear::Update() 
-{ 
-    this->state.Run(this); 
+void ActClear::Update()
+{
+    this->state.Run(this);
     this->trianglesLeftAnimator.Process();
     this->trianglesRightAnimator.Process();
     this->checkerboardBGAnimator.Process();
@@ -77,8 +77,8 @@ void ActClear::Draw()
     this->playerNameAnimator.DrawSprite(&drawPos, true);
 
     // got position
-    drawPos.x                        = this->gotPos.x;
-    drawPos.y                        = this->gotPos.y;
+    drawPos.x = this->gotPos.x;
+    drawPos.y = this->gotPos.y;
     if (GET_CHARACTER_ID(1) == ID_KNUCKLES) {
         this->gotThroughAnimator.frameID = 2;
     }
@@ -206,19 +206,19 @@ void ActClear::Create(void *data)
         // ink effect is set to none on creation, no transparency
         this->inkEffect = INK_NONE;
         // sets the alpha to 0 on creation for the checkerboard, shouldnt affect anything else as their ink effect is none
-        this->alpha     = 0; // should increase or decrease for the sliding in and away
+        this->alpha = 0; // should increase or decrease for the sliding in and away
         // this is where the results start sliding in
         this->state.Set(&ActClear::State_EnterResults);
         this->stageFinishTimer = 0;
         this->newRecordTimer   = 0;
         this->slidingInTimer   = 0;
-        this->slidingOutTimer = 0;
+        this->slidingOutTimer  = 0;
         // initial speeds, will slowly decrease or increase depending on if its sliding in or away
         // these are all set to the same amount, but they start decreasing at different times so they need to be different unfortunately
-        this->topTextSpeed = TO_FIXED(25);
-        this->timeBonusSpeed = TO_FIXED(25);
-        this->ringBonusSpeed = TO_FIXED(25);
-        this->coolBonusSpeed = TO_FIXED(25);
+        this->topTextSpeed    = TO_FIXED(25);
+        this->timeBonusSpeed  = TO_FIXED(25);
+        this->ringBonusSpeed  = TO_FIXED(25);
+        this->coolBonusSpeed  = TO_FIXED(25);
         this->totalScoreSpeed = TO_FIXED(25);
         Music::ClearMusicStack();
         Music::PlayTrack(Music::TRACK_ACTCLEAR);
@@ -291,16 +291,16 @@ void ActClear::Create(void *data)
         this->coolBonusPos.y  = TO_FIXED(154);
         this->totalScorePos.x = -TO_FIXED(158);
         this->totalScorePos.y = TO_FIXED(194);
-        this->timeNumPos.x   = TO_FIXED(600);
-        this->timeNumPos.y   = TO_FIXED(136);
-        this->ringNumPos.x   = TO_FIXED(600);
-        this->ringNumPos.y   = TO_FIXED(152);
-        this->coolNumPos.x   = TO_FIXED(600);
-        this->coolNumPos.y   = TO_FIXED(168);
-        this->totalNumPos.x  = TO_FIXED(570);
-        this->totalNumPos.y  = TO_FIXED(208);
+        this->timeNumPos.x    = TO_FIXED(600);
+        this->timeNumPos.y    = TO_FIXED(136);
+        this->ringNumPos.x    = TO_FIXED(600);
+        this->ringNumPos.y    = TO_FIXED(152);
+        this->coolNumPos.x    = TO_FIXED(600);
+        this->coolNumPos.y    = TO_FIXED(168);
+        this->totalNumPos.x   = TO_FIXED(570);
+        this->totalNumPos.y   = TO_FIXED(208);
 
-        // final resting positions lol 
+        // final resting positions lol
         /*
         triangleLeftPos.x     = TO_FIXED(0);
         triangleLeftPos.y     = TO_FIXED(0);
@@ -326,7 +326,7 @@ void ActClear::Create(void *data)
         this->scoreNumPos.y   = TO_FIXED(136);
         */
 
-        //setting animators
+        // setting animators
         this->hudElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
         this->numbersAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
         this->timeElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 5);
@@ -354,7 +354,9 @@ void ActClear::Create(void *data)
 
 void ActClear::StageLoad()
 {
-    switch GET_CHARACTER_ID(1) {
+    switch
+        GET_CHARACTER_ID(1)
+        {
             default: break;
             case ID_SONIC: sVars->aniFrames.Load("Global/HUDSonic.bin", SCOPE_STAGE); break;
             case ID_TAILS: sVars->aniFrames.Load("Global/HUDTails.bin", SCOPE_STAGE); break;
@@ -375,12 +377,13 @@ void ActClear::State_EnterResults()
 {
     SET_CURRENT_STATE();
 
-    // im aware its probably really ugly to be using multiple speed values, but im not sure how else to get them to all start moving at different times but at the same pace so
-    // if i used only 1 speed value but had them all still start moving at different times, the speed would be too low to really do anything on the later ones as a result of it subtracting every frame
+    // im aware its probably really ugly to be using multiple speed values, but im not sure how else to get them to all start moving at different
+    // times but at the same pace so if i used only 1 speed value but had them all still start moving at different times, the speed would be too low
+    // to really do anything on the later ones as a result of it subtracting every frame
 
     // gets the hud object and sets its state to moving out (dont need it visible here lmao)
     for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
-        hud->state.Set(&HUD::State_MoveOut);
+        HUD::MoveOut(hud);
     }
 
     // increases alpha for the checkerboard
@@ -402,7 +405,6 @@ void ActClear::State_EnterResults()
         this->topTextSpeed = 0;
     }
 
-    
     // triangle movement
     if (triangleLeftPos.x < TO_FIXED(0)) {
         triangleLeftPos.x += this->topTextSpeed; // these come in at the same time as the top text so fortunately can use the same speed value
@@ -576,7 +578,7 @@ void ActClear::State_SaveGameProgress()
             StarPost::ResetStarPosts();
             if (Zone::sVars->actID >= 0)
                 SaveGame::ClearCollectedSpecialRings();
-                SaveGame::SaveProgress();
+            SaveGame::SaveProgress();
 
             if (globals->saveSlotID != NO_SAVE_SLOT && !sVars->forceNoSave) {
                 if (Zone::CurrentStageSaveable())
@@ -627,7 +629,7 @@ void ActClear::State_ShowResultsTA()
                 if (TimeAttackData::sVars->personalRank == 1)
                     Announcer::sVars->sfxNewRecordTop.Play();
                 else if (TimeAttackData::sVars->personalRank <= 3)
-                   Announcer::sVars->sfxNewRecordMid.Play();
+                    Announcer::sVars->sfxNewRecordMid.Play();
             }
         }
         --this->newRecordTimer;
@@ -673,12 +675,6 @@ void ActClear::State_WaitForSave()
 void ActClear::State_EndEvent()
 {
     SET_CURRENT_STATE();
-
-    // this does not work bc apparently state_moveout actually destroys the object lmao
-    // im not sure how to get it to move back in after a moveout, creating a new one doesnt work as it gets set in its default position i assume so
-    for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
-        HUD::MoveIn(hud);
-    }
 
     // decreases alpha for the checkerboard
     if (this->alpha <= 96) {

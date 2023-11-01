@@ -12,6 +12,7 @@
 #include "ImageTrail.hpp"
 #include "InvincibleStars.hpp"
 #include "Announcer.hpp"
+#include "HUD.hpp"
 
 using namespace RSDK;
 
@@ -19,14 +20,14 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(TitleCard);
 
-void TitleCard::Update() {
+void TitleCard::Update()
+{
 
-    this->state.Run(this); 
+    this->state.Run(this);
 
     this->yellowPieceAnimator.Process();
     this->redPieceAnimator.Process();
     this->bluePieceAnimator.Process();
-
 }
 void TitleCard::LateUpdate() {}
 void TitleCard::StaticUpdate() {}
@@ -82,9 +83,11 @@ void TitleCard::Create(void *data)
     this->decorationAnimator.SetAnimation(&sVars->aniFrames, 0, false, 0);
     this->yellowPieceAnimator.SetAnimation(&sVars->aniFrames, 6, false, 0);
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
-        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 4, false, 0); }
+        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 4, false, 0);
+    }
     else {
-        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 7, false, 0); }
+        this->redPieceAnimator.SetAnimation(&sVars->aniFrames, 7, false, 0);
+    }
     this->zoneAnimator.SetAnimation(&sVars->aniFrames, 2, false, 0);
     this->actNumbersAnimator.SetAnimation(&sVars->aniFrames, 3, false, 0);
     this->zoneNameAnimator.SetAnimation(&sVars->aniFrames, 1, false, 0);
@@ -182,6 +185,8 @@ void TitleCard::State_SetupBGElements()
 {
     SET_CURRENT_STATE();
 
+    MovePositions_SlideIn();
+
     if (ActClear::sVars && ActClear::sVars->actClearActive)
         ActClear::sVars->actClearActive = false;
 
@@ -195,11 +200,12 @@ void TitleCard::State_SetupBGElements()
 
         this->state.Set(&TitleCard::State_OpeningBG);
     }
-
 }
 void TitleCard::State_OpeningBG()
 {
     SET_CURRENT_STATE();
+
+    MovePositions_SlideIn();
 
     Zone::ApplyWorldBounds();
 
@@ -210,7 +216,6 @@ void TitleCard::State_OpeningBG()
     else {
         this->timer += 32;
     }
-
 }
 
 void TitleCard::State_EnterTitle()
@@ -219,14 +224,15 @@ void TitleCard::State_EnterTitle()
 
     Zone::ApplyWorldBounds();
 
+    MovePositions_ShowTitle();
+
     this->state.Set(&TitleCard::State_ShowingTitle);
-
-
-
 }
 void TitleCard::State_ShowingTitle()
 {
     SET_CURRENT_STATE();
+
+    MovePositions_ShowTitle();
 
     if (this->actionTimer >= 60) {
         this->actionTimer = 0;
@@ -253,16 +259,23 @@ void TitleCard::State_ShowingTitle()
 
     Zone::ApplyWorldBounds();
     HandleCamera();
-
 }
 void TitleCard::State_SlideAway()
 {
     SET_CURRENT_STATE();
 
+    MovePositions_SlideAway();
+
     Zone::ApplyWorldBounds();
 
     if (this->actionTimer == 6 && globals->gameMode < MODE_TIMEATTACK) {
         sceneInfo->timeEnabled = true;
+    }
+
+    if (actionTimer == 10) {
+        for (auto hud : GameObject::GetEntities<HUD>(FOR_ACTIVE_ENTITIES)) {
+            HUD::MoveIn(hud);
+        }
     }
 
     if (this->actionTimer > 30) {
@@ -286,10 +299,11 @@ void TitleCard::State_SlideAway()
                 paletteBank[0].SetEntry(4, 0x1D2EE2);
                 break;
         }
+
         this->Destroy();
     }
     else {
-        this->actionTimer += 1;
+        this->actionTimer++;
     }
 }
 
@@ -313,17 +327,9 @@ void TitleCard::State_Supressed()
     sVars->finishedCB.Run(this);
 }
 
-// Draw States
-void TitleCard::Draw_SlideIn()
+void TitleCard::MovePositions_SlideIn()
 {
-    SET_CURRENT_STATE();
-
-    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
-
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
-        Graphics::DrawRect(0, 0, screen->size.x, screen->size.y, 0x000000, 0xFF, INK_NONE, true);
-
-        PiecePositions();
 
         if (this->bluePiecePos.y < TO_FIXED(240))
             this->bluePiecePos.y += TO_FIXED(16);
@@ -331,25 +337,23 @@ void TitleCard::Draw_SlideIn()
         if (this->decorationPos.x > TO_FIXED(-195))
             this->decorationPos.x -= TO_FIXED(18);
     }
-    
-    PiecePositions();
 
     if (this->yellowPiecePos.x > TO_FIXED(-424))
         this->yellowPiecePos.x -= TO_FIXED(16);
-    
+
     if (this->redPiecePos.x < TO_FIXED(300))
         this->redPiecePos.x += TO_FIXED(10);
-    
+
     if (this->zonePos.x < TO_FIXED(680))
         this->zonePos.x += TO_FIXED(16);
-    
+
     if (this->actNumPos.x < TO_FIXED(750))
         this->actNumPos.x += TO_FIXED(16);
-    
+
     if (this->zoneNamePos.x > TO_FIXED(100))
         this->zoneNamePos.x -= TO_FIXED(16);
-    
-    if (this->actNumPos.x < TO_FIXED(870))
+
+    if (this->actNumPos.x < TO_FIXED(870)) {
         if (this->moveTimer >= 4) {
             this->zonePos.x += TO_FIXED(1);
             this->actNumPos.x += TO_FIXED(1);
@@ -359,6 +363,37 @@ void TitleCard::Draw_SlideIn()
         else {
             this->moveTimer += 2;
         }
+    }
+}
+
+// Draw States
+void TitleCard::Draw_SlideIn()
+{
+    SET_CURRENT_STATE();
+
+    ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
+
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
+        Graphics::DrawRect(0, 0, screen->size.x, screen->size.y, 0x000000, 0xFF, INK_NONE, true);
+    }
+
+    PiecePositions();
+}
+
+void TitleCard::MovePositions_ShowTitle()
+{
+
+    if (this->actNumPos.x < TO_FIXED(870)) {
+        if (this->moveTimer >= 4) {
+            this->zonePos.x += TO_FIXED(1);
+            this->actNumPos.x += TO_FIXED(1);
+            this->zoneNamePos.x -= TO_FIXED(1);
+            this->moveTimer = 0;
+        }
+        else {
+            this->moveTimer += 2;
+        }
+    }
 }
 
 void TitleCard::Draw_ShowTitleCard()
@@ -370,27 +405,11 @@ void TitleCard::Draw_ShowTitleCard()
     Graphics::SetClipBounds(sceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 
     PiecePositions();
-
-    if (this->actNumPos.x < TO_FIXED(870))
-        if (this->moveTimer >= 4) {
-            this->zonePos.x += TO_FIXED(1);
-            this->actNumPos.x += TO_FIXED(1);
-            this->zoneNamePos.x -= TO_FIXED(1);
-            this->moveTimer = 0;
-        }
-        else {
-            this->moveTimer += 2;
-        }
-
-
+    MovePositions_ShowTitle();
 }
 
-void TitleCard::Draw_SlideAway()
+void TitleCard::MovePositions_SlideAway()
 {
-    SET_CURRENT_STATE();
-
-    PiecePositions();
-
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         if (this->bluePiecePos.y <= TO_FIXED(260))
             this->bluePiecePos.y -= TO_FIXED(16);
@@ -413,9 +432,16 @@ void TitleCard::Draw_SlideAway()
 
     if (this->zoneNamePos.x <= TO_FIXED(100))
         this->zoneNamePos.x -= TO_FIXED(16);
-
 }
-   
+
+void TitleCard::Draw_SlideAway()
+{
+    SET_CURRENT_STATE();
+
+    PiecePositions();
+
+    MovePositions_SlideAway();
+}
 
 #if RETRO_INCLUDE_EDITOR
 void TitleCard::EditorDraw()

@@ -12,6 +12,7 @@
 #include "Common/ParallaxSprite.hpp"
 #include "Helpers/CutsceneRules.hpp"
 #include "Helpers/RPCHelpers.hpp"
+#include "Global/HUD.hpp"
 
 using namespace RSDK;
 
@@ -83,14 +84,13 @@ void CPZSetup::StageLoad()
 
     if (globals->gameMode != MODE_TIMEATTACK) {
         if (Zone::sVars->actID) {
-
             if (globals->atlEnabled) {
                 if (!CutsceneRules::CheckStageReload())
                     CPZSetup::HandleActTransition();
             }
 
             if (CutsceneRules::CheckAct2()) {
-                //Zone::sVars->stageFinishCallback.Set(&CPZSetup::StageFinish_EndAct2);
+                // Zone::sVars->stageFinishCallback.Set(&CPZSetup::StageFinish_EndAct2);
             }
         }
         else {
@@ -125,6 +125,7 @@ void CPZSetup::StageLoad()
 
 void CPZSetup::StageFinish_EndAct1()
 {
+    sVars->timerStorage = Zone::sVars->timer;
     SceneLayer::GetTileLayer(0);
     Zone::StoreEntities(Vector2(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0])));
     Stage::LoadScene();
@@ -134,15 +135,17 @@ void CPZSetup::HandleActTransition()
 {
     Zone::sVars->cameraBoundsL[0] = 320 - screenInfo->center.x;
     Zone::sVars->cameraBoundsB[0] = 370;
+    paletteBank[0].SetEntry(159, paletteBank[3].GetEntry(sVars->bgTowerLightPalIndex)); // force it to keep the 3 frames of green away
 
     Zone::ReloadEntities(Vector2(TO_FIXED(320), TO_FIXED(370)), true);
+    Zone::sVars->timer = sVars->timerStorage;
 }
 
 void CPZSetup::StageFinish_EndAct2() {}
 
 #if RETRO_REV0U
-void CPZSetup::StaticLoad(Static *sVars) 
-{ 
+void CPZSetup::StaticLoad(Static *sVars)
+{
     RSDK_INIT_STATIC_VARS(CPZSetup);
 
     int32 deformation[] = { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,

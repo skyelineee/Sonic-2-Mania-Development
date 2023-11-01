@@ -81,6 +81,9 @@ struct TitleCard : RSDK::GameObject::Entity {
     void SetupTitleWords();
     void HandleCamera();
     void PiecePositions();
+    void MovePositions_SlideIn();
+    void MovePositions_ShowTitle();
+    void MovePositions_SlideAway();
 
     // States
     void State_SetupBGElements();

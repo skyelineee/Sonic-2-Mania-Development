@@ -12,6 +12,7 @@
 #include "Global/Zone.hpp"
 #include "Global/Animals.hpp"
 #include "Global/EggPrison.hpp"
+#include "Global/HUD.hpp"
 
 using namespace RSDK;
 
@@ -22,7 +23,7 @@ RSDK_REGISTER_OBJECT(SWZSetup);
 void SWZSetup::Update() {}
 void SWZSetup::LateUpdate() {}
 
-void SWZSetup::StaticUpdate() 
+void SWZSetup::StaticUpdate()
 {
     sVars->paletteTimer++;
     if (sVars->paletteTimer == 7) {
@@ -48,7 +49,7 @@ void SWZSetup::StageLoad()
             }
 
             if (CutsceneRules::CheckAct2()) {
-                //Zone::sVars->stageFinishCallback.Set(&SWZSetup::StageFinish_EndAct2);
+                // Zone::sVars->stageFinishCallback.Set(&SWZSetup::StageFinish_EndAct2);
             }
         }
         else {
@@ -95,19 +96,19 @@ void SWZSetup::HandleActTransition()
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(816)), true);
 
     TileLayer *bg1 = SceneLayer::GetTileLayer(0);
-    bg1->scrollPos * bg1->parallaxFactor;
+    bg1->scrollPos *= bg1->parallaxFactor;
     for (int32 s = 0; s < bg1->scrollInfoCount; ++s) {
         bg1->scrollInfo[s].scrollPos += 0x16000 * bg1->scrollInfo[s].parallaxFactor;
     }
 
     TileLayer *bg2 = SceneLayer::GetTileLayer(1);
-    bg2->scrollPos * bg2->parallaxFactor;
+    bg2->scrollPos *= bg2->parallaxFactor;
     for (int32 s = 0; s < bg2->scrollInfoCount; ++s) {
         bg2->scrollInfo[s].scrollPos += 0xC3500 * bg2->scrollInfo[s].parallaxFactor;
     }
 
     TileLayer *bg3 = SceneLayer::GetTileLayer(2);
-    bg3->scrollPos * bg3->parallaxFactor;
+    bg3->scrollPos *= bg3->parallaxFactor;
     for (int32 s = 0; s < bg3->scrollInfoCount; ++s) {
         bg3->scrollInfo[s].scrollPos += 0x16000 * bg3->scrollInfo[s].parallaxFactor;
     }

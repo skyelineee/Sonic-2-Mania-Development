@@ -101,8 +101,8 @@ void UISaveSlot::Draw()
         }
     }
 
-    drawPos.x = this->position.x;
-    drawPos.y = this->position.y;
+    drawPos.x                     = this->position.x;
+    drawPos.y                     = this->position.y;
     this->slotNumAnimator.frameID = this->saveSlotPlacement;
 
     if (this->type == UISAVESLOT_REGULAR) {
@@ -124,20 +124,21 @@ void UISaveSlot::Draw()
         }
         else {
             this->saveStatusAnimator.frameID = 1;
-        }                             
-        
+        }
+
         SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(this->slotID);
 
         int32 saveState = saveRAM->saveState;
 
-        if (saveState == SaveGame::SaveCompleted)
+        if (saveState == SaveGame::SaveCompleted) {
             if (this->isSelected) {
                 this->saveStatusAnimator.frameID = 5;
             }
             else {
                 this->saveStatusAnimator.frameID = 4;
             }
-        
+        }
+
         if (!this->isSelected && this->isNewSave)
             this->slotNumAnimator.SetAnimation(sVars->aniFrames, 13, true, this->slotNumAnimator.frameID);
 
@@ -179,7 +180,7 @@ void UISaveSlot::Draw()
         drawPos.y = this->position.y;
         if (!this->isSelected)
             this->slotNumAnimator.SetAnimation(sVars->aniFrames, 13, true, this->slotNumAnimator.frameID);
-        
+
         this->slotNumAnimator.DrawSprite(&drawPos, false);
     }
 
@@ -204,7 +205,7 @@ void UISaveSlot::Draw()
                     UIWidgets::DrawLeftRightArrows(drawPos.x, drawPos.y, TO_FIXED(160));
                 }
                 switch (this->zoneNameAnimator.frameID) {
-                    case 0: 
+                    case 0:
                     case 1:
                     case 2:
                     case 3:
@@ -247,11 +248,11 @@ void UISaveSlot::Draw()
 void UISaveSlot::Create(void *data)
 {
     if (!sceneInfo->inEditor) {
-        this->visible         = true;
-        this->drawGroup       = 6;
-        this->active          = ACTIVE_BOUNDS;
-        this->updateRange.x   = 0x800000;
-        this->updateRange.y   = 0x300000;
+        this->visible       = true;
+        this->drawGroup     = 6;
+        this->active        = ACTIVE_BOUNDS;
+        this->updateRange.x = 0x800000;
+        this->updateRange.y = 0x300000;
         this->processButtonCB.Set(&UISaveSlot::ProcessButtonCB);
         this->state.Set(&UISaveSlot::State_NotSelected);
 
@@ -300,7 +301,7 @@ void UISaveSlot::DrawFileIcons(int32 drawX, int32 drawY)
 
     this->fileAnimator.frameID = 0;
 
-    int32 frames[]                = { 0, 1, 2, 3, 4 };
+    int32 frames[] = { 0, 1, 2, 3, 4 };
 
     if (this->isNewSave || this->type == UISAVESLOT_NOSAVE) {
         this->fileAnimator.frameID = 4;
@@ -326,7 +327,7 @@ void UISaveSlot::DrawPlayerInfo(int32 drawX, int32 drawY)
     int32 frames[] = { 0, 1, 2, 3, 4 };
     playerID       = frames[this->frameID];
 
-    this->livesAnimator.frameID = playerID;
+    this->livesAnimator.frameID     = playerID;
     this->continuesAnimator.frameID = playerID;
 
     Animator *animators[2];
@@ -491,7 +492,7 @@ void UISaveSlot::LoadSaveInfo()
 
     int32 saveState = saveRAM->saveState;
     if (saveState == SaveGame::SaveActive || saveState == SaveGame::SaveCompleted) {
-       this->frameID = saveRAM->characterID;
+        this->frameID = saveRAM->characterID;
     }
 
     switch (saveState) {
@@ -499,30 +500,30 @@ void UISaveSlot::LoadSaveInfo()
 
         case SaveGame::SaveEmpty:
             this->frameID       = 0;
-            this->saveZoneID   = Zone::OWZ;
-            this->saveEmeralds = 0;
-            this->saveLives    = 3;
+            this->saveZoneID    = Zone::OWZ;
+            this->saveEmeralds  = 0;
+            this->saveLives     = 3;
             this->saveContinues = 0;
-            this->isNewSave = true;
-            this->listID    = 0;
+            this->isNewSave     = true;
+            this->listID        = 0;
             break;
 
         case SaveGame::SaveActive:
-            this->saveZoneID   = saveRAM->zoneID;
-            this->saveEmeralds = saveRAM->collectedEmeralds;
-            this->saveLives    = saveRAM->lives;
+            this->saveZoneID    = saveRAM->zoneID;
+            this->saveEmeralds  = saveRAM->collectedEmeralds;
+            this->saveLives     = saveRAM->lives;
             this->saveContinues = saveRAM->continues;
-            this->isNewSave = false;
-            this->listID    = 0;
+            this->isNewSave     = false;
+            this->listID        = 0;
             break;
 
         case SaveGame::SaveCompleted:
-            this->saveZoneID   = NO_SAVE_SLOT;
-            this->saveEmeralds = saveRAM->collectedEmeralds;
-            this->saveLives    = saveRAM->lives;
+            this->saveZoneID    = NO_SAVE_SLOT;
+            this->saveEmeralds  = saveRAM->collectedEmeralds;
+            this->saveLives     = saveRAM->lives;
             this->saveContinues = saveRAM->continues;
-            this->listID    = 1;
-            this->isNewSave = false;
+            this->listID        = 1;
+            this->isNewSave     = false;
             break;
     }
 
@@ -580,7 +581,7 @@ void UISaveSlot::DeleteSaveCB(bool32 success)
 
 void UISaveSlot::ProcessButtonCB()
 {
-    UIControl *control = (UIControl *)this->parent;
+    UIControl *control         = (UIControl *)this->parent;
     SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(this->slotID);
 
     this->active = ACTIVE_NORMAL;
@@ -633,7 +634,8 @@ void UISaveSlot::ProcessButtonCB()
                 dialog->entityPtr = (Entity *)this;
             }
         }
-        else if (!this->currentlySelected && control->buttons[control->lastButtonID] == (UIButton *)this && control->state.Matches(&UIControl::ProcessInputs)) {
+        else if (!this->currentlySelected && control->buttons[control->lastButtonID] == (UIButton *)this
+                 && control->state.Matches(&UIControl::ProcessInputs)) {
             UISaveSlot::ButtonEnterCB();
         }
     }
@@ -649,8 +651,7 @@ void UISaveSlot::SelectedCB()
         this->currentlySelected = false;
         this->processButtonCB.Set(nullptr);
 
-        for (auto saveSlot : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES))
-        {
+        for (auto saveSlot : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES)) {
             if (saveSlot != this) {
                 if (saveSlot->position.x >= this->position.x) {
                     if (saveSlot->position.x > this->position.x)
@@ -663,7 +664,9 @@ void UISaveSlot::SelectedCB()
             }
         }
 
-        for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) { prompt->visible = false; }
+        for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) {
+            prompt->visible = false;
+        }
 
         int32 id = Input::GetFilteredInputDeviceID(true, false, 5);
         Input::ResetInputSlotAssignments();
@@ -682,7 +685,7 @@ void UISaveSlot::NextCharacter()
     int32 max = 4;
     while (player >= max) player -= max;
 
-    this->frameID            = player;
+    this->frameID              = player;
     this->buttonBounceOffset   = 0;
     this->buttonBounceVelocity = -0x25000;
 
@@ -699,7 +702,7 @@ void UISaveSlot::PrevCharacter()
     int32 max = 4;
     while (player < 0) player += max;
 
-    this->frameID            = player;
+    this->frameID              = player;
     this->buttonBounceOffset   = 0;
     this->buttonBounceVelocity = -0x25000;
 
@@ -740,14 +743,8 @@ void UISaveSlot::PrevZone()
     UISaveSlot::HandleSaveIcons();
 }
 
-bool32 UISaveSlot::CheckButtonEnterCB()
-{
-    return this->isSelected;
-}
-bool32 UISaveSlot::CheckSelectedCB()
-{
-    return this->state.Matches(&UISaveSlot::State_Selected);
-}
+bool32 UISaveSlot::CheckButtonEnterCB() { return this->isSelected; }
+bool32 UISaveSlot::CheckSelectedCB() { return this->state.Matches(&UISaveSlot::State_Selected); }
 
 void UISaveSlot::ButtonEnterCB()
 {
@@ -844,13 +841,13 @@ void UISaveSlot::State_Selected()
 
     if (this->timer == 32)
         UIWidgets::sVars->sfxWarp.Play(false, 255);
-    
+
     if (FXFade::sVars) {
         if (this->timer == 32) {
             FXFade *fxFade   = GameObject::Create<FXFade>(0x000000, this->position.x, this->position.y);
             fxFade->active   = ACTIVE_ALWAYS;
             fxFade->speedIn  = 12;
-            fxFade->speedOut  = 0;
+            fxFade->speedOut = 0;
             fxFade->state.Set(&FXFade::State_FadeOut);
         }
     }

@@ -10,7 +10,7 @@ struct CPZSetup : RSDK::GameObject::Entity {
     // ENUMS
     // ==============================
 
-    enum DecorationTypesCPZ { CPZ_DECORATION_WARNSIGN};
+    enum DecorationTypesCPZ { CPZ_DECORATION_WARNSIGN };
 
     enum ParallaxSpriteAniIDsCPZ {
         CPZ_PARALLAXSPRITE_GIRDER,
@@ -36,6 +36,8 @@ struct CPZSetup : RSDK::GameObject::Entity {
         int32 chemLiquidPalIndex2;
         int32 chemLiquidPalIndex3;
         uint16 aniTileFrame;
+
+        int32 timerStorage;
     };
 
     // ==============================

@@ -142,8 +142,7 @@ void Player::Update()
 
         this->HandleSuperForm();
 
-        if (this->characterID == ID_TAILS && !this->state.Matches(&Player::State_TailsFlight)
-            && this->abilitySpeed)
+        if (this->characterID == ID_TAILS && !this->state.Matches(&Player::State_TailsFlight) && this->abilitySpeed)
             this->abilitySpeed = 0;
 
         // Hurt Player if we're touching T/B or L/R sides at same time
@@ -507,7 +506,6 @@ void Player::StaticUpdate()
         sVars->sfxTired.Stop();
         sVars->playingTiredSFX = false;
     }
-
 }
 void Player::Draw()
 {
@@ -760,9 +758,9 @@ void Player::StageLoad()
         globals->playerID |= ID_KNUCKLES_ASSIST;
     }
 
-    sVars->playerCount       = 0;
+    sVars->playerCount    = 0;
     sVars->maxPlayerCount = 4;
-    sVars->active            = ACTIVE_ALWAYS;
+    sVars->active         = ACTIVE_ALWAYS;
 
     // Sprite loading & characterID management
     LoadSprites();
@@ -862,14 +860,14 @@ void Player::StageLoad()
         memcpy(sVars->superKnuxPalette_Water, superKnuxPalette_Water, sizeof(superKnuxPalette_Water));
     }
 
-    sVars->activeSuperSonicPalette        = sVars->superSonicPalette;
-    sVars->activeSuperSonicPalette_Water  = sVars->superSonicPalette;
-    sVars->activeHyperSonicPalette        = sVars->hyperSonicPalette;
-    sVars->activeHyperSonicPalette_Water  = sVars->hyperSonicPalette;
-    sVars->activeSuperTailsPalette        = sVars->superTailsPalette;
-    sVars->activeSuperTailsPalette_Water  = sVars->superTailsPalette;
-    sVars->activeSuperKnuxPalette         = sVars->superKnuxPalette;
-    sVars->activeSuperKnuxPalette_Water   = sVars->superKnuxPalette;
+    sVars->activeSuperSonicPalette       = sVars->superSonicPalette;
+    sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette;
+    sVars->activeHyperSonicPalette       = sVars->hyperSonicPalette;
+    sVars->activeHyperSonicPalette_Water = sVars->hyperSonicPalette;
+    sVars->activeSuperTailsPalette       = sVars->superTailsPalette;
+    sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette;
+    sVars->activeSuperKnuxPalette        = sVars->superKnuxPalette;
+    sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette;
 
     if (ARZSetup::sVars || HPZSetup::sVars || CPZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
         sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette_Water;
@@ -1318,10 +1316,10 @@ void Player::ChangeCharacter(int32 character)
     this->sensorX[3] = -0x50000;
     this->sensorX[4] = -0xA0000;
 
-    if (this->state.Matches(&Player::State_KnuxWallClimb) || this->state.Matches(&Player::State_DropDash) || this->state.Matches(&Player::State_TailsFlight)
-        || this->state.Matches(&Player::State_KnuxGlideDrop) || this->state.Matches(&Player::State_KnuxGlideLeft)
-        || this->state.Matches(&Player::State_KnuxGlideRight) || this->state.Matches(&Player::State_KnuxGlideSlide)
-        || this->state.Matches(&Player::State_KnuxLedgePullUp)) {
+    if (this->state.Matches(&Player::State_KnuxWallClimb) || this->state.Matches(&Player::State_DropDash)
+        || this->state.Matches(&Player::State_TailsFlight) || this->state.Matches(&Player::State_KnuxGlideDrop)
+        || this->state.Matches(&Player::State_KnuxGlideLeft) || this->state.Matches(&Player::State_KnuxGlideRight)
+        || this->state.Matches(&Player::State_KnuxGlideSlide) || this->state.Matches(&Player::State_KnuxLedgePullUp)) {
         this->state.Set(&Player::State_Air);
         this->animator.SetAnimation(this->aniFrames, ANI_JUMP, false, 0);
     }
@@ -2668,7 +2666,7 @@ void Player::HandleSuperForm()
             if (--this->superRingLossTimer <= 0) {
                 this->superRingLossTimer = 60;
                 if (--this->rings <= 0) {
-                    this->rings      = 0;
+                    this->rings             = 0;
                     this->superState        = Player::SuperStateFadeOut;
                     this->hyperAbilityState = Player::HyperStateNone;
                 }
@@ -3020,7 +3018,7 @@ void Player::HandleDeath()
             if (Water::sVars)
                 Water::ApplyHeightTriggers();
         }
-    }  
+    }
 }
 
 void Player::Action_Jump()
@@ -3266,8 +3264,7 @@ void Player::Action_DblJumpTails()
 {
     SET_CURRENT_STATE();
 
-    if (this->jumpPress && this->jumpAbilityState == 1
-        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
+    if (this->jumpPress && this->jumpAbilityState == 1 && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
         if (!this->invertGravity) {
             this->jumpAbilityState = 0;
             this->outtaHereTimer   = 0;
@@ -3292,8 +3289,7 @@ void Player::Action_DblJumpKnux()
 {
     SET_CURRENT_STATE();
 
-    if (this->jumpPress && this->jumpAbilityState == 1
-        && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
+    if (this->jumpPress && this->jumpAbilityState == 1 && (!this->stateInput.Matches(&Player::Input_AI_Follow) || (this->up))) {
         if (!this->invertGravity) {
             if (GameObject::Get<Player>(SLOT_PLAYER1)->characterID == ID_KNUCKLES) {
                 NotifyCallback(NOTIFY_STATS_CHARA_ACTION, 0, 0, 1);
@@ -3539,8 +3535,8 @@ void Player::State_Air()
                 this->animator.speed = speed;
                 break;
             }
-            
-            case ANI_RUN: {           
+
+            case ANI_RUN: {
                 this->animator.SetAnimation(this->aniFrames, ANI_FALL, false, 0);
                 break;
             }
@@ -4253,11 +4249,11 @@ void Player::State_BubbleBounce()
 
             Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
             if (globals->useManiaBehavior) {
-                shield->fxAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniBubbleAttackUp, true, 0);
                 shield->shieldAnimator.SetAnimation(nullptr, 0, true, 0);
+                shield->fxAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniBubbleAttackUpAdd, true, 0);
             }
             else {
-                shield->shieldAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniBubbleAttackUp, true, 0);
+                shield->shieldAnimator.SetAnimation(Shield::sVars->aniFrames, Shield::AniBubbleAttackUpAdd, true, 0);
                 shield->fxAnimator.SetAnimation(nullptr, 0, true, 0);
             }
 
@@ -6360,7 +6356,7 @@ void Player::Input_Gamepad()
             if (controller->keyStart.press || Unknown_pausePress) {
                 if (sceneInfo->state == ENGINESTATE_REGULAR) {
                     PauseMenu *pauseMenu = GameObject::Get<PauseMenu>(SLOT_PAUSEMENU);
-                    bool32 allowPause          = true;
+                    bool32 allowPause    = true;
                     if (ActClear::sVars && ActClear::sVars->actClearActive)
                         allowPause = false;
                     if (!RSDKTable->GetEntityCount(TitleCard::sVars->classID, false) && !pauseMenu->classID && allowPause) {
@@ -6945,8 +6941,8 @@ bool32 Player::Hurt(RSDK::GameObject::Entity *entity, bool32 forceKill)
 
 bool32 Player::HurtFlip()
 {
-    if (this->state.Matches(&Player::State_Hurt) || this->state.Matches(&Player::State_Death) || this->state.Matches(&Player::State_Drown) || this->invincibleTimer
-        || this->blinkTimer > 0) {
+    if (this->state.Matches(&Player::State_Hurt) || this->state.Matches(&Player::State_Death) || this->state.Matches(&Player::State_Drown)
+        || this->invincibleTimer || this->blinkTimer > 0) {
         return false;
     }
 
@@ -7127,7 +7123,7 @@ bool32 Player::CheckBadnikBreak(RSDK::GameObject::Entity *badnik, bool32 destroy
 
     if (isAttacking) {
         Player *player = this;
-        player = GameObject::Get<Player>(SLOT_PLAYER1);
+        player         = GameObject::Get<Player>(SLOT_PLAYER1);
 
         BadnikHelpers::BadnikBreakUnseeded(badnik, false, true);
 
@@ -7224,7 +7220,6 @@ bool32 Player::CheckBossHit(RSDK::GameObject::Entity *entity, bool32 enableHyper
             }
         }
     }
-
 
     if (CheckAttacking(entity)) {
         this->groundVel  = -this->groundVel;
@@ -7373,7 +7368,7 @@ void Player::StaticLoad(Static *sVars)
 
     memcpy(sVars->superKnuxPalette, superKnuxPalette, sizeof(superKnuxPalette));
     //
-    
+
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };
     memcpy(sVars->spindashChargeSpeeds, chargeSpeeds, sizeof(chargeSpeeds));
 

@@ -31,15 +31,15 @@ void UIButton::Update()
     this->touchPosSizeS.x += 3 * this->size.y;
     this->touchPosSizeS.y = this->size.y + 0x60000;
 
-    if (!this->buttonFrames.Matches(UIWidgets::sVars->buttonFrames) || this->startNameListID != this->nameListID || this->startNameFrameID != this->nameFrameID
-        || this->isDisabled != this->disabled) {
+    if (!this->buttonFrames.Matches(UIWidgets::sVars->buttonFrames) || this->startNameListID != this->nameListID
+        || this->startNameFrameID != this->nameFrameID || this->isDisabled != this->disabled) {
         if (this->disabled)
             this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, 7, true, 0);
         else
-            this->buttonFrames   = UIWidgets::sVars->buttonFrames;
+            this->buttonFrames = UIWidgets::sVars->buttonFrames;
         this->startNameListID  = this->nameListID;
         this->startNameFrameID = this->nameFrameID;
-        this->isDisabled   = this->disabled;
+        this->isDisabled       = this->disabled;
     }
 
     UIButton *choice = UIButton::GetChoicePtr(this, this->selection);
@@ -137,21 +137,21 @@ void UIButton::Create(void *data)
         this->checkButtonEnterCB.Set(&UIButton::CheckButtonEnterCB);
         this->checkSelectedCB.Set(&UIButton::CheckSelectedCB);
 
-        this->nameVisible = true;
-        this->buttonFrames = UIWidgets::sVars->buttonFrames;
-        this->startNameListID  = this->nameListID;
-        this->startNameFrameID = this->nameFrameID;
-        this->startButtonListID = this->buttonListID;
-        this->startButtonFrameID = this->buttonFrameID;
-        this->startDescriptionListID = this->descriptionListID;
+        this->nameVisible             = true;
+        this->buttonFrames            = UIWidgets::sVars->buttonFrames;
+        this->startNameListID         = this->nameListID;
+        this->startNameFrameID        = this->nameFrameID;
+        this->startButtonListID       = this->buttonListID;
+        this->startButtonFrameID      = this->buttonFrameID;
+        this->startDescriptionListID  = this->descriptionListID;
         this->startDescriptionFrameID = this->descriptionFrameID;
 
         int32 slot = this->Slot() - this->choiceCount;
         for (int32 i = 0; i < this->choiceCount; ++i) {
             UIButton *item = GameObject::Get<UIButton>(slot + i);
 
-            if ((UIChoice::sVars && item->classID == UIChoice::sVars->classID)
-                || (UIResPicker::sVars && item->classID == UIResPicker::sVars->classID) || (UIWinSize::sVars && item->classID == UIWinSize::sVars->classID)) {
+            if ((UIChoice::sVars && item->classID == UIChoice::sVars->classID) || (UIResPicker::sVars && item->classID == UIResPicker::sVars->classID)
+                || (UIWinSize::sVars && item->classID == UIWinSize::sVars->classID)) {
                 item->parent = (Entity *)this;
             }
 
@@ -207,7 +207,7 @@ void UIButton::SetChoiceSelectionWithCB(UIButton *button, int32 selection)
         UIButton *curChoice = UIButton::GetChoicePtr(button, button->selection);
         if (curChoice) {
             if (curChoice->classID == UIChoice::sVars->classID) {
-                UIChoice *choice     = (UIChoice *)curChoice;
+                UIChoice *choice           = (UIChoice *)curChoice;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -256,7 +256,7 @@ void UIButton::SetChoiceSelection(UIButton *button, int32 selection)
         UIButton *choicePtr = UIButton::GetChoicePtr(button, button->selection);
         if (choicePtr) {
             if (choicePtr->classID == UIChoice::sVars->classID) {
-                UIChoice *choice     = (UIChoice *)choicePtr;
+                UIChoice *choice           = (UIChoice *)choicePtr;
                 choice->buttonBounceOffset = 0;
                 choice->isSelected         = false;
                 choice->state.Set(&UIChoice::State_HandleButtonLeave);
@@ -271,9 +271,9 @@ void UIButton::SetChoiceSelection(UIButton *button, int32 selection)
             choicePtr->active = ACTIVE_NEVER;
         }
 
-        button->selection         = selection;
+        button->selection   = selection;
         UIButton *newChoice = UIButton::GetChoicePtr(button, selection);
-        newChoice->active         = ACTIVE_NORMAL;
+        newChoice->active   = ACTIVE_NORMAL;
     }
 }
 
@@ -281,18 +281,15 @@ Action<void> *UIButton::GetActionCB()
 {
     UIButton *choice = UIButton::GetChoicePtr(this, this->selection);
     if (!choice)
-        return& this->actionCB;
+        return &this->actionCB;
 
     if (!UIChoice::sVars || this->choiceCount <= 0 || choice->actionCB.Matches(nullptr))
-        return& this->actionCB;
+        return &this->actionCB;
 
-    return& choice->actionCB;
+    return &choice->actionCB;
 }
 
-void UIButton::FailCB()
-{
-    UIWidgets::sVars->sfxFail.Play(false, 255);
-}
+void UIButton::FailCB() { UIWidgets::sVars->sfxFail.Play(false, 255); }
 
 void UIButton::ProcessButtonCB_Scroll()
 {
@@ -485,13 +482,11 @@ bool32 UIButton::ProcessTouchCB_Single()
                     this->failCB.Run(this);
                 }
                 else {
-                    this->isSelected       = false;
+                    this->isSelected = false;
                     actionCB.Set(nullptr);
 
                     if (this->classID == UIButton::sVars->classID)
                         actionCB.Copy(UIButton::GetActionCB());
-                    else
-                        actionCB = this->actionCB;
 
                     if (!actionCB.Matches(nullptr)) {
                         this->selectedCB.Run(this);
@@ -606,7 +601,7 @@ void UIButton::ProcessButtonCB()
                 movedH = false;
             }
             else {
-                selection              = (selection + 1) % this->choiceCount;
+                selection        = (selection + 1) % this->choiceCount;
                 UIButton *choice = UIButton::GetChoicePtr(this, selection);
 
                 while ((choice && choice->disabled) && selection != this->selection) {
@@ -696,15 +691,9 @@ void UIButton::ProcessButtonCB()
     }
 }
 
-bool32 UIButton::CheckButtonEnterCB()
-{
-    return this->state.Matches(&UIButton::State_HandleButtonEnter);
-}
+bool32 UIButton::CheckButtonEnterCB() { return this->state.Matches(&UIButton::State_HandleButtonEnter); }
 
-bool32 UIButton::CheckSelectedCB()
-{
-    return this->state.Matches(&UIButton::State_Selected);
-}
+bool32 UIButton::CheckSelectedCB() { return this->state.Matches(&UIButton::State_Selected); }
 
 void UIButton::ButtonEnterCB()
 {
@@ -746,7 +735,7 @@ void UIButton::ButtonLeaveCB()
         if (widget) {
             if (widget->classID == UIChoice::sVars->classID) {
                 ((UIChoice *)widget)->buttonBounceOffset = 0;
-                widget->isSelected                             = false;
+                widget->isSelected                       = false;
                 widget->state.Set(&UIChoice::State_HandleButtonLeave);
             }
             else if (widget->classID == UIResPicker::sVars->classID) {
@@ -791,6 +780,9 @@ void UIButton::SelectedCB()
 
     this->timer = 0;
     this->state.Set(&UIButton::State_Selected);
+
+    parent->selectionDisabled = true; // ?? not sure why i have to do all that
+
     UIWidgets::sVars->sfxAccept.Play(false, 255);
 }
 
@@ -824,13 +816,12 @@ void UIButton::State_HandleButtonEnter()
             this->buttonBounceVelocity = 0;
         }
     }
-  
-    this->buttonBounceVelocity += 0x4800;
 
+    this->buttonBounceVelocity += 0x4800;
 }
 
 void UIButton::State_Selected()
-{ 
+{
     UIButton::State_HandleButtonEnter();
 
     if (++this->timer == 30) {
@@ -857,7 +848,7 @@ void UIButton::EditorDraw()
     else
         this->nameAnimator.SetAnimation(&UIWidgets::sVars->buttonFrames, this->nameListID, true, this->nameFrameID);
 
-    this->buttonFrames   = UIWidgets::sVars->buttonFrames;
+    this->buttonFrames     = UIWidgets::sVars->buttonFrames;
     this->startNameListID  = this->nameListID;
     this->startNameFrameID = this->nameFrameID;
 
@@ -888,7 +879,7 @@ void UIButton::EditorDraw()
 
             if (item)
                 DrawHelpers::DrawArrow(this->position.x, this->position.y, item->position.x, item->position.y, i ? 0xFFFF00 : 0xE0E0E0, INK_NONE,
-                                      0xFF);
+                                       0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

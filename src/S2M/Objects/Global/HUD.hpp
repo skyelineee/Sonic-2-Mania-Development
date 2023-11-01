@@ -53,9 +53,11 @@ struct HUD : RSDK::GameObject::Entity {
     RSDK::Vector2 timeOffset;
     RSDK::Vector2 ringsOffset;
     RSDK::Vector2 lifeOffset;
+
+    int32 moveTimer;
+
     int32 lifeFrameIDs[PLAYER_COUNT];
     int32 lives[PLAYER_COUNT];
-    int32 maxOffset;
     int32 actionPromptPos;
     RSDK::StateMachine<HUD> vsStates[PLAYER_COUNT];
     RSDK::Vector2 vsScoreOffsets[PLAYER_COUNT];
@@ -120,6 +122,7 @@ struct HUD : RSDK::GameObject::Entity {
     void State_MoveOut();
 
     static void MoveIn(HUD *hud);
+    static void MoveOut(HUD *hud);
 
     static void EnableRingFlash();
     static int32 CharacterIndexFromID(int32 characterID);

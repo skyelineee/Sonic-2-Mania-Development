@@ -23,34 +23,34 @@ void ChopChop::Update()
         storedPos.x      = this->position.x;
         storedPos.y      = this->position.y;
         this->position.x = this->startPos.x;
-		this->position.y = this->startPos.y;
+        this->position.y = this->startPos.y;
         if (!this->CheckOnScreen(nullptr)) {
-			ChopChop::Setup();
-		}
-		else {
-			this->position.x = storedPos.x;
-			this->position.y = storedPos.y;
-		}
-	}
+            ChopChop::Setup();
+        }
+        else {
+            this->position.x = storedPos.x;
+            this->position.y = storedPos.y;
+        }
+    }
 
-	if (this->bubbleTimer == 0) {
-		//CreateTempObject(TypeName[Air Bubble], 2, object.xpos, object.ypos);
-		Water *bubble = GameObject::Create<Water>(Water::Bubble, this->position.x, this->position.y);
-		if (this->direction) {
-		    bubble->position.x -= TO_FIXED(6);
-		    bubble->angle = 0x100;
-		}
-		else {
-		    bubble->position.x += TO_FIXED(6);
-		}
+    if (this->bubbleTimer == 0) {
+        // CreateTempObject(TypeName[Air Bubble], 2, object.xpos, object.ypos);
+        Water *bubble = GameObject::Create<Water>(Water::Bubble, this->position.x, this->position.y);
+        if (this->direction) {
+            bubble->position.x -= TO_FIXED(6);
+            bubble->angle = 0x100;
+        }
+        else {
+            bubble->position.x += TO_FIXED(6);
+        }
 
-		bubble->childPtr   = this;
-		bubble->bubbleX    = bubble->position.x;
-		bubble->velocity.y = -0x8800;
-		bubble->drawGroup  = this->drawGroup + 1;
-	}
+        bubble->childPtr   = this;
+        bubble->bubbleX    = bubble->position.x;
+        bubble->velocity.y = -0x8800;
+        bubble->drawGroup  = this->drawGroup + 1;
+    }
 
-	for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (player->CheckBadnikTouch(this, &sVars->hitboxBadnik)) {
             player->CheckBadnikBreak(this, true);
         }
@@ -74,7 +74,7 @@ void ChopChop::Create(void *data)
         this->drawGroup = 3;
         this->visible   = true;
 
-        this->startPos = this->position;
+        this->startPos      = this->position;
         this->updateRange.x = 0x800000;
         this->updateRange.y = 0x800000;
     }
@@ -84,17 +84,17 @@ void ChopChop::StageLoad()
 {
     sVars->aniFrames.Load("ARZ/ChopChop.bin", SCOPE_STAGE);
 
-	sVars->hitboxBadnik.left   = -12;
+    sVars->hitboxBadnik.left   = -12;
     sVars->hitboxBadnik.top    = -16;
     sVars->hitboxBadnik.right  = 12;
     sVars->hitboxBadnik.bottom = 16;
 
-	sVars->hitboxRange.left   = -160;
+    sVars->hitboxRange.left   = -160;
     sVars->hitboxRange.top    = -32;
     sVars->hitboxRange.right  = 16;
     sVars->hitboxRange.bottom = 32;
 
-	DebugMode::AddObject(sVars->classID, &ChopChop::DebugSpawn, &ChopChop::DebugDraw);
+    DebugMode::AddObject(sVars->classID, &ChopChop::DebugSpawn, &ChopChop::DebugDraw);
     Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
@@ -108,79 +108,78 @@ void ChopChop::DebugDraw()
 
 void ChopChop::Setup()
 {
-	if (this->direction == FLIP_NONE) {
-		this->velocity.x = -0x4000;
-	}
-	else {
-		this->velocity.x = 0x4000;
-	}
+    if (this->direction == FLIP_NONE) {
+        this->velocity.x = -0x4000;
+    }
+    else {
+        this->velocity.x = 0x4000;
+    }
 
-	this->velocity.y = 0;
-	this->timer = 512;
-	this->bubbleTimer = 0;
-	this->animator.SetAnimation(sVars->aniFrames, Swim, false, 0);
+    this->velocity.y  = 0;
+    this->timer       = 512;
+    this->bubbleTimer = 0;
+    this->animator.SetAnimation(sVars->aniFrames, Swim, false, 0);
 }
 
 void ChopChop::State_Swimming()
 {
     this->active = ACTIVE_NORMAL;
-	this->position.x += this->velocity.x;
+    this->position.x += this->velocity.x;
 
-	this->timer--;
-	if (this->timer == 0) {
-		this->direction ^= FLIP_X;
-		this->velocity.x = -this->velocity.x;
-		this->timer = 512;
-	}
+    this->timer--;
+    if (this->timer == 0) {
+        this->direction ^= FLIP_X;
+        this->velocity.x = -this->velocity.x;
+        this->timer      = 512;
+    }
 
-	for (auto currentPlayer : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-		if (this->state.Matches(&ChopChop::State_Swimming)) {
-			if (currentPlayer->CheckCollisionTouch(this, &sVars->hitboxRange)) {
-				this->state.Set(&ChopChop::State_AttackDelay);
+    for (auto currentPlayer : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+        if (this->state.Matches(&ChopChop::State_Swimming)) {
+            if (currentPlayer->CheckCollisionTouch(this, &sVars->hitboxRange)) {
+                this->state.Set(&ChopChop::State_AttackDelay);
                 this->animator.SetAnimation(sVars->aniFrames, Attack, false, 0);
-				this->timer = 16;
-				if (currentPlayer->position.x < this->position.x) {
-					this->velocity.x = -0x20000;
-				}
-				else {
-					this->velocity.x = 0x20000;
-				}
+                this->timer = 16;
+                if (currentPlayer->position.x < this->position.x) {
+                    this->velocity.x = -0x20000;
+                }
+                else {
+                    this->velocity.x = 0x20000;
+                }
 
-				int32 inRange = this->position.y;
-				inRange -= currentPlayer->position.y;
-				abs(inRange);
-				if (inRange > 0x100000) {
-					if (currentPlayer->position.y < this->position.y) {
-						this->velocity.y = -0x8000;
-					}
-					else {
-						this->velocity.y = 0x8000;
-					}
-				}
-			}
-		}
-	}
+                int32 inRange = this->position.y;
+                inRange -= currentPlayer->position.y;
+                if (abs(inRange) > 0x100000) {
+                    if (currentPlayer->position.y < this->position.y) {
+                        this->velocity.y = -0x8000;
+                    }
+                    else {
+                        this->velocity.y = 0x8000;
+                    }
+                }
+            }
+        }
+    }
 
-	this->bubbleTimer++;
-	if (this->bubbleTimer >= 240) {
-		this->bubbleTimer = 0;
-	}
+    this->bubbleTimer++;
+    if (this->bubbleTimer >= 240) {
+        this->bubbleTimer = 0;
+    }
 }
 
-void ChopChop::State_AttackDelay() 
+void ChopChop::State_AttackDelay()
 {
-	this->timer--;
-	if (this->timer < 0) {
-		this->state.Set(&ChopChop::State_Attack);
-	}
+    this->timer--;
+    if (this->timer < 0) {
+        this->state.Set(&ChopChop::State_Attack);
+    }
 }
 
-void ChopChop::State_Attack() 
+void ChopChop::State_Attack()
 {
-	this->position.x += this->velocity.x;
-	this->position.y += this->velocity.y;
+    this->position.x += this->velocity.x;
+    this->position.y += this->velocity.y;
 
-	this->bubbleTimer++;
+    this->bubbleTimer++;
     if (this->bubbleTimer >= 20) {
         this->bubbleTimer = 0;
     }

@@ -31,6 +31,7 @@ enum PlayerIDs {
 #define GET_CHARACTER_ID(playerNum)            (((globals->playerID >> (8 * ((playerNum)-1))) & 0xFF))
 #define CHECK_CHARACTER_ID(characterID, plrID) (((globals->playerID >> (8 * ((plrID)-1))) & 0xFF) == (characterID))
 #define Unknown_anyKeyPress                    unknownInfo->anyKeyPress
+#define Unknown_pausePress                     unknownInfo->pausePress
 
 enum SaveSlots { NO_SAVE_SLOT = 255 };
 
@@ -263,8 +264,7 @@ enum KeyMappings {
     KEYMAP_NO_MAPPING   = 0,
 };
 
-template <typename R> struct Action
-{
+template <typename R> struct Action {
 
     R (Action::*action)();
 
@@ -273,8 +273,7 @@ template <typename R> struct Action
     template <typename T> inline bool Set(R (T::*action)())
     {
         // converts from T:: -> Action:: without the compiler interfering :]
-        union
-        {
+        union {
             R (T::*in)();
             R (Action::*out)();
         };
@@ -287,8 +286,7 @@ template <typename R> struct Action
     inline bool Set(R (*action)())
     {
         // converts from T:: -> Action:: without the compiler interfering :]
-        union
-        {
+        union {
             R (*in)();
             R (Action::*out)();
         };
@@ -320,9 +318,8 @@ template <typename R> struct Action
 
     inline R Run(void *self)
     {
-        if (action)
-        {
-        	return (((Action *)self)->*action)();
+        if (action) {
+            return (((Action *)self)->*action)();
         }
 
         return R();
@@ -331,8 +328,7 @@ template <typename R> struct Action
     template <typename T> inline bool Matches(void *other)
     {
         // converts from Action:: -> void (*)() without the compiler interfering :]
-        union
-        {
+        union {
             R *in;
             R (Action::*out)();
         };
@@ -341,7 +337,7 @@ template <typename R> struct Action
         return action == out;
     }
 
-    template <typename T> inline bool Matches(R (T::*other)()) { return action == (R (Action::*)())other; }
+    template <typename T> inline bool Matches(R (T::*other)()) { return action == (R(Action::*)())other; }
 
     inline bool Matches(Action *other)
     {
@@ -352,7 +348,7 @@ template <typename R> struct Action
     }
 
     inline void Copy(Action *other)
-    { 
+    {
         if (other == nullptr)
             this->action = nullptr;
         else

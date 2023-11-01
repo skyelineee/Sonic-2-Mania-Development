@@ -7,3 +7,6 @@ log.txt
 *.pdb
 
 .vs*
+
+build/
+.cache

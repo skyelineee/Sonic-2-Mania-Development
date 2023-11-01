@@ -65,7 +65,7 @@ struct TriBumper : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    void SetPlayerVelocity();
+    void SetPlayerVelocity(int32 pos, int32 heightVel);
     void HandleBump();
 
     // ==============================

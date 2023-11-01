@@ -98,7 +98,7 @@ void GameOver::Create(void *data)
 
         for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES))
         {
-            hud->state.Set(&HUD::State_MoveOut);
+            HUD::MoveOut(hud);
             hud->active = ACTIVE_ALWAYS;
         }
     }
