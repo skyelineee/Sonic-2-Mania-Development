@@ -10,8 +10,9 @@ struct SWZSetup : RSDK::GameObject::Entity {
         int32 paletteTimer;
         int32 snowflakeStorage[0x400]; // according to globals this is how big
         int32 snowflakeCount;
-        int32 basis;
-        RSDK::Vector2 offset;
+        int32 snowflakeBasis;  // the screenInfo from before transition
+        int32 snowflakeAddend; // the screenInfo from after transition
+        int32 snowflakeYOff;
     };
 
     // ==============================

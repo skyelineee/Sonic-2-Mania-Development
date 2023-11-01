@@ -38,6 +38,7 @@ struct Snowflakes : RSDK::GameObject::Entity {
     uint8 priority[0x40];
     uint16 angles[0x40];
     int32 basis;
+    int32 addend;
 
     // ==============================
     // EVENTS

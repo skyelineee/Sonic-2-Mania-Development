@@ -93,12 +93,11 @@ void SWZSetup::StageFinish_EndAct1()
     sVars->snowflakeCount = Snowflakes::sVars->count;
     for (int i = 0; i < 0x40; ++i) {
         if (snowflake->positions[i].x || snowflake->positions[i].y) {
-            // snowflake->positions[i].x -= ((offset.x >> 16) % screenInfo->size.x) << 16;
             snowflake->positions[i].y -= offset.y;
         }
     }
 
-    sVars->basis = screenInfo->position.x;
+    sVars->snowflakeBasis = screenInfo->position.x;
 
     GameObject::Copy(sVars->snowflakeStorage, snowflake, false);
 
@@ -113,10 +112,10 @@ void SWZSetup::HandleActTransition()
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(816)), true);
 
     Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);
-    camera->SetCameraBoundsXY(); // force screen pos
+    camera->SetCameraBoundsXY(); // force screen pos, this doesn't cause any artifacts thankfully
 
-    sVars->basis -= screenInfo->position.x;
-    sVars->offset.y = TO_FIXED(816);
+    sVars->snowflakeAddend = screenInfo->position.x;
+    sVars->snowflakeYOff   = TO_FIXED(816);
 
     TileLayer *bg1 = SceneLayer::GetTileLayer(0);
     bg1->scrollPos *= bg1->parallaxFactor;
