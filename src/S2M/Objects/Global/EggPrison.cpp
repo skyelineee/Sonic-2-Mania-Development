@@ -16,6 +16,7 @@
 #include "Ring.hpp"
 #include "Debris.hpp"
 #include "Helpers/BadnikHelpers.hpp"
+#include "HUD.hpp"
 
 using namespace RSDK;
 
@@ -431,6 +432,12 @@ void EggPrison::State_Wait()
             this->state.Set(nullptr);
         Zone::sVars->shouldRecoverPlayers = false;
         GameObject::Reset(SLOT_ACTCLEAR, ActClear::sVars->classID, nullptr);
+    }
+    else if (this->timer == 30) {
+        for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
+            if (!hud->state.Matches(&HUD::State_MoveOut))
+                HUD::MoveOut(hud);
+        }
     }
 }
 

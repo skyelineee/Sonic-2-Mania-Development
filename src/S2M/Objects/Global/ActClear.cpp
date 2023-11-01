@@ -383,7 +383,8 @@ void ActClear::State_EnterResults()
 
     // gets the hud object and sets its state to moving out (dont need it visible here lmao)
     for (auto hud : GameObject::GetEntities<HUD>(FOR_ALL_ENTITIES)) {
-        HUD::MoveOut(hud);
+        if (!hud->state.Matches(&HUD::State_MoveOut))
+            HUD::MoveOut(hud);
     }
 
     // increases alpha for the checkerboard

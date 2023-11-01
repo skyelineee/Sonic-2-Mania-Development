@@ -576,7 +576,8 @@ void HUD::MoveIn(HUD *hud)
     hud->timeOffset.x  = -TO_FIXED(194);
     hud->ringsOffset.x = -TO_FIXED(237);
     hud->lifeOffset.x  = -TO_FIXED(260); // except 4 this one this one wants to be quirky
-    hud->moveTimer     = 0;
+    // edit: figured out why it's quirky not changing it
+    hud->moveTimer = 0;
 
     // hud->scoreOffset.x = TO_FIXED(16);
     // hud->timeOffset.x  = TO_FIXED(16);
