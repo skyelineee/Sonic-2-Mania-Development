@@ -74,6 +74,8 @@ struct ManiaModeMenu : RSDK::GameObject::Entity {
 
     void State_HandleTransition();
 
+    void MovePromptCB();
+
     // ==============================
     // DECLARATION
     // ==============================

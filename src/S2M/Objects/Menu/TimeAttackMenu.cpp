@@ -26,6 +26,7 @@
 #include "Global/Music.hpp"
 #include "Global/SaveGame.hpp"
 #include "Common/BGSwitch.hpp"
+#include "ManiaModeMenu.hpp"
 
 using namespace RSDK;
 
@@ -33,10 +34,7 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(TimeAttackMenu);
 
-void TimeAttackMenu::Update()
-{
-    this->state.Run(this);
-}
+void TimeAttackMenu::Update() { this->state.Run(this); }
 
 void TimeAttackMenu::LateUpdate() {}
 
@@ -150,12 +148,14 @@ void TimeAttackMenu::Initialize()
             sVars->replayPrompt = prompt;
     }
 
-    for (auto carousel : GameObject::GetEntities<UIReplayCarousel>(FOR_ALL_ENTITIES)) { sVars->replayCarousel = carousel; }
+    for (auto carousel : GameObject::GetEntities<UIReplayCarousel>(FOR_ALL_ENTITIES)) {
+        sVars->replayCarousel = carousel;
+    }
 
     for (auto banner : GameObject::GetEntities<UITABanner>(FOR_ALL_ENTITIES)) {
         if (UIControl::ContainsPos(detailsControl, &banner->position)) {
             sVars->detailsBanner = banner;
-            banner->parent                = sVars->taDetailsControl;
+            banner->parent       = sVars->taDetailsControl;
         }
     }
 }
@@ -164,10 +164,10 @@ void TimeAttackMenu::HandleUnlocks() {}
 
 void TimeAttackMenu::SetupActions()
 {
-    UIControl *control             = sVars->timeAttackControl;
-    UIControl *replayControl       = sVars->replaysControl;
-    UIControl *zoneSelControl      = sVars->taZoneSelControl;
-    UIControl *detailsControl      = sVars->taDetailsControl;
+    UIControl *control        = sVars->timeAttackControl;
+    UIControl *replayControl  = sVars->replaysControl;
+    UIControl *zoneSelControl = sVars->taZoneSelControl;
+    UIControl *detailsControl = sVars->taDetailsControl;
 
     control->menuUpdateCB.Set(&TimeAttackMenu::MenuUpdateCB);
 
@@ -185,15 +185,21 @@ void TimeAttackMenu::SetupActions()
             charButton->actionCB.Set(&TimeAttackMenu::CharButton_ActionCB);
     }
 
-    for (auto module : GameObject::GetEntities<UITAZoneModule>(FOR_ALL_ENTITIES)) { module->actionCB.Set(&TimeAttackMenu::TAModule_ActionCB); }
+    for (auto module : GameObject::GetEntities<UITAZoneModule>(FOR_ALL_ENTITIES)) {
+        module->actionCB.Set(&TimeAttackMenu::TAModule_ActionCB);
+    }
 
     replayControl->menuSetupCB.Set(&TimeAttackMenu::MenuSetupCB_Replay);
     replayControl->menuUpdateCB.Set(&TimeAttackMenu::MenuUpdateCB_Replay);
     replayControl->xPressCB.Set(&TimeAttackMenu::DeleteReplayActionCB);
     replayControl->yPressCB.Set(&TimeAttackMenu::YPressCB_Replay);
+    replayControl->processButtonInputCB.Set(&ManiaModeMenu::MovePromptCB);
+    replayControl->promptOffset = -10;
 
     zoneSelControl->yPressCB.Set(&TimeAttackMenu::YPressCB_ZoneSel);
     zoneSelControl->backPressCB.Set(&TimeAttackMenu::BackPressCB_ZoneSel);
+    zoneSelControl->processButtonInputCB.Set(&ManiaModeMenu::MovePromptCB);
+    replayControl->promptOffset = 8;
 
     detailsControl->yPressCB.Set(&TimeAttackMenu::YPressCB_Details);
     detailsControl->xPressCB.Set(&TimeAttackMenu::XPressCB_Details);
@@ -204,7 +210,7 @@ void TimeAttackMenu::SetupActions()
     replayButton->actionCB.Set(&TimeAttackMenu::TAZoneModule_ActionCB);
     replayButton->choiceChangeCB.Set(&TimeAttackMenu::TAZoneModule_ChoiceChangeCB);
 
-    UIReplayCarousel *replayCarousel          = sVars->replayCarousel;
+    UIReplayCarousel *replayCarousel = sVars->replayCarousel;
     replayCarousel->actionCB.Set(&TimeAttackMenu::ReplayCarousel_ActionCB);
     replayControl->buttons[0]->choiceChangeCB.Set(&TimeAttackMenu::SortReplayChoiceCB);
 }
@@ -242,9 +248,9 @@ void TimeAttackMenu::HandleMenuReturn()
         replayControl->buttonID = 1; // Select Replay Carousel
         UIButton::SetChoiceSelectionWithCB(replayControl->buttons[0], param->selectedReplay & 0xFF);
 
-        UIReplayCarousel *carousel       = sVars->replayCarousel;
-        int32 replayCount                = APITable->GetSortedUserDBRowCount(globals->replayTableID);
-        int32 targetID                   = APITable->GetUserDBRowByID(globals->replayTableID, param->replayUUID);
+        UIReplayCarousel *carousel = sVars->replayCarousel;
+        int32 replayCount          = APITable->GetSortedUserDBRowCount(globals->replayTableID);
+        int32 targetID             = APITable->GetUserDBRowByID(globals->replayTableID, param->replayUUID);
 
         int32 replayID = 0;
         for (; replayID < replayCount; ++replayID) {
@@ -342,16 +348,17 @@ void TimeAttackMenu::WatchReplay(int32 row, bool32 showGhost)
     APITable->GetUserDBValue(globals->replayTableID, row, API::Storage::UserDB::UInt8, "act", &act);
     APITable->GetUserDBValue(globals->replayTableID, row, API::Storage::UserDB::UInt8, "characterID", &characterID);
 
-    param->viewReplay   = true;
-    param->showGhost    = showGhost;
-    param->replayUUID   = uuid;
-    param->zoneID       = zoneID;
-    param->actID        = act;
-    param->characterID  = characterID;
+    param->viewReplay  = true;
+    param->showGhost   = showGhost;
+    param->replayUUID  = uuid;
+    param->zoneID      = zoneID;
+    param->actID       = act;
+    param->characterID = characterID;
 
     int32 replayID = 0;
     if (!showGhost) {
-        if (!TimeAttackData::sVars->loaded || characterID != TimeAttackData::sVars->characterID || zoneID != TimeAttackData::sVars->zoneID || act != TimeAttackData::sVars->act) {
+        if (!TimeAttackData::sVars->loaded || characterID != TimeAttackData::sVars->characterID || zoneID != TimeAttackData::sVars->zoneID
+            || act != TimeAttackData::sVars->act) {
             TimeAttackData::ConfigureTableView(zoneID, act, characterID);
         }
 
@@ -647,8 +654,8 @@ void TimeAttackMenu::LoadScene()
             characterImage    = "tails";
             characterText     = "Tails";
             break;
-        case 3: 
-            globals->playerID = ID_KNUCKLES; 
+        case 3:
+            globals->playerID = ID_KNUCKLES;
             playingAsText     = "Playing as Knuckles";
             characterImage    = "knuckles";
             characterText     = "Knuckles";
@@ -787,16 +794,13 @@ void TimeAttackMenu::CharButton_ActionCB()
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         UITAZoneModule *charButton = (UITAZoneModule *)control->buttons[i];
-        charButton->characterID          = characterID;
+        charButton->characterID    = characterID;
     }
 
     UIControl::MatchMenuTag("Time Attack Zones");
 }
 
-void TimeAttackMenu::TransitionToDetailsCB()
-{
-    UIControl::SetActiveMenu(sVars->taDetailsControl);
-}
+void TimeAttackMenu::TransitionToDetailsCB() { UIControl::SetActiveMenu(sVars->taDetailsControl); }
 
 void TimeAttackMenu::SetupLeaderboardsCarousel(UICarousel *carousel)
 {

@@ -47,8 +47,8 @@ void SaveMenu::StaticUpdate()
 
             for (int i = 0; i < control->buttonCount; ++i) {
                 if (control->buttons[i]) {
-                    UISaveSlot *saveSlot = (UISaveSlot *)control->buttons[i];
-                    UIControl *control   = (UIControl *)saveSlot->parent;
+                    UISaveSlot *saveSlot       = (UISaveSlot *)control->buttons[i];
+                    UIControl *control         = (UIControl *)saveSlot->parent;
                     SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(saveSlot->slotID);
                     int32 saveState            = saveRAM->saveState;
                     if (saveSlot->saveSlotPlacement > selectedID) {
@@ -61,28 +61,34 @@ void SaveMenu::StaticUpdate()
                                 switch (saveSlot->fileAnimator.frameID) {
                                     case 0:
                                     case 1:
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID);
-                                    break;
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
                                     case 2:
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
-                                    break;
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
                                     case 3:
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
-                                    break;
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
                                 }
 
-                            switch (saveSlot->fileAnimator.frameID) {
-                                case 0:
-                                case 1: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 14, true, saveSlot->slotNumAnimator.frameID); 
+                        switch (saveSlot->fileAnimator.frameID) {
+                            case 0:
+                            case 1:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 14, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                                case 2: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 15, true, saveSlot->slotNumAnimator.frameID); 
+                            case 2:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 15, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                                case 3: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 16, true, saveSlot->slotNumAnimator.frameID);    
+                            case 3:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 16, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                            }
+                        }
                     }
                     else if (saveSlot->saveSlotPlacement == selectedID) {
                         saveSlot->position.y = saveSlot->startPos.y;
@@ -91,20 +97,23 @@ void SaveMenu::StaticUpdate()
                         switch (saveSlot->fileAnimator.frameID) {
                             case 0:
                             case 1:
-                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID); 
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true,
+                                                                          saveSlot->saveStatusAnimator.frameID);
                                 saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
                                 saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 10, true, saveSlot->slotNumAnimator.frameID);
-                            break;
-                            case 2: 
-                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
+                                break;
+                            case 2:
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true,
+                                                                          saveSlot->saveStatusAnimator.frameID);
                                 saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
                                 saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 11, true, saveSlot->slotNumAnimator.frameID);
-                            break;
-                            case 3: 
-                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
+                                break;
+                            case 3:
+                                saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true,
+                                                                          saveSlot->saveStatusAnimator.frameID);
                                 saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
                                 saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 12, true, saveSlot->slotNumAnimator.frameID);
-                            break;
+                                break;
                         }
                         // big boy
                     }
@@ -117,32 +126,38 @@ void SaveMenu::StaticUpdate()
                             if (saveState == SaveGame::SaveCompleted)
                                 switch (saveSlot->fileAnimator.frameID) {
                                     case 0:
-                                    case 1: 
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true, saveSlot->saveStatusAnimator.frameID); 
-                                    break;
-                                    case 2: 
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true, saveSlot->saveStatusAnimator.frameID); 
-                                    break;
-                                    case 3: 
-                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true, saveSlot->saveStatusAnimator.frameID); 
-                                    break;
+                                    case 1:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 3, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
+                                    case 2:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 4, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
+                                    case 3:
+                                        saveSlot->saveStatusAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 5, true,
+                                                                                  saveSlot->saveStatusAnimator.frameID);
+                                        break;
                                 }
 
-                            switch (saveSlot->fileAnimator.frameID) {
-                                case 0:
-                                case 1: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 14, true, saveSlot->slotNumAnimator.frameID); 
+                        switch (saveSlot->fileAnimator.frameID) {
+                            case 0:
+                            case 1:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 6, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 14, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                                case 2: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 15, true, saveSlot->slotNumAnimator.frameID); 
+                            case 2:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 7, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 15, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                                case 3: saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
-                                        saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 16, true, saveSlot->slotNumAnimator.frameID);    
+                            case 3:
+                                saveSlot->zoneNameAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 8, true, saveSlot->zoneNameAnimator.frameID);
+                                saveSlot->slotNumAnimator.SetAnimation(UISaveSlot::sVars->aniFrames, 16, true, saveSlot->slotNumAnimator.frameID);
                                 break;
-                            }
+                        }
                     }
                     switch (selectedID) {
-                        case 0: 
+                        case 0:
                         case 1: UIControl::SetTargetPos(control, saveSlot->position.x, saveSlot->position.y + TO_FIXED(84)); break;
                     }
                 }
@@ -211,18 +226,19 @@ void SaveMenu::HandleUnlocks()
 
     UIButton *sonicAbility      = control->buttons[2];
     UIButton *maxControlChoice  = UIButton::GetChoicePtr(sonicAbility, 0);
-    UIButton *peeloutChoice = UIButton::GetChoicePtr(sonicAbility, 2);
-    UIButton *instaShieldChoice  = UIButton::GetChoicePtr(sonicAbility, 3);
+    UIButton *peeloutChoice     = UIButton::GetChoicePtr(sonicAbility, 2);
+    UIButton *instaShieldChoice = UIButton::GetChoicePtr(sonicAbility, 3);
 
     UIButton *andKnux = control->buttons[3];
 }
 
 void SaveMenu::SetupActions()
 {
-    for (auto slot : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES)) { slot->actionCB.Set(&SaveMenu::SaveButton_ActionCB); }
+    for (auto slot : GameObject::GetEntities<UISaveSlot>(FOR_ALL_ENTITIES)) {
+        slot->actionCB.Set(&SaveMenu::SaveButton_ActionCB);
+    }
 
     for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) {
-
         Hitbox hitbox;
         UIControl *saveSel = ManiaModeMenu::sVars->saveSelectMenu;
         int32 x            = saveSel->startPos.x - saveSel->cameraOffset.x;
@@ -240,11 +256,14 @@ void SaveMenu::SetupActions()
     UIControl *saveSel = ManiaModeMenu::sVars->saveSelectMenu;
     saveSel->menuUpdateCB.Set(&SaveMenu::SaveSel_MenuUpdateCB);
     saveSel->yPressCB.Set(&SaveMenu::SaveSel_YPressCB);
+
+    saveSel->processButtonInputCB.Set(&ManiaModeMenu::MovePromptCB);
+    saveSel->promptOffset = 12;
 }
 
 void SaveMenu::HandleMenuReturn(int32 slot)
 {
-    UIControl *control = ManiaModeMenu::sVars->secretsMenu;
+    UIControl *control          = ManiaModeMenu::sVars->secretsMenu;
     SaveGame::SaveRAM *saveGame = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(slot);
 
     UIButton::SetChoiceSelection(control->buttons[0], (saveGame->medalMods & MEDAL_NOTIMEOVER) != 0);
@@ -414,11 +433,11 @@ void SaveMenu::SaveButton_ActionCB()
             memset(saveData, 0, 0x400);
             saveGame->saveState = 1;
 
-            saveGame->characterID   = saveSlot->frameID;
-            saveGame->zoneID        = 0;
-            saveGame->lives         = 3;
+            saveGame->characterID       = saveSlot->frameID;
+            saveGame->zoneID            = 0;
+            saveGame->lives             = 3;
             saveGame->collectedEmeralds = saveSlot->saveEmeralds;
-            saveGame->continues     = 0;
+            saveGame->continues         = 0;
             UILoadingIcon::StartWait();
             loadingSave = true;
             SaveGame::SaveFile(SaveMenu::SaveFileCB);

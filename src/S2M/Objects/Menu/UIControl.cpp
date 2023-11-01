@@ -98,8 +98,7 @@ void UIControl::Create(void *data)
 
         int32 slotID = this->Slot();
         if (UIButtonPrompt::sVars && slotID != SLOT_DIALOG_UICONTROL) {
-            for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES))
-            {
+            for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) {
                 if (this->promptCount < UICONTROL_PROMPT_COUNT) {
                     int32 x = this->startPos.x - this->cameraOffset.x;
                     int32 y = this->startPos.y - this->cameraOffset.y;
@@ -138,7 +137,6 @@ void UIControl::Create(void *data)
         }
     }
 }
-
 
 void UIControl::StageLoad()
 {
@@ -208,17 +206,17 @@ void UIControl::ProcessInputs()
             sVars->rightPress[i] = controllerInfo[Input::CONT_P1 + i].keyRight.press | analogStickInfoL[Input::CONT_P1 + i].keyRight.press;
 
             if (sVars->upPress[i] && sVars->downPress[i]) {
-                sVars->upPress[i] = false;
+                sVars->upPress[i]   = false;
                 sVars->downPress[i] = false;
             }
 
             if (sVars->leftPress[i] && sVars->rightPress[i]) {
-                sVars->leftPress[i] = false;
+                sVars->leftPress[i]  = false;
                 sVars->rightPress[i] = false;
             }
 
-            sVars->yPress[i] = controllerInfo[Input::CONT_P1 + i].keyY.press;
-            sVars->xPress[i] = controllerInfo[Input::CONT_P1 + i].keyX.press;
+            sVars->yPress[i]     = controllerInfo[Input::CONT_P1 + i].keyY.press;
+            sVars->xPress[i]     = controllerInfo[Input::CONT_P1 + i].keyX.press;
             sVars->startPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
 
             sVars->confirmPress[i] = controllerInfo[Input::CONT_P1 + i].keyStart.press;
@@ -269,9 +267,7 @@ void UIControl::ProcessInputs()
         bool32 backPressed = false;
 
         if (sVars->anyBackPress) {
-            if (!this->childHasFocus && !this->dialogHasFocus
-                && !this->popoverHasFocus
-                && this->backoutTimer <= 0) {
+            if (!this->childHasFocus && !this->dialogHasFocus && !this->popoverHasFocus && this->backoutTimer <= 0) {
                 if (!this->backPressCB.Matches(nullptr)) {
                     backPressed = this->backPressCB.Run(this);
 
@@ -285,7 +281,7 @@ void UIControl::ProcessInputs()
                     }
                     else {
                         this->selectionDisabled = true;
-                        UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
+                        UITransition::StartTransition(UIControl::ReturnToParentMenu, 0, true);
                         backPressed = false;
                     }
                 }
@@ -310,9 +306,7 @@ void UIControl::ProcessInputs()
 
         if (!this->selectionDisabled) {
             if (sVars->anyYPress) {
-                if (!this->childHasFocus && !this->dialogHasFocus
-                    && !this->popoverHasFocus
-                    && this->backoutTimer <= 0) {
+                if (!this->childHasFocus && !this->dialogHasFocus && !this->popoverHasFocus && this->backoutTimer <= 0) {
                     this->yPressCB.Run(this);
                 }
 
@@ -320,9 +314,7 @@ void UIControl::ProcessInputs()
             }
 
             if (sVars->anyXPress) {
-                if (!this->childHasFocus && !this->dialogHasFocus
-                    && !this->popoverHasFocus
-                    && this->backoutTimer <= 0) {
+                if (!this->childHasFocus && !this->dialogHasFocus && !this->popoverHasFocus && this->backoutTimer <= 0) {
                     this->xPressCB.Run(this);
                 }
 
@@ -377,7 +369,6 @@ void UIControl::MenuChangeButtonInit(UIControl *control)
 
                         zoneModule->Update();
                     }
-
 
                     else if (UISaveSlot::sVars && entity->classID == UISaveSlot::sVars->classID) {
                         UISaveSlot *saveSlot = (UISaveSlot *)entity;
@@ -453,9 +444,7 @@ void UIControl::SetMenuLostFocus(UIControl *entity)
     entity->active  = ACTIVE_ALWAYS;
     entity->visible = true;
 
-    if (!entity->dialogHasFocus && !entity->childHasFocus
-        && !entity->popoverHasFocus)
-    {
+    if (!entity->dialogHasFocus && !entity->childHasFocus && !entity->popoverHasFocus) {
         if (entity->hasStoredButton) {
             entity->buttonID        = entity->storedButtonID;
             entity->storedButtonID  = 0;
@@ -480,8 +469,8 @@ void UIControl::SetMenuLostFocus(UIControl *entity)
 void UIControl::SetInactiveMenu(UIControl *control)
 {
     sVars->hasTouchInput = false;
-    control->active          = ACTIVE_NEVER;
-    control->visible         = false;
+    control->active      = ACTIVE_NEVER;
+    control->visible     = false;
     control->state.Set(nullptr);
 
     if (this->promptCount) {
@@ -496,8 +485,7 @@ void UIControl::SetupButtons()
     Hitbox hitboxRange;
 
     if (UIShifter::sVars && slotID != SLOT_DIALOG_UICONTROL) {
-        for (auto shifter : GameObject::GetEntities<UIShifter>(FOR_ALL_ENTITIES))
-        {
+        for (auto shifter : GameObject::GetEntities<UIShifter>(FOR_ALL_ENTITIES)) {
             int32 x            = this->startPos.x - this->cameraOffset.x;
             int32 y            = this->startPos.y - this->cameraOffset.y;
             hitboxRange.right  = this->size.x >> 17;
@@ -513,8 +501,7 @@ void UIControl::SetupButtons()
     }
 
     if (UICarousel::sVars && slotID != SLOT_DIALOG_UICONTROL) {
-        for (auto carousel : GameObject::GetEntities<UICarousel>(FOR_ALL_ENTITIES))
-        {
+        for (auto carousel : GameObject::GetEntities<UICarousel>(FOR_ALL_ENTITIES)) {
             int32 x            = this->startPos.x - this->cameraOffset.x;
             int32 y            = this->startPos.y - this->cameraOffset.y;
             hitboxRange.right  = this->size.x >> 17;
@@ -535,8 +522,10 @@ void UIControl::SetupButtons()
         if (button) {
             int32 classID = button->classID;
             if (classID != UIButton::sVars->classID && (!UISaveSlot::sVars || classID != UISaveSlot::sVars->classID)
-                && (!UICharButton::sVars || classID != UICharButton::sVars->classID) && (!UITAZoneModule::sVars || classID != UITAZoneModule::sVars->classID)
-                && (!UIRankButton::sVars || classID != UIRankButton::sVars->classID) && (!UIReplayCarousel::sVars || classID != UIReplayCarousel::sVars->classID)
+                && (!UICharButton::sVars || classID != UICharButton::sVars->classID)
+                && (!UITAZoneModule::sVars || classID != UITAZoneModule::sVars->classID)
+                && (!UIRankButton::sVars || classID != UIRankButton::sVars->classID)
+                && (!UIReplayCarousel::sVars || classID != UIReplayCarousel::sVars->classID)
                 && (!UISlider::sVars || classID != UISlider::sVars->classID) && (!UIKeyBinder::sVars || classID != UIKeyBinder::sVars->classID)) {
             }
             else {
@@ -583,8 +572,7 @@ void UIControl::MatchMenuTag(const char *text)
     string.Init(nullptr);
 
     string.Set(text);
-    for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-    {
+    for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         if (entity->active == ACTIVE_ALWAYS || !string.Compare(&string, &entity->tag, false))
             entity->SetInactiveMenu(entity);
         else
@@ -595,8 +583,7 @@ void UIControl::MatchMenuTag(const char *text)
 void UIControl::HandleMenuChange(String *newMenuTag)
 {
     if (newMenuTag->length) {
-        for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-        {
+        for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
             if (entity->active == ACTIVE_ALWAYS || !newMenuTag->Compare(newMenuTag, &entity->tag, false))
                 entity->SetInactiveMenu(entity);
             else
@@ -607,8 +594,7 @@ void UIControl::HandleMenuChange(String *newMenuTag)
 
 void UIControl::HandleMenuLoseFocus(UIControl *parent)
 {
-    for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-    {
+    for (auto entity : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         if (entity->active == ACTIVE_ALWAYS || entity != parent)
             entity->SetInactiveMenu(entity);
         else
@@ -618,7 +604,7 @@ void UIControl::HandleMenuLoseFocus(UIControl *parent)
 
 void UIControl::ReturnToParentMenu()
 {
-    UIControl *entity   = UIControl::GetUIControl();
+    UIControl *entity         = UIControl::GetUIControl();
     entity->selectionDisabled = false;
 
     UIControl::HandleMenuChange(&entity->parentTag);
@@ -694,7 +680,7 @@ void UIControl::ProcessButtonInput()
 {
     bool32 allowAction = false;
     if (touchInfo->count || sVars->hasTouchInput) {
-        UIButton *activeButton = 0;
+        UIButton *activeButton   = 0;
         sVars->hasTouchInput     = touchInfo->count != 0;
         sVars->isProcessingInput = true;
 
@@ -704,9 +690,7 @@ void UIControl::ProcessButtonInput()
 
                 Entity *storeEntity = (Entity *)sceneInfo->entity;
                 sceneInfo->entity   = (Entity *)button;
-                if (!button->touchCB.Matches(nullptr) && !this->dialogHasFocus
-                    && !this->popoverHasFocus)
-                {
+                if (!button->touchCB.Matches(nullptr) && !this->dialogHasFocus && !this->popoverHasFocus) {
                     if (button->checkSelectedCB.Matches(nullptr) || button->checkSelectedCB.Matches(nullptr)) {
                         if (allowAction || !button->touchCB.Matches(nullptr)) {
                             allowAction = true;

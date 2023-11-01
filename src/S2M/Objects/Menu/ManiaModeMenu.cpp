@@ -99,7 +99,8 @@ bool32 ManiaModeMenu::InitAPI()
             if (MenuSetup::sVars->initializedAPI)
                 return true;
 
-            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK && globals->taTableLoaded == STATUS_OK) {
+            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
+                && globals->taTableLoaded == STATUS_OK) {
 
                 if (!API::Storage::GetNoSave() && DialogRunner::NotifyAutosave())
                     return false;
@@ -117,7 +118,8 @@ bool32 ManiaModeMenu::InitAPI()
                 return true;
             }
             else {
-                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR || globals->replayTableLoaded == STATUS_ERROR || globals->taTableLoaded == STATUS_ERROR) {
+                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR || globals->replayTableLoaded == STATUS_ERROR
+                    || globals->taTableLoaded == STATUS_ERROR) {
                     int32 status = API::Storage::GetSaveStatus();
 
                     if (status != STATUS_CONTINUE) {
@@ -157,8 +159,8 @@ int32 ManiaModeMenu::GetActiveMenu()
 
     if (control == TimeAttackMenu::sVars->timeAttackControl || control == TimeAttackMenu::sVars->taDetailsControl) {
         return MenuSetup::TimeAttackMain;
-    } 
-    
+    }
+
     if (control == TimeAttackMenu::sVars->taZoneSelControl || control == TimeAttackMenu::sVars->replaysControl) {
         return MenuSetup::TimeAttackElse;
     }
@@ -173,10 +175,10 @@ int32 ManiaModeMenu::GetActiveMenu()
     }
 
     if (control == OptionsMenu::sVars->videoControl_Windows || control == OptionsMenu::sVars->soundControl
-        || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB || control == OptionsMenu::sVars->controlsControl_PS4
-        || control == OptionsMenu::sVars->controlsControl_XB1 || control == OptionsMenu::sVars->controlsControl_NX
-        || control == OptionsMenu::sVars->controlsControl_NXGrip || control == OptionsMenu::sVars->controlsControl_NXJoycon
-        || control == OptionsMenu::sVars->controlsControl_NXPro) {
+        || control == OptionsMenu::sVars->controlsControl_Windows || control == OptionsMenu::sVars->controlsControl_KB
+        || control == OptionsMenu::sVars->controlsControl_PS4 || control == OptionsMenu::sVars->controlsControl_XB1
+        || control == OptionsMenu::sVars->controlsControl_NX || control == OptionsMenu::sVars->controlsControl_NXGrip
+        || control == OptionsMenu::sVars->controlsControl_NXJoycon || control == OptionsMenu::sVars->controlsControl_NXPro) {
         return MenuSetup::OptionsElse;
     }
 
@@ -190,10 +192,10 @@ void ManiaModeMenu::ChangeMenuTrack()
     switch (ManiaModeMenu::GetActiveMenu()) {
         default:
         case MenuSetup::Main: trackID = 0; break;
-        case MenuSetup::TimeAttackMain: ;
+        case MenuSetup::TimeAttackMain:;
         case MenuSetup::TimeAttackElse: trackID = 2; break;
         case MenuSetup::SaveSelect: trackID = 1; break;
-        case MenuSetup::OptionsMain: ;
+        case MenuSetup::OptionsMain:;
         case MenuSetup::OptionsElse: trackID = 0; break;
     }
 
@@ -225,7 +227,7 @@ void ManiaModeMenu::ChangeMenuBG()
             RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             break;
-        case MenuSetup::TimeAttackElse: 
+        case MenuSetup::TimeAttackElse:
             RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
             RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
@@ -234,7 +236,7 @@ void ManiaModeMenu::ChangeMenuBG()
             RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = 2;
             break;
-        case MenuSetup::SaveSelect: 
+        case MenuSetup::SaveSelect:
             RSDKTable->GetTileLayer(1)->drawGroup[BGSwitch::sVars->screenID] = 0;
             RSDKTable->GetTileLayer(2)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
             RSDKTable->GetTileLayer(3)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
@@ -312,8 +314,7 @@ void ManiaModeMenu::HandleMenuReturn()
 
     char buffer[0x100];
     memset(buffer, 0, 0x100);
-    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-    {
+    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         if (strcmp(param->menuTag, "") != 0) {
             control->tag.CStr(buffer);
 
@@ -336,17 +337,28 @@ void ManiaModeMenu::HandleMenuReturn()
     int32 zoneID = 0, actID = 0, characterID = 0;
     bool32 inTimeAttack = param->inTimeAttack;
     if (inTimeAttack) {
-        characterID  = param->characterID;
-        zoneID       = param->zoneID;
-        actID        = param->actID;
+        characterID = param->characterID;
+        zoneID      = param->zoneID;
+        actID       = param->actID;
     }
 
     TimeAttackData::Clear();
 
     if (inTimeAttack) {
-        param->characterID  = characterID;
-        param->zoneID       = zoneID;
-        param->actID        = actID;
+        param->characterID = characterID;
+        param->zoneID      = zoneID;
+        param->actID       = actID;
+    }
+}
+
+void ManiaModeMenu::MovePromptCB()
+{
+    auto *control = (UIControl *)this;
+    control->ProcessButtonInput();
+    for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ACTIVE_ENTITIES)) {
+        if (prompt->parent == this)
+            prompt->position.y = prompt->startPos.y - control->startPos.y + control->position.y
+                                 + TO_FIXED(control->promptOffset); // idk why the offset, maybe ask skye to move it
     }
 }
 

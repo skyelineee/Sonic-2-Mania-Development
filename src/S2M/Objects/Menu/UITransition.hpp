@@ -31,6 +31,7 @@ struct UITransition : RSDK::GameObject::Entity {
     int32 delay;
     bool32 isTransitioning;
     int32 fadeColor;
+    bool32 back;
 
     // ==============================
     // INSTANCE VARS
@@ -58,8 +59,13 @@ struct UITransition : RSDK::GameObject::Entity {
     // FUNCTIONS
     // ==============================
 
-    static void StartTransition(void (*callback)(), int32 delay);
-    static void StartTransition(RSDK::Action<void> callback, int32 delay);
+    static void StartTransition(RSDK::Action<void> callback, int32 delay, bool32 back = false);
+    static inline void StartTransition(void (*callback)(), int32 delay, bool32 back = false)
+    {
+        RSDK::Action<void> cb;
+        cb.Set(callback);
+        StartTransition(cb, delay, back);
+    }
     static void MatchNewTag();
     static void SetNewTag(const char *text);
 

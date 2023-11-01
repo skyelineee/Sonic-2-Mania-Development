@@ -54,28 +54,28 @@ void MainMenu::StaticUpdate()
 
             for (int i = 0; i < control->buttonCount; ++i) {
                 if (control->buttons[i]) {
-                    UIButton* button = control->buttons[i]; 
+                    UIButton *button = control->buttons[i];
                     if (button->nameFrameID > selectedID) {
-                        button->position.y = button->startPos.y + TO_FIXED(24);
-                        button->buttonFrameID = button->descriptionFrameID;
+                        button->position.y        = button->startPos.y + TO_FIXED(24);
+                        button->buttonFrameID     = button->descriptionFrameID;
                         button->descriptionListID = 5;
-                        button->buttonListID = 1;
-                        button->nameListID   = 3;
+                        button->buttonListID      = 1;
+                        button->nameListID        = 3;
                     }
                     else if (button->nameFrameID == selectedID) {
-                        button->buttonListID = 0;
-                        button->position.y = button->startPos.y;
-                        button->buttonFrameID = button->descriptionFrameID;
+                        button->buttonListID      = 0;
+                        button->position.y        = button->startPos.y;
+                        button->buttonFrameID     = button->descriptionFrameID;
                         button->descriptionListID = 0;
-                        button->nameListID    = 2;
+                        button->nameListID        = 2;
                         // big boy
                     }
                     else {
-                        button->buttonListID = 1;
-                        button->nameListID    = 4;
+                        button->buttonListID      = 1;
+                        button->nameListID        = 4;
                         button->descriptionListID = 5;
-                        button->position.y = button->startPos.y;
-                        button->buttonFrameID = button->descriptionFrameID + 5;
+                        button->position.y        = button->startPos.y;
+                        button->buttonFrameID     = button->descriptionFrameID + 5;
                     }
                 }
             }
@@ -93,8 +93,7 @@ void MainMenu::Initialize()
 {
     String text = {};
 
-    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-    {
+    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         text.Set("Main Menu");
         if (text.Compare(&text, &control->tag, false)) {
             MainMenu::sVars->menuControl = control;
@@ -110,10 +109,9 @@ void MainMenu::Initialize()
     RSDKTable->GetTileLayer(6)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
     RSDKTable->GetTileLayer(7)->drawGroup[BGSwitch::sVars->screenID] = DRAWGROUP_COUNT;
 
-   UIControl *menuControl = MainMenu::sVars->menuControl;
+    UIControl *menuControl = MainMenu::sVars->menuControl;
 
-    for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES))
-    {
+    for (auto prompt : GameObject::GetEntities<UIButtonPrompt>(FOR_ALL_ENTITIES)) {
         int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
         int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
 
@@ -127,8 +125,7 @@ void MainMenu::Initialize()
             MainMenu::sVars->confirmPrompt = prompt;
     }
 
-    for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES))
-    {
+    for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES)) {
         int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
         int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
 
@@ -140,7 +137,7 @@ void MainMenu::Initialize()
 
         if (MathHelpers::PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
             MainMenu::sVars->diorama = diorama;
-            diorama->parent   = MainMenu::sVars->menuControl;
+            diorama->parent          = MainMenu::sVars->menuControl;
         }
     }
 
@@ -149,17 +146,17 @@ void MainMenu::Initialize()
     int32 button3Frame = 3; // Options
     int32 button4Frame = 4; // Exit
 
-    UIButton *buttonAdventure = menuControl->buttons[0];
-    buttonAdventure->nameFrameID        = 0;
-    buttonAdventure->buttonFrameID      = 0;
-    buttonAdventure->transition     = true;
-    buttonAdventure->stopMusic      = true;
+    UIButton *buttonAdventure      = menuControl->buttons[0];
+    buttonAdventure->nameFrameID   = 0;
+    buttonAdventure->buttonFrameID = 0;
+    buttonAdventure->transition    = true;
+    buttonAdventure->stopMusic     = true;
 
-    UIButton *buttonTimeAttack = menuControl->buttons[1];
-    buttonTimeAttack->nameFrameID    = button1Frame;
-    buttonTimeAttack->buttonFrameID  = 1;
-    buttonTimeAttack->transition     = true;
-    buttonTimeAttack->stopMusic      = true;
+    UIButton *buttonTimeAttack      = menuControl->buttons[1];
+    buttonTimeAttack->nameFrameID   = button1Frame;
+    buttonTimeAttack->buttonFrameID = 1;
+    buttonTimeAttack->transition    = true;
+    buttonTimeAttack->stopMusic     = true;
 
     UIButton *buttonExtras      = menuControl->buttons[2];
     buttonExtras->nameFrameID   = button2Frame;
@@ -167,17 +164,17 @@ void MainMenu::Initialize()
     buttonExtras->transition    = true;
     buttonExtras->stopMusic     = false;
 
-    UIButton *buttonOptions = menuControl->buttons[3];
-    buttonOptions->nameFrameID    = button3Frame;
-    buttonOptions->buttonFrameID  = 3;
-    buttonOptions->transition     = true;
-    buttonOptions->stopMusic      = false;
+    UIButton *buttonOptions      = menuControl->buttons[3];
+    buttonOptions->nameFrameID   = button3Frame;
+    buttonOptions->buttonFrameID = 3;
+    buttonOptions->transition    = true;
+    buttonOptions->stopMusic     = false;
 
-    UIButton *buttonExit = menuControl->buttons[4];
-    buttonExit->nameFrameID    = button4Frame;
-    buttonExit->buttonFrameID  = 4;
-    buttonExit->transition     = false;
-    buttonExit->stopMusic      = false;
+    UIButton *buttonExit      = menuControl->buttons[4];
+    buttonExit->nameFrameID   = button4Frame;
+    buttonExit->buttonFrameID = 4;
+    buttonExit->transition    = false;
+    buttonExit->stopMusic     = false;
 }
 
 bool32 MainMenu::BackPressCB_ReturnToTitle()
@@ -224,9 +221,9 @@ void MainMenu::MenuButton_ActionCB()
                 UIControl::MatchMenuTag("No Save Mode");
             }
             else {
-                UIControl *saveSelect = ManiaModeMenu::sVars->saveSelectMenu;
-                saveSelect->buttonID        = 7;
-                saveSelect->menuWasSetup           = false;
+                UIControl *saveSelect                     = ManiaModeMenu::sVars->saveSelectMenu;
+                saveSelect->buttonID                      = 7;
+                saveSelect->menuWasSetup                  = false;
                 ManiaModeMenu::sVars->saveSelLastButtonID = -1;
 
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
@@ -262,15 +259,11 @@ void MainMenu::MenuButton_ActionCB()
     }
 }
 
-void MainMenu::HandleUnlocks()
-{
-    UIControl *control = MainMenu::sVars->menuControl;
-}
+void MainMenu::HandleUnlocks() { UIControl *control = MainMenu::sVars->menuControl; }
 
 void MainMenu::SetupActions()
 {
-    for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES))
-    {
+    for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES)) {
         if (button->nameListID == 3) {
             if (button->nameFrameID == 4) {
                 if (SKU->platform != PLATFORM_PC && SKU->platform != PLATFORM_DEV) {

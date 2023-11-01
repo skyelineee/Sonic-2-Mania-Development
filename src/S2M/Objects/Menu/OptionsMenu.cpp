@@ -34,9 +34,9 @@ RSDK_REGISTER_OBJECT(OptionsMenu);
 
 void OptionsMenu::Update() {}
 void OptionsMenu::LateUpdate() {}
-void OptionsMenu::StaticUpdate() 
+void OptionsMenu::StaticUpdate()
 {
-    UIControl *control = sVars->optionsControl;
+    UIControl *control     = sVars->optionsControl;
     UIControl *dataControl = sVars->dataOptionsControl;
 
     if (control && control->active) {
@@ -130,8 +130,7 @@ void OptionsMenu::Initialize()
 
     String tag = {};
 
-    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES))
-    {
+    for (auto control : GameObject::GetEntities<UIControl>(FOR_ALL_ENTITIES)) {
         tag.Set("Options");
         if (tag.Compare(&tag, &control->tag, false))
             sVars->optionsControl = control;
@@ -181,34 +180,29 @@ void OptionsMenu::Initialize()
             sVars->dataOptionsControl = control;
     }
 
-    for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES))
-    {
+    for (auto diorama : GameObject::GetEntities<UIDiorama>(FOR_ALL_ENTITIES)) {
         UIControl *controller = sVars->optionsControl;
 
         if (UIControl::ContainsPos(controller, &diorama->position)) {
-            sVars->diorama = diorama;
-            diorama->parent      = sVars->optionsControl;
+            sVars->diorama  = diorama;
+            diorama->parent = sVars->optionsControl;
         }
     }
 }
 
-void OptionsMenu::HandleUnlocks()
-{
-    UIControl *control = sVars->dataOptionsControl;
-}
+void OptionsMenu::HandleUnlocks() { UIControl *control = sVars->dataOptionsControl; }
 
 void OptionsMenu::SetupActions()
 {
-    UIControl *optionsControl         = sVars->optionsControl;
-    UIControl *controlsControl_Win    = sVars->controlsControl_Windows;
-    UIControl *videoControl_Win       = sVars->videoControl_Windows;
-    UIControl *soundControl           = sVars->soundControl;
-    UIControl *dataControl            = sVars->dataOptionsControl;
+    UIControl *optionsControl      = sVars->optionsControl;
+    UIControl *controlsControl_Win = sVars->controlsControl_Windows;
+    UIControl *videoControl_Win    = sVars->videoControl_Windows;
+    UIControl *soundControl        = sVars->soundControl;
+    UIControl *dataControl         = sVars->dataOptionsControl;
 
     String string = {};
 
-    for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES))
-    {
+    for (auto button : GameObject::GetEntities<UIButton>(FOR_ALL_ENTITIES)) {
         if (UIControl::ContainsPos(controlsControl_Win, &button->position))
             button->actionCB.Set(&OptionsMenu::KeyboardIDButton_Win_ActionCB);
 
@@ -251,8 +245,7 @@ void OptionsMenu::SetupActions()
         }
     }
 
-    for (auto slider : GameObject::GetEntities<UISlider>(FOR_ALL_ENTITIES))
-    {
+    for (auto slider : GameObject::GetEntities<UISlider>(FOR_ALL_ENTITIES)) {
         if (UIControl::ContainsPos(soundControl, &slider->position) && slider->listID == 17)
             slider->sliderChangedCB.Set(&OptionsMenu::UISlider_ChangedCB);
     }
@@ -266,15 +259,15 @@ void OptionsMenu::SetupActions()
 
 void OptionsMenu::HandleMenuReturn()
 {
-    UIControl *soundControl        = sVars->soundControl;
+    UIControl *soundControl = sVars->soundControl;
 
     if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_DEV)
         OptionsMenu::InitVideoOptionsMenu();
 
-    UISlider *musSlider = (UISlider *)soundControl->buttons[0];
+    UISlider *musSlider  = (UISlider *)soundControl->buttons[0];
     musSlider->sliderPos = Graphics::GetVideoSetting(VIDEOSETTING_STREAM_VOL);
 
-    UISlider *sfxSlider = (UISlider *)soundControl->buttons[1];
+    UISlider *sfxSlider  = (UISlider *)soundControl->buttons[1];
     sfxSlider->sliderPos = Graphics::GetVideoSetting(VIDEOSETTING_SFX_VOL);
 }
 
@@ -282,14 +275,14 @@ void OptionsMenu::InitVideoOptionsMenu()
 {
     if (SKU->platform == PLATFORM_PC || SKU->platform == PLATFORM_DEV) {
         UIControl *videoControl_Win = sVars->videoControl_Windows;
-        Options *optionsRAM            = Options::GetOptionsRAM();
+        Options *optionsRAM         = Options::GetOptionsRAM();
 
         Options::GetWinSize();
 
         int32 options[7];
 
         options[0] = Graphics::GetVideoSetting(VIDEOSETTING_SHADERID); // filter
-        options[1] = optionsRAM->windowSize;                      // window size
+        options[1] = optionsRAM->windowSize;                           // window size
         options[2] = Graphics::GetVideoSetting(VIDEOSETTING_BORDERED); // bordered
 
         // fullscreen
@@ -297,8 +290,8 @@ void OptionsMenu::InitVideoOptionsMenu()
         if (!Graphics::GetVideoSetting(VIDEOSETTING_WINDOWED) || optionsRAM->windowSize == 4)
             options[3] = 1;
 
-        options[4] = 0;                                                 // fullscreen res
-        options[5] = Graphics::GetVideoSetting(VIDEOSETTING_VSYNC);     // vsync
+        options[4] = 0;                                                      // fullscreen res
+        options[5] = Graphics::GetVideoSetting(VIDEOSETTING_VSYNC);          // vsync
         options[6] = Graphics::GetVideoSetting(VIDEOSETTING_TRIPLEBUFFERED); // triple buffered
 
         for (int32 i = 0; i < videoControl_Win->buttonCount; ++i) {
@@ -310,7 +303,7 @@ void OptionsMenu::InitVideoOptionsMenu()
             }
             else if (i == 1) {
                 UIWinSize *winSize = (UIWinSize *)UIButton::GetChoicePtr(button, button->selection);
-                winSize->selection       = Graphics::GetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT) / SCREEN_YSIZE;
+                winSize->selection = Graphics::GetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT) / SCREEN_YSIZE;
             }
             else if (button->selection != options[i]) {
                 UIButton::SetChoiceSelection(button, options[i]);
@@ -336,8 +329,7 @@ void OptionsMenu::VideoControl_Win_YPressCB()
         Action<void> callbackNo = {};
         callbackNo.Set(&OptionsMenu::ApplyChangesDlg_Win_NoCB);
 
-        UIDialog *dialog =
-            UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
+        UIDialog *dialog = UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
         if (dialog)
             dialog->closeDelay = 15 * 60; // 15 seconds at 60 FPS
     }
@@ -377,13 +369,12 @@ bool32 OptionsMenu::VideoControl_Win_BackPressCB()
         Action<void> callbackNo = {};
         callbackNo.Set(&OptionsMenu::ApplyChangesDlg_BackPress_NoCB);
 
-        UIDialog *dialog =
-            UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
+        UIDialog *dialog = UIDialog::CreateDialogYesNo(&message, callbackYes, callbackNo, true, true);
         if (dialog)
             return true;
     }
     else {
-        UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
+        UITransition::StartTransition(UIControl::ReturnToParentMenu, 0, true);
     }
 
     return false;
@@ -391,7 +382,7 @@ bool32 OptionsMenu::VideoControl_Win_BackPressCB()
 
 void OptionsMenu::ApplyChangesDlg_BackPress_YesCB()
 {
-    Action<void> callback      = {};
+    Action<void> callback = {};
     callback.Set(&DialogRunner::HandleCallback);
     DialogRunner *dialogRunner = GameObject::Create<DialogRunner>(&callback, 0, 0);
 
@@ -418,7 +409,7 @@ void OptionsMenu::ApplyChangesDlg_NoCB()
     OptionsMenu::InitVideoOptionsMenu();
 
     Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
-    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
+    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0, true);
 }
 
 void OptionsMenu::ApplyChangesDlg_Win_YesCB()
@@ -434,7 +425,7 @@ void OptionsMenu::ApplyChangesDlg_Win_BackPress_YesCB()
     Graphics::SetVideoSetting(VIDEOSETTING_WRITE, true);
     Graphics::SetVideoSetting(VIDEOSETTING_STORE, false);
 
-    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
+    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0, true);
 }
 
 void OptionsMenu::ApplyChangesDlg_BackPress_NoCB()
@@ -444,7 +435,7 @@ void OptionsMenu::ApplyChangesDlg_BackPress_NoCB()
     OptionsMenu::InitVideoOptionsMenu();
 
     Graphics::SetVideoSetting(VIDEOSETTING_CHANGED, false);
-    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0);
+    UITransition::StartTransition(UIControl::ReturnToParentMenu, 0, true);
 }
 
 void OptionsMenu::VideoMenuButton_ActionCB()
@@ -535,8 +526,7 @@ void OptionsMenu::SetupKBControlsMenu(int32 playerID)
 {
     UIControl *control = sVars->controlsControl_KB;
 
-    for (auto subHeading : GameObject::GetEntities<UISubHeading>(FOR_ALL_ENTITIES))
-    {
+    for (auto subHeading : GameObject::GetEntities<UISubHeading>(FOR_ALL_ENTITIES)) {
         if (UIControl::ContainsPos(control, &subHeading->position)) {
             subHeading->frameID = 19 + playerID;
             break;
@@ -623,8 +613,8 @@ void OptionsMenu::WindowScaleButton_ActionCB()
         Graphics::SetVideoSetting(VIDEOSETTING_WINDOW_WIDTH, WIDE_SCR_XSIZE * (button->selection + 1));
         Graphics::SetVideoSetting(VIDEOSETTING_WINDOW_HEIGHT, SCREEN_YSIZE * (button->selection + 1));
 
-        options->windowSize = button->selection;
-        Options::sVars->changed    = true;
+        options->windowSize     = button->selection;
+        Options::sVars->changed = true;
     }
 }
 
@@ -806,7 +796,7 @@ void OptionsMenu::EraseSaveGameButton_ActionCB()
 
 void OptionsMenu::AreYouSureDlg_YesCB_EraseTimeAttack()
 {
-    UIControl *control   = sVars->dataOptionsControl;
+    UIControl *control         = sVars->dataOptionsControl;
     control->selectionDisabled = true;
 
     UILoadingIcon::StartWait();

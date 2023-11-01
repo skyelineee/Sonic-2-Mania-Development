@@ -98,6 +98,8 @@ struct UIControl : RSDK::GameObject::Entity {
     RSDK::Action<void> yPressCB;
     RSDK::Action<void> xPressCB;
 
+    int32 promptOffset; // teehee
+
     // ==============================
     // EVENTS
     // ==============================
@@ -146,7 +148,7 @@ struct UIControl : RSDK::GameObject::Entity {
     // ==============================
     // DECLARATION
     // ==============================
-    
+
     RSDK_DECLARE(UIControl);
 };
 } // namespace GameLogic

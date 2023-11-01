@@ -21,18 +21,19 @@ RSDK_REGISTER_OBJECT(UITransition);
 void UITransition::Update()
 {
     this->state.Run(this);
+    UITransition::DrawFade();
 }
 
 void UITransition::LateUpdate() {}
 
 void UITransition::StaticUpdate() {}
 
-void UITransition::Draw() { UITransition::DrawFade(); }
+void UITransition::Draw() {}
 
 void UITransition::Create(void *data)
 {
-    this->active       = ACTIVE_ALWAYS;
-    this->drawGroup    = 13;
+    this->active    = ACTIVE_ALWAYS;
+    this->drawGroup = 13;
 
     this->visible = true;
     this->state.Set(&UITransition::State_Init);
@@ -40,10 +41,12 @@ void UITransition::Create(void *data)
 
 void UITransition::StageLoad()
 {
-    for (auto transition : GameObject::GetEntities<UITransition>(FOR_ALL_ENTITIES)) { sVars->activeTransition = (Entity *)transition; }
+    for (auto transition : GameObject::GetEntities<UITransition>(FOR_ALL_ENTITIES)) {
+        sVars->activeTransition = (Entity *)transition;
+    }
 }
 
-void UITransition::StartTransition(void (*callback)(), int32 delay)
+void UITransition::StartTransition(Action<void> callback, int32 delay, bool32 back)
 {
     UITransition *transition = (UITransition *)sVars->activeTransition;
 
@@ -52,25 +55,8 @@ void UITransition::StartTransition(void (*callback)(), int32 delay)
         transition->timer      = 0;
         transition->fadeColor  = 0x000000;
         transition->delay      = delay;
-        transition->callback.Set(callback);
-        transition->prevEntity = (Entity *)sceneInfo->entity;
-    }
-
-    UIControl *control = UIControl::GetUIControl();
-    if (control)
-        control->selectionDisabled = true;
-}
-
-void UITransition::StartTransition(Action<void> callback, int32 delay)
-{
-    UITransition *transition = (UITransition *)sVars->activeTransition;
-
-    if (transition->state.Matches(&UITransition::State_Init) && !UIDialog::sVars->activeDialog) {
-        transition->state.Set(&UITransition::State_TransitionIn);
-        transition->timer = 0;
-        transition->fadeColor   = 0x000000;
-        transition->delay = delay;
-        transition->callback = callback;
+        transition->callback   = callback;
+        transition->back       = back;
         transition->prevEntity = (Entity *)sceneInfo->entity;
     }
 
@@ -133,14 +119,14 @@ void UITransition::State_TransitionIn()
         this->isTransitioning = false;
 
     if (this->timer > this->delay + 17) {
-        this->timer        = 0;
+        this->timer = 0;
         this->state.Set(&UITransition::State_TransitionOut);
     }
     else {
         this->isTransitioning = true;
 
         int32 remain = this->timer - this->delay;
-        if (!remain)
+        if (!remain && back)
             UIWidgets::sVars->sfxWoosh.Play(false, 255);
 
         ++this->timer;
@@ -162,7 +148,7 @@ void UITransition::State_TransitionOut()
         }
     }
     else {
-        this->isTransitioning                       = true;
+        this->isTransitioning                        = true;
         UIControl::GetUIControl()->selectionDisabled = false;
 
         if (!this->callback.Matches(nullptr) && !UIDialog::sVars->activeDialog) {
@@ -178,7 +164,7 @@ void UITransition::State_TransitionOut()
             ManiaModeMenu::ChangeMenuBG();
         }
 
-        UIControl *control   = UIControl::GetUIControl();
+        UIControl *control         = UIControl::GetUIControl();
         control->selectionDisabled = true;
         ++this->timer;
     }
