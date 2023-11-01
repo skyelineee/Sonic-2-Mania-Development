@@ -13,6 +13,7 @@
 #include "Global/Animals.hpp"
 #include "Global/EggPrison.hpp"
 #include "Global/HUD.hpp"
+#include "Snowflakes.hpp"
 
 using namespace RSDK;
 
@@ -84,7 +85,23 @@ void SWZSetup::StageLoad()
 
 void SWZSetup::StageFinish_EndAct1()
 {
-    Zone::StoreEntities(Vector2(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0])));
+    Vector2 offset(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0]));
+    Zone::StoreEntities(offset);
+
+    // copy first Snowflakes (should be the only Snowflakes)
+    Snowflakes *snowflake = *GameObject::GetEntities<Snowflakes>(RSDK::FOR_ACTIVE_ENTITIES).begin();
+    sVars->snowflakeCount = Snowflakes::sVars->count;
+    for (int i = 0; i < 0x40; ++i) {
+        if (snowflake->positions[i].x || snowflake->positions[i].y) {
+            // snowflake->positions[i].x -= ((offset.x >> 16) % screenInfo->size.x) << 16;
+            snowflake->positions[i].y -= offset.y;
+        }
+    }
+
+    sVars->basis = screenInfo->position.x;
+
+    GameObject::Copy(sVars->snowflakeStorage, snowflake, false);
+
     Stage::LoadScene();
 }
 
@@ -94,6 +111,12 @@ void SWZSetup::HandleActTransition()
     Zone::sVars->cameraBoundsB[0] = 816;
 
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(816)), true);
+
+    Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);
+    camera->SetCameraBoundsXY(); // force screen pos
+
+    sVars->basis -= screenInfo->position.x;
+    sVars->offset.y = TO_FIXED(816);
 
     TileLayer *bg1 = SceneLayer::GetTileLayer(0);
     bg1->scrollPos *= bg1->parallaxFactor;

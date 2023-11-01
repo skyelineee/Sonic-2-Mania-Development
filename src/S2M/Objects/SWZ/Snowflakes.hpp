@@ -37,6 +37,7 @@ struct Snowflakes : RSDK::GameObject::Entity {
     RSDK::Vector2 positions[0x40];
     uint8 priority[0x40];
     uint16 angles[0x40];
+    int32 basis;
 
     // ==============================
     // EVENTS

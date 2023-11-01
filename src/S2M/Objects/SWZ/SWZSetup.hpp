@@ -8,6 +8,10 @@ struct SWZSetup : RSDK::GameObject::Entity {
 
     struct Static : RSDK::GameObject::Static {
         int32 paletteTimer;
+        int32 snowflakeStorage[0x400]; // according to globals this is how big
+        int32 snowflakeCount;
+        int32 basis;
+        RSDK::Vector2 offset;
     };
 
     // ==============================
