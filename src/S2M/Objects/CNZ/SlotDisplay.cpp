@@ -8,8 +8,6 @@
 #include "SlotMachine.hpp"
 #include "SlotPrize.hpp"
 
-// this object is pretty incomplete and doesnt really function properly like in v4, but probably wont end up fixing it
-
 using namespace RSDK;
 
 namespace GameLogic

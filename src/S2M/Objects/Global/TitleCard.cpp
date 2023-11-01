@@ -382,7 +382,6 @@ void TitleCard::Draw_SlideIn()
 
 void TitleCard::MovePositions_ShowTitle()
 {
-
     if (this->actNumPos.x < TO_FIXED(870)) {
         if (this->moveTimer >= 4) {
             this->zonePos.x += TO_FIXED(1);
@@ -405,7 +404,6 @@ void TitleCard::Draw_ShowTitleCard()
     Graphics::SetClipBounds(sceneInfo->currentScreenID, 0, 0, screen->size.x, screen->size.y);
 
     PiecePositions();
-    MovePositions_ShowTitle();
 }
 
 void TitleCard::MovePositions_SlideAway()

@@ -34,8 +34,8 @@ void UIPicture::Create(void *data)
     this->animator.SetAnimation(sVars->aniFrames, this->listID, true, this->frameID);
 
     if (!sceneInfo->inEditor) {
-        if (Stage::CheckSceneFolder("Menu") || Stage::CheckSceneFolder("LSelect") || Stage::CheckSceneFolder("LSelect2")
-            || Stage::CheckSceneFolder("LSelectEx") || Stage::CheckSceneFolder("Thanks") || Stage::CheckSceneFolder("DAGarden")|| Stage::CheckSceneFolder("Continue")) {
+        if (Stage::CheckSceneFolder("Menu") || Stage::CheckSceneFolder("LSelect") || Stage::CheckSceneFolder("LSelect2")  || Stage::CheckSceneFolder("LSelectEx") 
+            || Stage::CheckSceneFolder("Thanks") || Stage::CheckSceneFolder("DAGarden")|| Stage::CheckSceneFolder("Continue") || Stage::CheckSceneFolder("Credits")) {
             this->active    = ACTIVE_NORMAL;
             this->visible   = true;
             this->drawGroup = 2;
@@ -59,7 +59,7 @@ void UIPicture::StageLoad()
         sVars->aniFrames.Load("UI/UIPicture.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("Logos"))
         sVars->aniFrames.Load("Logos/Logos.bin", SCOPE_STAGE);
-    else if (Stage::CheckSceneFolder("Thanks") || Stage::CheckSceneFolder("Continue"))
+    else if (Stage::CheckSceneFolder("Thanks") || Stage::CheckSceneFolder("Continue") || Stage::CheckSceneFolder("Credits"))
         sVars->aniFrames.Load("LSelect/Icons.bin", SCOPE_STAGE);
     else if (Stage::CheckSceneFolder("DAGarden"))
         sVars->aniFrames.Load("Cabaret/Characters.bin", SCOPE_STAGE);

@@ -6,6 +6,7 @@
 
 #include "ThanksSetup.hpp"
 #include "UIPicture.hpp"
+#include "Global/Music.hpp"
 
 using namespace RSDK;
 
@@ -65,10 +66,17 @@ void ThanksSetup::State_ThanksForPlaying()
 void ThanksSetup::State_FadeOut()
 {
     if (this->timer >= 1024) {
-        Stage::SetScene("Presentation", "Menu");
-        Stage::LoadScene();
+        if (Stage::CheckSceneFolder("Thanks")) {
+            Stage::SetScene("Presentation", "Menu");
+            Stage::LoadScene();
+        }
+        else if (Stage::CheckSceneFolder("Credits")) {
+            Stage::SetScene("Presentation", "Signatures");
+            Stage::LoadScene();
+        }
     }
     else {
+        Music::FadeOut(0.5);
         this->timer += 16;
     }
 }

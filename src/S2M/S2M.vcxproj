@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{a7ddf156-9c7e-4867-8641-65dc61f3d1ce}</ProjectGuid>
-    <RootNamespace>DuckysDevTools</RootNamespace>
+    <RootNamespace>NOTDuckysDevTools</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,7 +146,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GAME_TYPE=0;GAME_NO_GLOBALS;_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GAME_TYPE=0;GAME_NO_GLOBALS;_DEBUG;DUCKYSDEVTOOLS_EXPORTS;_WINDOWS;_USRDLL;DISCORD_RPC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -398,6 +398,7 @@
     <ClCompile Include="Objects\Menu\UITAZoneModule.cpp" />
     <ClCompile Include="Objects\Menu\UIText.cpp" />
     <ClCompile Include="Objects\Menu\UITransition.cpp" />
+    <ClCompile Include="Objects\Menu\UIVideo.cpp" />
     <ClCompile Include="Objects\Menu\UIWidgets.cpp" />
     <ClCompile Include="Objects\Menu\UIWinSize.cpp" />
     <ClCompile Include="Objects\OOZ\Aquis.cpp" />
@@ -688,6 +689,7 @@
     <ClInclude Include="Objects\Menu\UITAZoneModule.hpp" />
     <ClInclude Include="Objects\Menu\UIText.hpp" />
     <ClInclude Include="Objects\Menu\UITransition.hpp" />
+    <ClInclude Include="Objects\Menu\UIVideo.hpp" />
     <ClInclude Include="Objects\Menu\UIWidgets.hpp" />
     <ClInclude Include="Objects\Menu\UIWinSize.hpp" />
     <ClInclude Include="Objects\OOZ\Aquis.hpp" />

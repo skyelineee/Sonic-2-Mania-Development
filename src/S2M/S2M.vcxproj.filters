@@ -820,6 +820,9 @@
     <ClCompile Include="Objects\SWZ\SWZSetup.cpp">
       <Filter>Source Files\Objects\SWZ</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Menu\UIVideo.cpp">
+      <Filter>Source Files\Objects\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameAPI\CPP\GameAPI\Game.hpp">
@@ -1583,6 +1586,9 @@
     </ClInclude>
     <ClInclude Include="Objects\SWZ\SWZSetup.hpp">
       <Filter>Source Files\Objects\SWZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\UIVideo.hpp">
+      <Filter>Source Files\Objects\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

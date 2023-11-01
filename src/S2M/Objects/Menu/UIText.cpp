@@ -71,7 +71,12 @@ void UIText::Create(void *data)
     }
 }
 
-void UIText::StageLoad() {}
+void UIText::StageLoad()
+{
+    if (Stage::CheckSceneFolder("Credits")) {
+        sVars->aniFrames.Load("LSelect/Text.bin", SCOPE_STAGE);
+    }
+}
 
 #if RETRO_INCLUDE_EDITOR
 void UIText::EditorDraw()
