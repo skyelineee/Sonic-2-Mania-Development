@@ -17,10 +17,10 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(SaveMenuIconBG);
 
-void SaveMenuIconBG::Update(){ this->staticAnimator.Process(); }
+void SaveMenuIconBG::Update() { this->staticAnimator.Process(); }
 void SaveMenuIconBG::LateUpdate() {}
 void SaveMenuIconBG::StaticUpdate() {}
-void SaveMenuIconBG::Draw() 
+void SaveMenuIconBG::Draw()
 {
     Vector2 drawPos;
 
@@ -29,8 +29,8 @@ void SaveMenuIconBG::Draw()
     drawPos.x = TO_FIXED(0);
     drawPos.y = TO_FIXED(16);
 
-    UIControl *control   = ManiaModeMenu::sVars->saveSelectMenu;
-    UISaveSlot *saveSlot = (UISaveSlot *)control->buttons[control->lastButtonID];
+    UIControl *control         = ManiaModeMenu::sVars->saveSelectMenu;
+    UISaveSlot *saveSlot       = (UISaveSlot *)control->buttons[control->lastButtonID];
     SaveGame::SaveRAM *saveRAM = (SaveGame::SaveRAM *)SaveGame::GetSaveDataPtr(saveSlot->slotID);
     int32 saveState            = saveRAM->saveState;
 
@@ -48,14 +48,15 @@ void SaveMenuIconBG::Draw()
             this->lastZoneIcon = this->zoneIconAnimator.frameID;
         }
         if (saveState == SaveGame::SaveCompleted) {
-            if (saveSlot->saveZoneID == 0xFF) 
-               this->characterIconAnimator.DrawSprite(&drawPos, true);
-               switch (saveSlot->fileAnimator.frameID) {
-                   case 0: this->characterIconAnimator.frameID = 0; break;
-                   case 1: this->characterIconAnimator.frameID = 1; break;
-                   case 2: this->characterIconAnimator.frameID = 2; break;
-                   case 3: this->characterIconAnimator.frameID = 3; break;
-               }
+            if (saveSlot->saveZoneID == 0xFF) {
+                switch (saveSlot->fileAnimator.frameID) {
+                    case 0: this->characterIconAnimator.frameID = 0; break;
+                    case 1: this->characterIconAnimator.frameID = 1; break;
+                    case 2: this->characterIconAnimator.frameID = 2; break;
+                    case 3: this->characterIconAnimator.frameID = 3; break;
+                }
+                this->characterIconAnimator.DrawSprite(&drawPos, true);
+            }
         }
         if (saveSlot->isNewSave) {
             this->staticAnimator.DrawSprite(&drawPos, true);
@@ -73,10 +74,10 @@ void SaveMenuIconBG::Create(void *data)
     this->characterIconAnimator.SetAnimation(&UISaveSlot::sVars->aniFrames, 24, true, 0);
 
     this->lastZoneIcon = -1;
-    this->active    = ACTIVE_BOUNDS;
-    this->visible   = true;
-    this->drawGroup = 1;
-    this->timer     = 0;
+    this->active       = ACTIVE_BOUNDS;
+    this->visible      = true;
+    this->drawGroup    = 1;
+    this->timer        = 0;
 }
 
 void SaveMenuIconBG::StageLoad() {}

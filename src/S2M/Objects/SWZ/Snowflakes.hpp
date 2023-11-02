@@ -28,17 +28,15 @@ struct Snowflakes : RSDK::GameObject::Entity {
     // INSTANCE VARS
     // ==============================
 
-    int32 unused1;
-    int32 unused2;
-    int32 unused3;
+    int32 basis;
+    int32 addend;
+    bool32 spawned;
     RSDK::Animator animator;
     uint8 animIDs[0x40];
     uint16 frameIDs[0x40];
     RSDK::Vector2 positions[0x40];
     uint8 priority[0x40];
     uint16 angles[0x40];
-    int32 basis;
-    int32 addend;
 
     // ==============================
     // EVENTS
@@ -63,6 +61,7 @@ struct Snowflakes : RSDK::GameObject::Entity {
     // ==============================
 
     RSDK::Vector2 HandleWrap(int32 id);
+    void CreateSnowflake(int32 id, bool32 top = true);
 
     // ==============================
     // DECLARATION

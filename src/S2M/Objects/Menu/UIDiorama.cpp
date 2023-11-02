@@ -60,8 +60,7 @@ void UIDiorama::Draw()
             this->dioramaSize.y = 0xA20000;
             // Draw Lime BG Rect to clear the screen, ONLY draw over the already existing lime pixels
             // Extra Note: as far as I can tell this doesn't *actually* do anything, the sprite already has a lime area setup
-            Graphics::DrawRect(this->dioramaPos.x, this->dioramaPos.y, this->dioramaSize.x, this->dioramaSize.y, 0x00FF00, 255, INK_MASKED,
-                               false);
+            Graphics::DrawRect(this->dioramaPos.x, this->dioramaPos.y, this->dioramaSize.x, this->dioramaSize.y, 0x00FF00, 255, INK_MASKED, false);
         }
 
         this->inkEffect = INK_MASKED;
@@ -97,7 +96,6 @@ void UIDiorama::StageLoad()
     Palette::SetPaletteMask(0x00FF00);
 
     UIDiorama::sVars->aniFrames.Load("UI/BGIcons.bin", SCOPE_STAGE);
-
 }
 
 void UIDiorama::ChangeDiorama(uint8 dioramaID)
@@ -111,61 +109,33 @@ void UIDiorama::ChangeDiorama(uint8 dioramaID)
     }
 
     switch (dioramaID) {
-        case UIDIORAMA_ADVENTURE:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
-            break;
+        case UIDIORAMA_ADVENTURE: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 0); break;
 
-        case UIDIORAMA_TIMEATTACK:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 1);
-            break;
+        case UIDIORAMA_TIMEATTACK: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 1); break;
 
-        case UIDIORAMA_EXTRAS:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 2);
-            break;
+        case UIDIORAMA_EXTRAS: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 2); break;
 
-        case UIDIORAMA_OPTIONS:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 3);
-            break;
+        case UIDIORAMA_OPTIONS: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 3); break;
 
-        case UIDIORAMA_EXIT:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 4);
-            break;
+        case UIDIORAMA_EXIT: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 4); break;
 
-        case UIDIORAMA_BOSSRUSH:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 5);
-            break;
+        case UIDIORAMA_BOSSRUSH: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 5); break;
 
-        case UIDIORAMA_MUSICPLAYER:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 6);
-            break;
+        case UIDIORAMA_MUSICPLAYER: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 6); break;
 
-        case UIDIORAMA_LEVELSELECT:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 7);
-            break;
+        case UIDIORAMA_LEVELSELECT: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 7); break;
 
-        case UIDIORAMA_EXTRALEVELS:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 8);
-            break;
+        case UIDIORAMA_EXTRALEVELS: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 8); break;
 
-        case UIDIORAMA_CREDITS:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 9);
-            break;
+        case UIDIORAMA_CREDITS: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 9); break;
 
-        case UIDIORAMA_VIDEO:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 10);
-            break;
+        case UIDIORAMA_VIDEO: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 10); break;
 
-        case UIDIORAMA_SOUND:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 11);
-            break;
+        case UIDIORAMA_SOUND: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 11); break;
 
-        case UIDIORAMA_CONTROLS:
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 12);
-            break;
+        case UIDIORAMA_CONTROLS: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 12); break;
 
-        case UIDIORAMA_DATA: 
-            this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 13);
-            break;
+        case UIDIORAMA_DATA: this->dioramaAnimator.SetAnimation(sVars->aniFrames, 0, true, 13); break;
 
         default: break;
     }

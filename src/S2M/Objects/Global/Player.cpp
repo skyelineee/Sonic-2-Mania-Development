@@ -6440,7 +6440,7 @@ void Player::Input_NULL()
             DebugMode::sVars->debugActive = true;
         }
         // TEMP: TODO REMOVE
-        else if (controllerInfo[1].keySelect.press) {
+        else if (false && controllerInfo[1].keySelect.press) {
             this->characterID <<= 1;
             if (this->characterID > ID_KNUCKLES)
                 this->characterID = ID_SONIC;

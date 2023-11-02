@@ -17,31 +17,40 @@ namespace GameLogic
 {
 RSDK_REGISTER_OBJECT(Snowflakes);
 
+void Snowflakes::CreateSnowflake(int32 i, bool32 top)
+{
+    int32 scrX = screenInfo->position.x % screenInfo->size.x;
+    int32 posX = (scrX + ZONE_RAND(0, screenInfo->size.x)) % screenInfo->size.x;
+
+    if (top) {
+        this->positions[i].y = (screenInfo->position.y - 5) << 16;
+    }
+    else {
+        this->positions[i].y = (screenInfo->position.y + ZONE_RAND(-5, screenInfo->size.y + 5)) << 16;
+    }
+
+    this->positions[i].x = posX << 16;
+    this->frameIDs[i]    = 0;
+    this->priority[i]    = ZONE_RAND(0, 10) > 7;
+
+    if (this->priority[i]) {
+        this->animIDs[i] = 2 * (ZONE_RAND(0, 10) > 7) + 2;
+    }
+    else {
+        int32 type       = ZONE_RAND(0, 10);
+        this->animIDs[i] = type > 8 ? 3 : (type > 4 ? 1 : 0);
+    }
+
+    this->angles[i] = ZONE_RAND(0, 256);
+    ++sVars->count;
+}
+
 void Snowflakes::Update()
 {
     if (sVars->count < 0x40 && !(Zone::sVars->timer % 16)) {
         for (int32 i = 0; i < 0x40; ++i) {
             if (!this->positions[i].x && !this->positions[i].y && (i & 0x8000) == 0) {
-                int32 screenY = screenInfo->position.y;
-                int32 scrX    = screenInfo->position.x % screenInfo->size.x;
-                int32 posX    = (scrX + ZONE_RAND(0, screenInfo->size.x)) % screenInfo->size.x;
-
-                this->positions[i].y = (screenY - 5) << 16;
-                this->positions[i].x = posX << 16;
-                this->frameIDs[i]    = 0;
-                this->priority[i]    = ZONE_RAND(0, 10) > 7;
-
-                if (this->priority[i]) {
-                    this->animIDs[i] = 2 * (ZONE_RAND(0, 10) > 7) + 2;
-                }
-                else {
-                    int32 type       = ZONE_RAND(0, 10);
-                    this->animIDs[i] = type > 8 ? 3 : (type > 4 ? 1 : 0);
-                }
-
-                this->angles[i] = ZONE_RAND(0, 256);
-                ++sVars->count;
-                break;
+                CreateSnowflake(i);
             }
         }
     }
@@ -85,7 +94,15 @@ void Snowflakes::Update()
     this->animator.Process();
 }
 
-void Snowflakes::LateUpdate() {}
+void Snowflakes::LateUpdate()
+{
+    if (!spawned) {
+        for (int32 i = 0; i < 0x40; ++i) {
+            CreateSnowflake(i, false);
+        }
+        spawned = true;
+    }
+}
 
 void Snowflakes::StaticUpdate()
 {
@@ -140,9 +157,9 @@ void Snowflakes::Create(void *data)
 {
 
     if (globals->atlEnabled) {
-        SWZSetup::Static* store = SWZSetup::sVars;
+        SWZSetup::Static *store = SWZSetup::sVars;
         if (sVars->holiday) {
-            store = (SWZSetup::Static*)EHZSetup::sVars; // this works bc same spot
+            store = (SWZSetup::Static *)EHZSetup::sVars; // this works bc same spot
         }
         Vector2 prePos = position;
         GameObject::Copy(this, store->snowflakeStorage, true);
@@ -155,6 +172,7 @@ void Snowflakes::Create(void *data)
         basis        = store->snowflakeBasis;
         addend       = store->snowflakeAddend;
         sVars->count = store->snowflakeCount;
+        spawned      = true;
     }
     else {
         this->active        = ACTIVE_ALWAYS;
@@ -166,6 +184,8 @@ void Snowflakes::Create(void *data)
 
         this->basis  = 0;
         this->addend = 0;
+
+        spawned = false;
     }
 }
 

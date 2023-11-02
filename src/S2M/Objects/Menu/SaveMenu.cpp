@@ -434,7 +434,7 @@ void SaveMenu::SaveButton_ActionCB()
             saveGame->saveState = 1;
 
             saveGame->characterID       = saveSlot->frameID;
-            saveGame->zoneID            = 0;
+            saveGame->zoneID            = 1; // start at an actual stage u can complete
             saveGame->lives             = 3;
             saveGame->collectedEmeralds = saveSlot->saveEmeralds;
             saveGame->continues         = 0;
@@ -476,7 +476,9 @@ void SaveMenu::SaveButton_ActionCB()
             Stage::SetScene("Presentation", "Level Select");
         }
         else {
-            Stage::SetScene("Adventure Mode", "Ocean Wind Zone");
+            // Stage::SetScene("Adventure Mode", "Ocean Wind Zone");
+            // start at an actual stage u can complete
+            Stage::SetScene("Adventure Mode", "Emerald Hill Zone 1");
         }
     }
     else {

@@ -206,7 +206,7 @@ void ManiaModeMenu::ChangeMenuTrack()
 }
 
 void ManiaModeMenu::ChangeMenuBG()
-{
+{   
     switch (ManiaModeMenu::GetActiveMenu()) {
         default:
         case MenuSetup::Main:

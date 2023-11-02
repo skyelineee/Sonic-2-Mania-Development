@@ -40,11 +40,13 @@ void UIWidgets::StageLoad()
     sVars->fontFrames.Load("UI/SmallFont.bin", SCOPE_STAGE);
     // buttonframes is set to pausemenu.bin for every stage that isnt the main menu, gets replaced with uibuttons.bin if it is the main menu
     sVars->buttonFrames.Load("UI/PauseMenu.bin", SCOPE_STAGE);
-    // with how buttons are setup, the description is always there and just has to get set to an empty frame so it can be not visible, works great for the main menu but can lead to some issues here
-    // if i dont load anything for descframes, it gets set to titlecard.bin by default so i just have to make it load pausemenu.bin again so i can give it an empty frame
+    // with how buttons are setup, the description is always there and just has to get set to an empty frame so it can be not visible, works great for
+    // the main menu but can lead to some issues here if i dont load anything for descframes, it gets set to titlecard.bin by default so i just have
+    // to make it load pausemenu.bin again so i can give it an empty frame
     sVars->descFrames.Load("UI/PauseMenu.bin", SCOPE_STAGE);
 
-    //these should only load in the main menu (this saves on stage space so we dont have a bunch of unneccessary textures loaded which could negatively affect stuff later maybe idk)
+    // these should only load in the main menu (this saves on stage space so we dont have a bunch of unneccessary textures loaded which could
+    // negatively affect stuff later maybe idk)
     if (Stage::CheckSceneFolder("Menu")) {
         sVars->buttonFrames.Load("UI/UIButtons.bin", SCOPE_STAGE);
         sVars->descFrames.Load("UI/DescriptionText.bin", SCOPE_STAGE);
@@ -61,7 +63,7 @@ void UIWidgets::StageLoad()
     sVars->sfxWarp.Get("Global/SpecialWarp.wav");
     sVars->sfxEvent.Get("Special/Event.wav");
     sVars->sfxWoosh.Get("Global/MenuWoosh.wav");
-    sVars->sfxFail.Get("Stage/Fail.wav");  
+    sVars->sfxFail.Get("Stage/Fail.wav");
 
     sVars->buttonColors[0]  = 0xB00000;
     sVars->buttonColors[1]  = 0xB81820;
@@ -335,7 +337,6 @@ void UIWidgets::EditorLoad()
     sVars->arrowRightAnimator.SetAnimation(&sVars->uiFrames, 0, true, 0);
     sVars->arrowLeftAnimator.SetAnimation(&sVars->uiFrames, 1, true, 0);
     sVars->arrowDownAnimator.SetAnimation(&sVars->uiFrames, 2, true, 0);
-
 
     sVars->buttonColor = 0xF0F0F0;
 }
