@@ -97,12 +97,10 @@ void ItemBox::Create(void *data)
                 this->contentsAnimator.frameID = this->type;
                 break;
 
-            case ItemBox::Swap:
-                this->Destroy();
-                break;
+            case ItemBox::Swap: this->Destroy(); break;
 
             case ItemBox::Random:
-                if (globals->secrets & SECRET_RANDOMITEMS) 
+                if (globals->secrets & SECRET_RANDOMITEMS)
                     this->contentsAnimator.frameID = ItemBox::Random;
                 else
                     this->Destroy();
@@ -143,7 +141,7 @@ void ItemBox::Create(void *data)
 
 void ItemBox::StageLoad()
 {
-    
+
     sVars->aniFrames.Load("Global/ItemBox.bin", SCOPE_STAGE);
 
     sVars->hitboxItemBox.left   = -15;
@@ -166,7 +164,7 @@ void ItemBox::StageLoad()
     else if (globals->secrets & SECRET_BLUESHIELDMODE) {
         for (auto itemBox : GameObject::GetEntities<ItemBox>(FOR_ALL_ENTITIES)) {
             if (itemBox->type == ItemBox::BubbleShield || itemBox->type == ItemBox::FireShield || itemBox->type == ItemBox::LightningShield)
-            itemBox->type = ItemBox::BlueShield;
+                itemBox->type = ItemBox::BlueShield;
         }
     }
 
@@ -291,7 +289,6 @@ void ItemBox::State_Falling()
     else
         this->contentsPos.y = this->position.y + 0x30000;
 
-
     ItemBox::CheckHit();
 
     this->overlayAnimator.Process();
@@ -315,11 +312,10 @@ void ItemBox::State_Falling()
 
 void ItemBox::CheckHit()
 {
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-    {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (this->planeFilter <= 0 || player->collisionPlane == (((uint8)this->planeFilter - 1) & 1)) {
 
-            int32 anim = player->animator.animationID;
+            int32 anim       = player->animator.animationID;
             bool32 attacking = false;
 
             switch (globals->gravityDir) {
@@ -381,7 +377,7 @@ void ItemBox::CheckHit()
 }
 void ItemBox::GivePowerup()
 {
-    Player *player = (Player*)this->storedEntity;
+    Player *player = (Player *)this->storedEntity;
 
     switch (this->type) {
         case ItemBox::Ring: player->GiveRings(10, true); break;
@@ -446,22 +442,16 @@ void ItemBox::GivePowerup()
 
         case ItemBox::ExtraLife_Sonic:
         case ItemBox::ExtraLife_Tails:
-        case ItemBox::ExtraLife_Knux:
-            player->GiveLife();
-            break;
+        case ItemBox::ExtraLife_Knux: player->GiveLife(); break;
 
-        case ItemBox::Eggman: 
-            player->Hurt(this); 
-            break;
+        case ItemBox::Eggman: player->Hurt(this); break;
 
         case ItemBox::HyperRing:
             sVars->sfxHyperRing.Play();
             player->hyperRing = true;
             break;
 
-        case ItemBox::Swap:       
-            Player::sVars->sfxSwapFail.Play();
-            break;
+        case ItemBox::Swap: Player::sVars->sfxSwapFail.Play(); break;
 
         case ItemBox::Random: {
             uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -554,7 +544,7 @@ void ItemBox::GivePowerup()
                         }
                     }
 
-                    Explosion *explosion            = GameObject::Create<Explosion>(0, player1->position.x, player1->position.y);
+                    Explosion *explosion = GameObject::Create<Explosion>(0, player1->position.x, player1->position.y);
                     explosion->drawGroup = Zone::sVars->objectDrawGroup[1];
 
                     explosion            = GameObject::Create<Explosion>(0, player2->position.x, player2->position.y);
@@ -574,10 +564,10 @@ void ItemBox::GivePowerup()
         case ItemBox::Hyper:
             player->GiveRings(50, false);
             player->TryTransform(false, Player::TransformHyper);
-        break;
+            break;
 
         case ItemBox::Stock: {
-            if (this->contentsAnimator.animationID == 7) {      
+            if (this->contentsAnimator.animationID == 7) {
                 switch (this->contentsAnimator.frameID) {
                     case 0: player->ChangeCharacter(ID_SONIC); break;
                     case 1: player->ChangeCharacter(ID_TAILS); break;
@@ -601,7 +591,7 @@ void ItemBox::GivePowerup()
                     default: this->type = ItemBox::Ring; break;
                 }
 
-                player = (Player*)this->parent;
+                player = (Player *)this->parent;
                 if ((uint32)this->type <= ItemBox::Stock)
                     ItemBox::GivePowerup();
             }
@@ -617,13 +607,9 @@ void ItemBox::Break(Player *player)
     switch (globals->gravityDir) {
         default: break;
 
-        case CMODE_FLOOR:
-                player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-            break;
+        case CMODE_FLOOR: player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength); break;
 
-        case CMODE_ROOF:
-                player->velocity.y = player->velocity.y + 2 * player->gravityStrength;
-            break;
+        case CMODE_ROOF: player->velocity.y = player->velocity.y + 2 * player->gravityStrength; break;
     }
 
     this->storedEntity  = (Entity *)player;
@@ -636,17 +622,17 @@ void ItemBox::Break(Player *player)
         case CMODE_FLOOR: this->velocity.y = -0x20000; break;
         case CMODE_ROOF: this->velocity.y = -0x20000; break;
     }
-    this->isContents    = true;
-    this->state         .Set(&ItemBox::State_Break);
+    this->isContents = true;
+    this->state.Set(&ItemBox::State_Break);
     this->boxAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
     this->boxAnimator.frameID = sVars->brokenFrame++;
     sVars->brokenFrame %= 3;
     this->overlayAnimator.SetAnimation(nullptr, 0, true, 0);
     this->debrisAnimator.SetAnimation(nullptr, 0, true, 0);
 
-    int32 y = this->position.y - 0x100000;
+    int32 y              = this->position.y - 0x100000;
     Explosion *explosion = GameObject::Create<Explosion>(0, this->position.x, y);
-    explosion->drawGroup       = Zone::sVars->objectDrawGroup[1];
+    explosion->drawGroup = Zone::sVars->objectDrawGroup[1];
 
     for (int32 d = 0; d < 6; ++d) {
         Debris *debris = GameObject::Create<Debris>(Debris::Fall, this->position.x + Math::Rand(-0x80000, 0x80000),
@@ -672,9 +658,9 @@ void ItemBox::Break(Player *player)
                 break;
         }
 
-        debris->drawFX     = FX_FLIP;
-        debris->direction  = d & 3;
-        debris->drawGroup  = Zone::sVars->objectDrawGroup[1];
+        debris->drawFX    = FX_FLIP;
+        debris->direction = d & 3;
+        debris->drawGroup = Zone::sVars->objectDrawGroup[1];
         debris->animator1.SetAnimation(sVars->aniFrames, 6, true, Math::Rand(0, 4));
     }
 
@@ -706,11 +692,9 @@ void ItemBox::Break(Player *player)
                     break;
 
                 case ItemBox::ExtraLife_Tails:
-                case ItemBox::ExtraLife_Knux:
-                    continue;
+                case ItemBox::ExtraLife_Knux: continue;
 
-                case ItemBox::Swap:
-                    break;
+                case ItemBox::Swap: break;
 
                 default: this->contentsAnimator.frameID = this->type; break;
             }
@@ -775,7 +759,7 @@ bool32 ItemBox::HandleFallingCollision()
     return false;
 }
 bool32 ItemBox::HandlePlatformCollision(Platform *platform)
-{    
+{
     bool32 collided = false;
     if (!platform->state.Matches(&Platform::State_Falling2) && !platform->state.Matches(&Platform::State_Hold)) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
@@ -867,7 +851,7 @@ void ItemBox::HandleObjectCollisions()
     if (Platform::sVars) {
         if (this->parent) {
             Platform *platform = (Platform *)this->parent;
-    
+
             if (platform->classID == Platform::sVars->classID) {
                 platform->stood    = true;
                 this->position.x   = this->scale.x + platform->drawPos.x;
@@ -906,7 +890,6 @@ void ItemBox::HandleObjectCollisions()
 
     if (!platformCollided)
         this->parent = nullptr;
-
 }
 
 #if RETRO_INCLUDE_EDITOR

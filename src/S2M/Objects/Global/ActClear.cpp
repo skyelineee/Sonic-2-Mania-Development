@@ -349,6 +349,12 @@ void ActClear::Create(void *data)
 
             case ID_KNUCKLES: this->playerNameAnimator.SetAnimation(sVars->aniFrames, 3, true, 2); break;
         }
+
+        for (auto player : GameObject::GetEntities<Player>(RSDK::FOR_ACTIVE_ENTITIES)) {
+            if (player->invincibleTimer > 32) {
+                player->invincibleTimer = 32;
+            }
+        }
     }
 }
 

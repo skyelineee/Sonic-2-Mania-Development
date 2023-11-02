@@ -26,7 +26,7 @@ void Snowflakes::CreateSnowflake(int32 i, bool32 top)
         this->positions[i].y = (screenInfo->position.y - 5) << 16;
     }
     else {
-        this->positions[i].y = (screenInfo->position.y + ZONE_RAND(-5, screenInfo->size.y + 5)) << 16;
+        this->positions[i].y = (screenInfo->position.y + ZONE_RAND(-0x80, screenInfo->size.y + 0x80)) << 16;
     }
 
     this->positions[i].x = posX << 16;
@@ -47,12 +47,9 @@ void Snowflakes::CreateSnowflake(int32 i, bool32 top)
 
 void Snowflakes::Update()
 {
-    if (sVars->count < 0x40 && !(Zone::sVars->timer % 16)) {
-        for (int32 i = 0; i < 0x40; ++i) {
-            if (!this->positions[i].x && !this->positions[i].y && (i & 0x8000) == 0) {
-                CreateSnowflake(i);
-                break;
-            }
+    for (int32 i = 0; i < 0x40; ++i) {
+        if (!this->positions[i].x && !this->positions[i].y) {
+            CreateSnowflake(i);
         }
     }
 

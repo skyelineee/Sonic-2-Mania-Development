@@ -107,14 +107,8 @@ void Water::Create(void *data)
                 this->active    = ACTIVE_NORMAL;
                 this->drawGroup = Zone::sVars->hudDrawGroup - 1;
                 if (this->surfaceWaves) {
-                    if (globals->gameSpriteStyle == GAME_SM) {
-                        this->inkEffect = INK_ALPHA;
-                        this->alpha     = 0xA0;
-                    }
-                    else {
-                        this->inkEffect = INK_ADD;
-                        this->alpha     = Stage::CheckSceneFolder("AIZ") ? 0x60 : 0xE0;
-                    }
+                    this->inkEffect = INK_ADD;
+                    this->alpha     = 0xA0;
                     this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
                 }
                 this->state.Set(&Water::State_Water);
@@ -145,7 +139,7 @@ void Water::Create(void *data)
 
                 if (this->surfaceWaves) {
                     this->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
-                    this->inkEffect = INK_ALPHA;
+                    this->inkEffect = INK_ADD;
                     this->alpha     = 0xB8;
                 }
 
@@ -154,9 +148,8 @@ void Water::Create(void *data)
                 break;
 
             case Water::Bubbler:
-                this->drawGroup = Zone::sVars->objectDrawGroup[0];
-                if (globals->useManiaBehavior)
-                    this->inkEffect = INK_ADD;
+                this->drawGroup     = Zone::sVars->objectDrawGroup[0];
+                this->inkEffect     = INK_ADD;
                 this->alpha         = 0x100;
                 this->active        = ACTIVE_BOUNDS;
                 this->updateRange.x = 0x100000;
@@ -192,11 +185,10 @@ void Water::Create(void *data)
                 break;
 
             case Water::Bubble:
-                this->active    = ACTIVE_NORMAL;
-                this->drawGroup = Zone::sVars->playerDrawGroup[1];
-                this->drawFX    = FX_SCALE;
-                if (globals->useManiaBehavior)
-                    this->inkEffect = INK_ADD;
+                this->active        = ACTIVE_NORMAL;
+                this->drawGroup     = Zone::sVars->playerDrawGroup[1];
+                this->drawFX        = FX_SCALE;
+                this->inkEffect     = INK_ADD;
                 this->alpha         = 0x100;
                 this->updateRange.x = 0x800000;
                 this->updateRange.y = 0x800000;
@@ -211,11 +203,10 @@ void Water::Create(void *data)
                 break;
 
             case Water::Countdown:
-                this->active    = ACTIVE_NORMAL;
-                this->drawGroup = Zone::sVars->playerDrawGroup[1];
-                this->drawFX    = FX_SCALE;
-                if (globals->useManiaBehavior)
-                    this->inkEffect = INK_ADD;
+                this->active        = ACTIVE_NORMAL;
+                this->drawGroup     = Zone::sVars->playerDrawGroup[1];
+                this->drawFX        = FX_SCALE;
+                this->inkEffect     = INK_ADD;
                 this->alpha         = 0x100;
                 this->updateRange.x = 0x800000;
                 this->updateRange.y = 0x800000;
@@ -537,7 +528,7 @@ void Water::State_Water()
                             // lightning underwater, give the palette a good ZAP!
                             player->shield = Shield::None;
 
-                            color flashColor = paletteBank[0].GetEntry(16);
+                            color flashColor = paletteBank[sVars->waterPalette].GetEntry(62); // brightest color
                             for (int32 i = 0; i < 0x100; ++i) {
                                 sVars->flashColorStorage[i] = paletteBank[sVars->waterPalette].GetEntry(i);
                                 paletteBank[sVars->waterPalette].SetEntry(i, flashColor);
@@ -779,7 +770,7 @@ void Water::BubbleFinishPopBehavior()
                             int32 anim = player->animator.animationID;
                             if (player->characterID == ID_TAILS) {
                                 canBreathe = anim != Player::ANI_FLY && anim != Player::ANI_FLY_TIRED && anim != Player::ANI_FLY_LIFT
-                                    && anim != Player::ANI_SWIM && anim != Player::ANI_SWIM_LIFT;
+                                             && anim != Player::ANI_SWIM && anim != Player::ANI_SWIM_LIFT;
                             }
                             else if (player->characterID == ID_KNUCKLES) {
                                 canBreathe = anim != Player::ANI_LEDGE_PULL_UP && anim != Player::ANI_GLIDE && anim != Player::ANI_GLIDE_SLIDE
@@ -1044,7 +1035,6 @@ void Water::State_HeightTrigger()
         if (this->destroyOnTrigger)
             this->Destroy();
     }
-
 }
 
 void Water::Draw_Water()
@@ -1056,6 +1046,7 @@ void Water::Draw_Water()
     Vector2 drawPos;
     drawPos.y = sVars->waterLevel;
     if (this->surfaceWaves) {
+        this->inkEffect    = INK_ADD;
         SpriteFrame *frame = this->animator.GetFrame(sVars->aniFrames);
 
         drawPos.x  = ((screen->position.x / frame->width * frame->width) << 16) + (frame->width << 15);

@@ -3629,6 +3629,7 @@ void Player::State_LookUp()
             this->timer++;
         }
         else if (this->camera) {
+            this->camera->State_FollowXY();
             if (this->invertGravity || globals->gravityDir == CMODE_ROOF) {
                 if (this->camera->lookPos.y < sVars->lookUpDistance)
                     this->camera->lookPos.y += 2;
@@ -7393,7 +7394,6 @@ void Player::StaticLoad(Static *sVars)
 
     memcpy(sVars->superKnuxPalette, superKnuxPalette, sizeof(superKnuxPalette));
 
-
     // ---------------
     // HYPER SONIC
     // ---------------
@@ -7402,7 +7402,6 @@ void Player::StaticLoad(Static *sVars)
                                   0xF287FF, 0xF5A2FF, 0xF9C7FF, 0x008935, 0x00B838, 0x00CC46, 0x00E460, 0x5AFF72, 0x98FFB3 };
 
     memcpy(sVars->hyperSonicPalette, hyperSonicPalette, sizeof(hyperSonicPalette));
-
 
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };
     memcpy(sVars->spindashChargeSpeeds, chargeSpeeds, sizeof(chargeSpeeds));

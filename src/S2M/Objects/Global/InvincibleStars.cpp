@@ -87,43 +87,51 @@ void InvincibleStars::Draw()
     }
 
     Vector2 drawPos;
-    drawPos.x = (Math::Cos512(this->starAngle[1] + 0x74) << this->starOffset) + this->starPos[7].x;
-    drawPos.y = (Math::Sin512(this->starAngle[1] + 0x74) << this->starOffset) + this->starPos[7].y;
+    drawPos.x                     = (Math::Cos512(this->starAngle[1] + 0x74) << this->starOffset) + this->starPos[7].x;
+    drawPos.y                     = (Math::Sin512(this->starAngle[1] + 0x74) << this->starOffset) + this->starPos[7].y;
+    this->starAnimator[3].frameID = this->starFrame[0];
     this->starAnimator[3].DrawSprite(&drawPos, false);
 
     drawPos.x = (Math::Cos512(this->starAngle[1] + 0x174) << this->starOffset) + this->starPos[7].x;
     drawPos.y = (Math::Sin512(this->starAngle[1] + 0x174) << this->starOffset) + this->starPos[7].y;
+    this->starAnimator[3].frameID += 6;
     this->starAnimator[3].DrawSprite(&drawPos, false);
 
-    drawPos.x = (Math::Cos512(this->starAngle[1]) << this->starOffset) + this->starPos[5].x;
-    drawPos.y = (Math::Sin512(this->starAngle[1]) << this->starOffset) + this->starPos[5].y;
+    drawPos.x                     = (Math::Cos512(this->starAngle[1]) << this->starOffset) + this->starPos[5].x;
+    drawPos.y                     = (Math::Sin512(this->starAngle[1]) << this->starOffset) + this->starPos[5].y;
+    this->starAnimator[2].frameID = this->starFrame[0];
     this->starAnimator[2].DrawSprite(&drawPos, false);
 
     drawPos.x = (Math::Cos512(this->starAngle[1] + 0x100) << this->starOffset) + this->starPos[5].x;
     drawPos.y = (Math::Sin512(this->starAngle[1] + 0x100) << this->starOffset) + this->starPos[5].y;
+    this->starAnimator[2].frameID += 6;
     this->starAnimator[2].DrawSprite(&drawPos, false);
 
-    drawPos.x = (Math::Cos512(this->starAngle[1] + 0xA8) << this->starOffset) + this->starPos[3].x;
-    drawPos.y = (Math::Sin512(this->starAngle[1] + 0xA8) << this->starOffset) + this->starPos[3].y;
+    drawPos.x                     = (Math::Cos512(this->starAngle[1] + 0xA8) << this->starOffset) + this->starPos[3].x;
+    drawPos.y                     = (Math::Sin512(this->starAngle[1] + 0xA8) << this->starOffset) + this->starPos[3].y;
+    this->starAnimator[1].frameID = this->starFrame[1];
     this->starAnimator[1].DrawSprite(&drawPos, false);
 
     drawPos.x = (Math::Cos512(this->starAngle[1] + 0x1A8) << this->starOffset) + this->starPos[3].x;
     drawPos.y = (Math::Sin512(this->starAngle[1] + 0x1A8) << this->starOffset) + this->starPos[3].y;
+    this->starAnimator[1].frameID += 5;
     this->starAnimator[1].DrawSprite(&drawPos, false);
 
-    drawPos.x = (Math::Cos512(this->starAngle[0]) << this->starOffset) + this->starPos[0].x;
-    drawPos.y = (Math::Sin512(this->starAngle[0]) << this->starOffset) + this->starPos[0].y;
+    drawPos.x                     = (Math::Cos512(this->starAngle[0]) << this->starOffset) + this->starPos[0].x;
+    drawPos.y                     = (Math::Sin512(this->starAngle[0]) << this->starOffset) + this->starPos[0].y;
+    this->starAnimator[0].frameID = this->starFrame[0];
     this->starAnimator[0].DrawSprite(&drawPos, false);
 
     // changing animator for big red star lol
-    drawPos.x = (Math::Cos512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].x;
-    drawPos.y = (Math::Sin512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].y;
+    drawPos.x                     = (Math::Cos512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].x;
+    drawPos.y                     = (Math::Sin512(this->starAngle[0] + 0x100) << this->starOffset) + this->starPos[0].y;
+    this->starAnimator[4].frameID = this->starFrame[0];
     this->starAnimator[4].DrawSprite(&drawPos, false);
 }
 
 void InvincibleStars::Create(void *data)
 {
-    if (!sceneInfo->inEditor) {
+    if (!sceneInfo->inEditor && data) {
         Player *player = (Player *)data;
 
         this->active     = ACTIVE_NORMAL;
@@ -135,7 +143,7 @@ void InvincibleStars::Create(void *data)
         }
 
         this->drawFX       = FX_FLIP;
-        this->inkEffect    = globals->useManiaBehavior ? INK_ADD : INK_ALPHA;
+        this->inkEffect    = INK_ADD;
         this->starAngle[0] = 180;
         this->starAngle[1] = 0;
         this->alpha        = 0xFF;
@@ -147,10 +155,7 @@ void InvincibleStars::Create(void *data)
     }
 }
 
-void InvincibleStars::StageLoad()
-{
-    sVars->aniFrames.Load("Global/Invincible.bin", SCOPE_STAGE);
-}
+void InvincibleStars::StageLoad() { sVars->aniFrames.Load("Global/Invincible.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void InvincibleStars::EditorDraw() {}

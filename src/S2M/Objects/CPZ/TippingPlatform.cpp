@@ -20,19 +20,19 @@ void TippingPlatform::Update()
     if (this->bossID) {
         if (this->animator.frameID) {
             this->stateCollide.Set(&Platform::Collision_None);
-            this->collision    = Platform::C_None;
+            this->collision = Platform::C_None;
         }
         else {
             this->stateCollide.Set(&Platform::Collision_Platform);
-            this->collision    = Platform::C_Platform;
+            this->collision = Platform::C_Platform;
         }
 
-        //if (!this->stoodAngle && this->bossID > TIPPINGPLATFORM_EGGMAN && this->syringe->activated) {
-        //    this->stoodAngle = 1;
-        //    this->timer      = this->intervalOffset + 1;
-        //    this->animator.SetAnimation(Platform::sVars->aniFrames, 1, true, 0);
-        //    this->state.Set(&TippingPlatform::State_Tipping_Delay);
-        //}
+        if (!this->stoodAngle && this->bossID > TIPPINGPLATFORM_EGGMAN) {
+            this->stoodAngle = 1;
+            this->timer      = this->intervalOffset + 1;
+            this->animator.SetAnimation(Platform::sVars->aniFrames, 1, true, 0);
+            this->state.Set(&TippingPlatform::State_Tipping_Delay);
+        }
     }
     else {
         if (this->state.Matches(&Platform::State_Fixed)) {
@@ -71,11 +71,11 @@ void TippingPlatform::Update()
 
         if (isSolid) {
             this->stateCollide.Set(&Platform::Collision_Platform);
-            this->collision    = Platform::C_Platform;
+            this->collision = Platform::C_Platform;
         }
         else {
             this->stateCollide.Set(&Platform::Collision_None);
-            this->collision    = Platform::C_None;
+            this->collision = Platform::C_None;
         }
     }
 
@@ -97,7 +97,7 @@ void TippingPlatform::Create(void *data)
     if (!this->duration)
         this->duration = 120;
 
-    this->collision = Platform::C_Platform;
+    this->collision    = Platform::C_Platform;
     Platform *platform = (Platform *)this;
     platform->Create(nullptr);
 
@@ -112,19 +112,19 @@ void TippingPlatform::Create(void *data)
     this->state.Set(&Platform::State_Fixed);
     if (!sceneInfo->inEditor) {
         if (this->bossID > TIPPINGPLATFORM_PLAYER) {
-            //foreach_all(Syringe, syringe)
+            // foreach_all(Syringe, syringe)
             //{
-            //    if (syringe->tag == this->bossID) {
-            //        this->syringe = syringe;
-            //        if (syringe) {
-            //            this->updateRange.x = abs(this->position.x - syringe->position.x) + 0x400000;
-            //            this->updateRange.y = abs(this->position.y - syringe->position.y) + 0x400000;
-            //        }
-            //        this->stateCollide = Platform_Collision_Solid;
-            //        this->collision    = PLATFORM_C_SOLID;
-            //        foreach_break;
-            //    }
-            //}
+            //     if (syringe->tag == this->bossID) {
+            //         this->syringe = syringe;
+            //         if (syringe) {
+            //             this->updateRange.x = abs(this->position.x - syringe->position.x) + 0x400000;
+            //             this->updateRange.y = abs(this->position.y - syringe->position.y) + 0x400000;
+            //         }
+            //         this->stateCollide = Platform_Collision_Solid;
+            //         this->collision    = PLATFORM_C_SOLID;
+            //         foreach_break;
+            //     }
+            // }
         }
 
         if (this->bossID == TIPPINGPLATFORM_PLAYER) {
@@ -145,8 +145,9 @@ void TippingPlatform::State_Tipping_Boss()
 
     if (--this->timer <= 0) {
         this->active = ACTIVE_BOUNDS;
-        if (this->bossID <= TIPPINGPLATFORM_EGGMAN)
+        if (this->bossID <= TIPPINGPLATFORM_EGGMAN) {
             this->state.Set(&TippingPlatform::State_RestorePlatform);
+        }
         else
             this->state.Set(&Platform::State_Fixed);
     }
@@ -189,7 +190,7 @@ void TippingPlatform::State_Tipping_Delay()
 #if RETRO_INCLUDE_EDITOR
 void TippingPlatform::EditorDraw()
 {
-    this->collision = Platform::C_Platform;
+    this->collision    = Platform::C_Platform;
     Platform *platform = (Platform *)this;
     platform->Create(nullptr);
 
@@ -207,17 +208,17 @@ void TippingPlatform::EditorDraw()
         RSDK_DRAWING_OVERLAY(true);
 
         if (this->bossID > TIPPINGPLATFORM_PLAYER) {
-            //foreach_all(Syringe, syringe)
+            // foreach_all(Syringe, syringe)
             //{
-            //    if (syringe->tag == this->bossID) {
-            //        DrawHelpers_DrawArrow(this->position.x, this->position.y, syringe->position.x, syringe->position.y, 0xFFFF00, INK_NONE, 0xFF);
-            //        foreach_break;
-            //    }
-            //}
+            //     if (syringe->tag == this->bossID) {
+            //         DrawHelpers_DrawArrow(this->position.x, this->position.y, syringe->position.x, syringe->position.y, 0xFFFF00, INK_NONE, 0xFF);
+            //         foreach_break;
+            //     }
+            // }
         }
 
         for (int32 s = sceneInfo->entitySlot + 1, i = 0; i < this->childCount; ++i) {
-            //Entity *child = RSDK_GET_ENTITY_GEN(s + i);
+            // Entity *child = RSDK_GET_ENTITY_GEN(s + i);
             Entity *child = GameObject::Get(s + i);
             if (!child)
                 continue;

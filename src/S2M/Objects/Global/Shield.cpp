@@ -301,7 +301,7 @@ void Shield::State_LightningFlash()
 
     this->timer++;
     if (this->timer < 3) {
-        color flashColor = paletteBank[0].GetEntry(16);
+        color flashColor = paletteBank[Water::sVars->waterPalette].GetEntry(62);
         for (int32 c = 0; c < 256; ++c) paletteBank[Water::sVars->waterPalette].SetEntry(c, flashColor);
     }
     else {

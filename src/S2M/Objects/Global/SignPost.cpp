@@ -437,7 +437,7 @@ void SignPost::CheckTouch()
                         this->velocity.y       = -(vel >> 1);
                         this->gravityStrength  = vel / 96;
                         sceneInfo->timeEnabled = false;
-                        if (vel >= 0x40000 && globals->useManiaBehavior) {
+                        if (vel >= 0x40000 && globals->useManiaBehavior && false) {
                             this->state.Set(&SignPost::State_FlyUp);
                         }
                         else {

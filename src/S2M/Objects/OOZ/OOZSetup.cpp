@@ -26,7 +26,9 @@ void OOZSetup::LateUpdate() {}
 
 void OOZSetup::StaticUpdate()
 {
-    for (auto setup : GameObject::GetEntities<OOZSetup>(FOR_ALL_ENTITIES)) { RSDKTable->AddDrawListRef(Zone::sVars->playerDrawGroup[0] + 1, RSDKTable->GetEntitySlot(setup)); }
+    for (auto setup : GameObject::GetEntities<OOZSetup>(FOR_ALL_ENTITIES)) {
+        RSDKTable->AddDrawListRef(Zone::sVars->playerDrawGroup[0] + 1, RSDKTable->GetEntitySlot(setup));
+    }
 
     sVars->palTimer += 128;
     if (sVars->palTimer >= 256) {
@@ -63,9 +65,8 @@ void OOZSetup::StaticUpdate()
     }
 
     sVars->swimmingPlayerCount = 0;
-    OOZSetup *setup             = GameObject::Get<OOZSetup>(sceneInfo->entitySlot);
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-    {
+    OOZSetup *setup            = GameObject::Get<OOZSetup>(sceneInfo->entitySlot);
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         int32 playerID = RSDKTable->GetEntitySlot(player);
         if (!player->state.Matches(&Player::State_Static)) {
             Hitbox *playerHitbox = player->GetHitbox();
@@ -83,7 +84,7 @@ void OOZSetup::StaticUpdate()
                         ty &= 0xFFF00000;
                         ty -= 0xC0000;
                         if (setup->StartFire(tx, ty, player->angle)) {
-                            Sol *sol  = GameObject::Create<Sol>(INT_TO_VOID(true), tx - 0x10000, ty);
+                            Sol *sol        = GameObject::Create<Sol>(INT_TO_VOID(true), tx - 0x10000, ty);
                             sol->velocity.x = -0x40000;
                             sol->mainAnimator.SetAnimation(Sol::sVars->aniFrames, 3, true, 0);
                             sol->state.Set(&Sol::State_OilFlame);
@@ -98,7 +99,7 @@ void OOZSetup::StaticUpdate()
                         ty &= 0xFFFF0000;
                         if (setup->StartFire(tx, ty, player->angle)) {
                             ty -= 0x80000;
-                            Sol *sol  = GameObject::Create<Sol>(INT_TO_VOID(true), tx - 0x10000, ty);
+                            Sol *sol        = GameObject::Create<Sol>(INT_TO_VOID(true), tx - 0x10000, ty);
                             sol->velocity.x = -0x40000;
                             sol->mainAnimator.SetAnimation(Sol::sVars->aniFrames, 3, true, 0);
                             sol->state.Set(&Sol::State_FireballOilFlame);
@@ -183,8 +184,7 @@ void OOZSetup::StaticUpdate()
             sVars->smogTimer -= 32;
     }
 
-    for (auto ring : GameObject::GetEntities<Ring>(FOR_ACTIVE_ENTITIES))
-    {
+    for (auto ring : GameObject::GetEntities<Ring>(FOR_ACTIVE_ENTITIES)) {
         if (ring->state.Matches(&Ring::State_Lost)) {
             Tile tile = Zone::sVars->fgLayer[0].GetTile(ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
             if (tile.id == (uint16)-1)
@@ -210,8 +210,7 @@ void OOZSetup::StaticUpdate()
 void OOZSetup::Draw()
 {
     if (sceneInfo->currentDrawGroup != this->drawGroup) {
-        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-        {
+        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
             if ((1 << RSDKTable->GetEntitySlot(player)) & sVars->activePlayers)
                 sVars->animator.DrawSprite(&player->position, false);
         }
@@ -257,7 +256,6 @@ void OOZSetup::StageLoad()
     sVars->splashFrames.Load("OOZ/Splash.bin", SCOPE_STAGE);
     sVars->animator.SetAnimation(sVars->splashFrames, 0, true, 0);
 
-
     if (globals->gameMode != MODE_TIMEATTACK) {
         const char *playingAsText  = "";
         const char *characterImage = "";
@@ -282,16 +280,15 @@ void OOZSetup::StageLoad()
         SetPresence(playingAsText, "In Oil Ocean", "doggy", "doggy", characterImage, characterText);
     }
 
-
     // oh my god i finally learned how to actually use soundboard
     int32 sfxID = Soundboard::LoadSfx(OOZSetup::SfxCheck_Slide, nullptr);
     if (sfxID >= 0)
         Soundboard::sVars->sfxFadeOutDuration[sfxID] = 30;
-    
+
     sfxID = Soundboard::LoadSfx(OOZSetup::SfxCheck_OilSwim, nullptr);
     if (sfxID >= 0)
         Soundboard::sVars->sfxFadeOutDuration[sfxID] = 30;
-    
+
     sfxID = Soundboard::LoadSfx(OOZSetup::SfxCheck_Flame2, nullptr);
     if (sfxID >= 0)
         Soundboard::sVars->sfxFadeOutDuration[sfxID] = 30;
@@ -301,8 +298,7 @@ Soundboard::SoundInfo OOZSetup::SfxCheck_Flame2()
 {
     int32 count = 0;
 
-    for (auto sol : GameObject::GetEntities<Sol>(FOR_ACTIVE_ENTITIES))
-    {
+    for (auto sol : GameObject::GetEntities<Sol>(FOR_ACTIVE_ENTITIES)) {
         if (sol->isFlameFX)
             count++;
     }
@@ -312,7 +308,7 @@ Soundboard::SoundInfo OOZSetup::SfxCheck_Flame2()
             count++;
     }
 
-    //return count > 0;
+    // return count > 0;
     SoundFX flameSFX;
     flameSFX.Get("Stage/Flame2.wav");
     Soundboard::SoundInfo info = {};
@@ -327,28 +323,27 @@ Soundboard::SoundInfo OOZSetup::SfxCheck_Slide()
 {
     int32 count = 0;
 
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-    {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (!player->sidekick) {
             if (player->state.Matches(&OOZSetup::PlayerState_OilSlide) || player->state.Matches(&OOZSetup::PlayerState_OilStrip))
                 ++count;
         }
     }
 
-    //return count > 0;
+    // return count > 0;
     SoundFX slideSFX;
     slideSFX.Get("OOZ/Slide.wav");
     Soundboard::SoundInfo info = {};
-    info.playFlags = count > 0;
-    info.sfx       = slideSFX;
-    info.loopPoint = 12382;
+    info.playFlags             = count > 0;
+    info.sfx                   = slideSFX;
+    info.loopPoint             = 12382;
 
     return info;
 }
 
-Soundboard::SoundInfo OOZSetup::SfxCheck_OilSwim() 
-{ 
-    //return sVars->swimmingPlayerCount > 0;
+Soundboard::SoundInfo OOZSetup::SfxCheck_OilSwim()
+{
+    // return sVars->swimmingPlayerCount > 0;
     SoundFX swimSFX;
     swimSFX.Get("OOZ/OilSwim.wav");
     Soundboard::SoundInfo info = {};
@@ -363,7 +358,7 @@ void OOZSetup::Draw_Flames()
 {
     for (int32 i = 0; i < sVars->flameCount; ++i) {
         if (sVars->flameTimerPtrs[i]) {
-            this->rotation                  = 2 * (sVars->flamePositions[i].x & 0xFF);
+            this->rotation               = 2 * (sVars->flamePositions[i].x & 0xFF);
             sVars->flameAnimator.frameID = sVars->flamePositions[i].y & 0xFF;
             sVars->flameAnimator.DrawSprite(&sVars->flamePositions[i], false);
         }
@@ -378,9 +373,9 @@ void OOZSetup::HandleActiveFlames()
 
             if (!*sVars->flameTimerPtrs[i]) {
                 sVars->flameTimerPtrs[i] = nullptr;
-                Sol *sol                    = GameObject::Create<Sol>(INT_TO_VOID(true), sVars->flamePositions[i].x, sVars->flamePositions[i].y);
-                sol->isFlameFX              = true;
-                sol->rotation               = 2 * (sVars->flamePositions[i].x & 0xFF);
+                Sol *sol                 = GameObject::Create<Sol>(INT_TO_VOID(true), sVars->flamePositions[i].x, sVars->flamePositions[i].y);
+                sol->isFlameFX           = true;
+                sol->rotation            = 2 * (sVars->flamePositions[i].x & 0xFF);
                 sol->mainAnimator.SetAnimation(Sol::sVars->aniFrames, 2, true, 0);
                 sol->state.Set(&Sol::State_FlameDissipate);
             }
@@ -399,8 +394,7 @@ void OOZSetup::HandleActiveFlames()
             }
 
             Vector2 storePos = this->position;
-            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-            {
+            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
                 this->position = sVars->flamePositions[i];
                 if (player->CheckCollisionTouch(this, &Sol::sVars->hitboxBadnik)) {
                     this->position = storePos;
@@ -438,7 +432,7 @@ bool32 OOZSetup::StartFire(int32 posX, int32 posY, int32 angle)
             if (i + 1 > sVars->flameCount)
                 sVars->flameCount = i + 1;
 
-            sVars->flameTimers[pos]                                                                                     = 0xF0;
+            sVars->flameTimers[pos]                                                                                               = 0xF0;
             GameObject::Create<Explosion>(INT_TO_VOID(Explosion::Type2), this->position.x, this->position.y - 0x60000)->drawGroup = this->drawGroup;
 
             return true;
@@ -452,8 +446,8 @@ void OOZSetup::PlayerState_OilPool()
 {
     Player *player = (Player *)this;
 
-    int32 top          = player->topSpeed;
-    int32 acc          = player->acceleration;
+    int32 top            = player->topSpeed;
+    int32 acc            = player->acceleration;
     player->topSpeed     = (player->topSpeed >> 1) + (player->topSpeed >> 3);
     player->acceleration = (player->acceleration >> 1) + (player->acceleration >> 3);
 
@@ -508,14 +502,24 @@ void OOZSetup::PlayerState_OilStrip()
 
     player->State_Ground();
 
-    if ((animator.animationID == Player::ANI_HURT || animator.animationID == Player::ANI_FLUME) && player->groundedStore && player->onGround) {
+    if ((animator.animationID == Player::ANI_HURT || animator.animationID == Player::ANI_FLUME || animator.animationID == Player::ANI_RUN
+         || animator.animationID == Player::ANI_WALK)
+        && player->groundedStore && player->onGround) {
         if (abs(player->groundVel) >= 0x20000) {
             memcpy(&player->animator, &animator, sizeof(Animator));
             if (player->animator.timer >= 3)
                 player->animator.timer = 256;
 
-            if (player->angle == 0x40 || player->angle == 0xC0) {
+            // v5U processes the angles slightly differently(?)
+            // this fixes it
+            if ((player->angle >= 0x3C && player->angle <= 0x40) || (player->angle >= 0xC0 && player->angle <= 0xC4)) {
                 player->onGround = false;
+                if (player->angle >= 0x3C && player->angle <= 0x40) {
+                    player->angle = 0x40;
+                }
+                else {
+                    player->angle = 0xC0;
+                }
                 player->state.Set(&Player::State_Air);
             }
         }

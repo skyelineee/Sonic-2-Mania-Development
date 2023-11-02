@@ -34,7 +34,8 @@ void CPZEggman::Update()
 
         for (auto currentPlayer : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
             if (this->invincibilityTimer == 0) { // Invulnerable?
-                if (currentPlayer->animator.animationID == Player::ANI_HURT || currentPlayer->animator.animationID == Player::ANI_DIE || currentPlayer->animator.animationID == Player::ANI_DROWN) {
+                if (currentPlayer->animator.animationID == Player::ANI_HURT || currentPlayer->animator.animationID == Player::ANI_DIE
+                    || currentPlayer->animator.animationID == Player::ANI_DROWN) {
                     if (this->eggmanAnimator.animationID != Laugh) {
                         this->eggmanAnimator.SetAnimation(sVars->aniFrames, Laugh, false, 0);
                     }
@@ -46,8 +47,8 @@ void CPZEggman::Update()
                         currentPlayer->score += 1000;
                         this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0);
                         this->flameAnimator.SetAnimation(sVars->aniFrames, Inactive, false, 0);
-                        this->exploding        = true;
-                        this->originPos.y      = this->position.y;
+                        this->exploding          = true;
+                        this->originPos.y        = this->position.y;
                         ChemicalDropper *dropper = GameObject::Get<ChemicalDropper>(sceneInfo->entitySlot + 1);
                         this->state.Set(&CPZEggman::State_Explode); // this->state++
                         dropper->state.Set(&ChemicalDropper::State_Destroyed);
@@ -63,7 +64,7 @@ void CPZEggman::Update()
     }
 
     if (this->exploding == true) {
-        if ((Zone::sVars->timer &= 7) == 0) {
+        if ((Zone::sVars->timer & 7) == 0) {
             Vector2 explosionPos;
             explosionPos.x       = this->position.x + Math::Rand(TO_FIXED(-24), TO_FIXED(24));
             explosionPos.y       = this->position.y + Math::Rand(TO_FIXED(-24), TO_FIXED(48));
@@ -73,49 +74,51 @@ void CPZEggman::Update()
         }
     }
 
-    // if eggman is on the hit or laugh animation, it checks for when the animator reaches the final frame (via the frame count) and sets it back to idle when it gets there
-	if (this->eggmanAnimator.animationID == Hit || this->eggmanAnimator.animationID == Laugh) {
-		if (this->eggmanAnimator.frameID == this->eggmanAnimator.frameCount - 1) {
-			this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
-		}
-		if (this->health == 0) { // way of fixing an issue of him still laughing and getting stuck on the idle animation if he dies while hes in the middle of playing it
-			this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0); 
-		}
+    // if eggman is on the hit or laugh animation, it checks for when the animator reaches the final frame (via the frame count) and sets it back to
+    // idle when it gets there
+    if (this->eggmanAnimator.animationID == Hit || this->eggmanAnimator.animationID == Laugh) {
+        if (this->eggmanAnimator.frameID == this->eggmanAnimator.frameCount - 1) {
+            this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
+        }
+        if (this->health == 0) { // way of fixing an issue of him still laughing and getting stuck on the idle animation if he dies while hes in the
+                                 // middle of playing it
+            this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, false, 0);
+        }
     }
 
-	this->state.Run(this);
-	this->flameAnimator.Process();
-	this->mobileAnimator.Process();
-	this->eggmanAnimator.Process();
+    this->state.Run(this);
+    this->flameAnimator.Process();
+    this->mobileAnimator.Process();
+    this->eggmanAnimator.Process();
 }
 
 void CPZEggman::LateUpdate() {}
 void CPZEggman::StaticUpdate() {}
 void CPZEggman::Draw()
 {
-	this->flameAnimator.DrawSprite(nullptr, false);
-	this->seatAnimator.DrawSprite(nullptr, false);
-	this->eggmanAnimator.DrawSprite(nullptr, false);
+    this->flameAnimator.DrawSprite(nullptr, false);
+    this->seatAnimator.DrawSprite(nullptr, false);
+    this->eggmanAnimator.DrawSprite(nullptr, false);
     this->mobileAnimator.DrawSprite(nullptr, false);
 }
 
-void CPZEggman::Create(void *data) 
+void CPZEggman::Create(void *data)
 {
-	if (!sceneInfo->inEditor) {
-		this->active = ACTIVE_BOUNDS;
-		this->drawFX = FX_FLIP;
-        this->visible = true;
-		this->drawGroup = 2;
-		this->seatAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
-		this->mobileAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
+    if (!sceneInfo->inEditor) {
+        this->active    = ACTIVE_BOUNDS;
+        this->drawFX    = FX_FLIP;
+        this->visible   = true;
+        this->drawGroup = 2;
+        this->seatAnimator.SetAnimation(sVars->aniFrames, 5, true, 0);
+        this->mobileAnimator.SetAnimation(sVars->aniFrames, 6, true, 0);
         this->state.Set(&CPZEggman::State_AwaitPlayer);
-	}
+    }
 }
 
 void CPZEggman::StageLoad()
 {
-	sVars->aniFrames.Load("Eggman/EggMobile.bin", SCOPE_STAGE);
-	sVars->bossHitSFX.Get("Stage/BossHit.wav");
+    sVars->aniFrames.Load("Eggman/EggMobile.bin", SCOPE_STAGE);
+    sVars->bossHitSFX.Get("Stage/BossHit.wav");
     sVars->hitbox.left   = -24;
     sVars->hitbox.top    = -24;
     sVars->hitbox.right  = 24;
@@ -128,7 +131,7 @@ void CPZEggman::Oscillate() { this->position.y = BadnikHelpers::Oscillate(this, 
 
 void CPZEggman::State_AwaitPlayer()
 {
-	Zone::sVars->playerBoundActiveL[0] = true;
+    Zone::sVars->playerBoundActiveL[0] = true;
     Zone::sVars->playerBoundActiveR[0] = true;
     Zone::sVars->cameraBoundsL[0]      = FROM_FIXED(this->position.x) - screenInfo->center.x;
     Zone::sVars->cameraBoundsR[0]      = FROM_FIXED(this->position.x) + screenInfo->center.x;
@@ -138,93 +141,94 @@ void CPZEggman::State_AwaitPlayer()
     Music::PlayTrack(Music::TRACK_EGGMAN2);
     this->originPos.y = this->position.y;
 
-    //object[+1].type = TypeName[Chemical Dropper];
+    // object[+1].type = TypeName[Chemical Dropper];
     ChemicalDropper *dropper = GameObject::Get<ChemicalDropper>(sceneInfo->entitySlot + 1);
-    GameObject::Reset(sceneInfo->entitySlot + 1, ChemicalDropper::sVars->classID, INT_TO_VOID(true)); // this resets it so the objects creation can be properly started, it does nothing otherwise
-	dropper->boundsL = this->position.x - 0x700000;
+    GameObject::Reset(sceneInfo->entitySlot + 1, ChemicalDropper::sVars->classID,
+                      INT_TO_VOID(true)); // this resets it so the objects creation can be properly started, it does nothing otherwise
+    dropper->boundsL = this->position.x - 0x700000;
     dropper->boundsR = this->position.x + 0x700000;
     this->position.x += (screenInfo->center.x + 256) << 16;
-	dropper->position.x = this->position.x;
-	dropper->position.y = this->position.y;
-	dropper->originPos.x = this->position.x;
-	dropper->originPos.y = this->position.y;
-    dropper->main = dropper;
+    dropper->position.x  = this->position.x;
+    dropper->position.y  = this->position.y;
+    dropper->originPos.x = this->position.x;
+    dropper->originPos.y = this->position.y;
+    dropper->main        = dropper;
 
-	this->flameAnimator.SetAnimation(sVars->aniFrames, Active, true, 0);
-	this->health = 8;
-	this->active = ACTIVE_NORMAL;
-	this->state.Set(&CPZEggman::State_BossFight);
+    this->flameAnimator.SetAnimation(sVars->aniFrames, Active, true, 0);
+    this->health = 8;
+    this->active = ACTIVE_NORMAL;
+    this->state.Set(&CPZEggman::State_BossFight);
 }
 
 void CPZEggman::State_BossFight() {}
 
 void CPZEggman::State_Explode()
 {
-	this->timer++;
-	if (this->timer == 180) {
-		this->timer = 0;
-		this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, true, 0);
-		this->exploding = false;
-		this->state.Set(&CPZEggman::State_DefeatFall);
-		Music::ClearMusicStack();
+    this->timer++;
+    if (this->timer == 180) {
+        this->timer = 0;
+        this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, true, 0);
+        this->exploding = false;
+        this->state.Set(&CPZEggman::State_DefeatFall);
+        Music::ClearMusicStack();
         Music::PlayTrack(Music::TRACK_STAGE);
-		Vector2 layerSize;
-		Zone::sVars->fgLayer[0].Size(&layerSize, true); // gets the layer size of the fg and sets layerSize to it
+        Vector2 layerSize;
+        Zone::sVars->fgLayer[0].Size(&layerSize, true); // gets the layer size of the fg and sets layerSize to it
         Zone::sVars->cameraBoundsR[0] = layerSize.x;
-	}
+    }
 }
 
 void CPZEggman::State_DefeatFall()
 {
-	this->position.y += this->velocity.y;
-	this->velocity.y += 0x1800;
-	this->timer++;
-	if (this->timer == 38) {
+    this->position.y += this->velocity.y;
+    this->velocity.y += 0x1800;
+    this->timer++;
+    if (this->timer == 38) {
         this->velocity.y = 0;
-		this->timer = 0;
+        this->timer      = 0;
         this->state.Set(&CPZEggman::State_DefeatRise);
-	}
+    }
 }
 
 void CPZEggman::State_DefeatRise()
 {
-	if (this->timer < 48) {
+    if (this->timer < 48) {
         this->position.y += this->velocity.y;
         this->velocity.y -= 0x800;
         this->timer++;
-	}
-	else {
-		this->timer = 0;
-		this->velocity.y = 0;
-		this->originPos.y = this->position.y;
-		this->state.Set(&CPZEggman::State_Flee);
-	}
+    }
+    else {
+        this->timer       = 0;
+        this->velocity.y  = 0;
+        this->originPos.y = this->position.y;
+        this->state.Set(&CPZEggman::State_Flee);
+    }
 }
 
 void CPZEggman::State_Flee()
 {
-	this->position.y = this->originPos.y;
+    this->position.y = this->originPos.y;
     CPZEggman::Oscillate();
 
-	if (this->timer < 8) {
-		this->timer++;
-	}
-	else {
-		this->timer = 0;
-		this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, true, 0);
-		this->flameAnimator.SetAnimation(sVars->aniFrames, Explode, true, 0);
-		this->direction = FLIP_X; // FACING_LEFT in v4
-		this->state.Set(&CPZEggman::State_Escape);
-	}
+    if (this->timer < 8) {
+        this->timer++;
+    }
+    else {
+        this->timer = 0;
+        this->eggmanAnimator.SetAnimation(sVars->aniFrames, Toasted, true, 0);
+        this->flameAnimator.SetAnimation(sVars->aniFrames, Explode, true, 0);
+        this->direction = FLIP_X; // FACING_LEFT in v4
+        this->state.Set(&CPZEggman::State_Escape);
+    }
 }
 
 void CPZEggman::State_Escape()
 {
-	this->position.x += 0x40000;
-	this->originPos.y -= 0x4000;
-	CPZEggman::Oscillate();
-	if (!this->CheckOnScreen(nullptr)) {
-		this->Destroy();
+    this->position.x += 0x40000;
+    this->originPos.y -= 0x4000;
+    CPZEggman::Oscillate();
+    if (!this->CheckOnScreen(nullptr)) {
+        this->Destroy();
     }
 }
 

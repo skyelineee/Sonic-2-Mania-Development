@@ -31,23 +31,21 @@ void TitleSetup::LateUpdate() {}
 
 void TitleSetup::StaticUpdate()
 {
-    sVars->deformationTimer = (sVars->deformationTimer + 1) & 0x7FFF; // need this here as i cant use the one in zone like other setups, bc zone is not an object in title
-    if (!(sVars->deformationTimer & 7)) { // every 7th frame the deformation offset gets added to by 1
+    sVars->deformationTimer =
+        (sVars->deformationTimer + 1) & 0x7FFF; // need this here as i cant use the one in zone like other setups, bc zone is not an object in title
+    if (!(sVars->deformationTimer & 7)) {       // every 7th frame the deformation offset gets added to by 1
         ++sVars->background->deformationOffset;
         ++sVars->backgroundIsland->deformationOffset;
         ++sVars->backgroundRipple->deformationOffset;
     }
 }
 
-void TitleSetup::Draw()
-{
-    this->stateDraw.Run(this);
-}
+void TitleSetup::Draw() { this->stateDraw.Run(this); }
 
 void TitleSetup::Create(void *data)
 {
-    // i dont actually know how it gets here lmao, these are entity events but title setup is not actually placed in hte stage, so i would think itd only do static events and functions
-    // copying manias scene directly just has these happen anyway tho so idk
+    // i dont actually know how it gets here lmao, these are entity events but title setup is not actually placed in hte stage, so i would think itd
+    // only do static events and functions copying manias scene directly just has these happen anyway tho so idk
     if (!sceneInfo->inEditor) {
         this->active    = ACTIVE_ALWAYS;
         this->visible   = true;
@@ -63,9 +61,9 @@ void TitleSetup::Create(void *data)
 
 void TitleSetup::StageLoad()
 {
-    //String presence;
-    //Localization::GetString(&presence, Localization::RPC_Title);
-    //API::RichPresence::Set(PRESENCE_TITLE, &presence);
+    // String presence;
+    // Localization::GetString(&presence, Localization::RPC_Title);
+    // API::RichPresence::Set(PRESENCE_TITLE, &presence);
     SetPresence("", "In Title Screen", "doggy", "doggy", "", "");
 
     API::Storage::SetNoSave(false);
@@ -96,12 +94,12 @@ void TitleSetup::StageLoad()
     RSDKTable->ResetEntitySlot(0, sVars->classID, nullptr);
 
     // need to do this multiple times as multiple layers need the rippling lol
-    sVars->background = SceneLayer::GetTileLayer(2);
+    sVars->background       = SceneLayer::GetTileLayer(2);
     sVars->backgroundIsland = SceneLayer::GetTileLayer(3);
     sVars->backgroundRipple = SceneLayer::GetTileLayer(4);
     for (int32 i = 0; i < 1024; ++i) {
         // sets the layers' deformation data to this objects deformation data
-        sVars->background->deformationData[i] = sVars->deformation[i & 63];
+        sVars->background->deformationData[i]       = sVars->deformation[i & 63];
         sVars->backgroundIsland->deformationData[i] = sVars->deformation[i & 63];
         sVars->backgroundRipple->deformationData[i] = sVars->deformation[i & 63];
     }
@@ -143,12 +141,14 @@ void TitleSetup::State_Wait()
     }
 }
 
-void TitleSetup::State_TwinklesFadingIn() 
+void TitleSetup::State_TwinklesFadingIn()
 {
     this->timer++;
     for (auto titleLogo : GameObject::GetEntities<TitleLogo>(FOR_ALL_ENTITIES)) { // gets all title logos
-        if (titleLogo->type == TitleLogo::TITLELOGO_EMBLEM) { // if its the emblem type (there should only be one) then create stars based on its position
-            // this looks ugly im aware but its the best way i know of creating a good amount of twinkles in quick succession all in different positions
+        if (titleLogo->type
+            == TitleLogo::TITLELOGO_EMBLEM) { // if its the emblem type (there should only be one) then create stars based on its position
+            // this looks ugly im aware but its the best way i know of creating a good amount of twinkles in quick succession all in different
+            // positions
             if (this->timer == 15) { // creates stars
                 Twinkle *twinkle = GameObject::Create<Twinkle>(nullptr, titleLogo->position.x - TO_FIXED(64), titleLogo->position.y + TO_FIXED(8));
                 twinkle->type    = Twinkle::TwinkleStar;
@@ -207,7 +207,8 @@ void TitleSetup::State_TwinklesFadingIn()
                 twinkle->type    = Twinkle::TwinkleStar;
             }
             if (this->timer >= 225) {
-                for (auto twinkle : GameObject::GetEntities<Twinkle>(FOR_ALL_ENTITIES)) { // gets all of the twinkles currently in the stage to destroy them all
+                for (auto twinkle :
+                     GameObject::GetEntities<Twinkle>(FOR_ALL_ENTITIES)) { // gets all of the twinkles currently in the stage to destroy them all
                     twinkle->Destroy();
                 }
             }
@@ -220,7 +221,8 @@ void TitleSetup::State_TwinklesFadingIn()
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
             }
-            else if (titleLogo->type == TitleLogo::TITLELOGO_RIBBON) { // if its ribbon wait 50 extra frames and then start increasing alpha and make it visible
+            else if (titleLogo->type
+                     == TitleLogo::TITLELOGO_RIBBON) { // if its ribbon wait 50 extra frames and then start increasing alpha and make it visible
                 if (this->timer >= 150) {
                     if (titleLogo->alpha < 255) {
                         titleLogo->alpha += 8;
@@ -250,13 +252,14 @@ void TitleSetup::State_TwinklesFadingIn()
     }
 }
 
-void TitleSetup::State_WhiteFlash() 
+void TitleSetup::State_WhiteFlash()
 {
     this->timer++;
     if (this->timer == 320) {
-        for (auto titleLogo : GameObject::GetEntities<TitleLogo>(FOR_ALL_ENTITIES)) // gets all title logos and sets them ALL to active and visible when the screen flashes white
+        for (auto titleLogo : GameObject::GetEntities<TitleLogo>(
+                 FOR_ALL_ENTITIES)) // gets all title logos and sets them ALL to active and visible when the screen flashes white
         {
-            titleLogo->active = ACTIVE_NORMAL;
+            titleLogo->active  = ACTIVE_NORMAL;
             titleLogo->visible = true;
             if (titleLogo->type == TitleLogo::TITLELOGO_RIBBON) {
                 titleLogo->showRibbonCenter = true;
@@ -265,8 +268,8 @@ void TitleSetup::State_WhiteFlash()
         }
         // changes the bg during the flash by changing draw orders
         SceneLayer::GetTileLayer(0)->drawGroup[0] = DRAWGROUP_COUNT;
-        this->timer = 768; // high value so the screen flash is instant
-        this->state.Set(&TitleSetup::State_ClearFlash); // state that slowly fades away the white screen
+        this->timer                               = 768; // high value so the screen flash is instant
+        this->state.Set(&TitleSetup::State_ClearFlash);  // state that slowly fades away the white screen
         this->stateDraw.Set(&TitleSetup::Draw_Flash);
     }
 }
@@ -275,7 +278,7 @@ void TitleSetup::State_ClearFlash()
 {
     if (this->timer <= 0) {
         this->timer = 0;
-        this->stateDraw.Set(nullptr); // set to nullptr when its done so the white screen is no longer drawing
+        this->stateDraw.Set(nullptr);                       // set to nullptr when its done so the white screen is no longer drawing
         this->state.Set(&TitleSetup::State_SetupStartText); // sets up the press any button text alongside the "mania" animation
     }
     else {
@@ -297,7 +300,8 @@ void TitleSetup::State_SetupStartText()
         for (auto titleLogo : GameObject::GetEntities<TitleLogo>(FOR_ALL_ENTITIES)) { // gets all titlelogos but only uses the press start type
             if (titleLogo->type == TitleLogo::TITLELOGO_PRESSSTART) {
                 sceneInfo->entity = titleLogo;
-                titleLogo->SetupPressStart(); // used to be for setting the sprite for whichever language the game is on, but now its always just set on the english text
+                titleLogo->SetupPressStart(); // used to be for setting the sprite for whichever language the game is on, but now its always just set
+                                              // on the english text
             }
         }
 
@@ -316,31 +320,35 @@ void TitleSetup::State_WaitForEnter()
     this->touched   = touchInfo->count > 0;
 
     if (this->timer == 15) {
-        Twinkle *twinkle = GameObject::Create<Twinkle>(INT_TO_VOID(true), 0, 0); // position doesnt matter, shooting star is drawn relative to the screen
-        // the type is only set AFTER the twinkle is created which is really annoying honestly, so instead on create im setting int_to_void true and using that in the twinkle's create event
-        twinkle->type    = Twinkle::ShootingStar;
+        Twinkle *twinkle =
+            GameObject::Create<Twinkle>(INT_TO_VOID(true), 0, 0); // position doesnt matter, shooting star is drawn relative to the screen
+        // the type is only set AFTER the twinkle is created which is really annoying honestly, so instead on create im setting int_to_void true and
+        // using that in the twinkle's create event
+        twinkle->type = Twinkle::ShootingStar;
     }
 
     if (anyClick || anyButton) {
         sVars->sfxMenuAccept.Play(false, 255);
         this->timer = 0;
 
-        const char *nextScene = "Menu"; // "nextScene" is used so it can change depending on whether you did a cheat or not, but no cheats are here so its always just menu
+        const char *nextScene = "Menu"; // "nextScene" is used so it can change depending on whether you did a cheat or not, but no cheats are here so
+                                        // its always just menu
         Stage::SetScene("Presentation", nextScene);
 
         int32 id = Input::GetFilteredInputDeviceID(false, false, 5); // gets the id of the whichever controller was used
-        Input::ResetInputSlotAssignments(); // resets assignments
-        Input::AssignInputSlotToDevice(Input::CONT_P1, id); // assigns p1 to whichever controller was used to pass the title screen
+        Input::ResetInputSlotAssignments();                          // resets assignments
+        Input::AssignInputSlotToDevice(Input::CONT_P1, id);          // assigns p1 to whichever controller was used to pass the title screen
 
         Music::Stop();
         this->state.Set(&TitleSetup::State_FadeToMenu);
         this->stateDraw.Set(&TitleSetup::Draw_FadeBlack);
     }
-    else if (++this->timer == 1024) { // timer until video is about to play
+    /*else if (++this->timer == 1024) { // timer until video is about to play
         this->timer     = 0;
         this->state.Set(&TitleSetup::State_FadeToVideo);
         this->stateDraw.Set(&TitleSetup::Draw_FadeBlack);
-    }
+    }//*/
+    // stop video from even attempting to play
 }
 
 void TitleSetup::State_FadeToMenu()
@@ -375,13 +383,12 @@ void TitleSetup::State_FadeToVideo()
 
 void TitleSetup::Draw_FadeBlack()
 {
-    Graphics::FillScreen(0x000000, this->timer, this->timer - 128, this->timer - 256); // timer should be 0 at start and goes down, but once it reaches -300 it resets to 0 and the draw state changes, making this rectangle fade away
+    Graphics::FillScreen(0x000000, this->timer, this->timer - 128,
+                         this->timer - 256); // timer should be 0 at start and goes down, but once it reaches -300 it resets to 0 and the draw state
+                                             // changes, making this rectangle fade away
 }
 
-void TitleSetup::Draw_Flash()
-{
-    Graphics::FillScreen(0xF0F0F0, this->timer, this->timer - 128, this->timer - 256);
-}
+void TitleSetup::Draw_Flash() { Graphics::FillScreen(0xF0F0F0, this->timer, this->timer - 128, this->timer - 256); }
 
 #if RETRO_INCLUDE_EDITOR
 void TitleSetup::EditorDraw() {}
@@ -390,6 +397,5 @@ void TitleSetup::EditorLoad() {}
 #endif
 
 void TitleSetup::Serialize() {}
-
 
 } // namespace GameLogic
