@@ -120,6 +120,7 @@ void EHZSetup::StageLoad()
 
 void EHZSetup::StageFinish_EndAct1()
 {
+    sVars->timerStorage = Zone::sVars->timer;
     Vector2 offset(TO_FIXED(Zone::sVars->cameraBoundsL[0] + screenInfo->center.x), TO_FIXED(Zone::sVars->cameraBoundsB[0]));
     Zone::StoreEntities(offset);
 
@@ -146,6 +147,7 @@ void EHZSetup::HandleActTransition()
     Zone::sVars->cameraBoundsB[0] = 694;
 
     Zone::ReloadEntities(Vector2(TO_FIXED(256), TO_FIXED(694)), true);
+    Zone::sVars->timer = sVars->timerStorage;
 
     if (Stage::CheckSceneFolder("HEHZ")) {
         Camera *camera = GameObject::Get<Camera>(SLOT_CAMERA1);

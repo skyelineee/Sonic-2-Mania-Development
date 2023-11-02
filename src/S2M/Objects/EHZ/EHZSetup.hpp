@@ -17,6 +17,8 @@ struct EHZSetup : RSDK::GameObject::Entity {
         int32 deformation[64];
         bool32 cutsceneActivated;
         int32 cutsceneTimer;
+
+        int32 timerStorage;
     };
 
     // ==============================
