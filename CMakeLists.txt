@@ -10,10 +10,9 @@ set(RETRO_MOD_LOADER_VER 2 CACHE STRING "Sets the mod loader version. Defaults t
 
 option(MOD_INCLUDE_EDITOR "Whether or not to include editor functions. Defaults to true" ON)
 
-option(DISCORD_RPC "Compile with RPC or not" OFF)
+option(DISCORD_RPC "Compile with Discord RPC or not" OFF)
 
 file(GLOB OBJECTS RELATIVE ${CMAKE_SOURCE_DIR} src/S2M/Objects/*/*.cpp)
-file(GLOB DISCORDSDK src/DiscordGameSDK/cpp/*.cpp)
 
 add_library(Sonic2Mania SHARED
     src/GameAPI/CPP/GameAPI/Game.cpp
@@ -24,16 +23,18 @@ add_library(Sonic2Mania SHARED
 target_include_directories(Sonic2Mania PRIVATE
     src/S2M/
     src/S2M/Objects/
-    src/DiscordGameSDK/cpp/
     src/GameAPI/CPP/GameAPI/
 )
 
-if(DISCORD_RPC)
+if(DISCORD_RPC AND WIN32)
+    file(GLOB DISCORDSDK src/DiscordGameSDK/cpp/*.cpp)
+    target_sources(Sonic2Mania PRIVATE ${DISCORDSDK})
+    target_include_directories(Sonic2Mania PRIVATE src/DiscordGameSDK/cpp)
+
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         target_link_libraries(Sonic2Mania PRIVATE
             ${CMAKE_SOURCE_DIR}/src/DiscordGameSDK/lib/x86_64/discord_game_sdk.dll.lib
         )
-
     elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "X86")
         target_link_libraries(Sonic2Mania PRIVATE
             ${CMAKE_SOURCE_DIR}/src/DiscordGameSDK/lib/x86/discord_game_sdk.dll.lib

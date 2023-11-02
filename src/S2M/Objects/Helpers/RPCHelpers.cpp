@@ -1,6 +1,8 @@
 #include "RPCHelpers.hpp"
+#if DISCORD_RPC
 #include "discord.h"
 #include <ctime>
+#endif
 
 // not an RSDK object like the other helpers, this just contains the functions themselves for updating the discord rich presence
 

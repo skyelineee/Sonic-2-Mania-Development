@@ -454,8 +454,7 @@ void Music::PlayOnFade(uint8 trackID, float fadeSpeed)
 
     Music *music = nullptr;
     switch (trackID) {
-        case TRACK_SUPER: Music::ClearMusicStack(); break;
-
+        case TRACK_SUPER:
         case TRACK_ACTCLEAR:
             Music::ClearMusicStack();
             // [Fallthrough]
