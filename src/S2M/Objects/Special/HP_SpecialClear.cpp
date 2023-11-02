@@ -54,7 +54,7 @@ void HP_SpecialClear::StageLoad()
     sVars->sfxWarp.Get("Global/SpecialWarp.wav");
     sVars->sfxEvent.Get("Special/Event.wav");
 
-    sVars->hiddenPalaceEnabled = true;
+    sVars->hiddenPalaceEnabled = false;
 }
 
 void HP_SpecialClear::GiveScoreBonus(int32 score)

@@ -343,12 +343,14 @@ void TitleSetup::State_WaitForEnter()
         this->state.Set(&TitleSetup::State_FadeToMenu);
         this->stateDraw.Set(&TitleSetup::Draw_FadeBlack);
     }
+    this->timer++;
     /*else if (++this->timer == 1024) { // timer until video is about to play
         this->timer     = 0;
         this->state.Set(&TitleSetup::State_FadeToVideo);
         this->stateDraw.Set(&TitleSetup::Draw_FadeBlack);
     }//*/
     // stop video from even attempting to play
+    // chuli you NUMBSKULL this made the timer never count up and as a result the shooting star never started
 }
 
 void TitleSetup::State_FadeToMenu()
