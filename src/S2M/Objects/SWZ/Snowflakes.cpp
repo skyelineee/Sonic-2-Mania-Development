@@ -173,7 +173,7 @@ void Snowflakes::Create(void *data)
         spawned      = true;
     }
     else {
-        this->active        = ACTIVE_ALWAYS;
+        this->active        = ACTIVE_NORMAL;
         this->drawGroup     = Zone::sVars->objectDrawGroup[0];
         this->visible       = true;
         this->drawFX        = FX_FLIP;
