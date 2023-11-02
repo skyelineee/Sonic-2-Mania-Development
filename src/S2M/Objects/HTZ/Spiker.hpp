@@ -10,6 +10,8 @@ struct Spiker : RSDK::GameObject::Entity {
     // ENUMS
     // ==============================
 
+    enum ConeState { None, Attached, Launching };
+
     // ==============================
     // STRUCTS
     // ==============================
@@ -23,7 +25,6 @@ struct Spiker : RSDK::GameObject::Entity {
         RSDK::Hitbox activateHitbox;
         RSDK::Hitbox coneHitbox;
         RSDK::SpriteAnimation aniFrames;
-
     };
 
     // ==============================
@@ -31,7 +32,7 @@ struct Spiker : RSDK::GameObject::Entity {
     // ==============================
 
     RSDK::StateMachine<Spiker> state;
-    RSDK::StateMachine<Spiker> coneState;
+    ConeState coneState;
     RSDK::StateMachine<Spiker> backupState;
     RSDK::Animator animator;
     RSDK::Animator coneAnimator;
@@ -69,10 +70,6 @@ struct Spiker : RSDK::GameObject::Entity {
     void State_Wandering();
     void State_Launching();
     void State_Cone();
-
-    void Cone_None();
-    void Cone_Attached();
-    void Cone_Launching();
 
     // ==============================
     // DECLARATION

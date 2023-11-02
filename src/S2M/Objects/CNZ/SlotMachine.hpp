@@ -30,7 +30,7 @@ struct SlotMachine : RSDK::GameObject::Entity {
         Bar,
         Jackpot,
         Eggman,
-        Knux, // Only Sonic OR Knux can appear at any one time
+        Knux,  // Only Sonic OR Knux can appear at any one time
         Super, // (Unused)
     };
 

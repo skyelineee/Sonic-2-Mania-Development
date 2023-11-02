@@ -1079,9 +1079,10 @@ void Player::DrawSprite(Player *self, RSDK::Animator *animator)
 bool32 Player::CheckValidState()
 {
     if (this->classID == Player::sVars->classID && !this->deathType) {
-        if (!this->state.Matches(&Player::State_DeathHold) && !this->state.Matches(&Player::State_Death) && !this->state.Matches(&Player::State_Drown)
-            && !this->state.Matches(&Player::State_ReturnToPlayer) && !this->state.Matches(&Player::State_HoldRespawn)
-            && !this->state.Matches(&Player::State_FlyToPlayer) && !this->state.Matches(&Player::State_Transform)) {
+        if ((!this->state.Matches(&Player::State_DeathHold) && !inDeathHold) && !this->state.Matches(&Player::State_Death)
+            && !this->state.Matches(&Player::State_Drown) && !this->state.Matches(&Player::State_ReturnToPlayer)
+            && !this->state.Matches(&Player::State_HoldRespawn) && !this->state.Matches(&Player::State_FlyToPlayer)
+            && !this->state.Matches(&Player::State_Transform)) {
             return true;
         }
     }
@@ -7026,10 +7027,10 @@ bool32 Player::CheckBadnikTouch(RSDK::GameObject::Entity *entity, RSDK::Hitbox *
         return false;
 
     Hitbox *playerHitbox = this->GetHitbox();
+    Hitbox tempHitbox    = sVars->instaShieldHitbox;
 
     Shield *shield = GameObject::Get<Shield>(sVars->maxPlayerCount + this->playerID);
     if (shield->classID == Shield::sVars->classID && shield->state.Matches(&Shield::State_Insta)) {
-        Hitbox tempHitbox = sVars->instaShieldHitbox;
 
         if (this->isChibi) {
             tempHitbox.left   = (playerHitbox->left << 1) - (playerHitbox->left >> 1);
