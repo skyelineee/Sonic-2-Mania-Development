@@ -58,10 +58,10 @@ void HP_Message::StageLoad()
     RSDK::Animator animator;
     animator.SetAnimation(sVars->aniFrames, 0, true, 0);
     for (int32 f = 0; f < animator.frameCount; ++f) {
-        animator.frameID = f;
+        animator.frameID   = f;
         uint16 unicodeChar = animator.GetFrameID() - '0';
 
-        if (unicodeChar <= 9) 
+        if (unicodeChar <= 9)
             sVars->numFrames[unicodeChar] = f;
     }
 }
@@ -263,11 +263,11 @@ void HP_Message::State_InitStartMessage()
 {
     SET_CURRENT_STATE();
 
-    this->fadeColor = 0x000000;
+    this->fadeColor = 0xF0F0F0;
     this->stateDraw.Set(&HP_Message::Draw_Fade);
     this->charAnimator.SetAnimation(sVars->aniFrames, 2, true, 0);
 
-    this->timer = 256;
+    this->timer = 512;
     // this->vsReady       = true;
     // this->sentReadyFlag = false;
 
@@ -289,7 +289,7 @@ void HP_Message::State_StartMessageSendDelay()
 
     if (this->timer++ >= 256 + 15) {
         this->state.Set(&HP_Message::State_StartMessageStartFadeIn);
-        this->timer = 256;
+        this->timer = 512;
     }
 }
 void HP_Message::State_StartMessageStartFadeIn()
@@ -306,7 +306,7 @@ void HP_Message::State_StartMessageFadeIn()
     SET_CURRENT_STATE();
 
     if (this->timer > 0) {
-        this->timer -= 8;
+        this->timer -= 0x10;
     }
     else {
         this->position.y = -TO_FIXED(15);
@@ -423,8 +423,8 @@ void HP_Message::State_StartMessageSetupNextMsg()
         message->Reset(HP_Message::sVars->classID, 0);
 
         message->position.y = TO_FIXED(116);
-        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
-                            "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
+        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false, "GET % RINGS!",
+                            "GET $% RINGS!", "GET #$% RINGS!", nullptr);
         message->stateDraw.Set(&HP_Message::Draw_GetRings);
 
         this->Destroy();
@@ -509,7 +509,7 @@ void HP_Message::Draw_Fade()
 
     ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
-    Graphics::FillScreen(this->fadeColor, this->timer, this->timer, this->timer);
+    Graphics::FillScreen(this->fadeColor, this->timer, this->timer - 0x80, this->timer - 0x100);
 }
 
 #if RETRO_INCLUDE_EDITOR

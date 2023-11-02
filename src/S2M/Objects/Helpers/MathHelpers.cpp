@@ -109,7 +109,7 @@ RSDK::Vector2 MathHelpers::GetBezierPoint(int32 percent, int32 x1, int32 y1, int
 }
 int32 MathHelpers::SquareRoot(uint32 num)
 {
-    uint32 rem = 1 << 30; // 1 << 31 would result in the value having to be unsigned, so this is the max
+    int32 rem = 1 << 30; // 1 << 31 would result in the value having to be unsigned, so this is the max
     while (rem > num) rem >>= 2;
 
     uint32 root = 0;
@@ -127,10 +127,10 @@ int32 MathHelpers::SquareRoot(uint32 num)
 }
 int32 MathHelpers::Distance(RSDK::Vector2 point1, RSDK::Vector2 point2)
 {
-    int32 distanceX = abs(point2.x - point1.x);
-    int32 distanceY = abs(point2.y - point1.y);
+    int32 distanceX = abs(point2.x - point1.x) >> 16;
+    int32 distanceY = abs(point2.y - point1.y) >> 16;
 
-    return SquareRoot((distanceX >> 16) * (distanceX >> 16) + (distanceY >> 16) * (distanceY >> 16)) << 16;
+    return SquareRoot((distanceX) * (distanceX) + (distanceY) * (distanceY)) << 16;
 }
 int32 MathHelpers::GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)
 {
@@ -390,7 +390,7 @@ bool32 MathHelpers::ConstrainToBox(RSDK::Vector2 *pos, int32 x, int32 y, RSDK::V
     }
 
     if (y >= boxPos.y) {
-        radius =  (int32)(x - ((((boxPosBottom - y) * div) / (radius * div)) * -65536.0f));
+        radius = (int32)(x - ((((boxPosBottom - y) * div) / (radius * div)) * -65536.0f));
         if (boxPosLeft <= radius && radius <= boxPosRight) {
             if (pos) {
                 pos->x = radius;

@@ -462,38 +462,33 @@ void Player::StaticUpdate()
 
     bool32 flying = false;
     bool32 tired  = false;
-    if (sceneInfo->state != ENGINESTATE_REGULAR) {
-        if (!sVars->playingFlySFX) {
-            if (sVars->sfxFlying.IsPlaying())
-                sVars->sfxFlying.Stop();
-        }
-        sVars->playingFlySFX = false;
-    }
+    if (sceneInfo->state == ENGINESTATE_REGULAR) {
 
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
-        if (player->characterID == ID_TAILS) {
-            int32 anim = player->animator.animationID;
-            if (anim == ANI_FLY || anim == ANI_FLY_LIFT)
-                flying = true;
-            if (anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT_TIRED)
-                tired = true;
+        for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+            if (player->characterID == ID_TAILS) {
+                int32 anim = player->animator.animationID;
+                if (anim == ANI_FLY || anim == ANI_FLY_LIFT)
+                    flying = true;
+                if (anim == ANI_FLY_TIRED || anim == ANI_FLY_LIFT_TIRED)
+                    tired = true;
+            }
+
+            player->lastMoveLayerPosition.x = player->moveLayerPosition.x;
+            player->lastMoveLayerPosition.y = player->moveLayerPosition.y;
         }
 
-        player->lastMoveLayerPosition.x = player->moveLayerPosition.x;
-        player->lastMoveLayerPosition.y = player->moveLayerPosition.y;
-    }
-
-    if (flying) {
-        if (!sVars->playingFlySFX) {
-            sVars->sfxFlying.Play();
-            sVars->playingFlySFX = true;
+        if (flying) {
+            if (!sVars->playingFlySFX) {
+                sVars->sfxFlying.Play(1);
+                sVars->playingFlySFX = true;
+            }
         }
-    }
 
-    if (tired) {
-        if (!sVars->playingTiredSFX) {
-            sVars->sfxTired.Play();
-            sVars->playingTiredSFX = true;
+        if (tired) {
+            if (!sVars->playingTiredSFX) {
+                sVars->sfxTired.Play(1);
+                sVars->playingTiredSFX = true;
+            }
         }
     }
 

@@ -42,10 +42,10 @@ void FXAudioPan::Create(void *data)
 {
     this->active        = ACTIVE_BOUNDS;
     this->visible       = 0;
-    this->updateRange.x   = TILE_SIZE * this->size.x;
-    this->updateRange.y   = TILE_SIZE * this->size.y;
-    this->sfxPos.x        = 0;
-    this->sfxPos.y        = 0;
+    this->updateRange.x = TILE_SIZE * this->size.x;
+    this->updateRange.y = TILE_SIZE * this->size.y;
+    this->sfxPos.x      = 0;
+    this->sfxPos.y      = 0;
     this->drawGroup     = Zone::sVars->hudDrawGroup;
 
     if (this->soundName.length) {
@@ -71,7 +71,7 @@ Soundboard::SoundInfo FXAudioPan::CheckCB()
 
     sVars->activeCount1 = 0;
     sVars->activeCount2 = 0;
-    int32 count                 = 0;
+    int32 count         = 0;
 
     RSDK::SoundFX sfx;
     sfx.Init();
@@ -118,9 +118,9 @@ Soundboard::SoundInfo FXAudioPan::CheckCB()
     sVars->activeCount2 = count;
 
     Soundboard::SoundInfo info = {};
-    info.playFlags = (uint16)(sVars->activeCount1 > 0 ? Soundboard::PlayOnStart : Soundboard::PlayNever);
-    info.sfx       = sfx;
-    info.loopPoint = loopPoint;
+    info.playFlags             = (uint16)(sVars->activeCount1 > 0 ? Soundboard::PlayOnStart : Soundboard::PlayNever);
+    info.sfx                   = sfx;
+    info.loopPoint             = loopPoint;
 
     return info;
 }
@@ -130,8 +130,8 @@ void FXAudioPan::UpdateCB(int32 sfxID)
     int32 worldCenterY = (screenInfo->position.y + screenInfo->center.y) << 16;
     Vector2 worldPos(worldCenterX, worldCenterY);
 
-    int32 worldLeft    = worldCenterX - (screenInfo->center.x << 16);
-    int32 worldRight   = worldCenterX + (screenInfo->center.x << 16);
+    int32 worldLeft  = worldCenterX - (screenInfo->center.x << 16);
+    int32 worldRight = worldCenterX + (screenInfo->center.x << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;
@@ -139,8 +139,8 @@ void FXAudioPan::UpdateCB(int32 sfxID)
 
     for (auto sound : GameObject::GetEntities<FXAudioPan>(FOR_ALL_ENTITIES)) {
         if (sound->sfxActive) {
-            int16 d   = MIN(MathHelpers::Distance(sound->sfxPos, worldPos), 640);
-            float volume   = (d / -640.0f) + 1.0f;
+            int16 sqRoot   = MIN(MathHelpers::Distance(sound->sfxPos, worldPos) >> 16, 640);
+            float volume   = (sqRoot / -640.0f) + 1.0f;
             float distance = -1.0;
             if (sound->sfxPos.x > worldLeft) {
                 distance = 1.0;
@@ -150,8 +150,8 @@ void FXAudioPan::UpdateCB(int32 sfxID)
             }
 
             volDivisor += volume;
-            if (dist >= (d << 16))
-                dist = (d << 16);
+            if (dist >= (sqRoot << 16))
+                dist = (sqRoot << 16);
             pan += volume * distance;
         }
     }
@@ -160,8 +160,8 @@ void FXAudioPan::UpdateCB(int32 sfxID)
     if (div > 0)
         pan /= volDivisor;
 
-    float volume = (float)MIN(dist >> 16, 640);
-    channels[Soundboard::sVars->sfxChannel[sfxID]].SetAttributes((volume / -640.0f) + 1.0f, CLAMP(pan, -1.0f, 1.0f), 1.0f);
+    float volume = MIN(dist >> 16, 640) / -640.f + 1;
+    channels[Soundboard::sVars->sfxChannel[sfxID]].SetAttributes(volume, CLAMP(pan, -1.0f, 1.0f), 1.0f);
 }
 
 uint8 FXAudioPan::PlayDistancedSfx(RSDK::SoundFX sfx, uint32 loopPoint, uint32 priority, RSDK::Vector2 position)
@@ -198,7 +198,7 @@ uint8 FXAudioPan::PlayDistancedSfx(RSDK::SoundFX sfx, uint32 loopPoint, uint32 p
     if (div > 0)
         pan /= volDivisor;
 
-    float volume = (float)MIN(dist >> 16, 640);
+    float volume  = (float)MIN(dist >> 16, 640);
     uint8 channel = sfx.Play(loopPoint, priority);
     channels[channel].SetAttributes((volume / -640.0f) + 1.0f, CLAMP(pan, -1.0f, 1.0f), 1.0f);
     return channel;
@@ -268,8 +268,8 @@ void FXAudioPan::StaticLoad(Static *sVars)
 
     sVars->aniFrames.Init();
 
-    sVars->field_1E  = -1;
-    sVars->field_20  = -1;
+    sVars->field_1E = -1;
+    sVars->field_20 = -1;
 }
 #endif
 

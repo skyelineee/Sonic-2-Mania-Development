@@ -91,7 +91,7 @@ void HP_Checkpoint::State_AwaitPlayer()
                 sVars->sfxStarPost.Play();
             }
             else {
-                this->failed           = true;
+                this->failed = true;
 
                 message->position.y = TO_FIXED(116);
                 message->SetMessage(&HP_Message::State_NotEnough, 0, 120, false, "NOT ENOUGH", "RINGS ... ", nullptr);
@@ -160,8 +160,8 @@ void HP_Checkpoint::State_ShowNewRingTarget()
         HP_Setup::sVars->checkpointID++;
 
         message->position.y = TO_FIXED(116);
-        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false,
-                            "GET % RINGS!", "GET $% RINGS!", "GET #$% RINGS!", nullptr);
+        message->SetMessage(&HP_Message::State_SingleMessage, HP_Setup::sVars->ringCounts[HP_Setup::sVars->checkpointID], 90, false, "GET % RINGS!",
+                            "GET $% RINGS!", "GET #$% RINGS!", nullptr);
         message->stateDraw.Set(&HP_Message::Draw_GetRings);
 
         this->Destroy();
@@ -245,7 +245,7 @@ void HP_Checkpoint::Draw_Fade()
 
     Draw_Results();
 
-    Graphics::FillScreen(0xF8F8F8, this->timer, this->timer, this->timer);
+    Graphics::FillScreen(0xF0F0F0, this->timer, this->timer - 0x80, this->timer - 0x100);
 }
 
 void HP_Checkpoint::Draw_Exit()

@@ -9,6 +9,7 @@
 #include "Helpers/RPCHelpers.hpp"
 #include "HP_Message.hpp"
 #include "HP_Checkpoint.hpp"
+#include "Helpers/FXFade.hpp"
 
 using namespace RSDK;
 
@@ -18,16 +19,17 @@ RSDK_REGISTER_OBJECT(HP_Setup);
 
 void HP_Setup::Update() {}
 void HP_Setup::LateUpdate() {}
-void HP_Setup::StaticUpdate() {
-	if (++sVars->paletteTimer == 4) {
+void HP_Setup::StaticUpdate()
+{
+    if (++sVars->paletteTimer == 4) {
         sVars->paletteTimer = 0;
 
-		sVars->paletteIndex1 = (sVars->paletteIndex1 + 1) & 15;
+        sVars->paletteIndex1 = (sVars->paletteIndex1 + 1) & 15;
         paletteBank[0].SetEntry(142, sVars->starPalCycle[sVars->paletteIndex1]);
 
         sVars->paletteIndex2 = (sVars->paletteIndex2 + 1) & 15;
         paletteBank[0].SetEntry(143, sVars->starPalCycle[sVars->paletteIndex2]);
-	}
+    }
 }
 void HP_Setup::Draw() {}
 
@@ -38,7 +40,7 @@ void HP_Setup::StageLoad()
     if (!globals->playerID)
         globals->playerID = ID_DEFAULT_PLAYER;
 
-    sVars->gotEmerald = false;
+    sVars->gotEmerald      = false;
     sceneInfo->timeEnabled = true;
 
     uint8 paletteID = 0;
@@ -51,17 +53,17 @@ void HP_Setup::StageLoad()
     }
 
     int32 start = 0;
-    start = paletteID << 3;
+    start       = paletteID << 3;
 
     paletteBank[0].Copy(1, start, 192, 8);
 
-    sVars->stageColor1 = paletteBank[0].GetEntry(197) | (0xFF << 24);
+    sVars->stageColor1   = paletteBank[0].GetEntry(197) | (0xFF << 24);
     sVars->stageColor2   = paletteBank[0].GetEntry(192) | (0xFF << 24);
     sVars->arrowColor    = 0xE0E000 | (0xFF << 24);
     sVars->railEdgeColor = 0xE0A020 | (0xFF << 24);
 
     sVars->checkpointID = 0;
-    int32 count = 0;
+    int32 count         = 0;
     for (auto checkpoint : GameObject::GetEntities<HP_Checkpoint>(FOR_ALL_ENTITIES)) {
         if (count < 3) {
             sVars->ringCountSonic[count] = checkpoint->ringCountSonic;

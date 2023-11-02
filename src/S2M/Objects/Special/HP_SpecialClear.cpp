@@ -32,12 +32,12 @@ void HP_SpecialClear::Create(void *data)
 
         this->state.Set(&HP_SpecialClear::State_FadeIn);
         this->stateDraw.Set(&HP_SpecialClear::Draw_FadeIn);
-        this->fillColor = 0xE0E0E0;
+        this->fillColor = 0xF0F0F0;
 
         SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
-        this->score       = saveRAM->score;
-        this->score1UP    = saveRAM->score1UP;
-        this->lives       = saveRAM->lives;
+        this->score                = saveRAM->score;
+        this->score1UP             = saveRAM->score1UP;
+        this->lives                = saveRAM->lives;
 
         this->uiElementsAnimator.SetAnimation(sVars->aniFrames, 0, true, 0);
         this->numbersAnimator.SetAnimation(sVars->aniFrames, 1, true, 0);
@@ -102,7 +102,7 @@ void HP_SpecialClear::State_FadeIn()
 {
     SET_CURRENT_STATE();
 
-    if (this->timer >= 256) {
+    if (this->timer >= 0x200) {
         SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
         if (HP_Setup::sVars->gotEmerald) {
@@ -127,7 +127,7 @@ void HP_SpecialClear::State_FadeIn()
             this->resultsTextTop = HP_SpecialClear::MessageNone;
             this->resultsTextMid = HP_SpecialClear::MessageFailed;
             this->messageAnimator.SetAnimation(sVars->aniFrames, 3 + (5 * HUD::CharacterIndexFromID(GET_CHARACTER_ID(1))), true, 0);
-            this->gemBonus       = 0;
+            this->gemBonus = 0;
         }
         this->resultsTextBottom = 0;
 
@@ -138,8 +138,6 @@ void HP_SpecialClear::State_FadeIn()
         this->ringBonus[1] = 0;
         if (GET_CHARACTER_ID(2))
             this->ringBonus[1] = player2->rings;
-
-        this->timer = 256;
 
         for (int32 e = 0; e < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++e) {
             if (e != this->Slot())
@@ -168,14 +166,14 @@ void HP_SpecialClear::State_FadeIn()
         this->state.Set(&HP_SpecialClear::State_FadeIdle);
     }
     else {
-        this->timer += 8;
+        this->timer += 0x10;
     }
 }
 void HP_SpecialClear::State_FadeIdle()
 {
     SET_CURRENT_STATE();
 
-    if (++this->timer >= 256 + 15) {
+    if (++this->timer >= 0x200 + 15) {
         this->timer = 0;
         this->state.Set(&HP_SpecialClear::State_EnterText);
         this->stateDraw.Set(&HP_SpecialClear::Draw_Results);
@@ -289,10 +287,10 @@ void HP_SpecialClear::State_Failed()
 
     if (++this->timer >= 160) {
         this->timer     = 0;
-        this->fillColor = 0xF8F8F8;
+        this->fillColor = 0xF0F0F0;
         sVars->sfxWarp.Play();
-        this->state.Set(&HP_SpecialClear::State_FadeOut);
-        this->stateDraw.Set(&HP_SpecialClear::Draw_FadeOut);
+        this->state.Set(&HP_SpecialClear::State_ExitResults);
+        this->stateDraw.Set(&HP_SpecialClear::Draw_Exit);
     }
 }
 void HP_SpecialClear::State_FadeOut()
@@ -301,13 +299,13 @@ void HP_SpecialClear::State_FadeOut()
 
     this->alphaTimer = (this->alphaTimer + 16) & 0x1FF;
 
-    if (this->timer >= 400) {
-        this->timer = 248;
+    if (this->timer >= 0x200) {
+        this->timer = 0;
         this->state.Set(&HP_SpecialClear::State_ExitResults);
         this->stateDraw.Set(&HP_SpecialClear::Draw_Exit);
     }
     else {
-        this->timer += 8;
+        this->timer += 0x10;
     }
 }
 void HP_SpecialClear::State_ExitResults()
@@ -316,16 +314,15 @@ void HP_SpecialClear::State_ExitResults()
 
     this->alphaTimer = (this->alphaTimer + 16) & 0x1FF;
 
-    if (this->timer < 0) {
+    if (this->timer >= 0x380) {
         SaveGame::SaveRAM *saveRAM = SaveGame::GetSaveRAM();
 
         Stage::SetScene("Adventure Mode", "");
         sceneInfo->listPos = saveRAM->storedStageID;
 
-        this->state.Set(&HP_SpecialClear::State_Failed);
         if (HP_Setup::sVars->gotEmerald) {
             if (SaveGame::GetEmeralds(SaveGame::EmeraldBoth)) { // hyper !!!
-                // cool ok
+                // cool o
             }
             else if (SaveGame::GetEmeralds(SaveGame::EmeraldAny) && sVars->hiddenPalaceEnabled) {
                 Stage::SetScene("Extras", "Proto Palace Zone");
@@ -338,7 +335,7 @@ void HP_SpecialClear::State_ExitResults()
         Stage::LoadScene();
     }
     else {
-        this->timer -= 8;
+        this->timer += 12;
     }
 }
 void HP_SpecialClear::State_WinShowReward()
@@ -419,10 +416,10 @@ void HP_SpecialClear::State_WinIdle()
 
     if (++this->timer >= 200) {
         this->timer     = 0;
-        this->fillColor = 0xF8F8F8;
+        this->fillColor = 0xF0F0F0;
         sVars->sfxWarp.Play();
-        this->state.Set(&HP_SpecialClear::State_FadeOut);
-        this->stateDraw.Set(&HP_SpecialClear::Draw_FadeOut);
+        this->state.Set(&HP_SpecialClear::State_ExitResults);
+        this->stateDraw.Set(&HP_SpecialClear::Draw_Exit);
     }
 }
 
@@ -431,7 +428,7 @@ void HP_SpecialClear::Draw_FadeIn()
 {
     SET_CURRENT_STATE();
 
-    Graphics::FillScreen(this->fillColor, this->timer, this->timer, this->timer);
+    Graphics::FillScreen(this->fillColor, this->timer, this->timer - 0x80, this->timer - 0x100);
 }
 void HP_SpecialClear::Draw_Results()
 {
@@ -442,7 +439,7 @@ void HP_SpecialClear::Draw_Results()
     ScreenInfo *screen = &screenInfo[sceneInfo->currentScreenID];
 
     color bgColor = paletteBank[0].GetEntry(152);
-    Graphics::FillScreen(bgColor, 0xFF, 0xFF, 0xFF);
+    Graphics::FillScreen(0xF0F0F0, 0xFF, 0xFF, 0xFF);
 
     this->alpha = ((190 + (Math::Sin512(this->alphaTimer) >> 3)) * this->emeraldAlpha) >> 8;
 
@@ -453,8 +450,8 @@ void HP_SpecialClear::Draw_Results()
     for (int32 e = 0; e < 7; ++e) {
         if (GET_BIT(saveRAM->collectedEmeralds, e)) {
             Vector2 drawPos;
-            drawPos.x = TO_FIXED(screen->center.x) + emeraldPosTableX[e];
-            drawPos.y = emeraldPosTableY[e];
+            drawPos.x                      = TO_FIXED(screen->center.x) + emeraldPosTableX[e];
+            drawPos.y                      = emeraldPosTableY[e];
             this->emeraldsAnimator.frameID = e;
             this->emeraldsAnimator.DrawSprite(&drawPos, false);
         }
@@ -590,7 +587,7 @@ void HP_SpecialClear::Draw_Results()
         drawPos.y                        = TO_FIXED(177);
         this->uiElementsAnimator.frameID = 3; // tails rings
         if (GET_CHARACTER_ID(2) == ID_TAILS && (globals->secrets & SECRET_REGIONSWAP))
-            this->uiElementsAnimator.frameID = this->uiElementsAnimator.frameCount - 1;  // miles rings
+            this->uiElementsAnimator.frameID = this->uiElementsAnimator.frameCount - 1; // miles rings
         this->uiElementsAnimator.DrawSprite(&drawPos, true);
 
         drawPos.x += TO_FIXED(88);
@@ -632,7 +629,7 @@ void HP_SpecialClear::Draw_FadeOut()
 
     Draw_Results();
 
-    Graphics::FillScreen(this->fillColor, this->timer, this->timer, this->timer);
+    Graphics::FillScreen(this->fillColor, this->timer, this->timer - 0x80, this->timer - 0x100);
 }
 void HP_SpecialClear::Draw_Exit()
 {
@@ -640,8 +637,7 @@ void HP_SpecialClear::Draw_Exit()
 
     Draw_Results();
 
-    uint8 c         = CLAMP(this->timer, 0, 255);
-    Graphics::FillScreen((c << 16) | (c << 8) | (c << 0), 0xFF, 0xFF, 0xFF);
+    Graphics::FillScreen(0x000000, timer, timer - 0x80, timer - 0x100);
 }
 
 #if RETRO_INCLUDE_EDITOR
