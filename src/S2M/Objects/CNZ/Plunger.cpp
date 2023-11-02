@@ -161,11 +161,12 @@ void Plunger::Update()
                                 if (currentPlayer->CheckCollisionTouch(this, &sVars->verticalHitbox)) {
                                     currentPlayer->state.Set(&Player::State_Air);
                                     currentPlayer->stateGravity.Set(&Player::Gravity_True);
-                                    currentPlayer->timer      = 0;
-                                    currentPlayer->groundVel  = 0;
-                                    currentPlayer->velocity.x = 0;
-                                    currentPlayer->onGround   = false;
-                                    currentPlayer->velocity.y = -((this->compression * 3) >> 2);
+                                    currentPlayer->timer        = 0;
+                                    currentPlayer->groundVel    = 0;
+                                    currentPlayer->velocity.x   = 0;
+                                    currentPlayer->onGround     = false;
+                                    currentPlayer->applyJumpCap = false;
+                                    currentPlayer->velocity.y   = -((this->compression * 3) >> 2);
                                     sVars->sfxPlunger.Play(false, 255);
                                 }
                             }
