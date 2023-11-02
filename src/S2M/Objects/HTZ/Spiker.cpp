@@ -112,6 +112,7 @@ void Spiker::StageLoad()
 	sVars->coneHitbox.bottom = 0;
 
     DebugMode::AddObject(sVars->classID, &Spiker::DebugSpawn, &Spiker::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Spiker::DebugSpawn() { GameObject::Create<Spiker>(nullptr, this->position.x, this->position.y); }

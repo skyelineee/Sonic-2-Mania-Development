@@ -101,6 +101,7 @@ void Tubinaut::StageLoad()
     sVars->hitboxSpin.bottom = 20;
 
     DebugMode::AddObject(sVars->classID, &Tubinaut::DebugSpawn, &Tubinaut::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 
     sVars->sfxPowerdown.Get("Stage/PowerDown.wav");
     sVars->sfxRepel.Get("Stage/Repel.wav");

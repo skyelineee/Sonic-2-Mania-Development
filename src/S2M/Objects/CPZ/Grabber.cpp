@@ -86,6 +86,7 @@ void Grabber::StageLoad()
     sVars->hitboxGrab.bottom = 16;
 
     DebugMode::AddObject(sVars->classID, &Grabber::DebugSpawn, &Grabber::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 
     sVars->sfxGrab.Get("Global/Grab.wav");
     sVars->sfxDestroy.Get("Global/Destroy.wav");

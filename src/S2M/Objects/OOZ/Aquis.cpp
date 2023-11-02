@@ -82,6 +82,7 @@ void Aquis::StageLoad()
     sVars->sfxShot.Get("Stage/Shot.wav");
 
     DebugMode::AddObject(sVars->classID, &Aquis::DebugSpawn, &Aquis::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Aquis::DebugSpawn()

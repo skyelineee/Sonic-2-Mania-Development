@@ -813,6 +813,15 @@ void Player::StageLoad()
         memcpy(sVars->superSonicPalette_Water, superSonicPalette_Water, sizeof(superSonicPalette_Water));
 
         // ---------------
+        // HYPER SONIC WATER
+        // ---------------
+
+        color hyperSonicPalette_Water[] = { 0x120C78, 0x2529E4, 0x2C3AE5, 0x3962E7, 0x5086E9, 0x67BDF0, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->hyperSonicPalette_Water, hyperSonicPalette_Water, sizeof(hyperSonicPalette_Water));
+
+        // ---------------
         // SUPER TAILS WATER
         // ---------------
 
@@ -840,6 +849,15 @@ void Player::StageLoad()
                                             0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
 
         memcpy(sVars->superSonicPalette_Water, superSonicPalette_Water, sizeof(superSonicPalette_Water));
+
+        // ---------------
+        // HYPER SONIC WATER
+        // ---------------
+
+        color hyperSonicPalette_Water[] = { 0x500074, 0x6E009E, 0x8F02CD, 0xBF06FF, 0xD52EFF, 0xDD74FF, 0x000000, 0x000000, 0x000000,
+                                            0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
+
+        memcpy(sVars->hyperSonicPalette_Water, hyperSonicPalette_Water, sizeof(hyperSonicPalette_Water));
 
         // ---------------
         // SUPER TAILS WATER
@@ -871,6 +889,7 @@ void Player::StageLoad()
 
     if (ARZSetup::sVars || HPZSetup::sVars || CPZSetup::sVars) { // if any of these setups (stages with water) load the water player colors
         sVars->activeSuperSonicPalette_Water = sVars->superSonicPalette_Water;
+        sVars->activeHyperSonicPalette_Water = sVars->hyperSonicPalette_Water;
         sVars->activeSuperTailsPalette_Water = sVars->superTailsPalette_Water;
         sVars->activeSuperKnuxPalette_Water  = sVars->superKnuxPalette_Water;
     }
@@ -3238,9 +3257,11 @@ void Player::Action_DblJumpSonic()
                 }
             }
             else {
-                if (controllerInfo[this->controllerID].keyY.press) {
-                    SaveGame::GetSaveRAM();
-                    TryTransform(false, Player::TransformEmeralds);
+                if (this->rings >= 50 && this->superState != Player::SuperStateSuper) {
+                    if (controllerInfo[this->controllerID].keyY.press) {
+                        SaveGame::GetSaveRAM();
+                        TryTransform(false, Player::TransformSuper);
+                    }
                 }
             }
             return;
@@ -3281,8 +3302,10 @@ void Player::Action_DblJumpTails()
         }
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
-        SaveGame::GetSaveRAM();
-        TryTransform(false, Player::TransformEmeralds);
+        if (this->rings >= 50 && this->superState != Player::SuperStateSuper) {
+            SaveGame::GetSaveRAM();
+            TryTransform(false, Player::TransformSuper);
+        }
     }
 }
 void Player::Action_DblJumpKnux()
@@ -3352,8 +3375,10 @@ void Player::Action_DblJumpKnux()
         }
     }
     else if (controllerInfo[this->controllerID].keyY.press) {
-        SaveGame::GetSaveRAM();
-        TryTransform(false, Player::TransformEmeralds);
+        if (this->rings >= 50 && this->superState != Player::SuperStateSuper) {
+            SaveGame::GetSaveRAM();
+            TryTransform(false, Player::TransformSuper);
+        }
     }
 }
 
@@ -5898,25 +5923,25 @@ void Player::State_Transform()
         this->abilityValues[6] = 0;
         this->abilityValues[7] = 0;
         this->abilityValues[5] = true;
-    }
 
-    if (this->hyperAbilityState == Player::HyperStateNone) {
-        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
-        sparkle->Reset(SuperSparkle::sVars->classID, this);
-        sparkle->timer = 13;
+        if (this->hyperAbilityState == Player::HyperStateNone) {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
+            sparkle->timer = 13;
 
-        if (globals->useManiaBehavior) {
+            if (globals->useManiaBehavior) {
+                ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
+                trail->Reset(ImageTrail::sVars->classID, this);
+            }
+        }
+        else {
+            SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
+            sparkle->Reset(SuperSparkle::sVars->classID, this);
+            sparkle->timer = 13;
+
             ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
             trail->Reset(ImageTrail::sVars->classID, this);
         }
-    }
-    else {
-        SuperSparkle *sparkle = GameObject::Get<SuperSparkle>(this->playerID + sVars->maxPlayerCount);
-        sparkle->Reset(SuperSparkle::sVars->classID, this);
-        sparkle->timer = 13;
-
-        ImageTrail *trail = GameObject::Get<ImageTrail>(this->playerID + sVars->maxPlayerCount * 2);
-        trail->Reset(ImageTrail::sVars->classID, this);
     }
 
     bool32 done = false;
@@ -6440,7 +6465,7 @@ void Player::Input_NULL()
             DebugMode::sVars->debugActive = true;
         }
         // TEMP: TODO REMOVE
-        else if (false && controllerInfo[1].keySelect.press) {
+        else if (controllerInfo[1].keySelect.press) {
             this->characterID <<= 1;
             if (this->characterID > ID_KNUCKLES)
                 this->characterID = ID_SONIC;
@@ -7367,7 +7392,17 @@ void Player::StaticLoad(Static *sVars)
                                  0xF098B0, 0xF0B0C8, 0xB30626, 0xE12808, 0xF06090, 0xF080A0, 0xF098B0, 0xF0B0C8, 0xF0C0C8 };
 
     memcpy(sVars->superKnuxPalette, superKnuxPalette, sizeof(superKnuxPalette));
-    //
+
+
+    // ---------------
+    // HYPER SONIC
+    // ---------------
+
+    color hyperSonicPalette[] = { 0x11004F, 0x0F16AD, 0x1D2EE2, 0x225BF1, 0x4281F7, 0x48B9F7, 0xDD1DFF, 0xFF23FE, 0xFF53FE,
+                                  0xF287FF, 0xF5A2FF, 0xF9C7FF, 0x008935, 0x00B838, 0x00CC46, 0x00E460, 0x5AFF72, 0x98FFB3 };
+
+    memcpy(sVars->hyperSonicPalette, hyperSonicPalette, sizeof(hyperSonicPalette));
+
 
     float chargeSpeeds[13] = { 1.0f, 1.0614f, 1.1255f, 1.1926f, 1.263f, 1.337f, 1.415f, 1.4975f, 1.585f, 1.6781f, 1.7776f, 1.8845f, 2.0f };
     memcpy(sVars->spindashChargeSpeeds, chargeSpeeds, sizeof(chargeSpeeds));

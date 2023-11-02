@@ -73,6 +73,7 @@ void Stegway::StageLoad()
     sVars->sfxRelease.Get("Global/Release.wav");
 
     DebugMode::AddObject(sVars->classID, &Stegway::DebugSpawn, &Stegway::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Stegway::DebugSpawn()

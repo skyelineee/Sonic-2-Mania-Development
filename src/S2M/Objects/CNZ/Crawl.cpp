@@ -72,6 +72,7 @@ void Crawl::StageLoad()
     sVars->hitboxBadnik.bottom = 16;
 
     DebugMode::AddObject(sVars->classID, &Crawl::DebugSpawn, &Crawl::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Crawl::DebugSpawn() { GameObject::Create<Crawl>(nullptr, this->position.x, this->position.y); }

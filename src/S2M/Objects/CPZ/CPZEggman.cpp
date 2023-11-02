@@ -120,6 +120,8 @@ void CPZEggman::StageLoad()
     sVars->hitbox.top    = -24;
     sVars->hitbox.right  = 24;
     sVars->hitbox.bottom = 20;
+
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void CPZEggman::Oscillate() { this->position.y = BadnikHelpers::Oscillate(this, this->originPos.y, 2, 10); }

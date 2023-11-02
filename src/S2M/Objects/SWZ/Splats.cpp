@@ -55,6 +55,7 @@ void Splats::StageLoad()
     sVars->hitboxBadnik.bottom = 20;
 
     DebugMode::AddObject(sVars->classID, &Splats::DebugSpawn, &Splats::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Splats::DebugDraw()

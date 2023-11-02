@@ -140,6 +140,8 @@ void EHZEggman::StageLoad()
     sVars->hitbox.top    = -24;
     sVars->hitbox.right  = 24;
     sVars->hitbox.bottom = 24;
+
+	Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void EHZEggman::PlayHeliSFX()

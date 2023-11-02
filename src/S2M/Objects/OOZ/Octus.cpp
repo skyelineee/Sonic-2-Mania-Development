@@ -75,6 +75,7 @@ void Octus::StageLoad()
     sVars->sfxShot.Get("Stage/Shot.wav");
 
     DebugMode::AddObject(sVars->classID, &Octus::DebugSpawn, &Octus::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Octus::DebugSpawn()

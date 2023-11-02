@@ -81,6 +81,7 @@ void Redz::StageLoad()
     sVars->sfxFlame.Get("Stage/Flame.wav");
 
     DebugMode::AddObject(sVars->classID, &Redz::DebugSpawn, &Redz::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Redz::DebugSpawn()

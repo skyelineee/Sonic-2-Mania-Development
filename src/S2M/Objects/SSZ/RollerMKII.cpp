@@ -90,6 +90,7 @@ void RollerMKII::StageLoad()
     sVars->sfxSkidding.Get("Global/Skidding.wav");
 
     DebugMode::AddObject(sVars->classID, &RollerMKII::DebugSpawn, &RollerMKII::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void RollerMKII::DebugSpawn()

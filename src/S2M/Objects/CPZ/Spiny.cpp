@@ -82,6 +82,7 @@ void Spiny::StageLoad()
     sVars->hitboxShot.bottom = 4;
 
     DebugMode::AddObject(sVars->classID, &Spiny::DebugSpawn, &Spiny::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 
     sVars->sfxShot.Get("Stage/Shot.wav");
 }

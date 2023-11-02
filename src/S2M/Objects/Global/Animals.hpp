@@ -25,7 +25,7 @@ struct Animals : RSDK::GameObject::Entity {
         Tocky,
         Wocky,
         Micky,
-        SuperFlicky, // Not a proper type per-se, but it appears here on the anim list so
+        SuperFlicky = 24, // Not a proper type per-se, but it appears here on the anim list so
     };
 
     enum Behaviours {

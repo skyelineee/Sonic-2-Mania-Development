@@ -65,6 +65,7 @@ void Rhinobot::StageLoad()
     sVars->sfxHuff.Get("Stage/Huff.wav");
 
     DebugMode::AddObject(sVars->classID, &Rhinobot::DebugSpawn, &Rhinobot::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Rhinobot::DebugSpawn() { GameObject::Create<Rhinobot>(nullptr, this->position.x, this->position.y); }

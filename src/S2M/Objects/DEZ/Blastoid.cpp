@@ -67,6 +67,7 @@ void Blastoid::StageLoad()
     sVars->sfxShot.Get("Stage/Shot.wav");
 
     DebugMode::AddObject(sVars->classID, &Blastoid::DebugSpawn, &Blastoid::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Blastoid::DebugSpawn()

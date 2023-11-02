@@ -90,6 +90,7 @@ void Jellygnite::StageLoad()
     sVars->sfxElectrify.Get("Stage/Electrify2.wav");
 
     DebugMode::AddObject(sVars->classID, &Jellygnite::DebugSpawn, &Jellygnite::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Jellygnite::DebugSpawn()

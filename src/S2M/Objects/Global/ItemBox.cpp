@@ -185,7 +185,7 @@ void ItemBox::StageLoad()
 
 void ItemBox::DebugDraw()
 {
-    DebugMode::sVars->itemTypeCount = 15;
+    DebugMode::sVars->itemTypeCount = 16;
 
     DebugMode::sVars->animator.SetAnimation(sVars->aniFrames, 0, true, 0);
     DebugMode::sVars->animator.DrawSprite(nullptr, false);
@@ -570,6 +570,11 @@ void ItemBox::GivePowerup()
             player->GiveRings(50, false);
             player->TryTransform(false, Player::TransformSuper);
             break;
+
+        case ItemBox::Hyper:
+            player->GiveRings(50, false);
+            player->TryTransform(false, Player::TransformHyper);
+        break;
 
         case ItemBox::Stock: {
             if (this->contentsAnimator.animationID == 7) {      

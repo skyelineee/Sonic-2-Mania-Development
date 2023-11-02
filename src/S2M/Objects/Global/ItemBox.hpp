@@ -28,6 +28,7 @@ struct ItemBox : RSDK::GameObject::Entity {
         Swap,
         Random,
         Super,
+        Hyper,
         Coin,
         Stock,
         Banana,

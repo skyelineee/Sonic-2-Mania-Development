@@ -150,6 +150,7 @@ struct Player : RSDK::GameObject::Entity {
         color superKnuxPalette_Water[18];
 
         color hyperSonicPalette[18];
+        color hyperSonicPalette_Water[18];
 
         color *activeSuperSonicPalette;
         color *activeSuperSonicPalette_Water;

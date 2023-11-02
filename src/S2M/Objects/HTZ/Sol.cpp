@@ -79,6 +79,7 @@ void Sol::StageLoad()
     sVars->hitboxOrb.bottom = 4;
 
     DebugMode::AddObject(sVars->classID, &Sol::DebugSpawn, &Sol::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Sol::DebugSpawn()

@@ -76,6 +76,7 @@ void FlasherMKII::StageLoad()
     sVars->aniFrames.Load("DEZ/FlasherMKII.bin", SCOPE_STAGE);
 
     DebugMode::AddObject(sVars->classID, &FlasherMKII::DebugSpawn, &FlasherMKII::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 
     sVars->sfxFlop.Get("DEZ/FlasherFlop.wav");
     sVars->sfxZap.Get("DEZ/FlasherZap.wav");

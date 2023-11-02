@@ -79,6 +79,7 @@ void Caterkiller::StageLoad()
     sVars->hitbox.bottom = 8;
 
     DebugMode::AddObject(sVars->classID, &Caterkiller::DebugSpawn, &Caterkiller::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Caterkiller::DebugSpawn()

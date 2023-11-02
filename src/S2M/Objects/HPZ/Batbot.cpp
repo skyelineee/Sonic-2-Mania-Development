@@ -88,6 +88,7 @@ void Batbot::StageLoad()
     sVars->directionTable[4] = FLIP_X;
 
     DebugMode::AddObject(sVars->classID, &Batbot::DebugSpawn, &Batbot::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Batbot::DebugSpawn()

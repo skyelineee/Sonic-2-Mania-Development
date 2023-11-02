@@ -91,6 +91,7 @@ void Dragonfly::StageLoad()
     sVars->hitboxSpine.bottom = 2;
 
     DebugMode::AddObject(sVars->classID, &Dragonfly::DebugSpawn, &Dragonfly::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Dragonfly::DebugDraw()

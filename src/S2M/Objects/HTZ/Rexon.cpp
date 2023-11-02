@@ -127,6 +127,7 @@ void Rexon::StageLoad(void)
     sVars->sfxExplosion.Get("Stage/Explosion2.wav");
 
     DebugMode::AddObject(sVars->classID, &Rexon::DebugSpawn, &Rexon::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Rexon::DebugSpawn()

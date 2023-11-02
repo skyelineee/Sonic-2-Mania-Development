@@ -82,6 +82,7 @@ void Vultron::StageLoad()
     sVars->hitboxRange.bottom = 128;
 
     DebugMode::AddObject(sVars->classID, &Vultron::DebugSpawn, &Vultron::DebugDraw);
+    Zone::AddToHyperList(sVars->classID, true, true, true);
 }
 
 void Vultron::DebugSpawn()
