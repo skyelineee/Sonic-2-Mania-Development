@@ -262,12 +262,6 @@ void TitleSetup::State_WhiteFlash()
                 titleLogo->showRibbonCenter = true;
                 titleLogo->mainAnimator.SetAnimation(TitleLogo::sVars->aniFrames, 2, true, 0);
             }
-            if (titleLogo->type != TitleLogo::TITLELOGO_PRESSSTART && titleLogo->type != TitleLogo::TITLELOGO_COPYRIGHT) { // if titlelogos type is not pressstart and its not copyright, subtract its position
-                titleLogo->position.y -= TO_FIXED(16);
-            }
-        }
-        for (auto titleSonic : GameObject::GetEntities<TitleSonic>(FOR_ALL_ENTITIES)) {
-            titleSonic->position.y -= TO_FIXED(16);
         }
         // changes the bg during the flash by changing draw orders
         SceneLayer::GetTileLayer(0)->drawGroup[0] = DRAWGROUP_COUNT;
