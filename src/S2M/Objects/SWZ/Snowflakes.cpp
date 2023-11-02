@@ -51,6 +51,7 @@ void Snowflakes::Update()
         for (int32 i = 0; i < 0x40; ++i) {
             if (!this->positions[i].x && !this->positions[i].y && (i & 0x8000) == 0) {
                 CreateSnowflake(i);
+                break;
             }
         }
     }
