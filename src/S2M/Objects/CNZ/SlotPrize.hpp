@@ -34,7 +34,7 @@ struct SlotPrize : RSDK::GameObject::Entity {
     // INSTANCE VARS
     // ==============================
 
-    bool32 winner;
+    RSDK::StateMachine<SlotPrize> state;
     RSDK::Animator animator;
     RSDK::Vector2 originPos;
     int32 timer;
@@ -57,6 +57,13 @@ struct SlotPrize : RSDK::GameObject::Entity {
     static void EditorLoad();
     void EditorDraw();
 #endif
+
+    // ==============================
+    // FUNCTIONS
+    // ==============================
+
+    void State_Winner();
+    void State_Loser();
 
     // ==============================
     // DECLARATION

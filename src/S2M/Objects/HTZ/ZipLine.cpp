@@ -23,7 +23,8 @@ void ZipLine::Update()
     int32 storeY = this->position.y;
 
     this->position = this->handlePos;
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) 
+    {
         int32 playerID = RSDKTable->GetEntitySlot(player);
         if (this->grabDelay[playerID])
             this->grabDelay[playerID]--;
@@ -59,7 +60,7 @@ void ZipLine::Update()
                             player->velocity.y       = -0x40000;
                             player->jumpAbilityState = 1;
                             player->animator.SetAnimation(player->aniFrames, Player::ANI_JUMP, false, 0);
-                            player->animator.speed = 48;
+                            player->animator.speed    = 48;
                             player->state.Set(&Player::State_Air);
                             this->grabDelay[playerID] = 60;
                             this->activePlayers &= ~(1 << playerID);
@@ -205,12 +206,13 @@ void ZipLine::StageLoad()
     sVars->hitboxHandle.bottom = 24;
     sVars->hitboxHandle.right  = 8;
 
-    // Zone_AddVSSwapCallback(ZipLine::VSSwap_CheckBusy);
+   //Zone_AddVSSwapCallback(ZipLine::VSSwap_CheckBusy);
 }
 
 void ZipLine::VSSwap_CheckBusy()
 {
-    for (auto zipline : GameObject::GetEntities<ZipLine>(FOR_ACTIVE_ENTITIES)) {
+    for (auto zipline : GameObject::GetEntities<ZipLine>(FOR_ACTIVE_ENTITIES)) 
+    {
         if ((1 << Zone::sVars->swapPlayerID) & zipline->activePlayers)
             Zone::sVars->playerSwapEnabled[Zone::sVars->swapPlayerID] = false;
     }
@@ -229,8 +231,7 @@ void ZipLine::GrabHandle(Player *player, int32 playerID, Hitbox *playerHitbox)
     player->rotation      = 0;
     player->position.x    = this->position.x;
     player->position.y    = this->position.y;
-    player->position.y +=
-        ((sVars->hitboxHandle.top - playerHitbox->top) << 16) + (((sVars->hitboxHandle.bottom - sVars->hitboxHandle.top) << 15) & 0xFFFF0000);
+    player->position.y += ((sVars->hitboxHandle.top - playerHitbox->top) << 16) + (((sVars->hitboxHandle.bottom - sVars->hitboxHandle.top) << 15) & 0xFFFF0000);
     player->tileCollisions = TILECOLLISION_NONE;
     player->animator.SetAnimation(player->aniFrames, Player::ANI_HANG, true, 0);
     player->state.Set(&Player::State_Static);
@@ -243,7 +244,8 @@ void ZipLine::GrabHandle(Player *player, int32 playerID, Hitbox *playerHitbox)
 
 void ZipLine::ForceReleasePlayers()
 {
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) 
+    {
         int32 playerID = RSDKTable->GetEntitySlot(player);
         if ((1 << playerID) & this->activePlayers) {
             this->grabDelay[playerID] = 60;
@@ -362,20 +364,21 @@ void ZipLine::State_Moving()
         }
 
         if (this->CheckCollisionTouchBox(&sVars->hitboxHandle, this, &otherHitbox)) {
-            ZipLine *endMarker       = GameObject::Get<ZipLine>(sceneInfo->entitySlot - 1);
+            ZipLine *endMarker = GameObject::Get<ZipLine>(sceneInfo->entitySlot - 1);
             endMarker->handlePos.x   = this->joinPos.x;
             endMarker->handlePos.y   = this->joinPos.y;
             endMarker->onGround      = true;
             endMarker->activePlayers = this->activePlayers;
             endMarker->groundVel     = this->groundVel;
             endMarker->state.Set(&ZipLine::State_Moving);
-            this->position.x    = storeX;
-            this->position.y    = storeY;
-            this->activePlayers = 0;
-            this->groundVel     = 0;
-            this->handlePos.x   = -0x100000;
+            this->position.x         = storeX;
+            this->position.y         = storeY;
+            this->activePlayers      = 0;
+            this->groundVel          = 0;
+            this->handlePos.x        = -0x100000;
             this->state.Set(nullptr);
-            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
+            for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) 
+            {
                 if ((1 << RSDKTable->GetEntitySlot(player)) & endMarker->activePlayers) {
                     Hitbox *playerHitbox = player->GetHitbox();
                     player->velocity.x   = 0;

@@ -42,6 +42,12 @@ if(DISCORD_RPC AND WIN32)
     endif()
 endif()
 
+if(MSVC)
+    target_link_options(Sonic2Mania PRIVATE /OPT:NOICF)
+else()
+    target_link_options(Sonic2Mania PRIVATE --icf=none)
+endif()
+
 set_target_properties(Sonic2Mania PROPERTIES OUTPUT_NAME ${OUTPUT_NAME})
 
 target_compile_definitions(Sonic2Mania PRIVATE

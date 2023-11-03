@@ -489,15 +489,15 @@ void SlotMachine::State_Reward()
             prize->originPos.y = this->position.y;
             prize->inkEffect   = INK_ALPHA; // 2
             if (this->rewardRingCount > 0) {
-                prize->timer  = 26;
-                prize->winner = true;
+                prize->timer = 26;
+                prize->state.Set(&SlotPrize::State_Winner);
                 prize->listID = SlotPrize::Rings;
                 this->angle += 0x89;
                 this->rewardRingCount--;
             }
             else {
-                prize->timer  = 30;
-                prize->winner = false;
+                prize->timer = 30;
+                prize->state.Set(&SlotPrize::State_Loser);
                 prize->listID = SlotPrize::Spike;
                 this->angle += 0x90;
                 this->rewardRingCount++;
