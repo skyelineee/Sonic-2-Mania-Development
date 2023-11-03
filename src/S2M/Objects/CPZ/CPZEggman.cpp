@@ -138,7 +138,7 @@ void CPZEggman::State_AwaitPlayer()
 
     this->eggmanAnimator.SetAnimation(sVars->aniFrames, Idle, false, 0);
     Music::ClearMusicStack();
-    Music::PlayTrack(Music::TRACK_EGGMAN2);
+    Music::PlayOnFade(Music::TRACK_EGGMAN2, 0.025f);
     this->originPos.y = this->position.y;
 
     // object[+1].type = TypeName[Chemical Dropper];
@@ -171,7 +171,7 @@ void CPZEggman::State_Explode()
         this->exploding = false;
         this->state.Set(&CPZEggman::State_DefeatFall);
         Music::ClearMusicStack();
-        Music::PlayTrack(Music::TRACK_STAGE);
+        Music::PlayOnFade(Music::TRACK_STAGE, 0.025f);
         Vector2 layerSize;
         Zone::sVars->fgLayer[0].Size(&layerSize, true); // gets the layer size of the fg and sets layerSize to it
         Zone::sVars->cameraBoundsR[0] = layerSize.x;
