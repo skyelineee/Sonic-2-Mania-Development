@@ -74,6 +74,7 @@ struct Splats : RSDK::GameObject::Entity {
 
     void State_Init();
     void State_BounceAround();
+    void State_Land();
 
     // ==============================
     // DECLARATION

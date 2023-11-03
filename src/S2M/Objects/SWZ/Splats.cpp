@@ -47,7 +47,7 @@ void Splats::Create(void *data)
 
 void Splats::StageLoad()
 {
-    sVars->aniFrames.Load("SWZ/Splats.bin", SCOPE_STAGE);
+    sVars->aniFrames.Load("SWZ/Frogger.bin", SCOPE_STAGE);
 
     sVars->hitboxBadnik.left   = -10;
     sVars->hitboxBadnik.top    = -20;
@@ -69,8 +69,7 @@ void Splats::DebugSpawn() { GameObject::Create<Splats>(nullptr, this->position.x
 
 void Splats::CheckPlayerCollisions()
 {
-    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES))
-    {
+    for (auto player : GameObject::GetEntities<Player>(FOR_ACTIVE_ENTITIES)) {
         if (player->CheckBadnikTouch(this, &sVars->hitboxBadnik)) {
             player->CheckBadnikBreak(this, true);
         }
@@ -98,22 +97,34 @@ void Splats::State_Init()
 
 void Splats::State_BounceAround()
 {
+    this->mainAnimator.Process();
     this->position.x += this->velocity.x;
     this->position.y += this->velocity.y;
     this->velocity.y += 0x3800;
 
     if (this->velocity.y > 0 && this->TileCollision(Zone::sVars->collisionLayers, 0, 0, 0, 0x100000, true)) {
+        this->mainAnimator.SetAnimation(sVars->aniFrames, 1, 0, 0);
+        this->state.Set(&Splats::State_Land);
+    }
+
+    Splats::CheckPlayerCollisions();
+    Splats::CheckOffScreen();
+}
+
+void Splats::State_Land()
+{
+    if (this->mainAnimator.frameID == this->mainAnimator.frameCount - 1) {
         if (this->bounceCount && ++this->activeCount >= this->bounceCount) {
             this->activeCount = 0;
             this->direction ^= FLIP_X;
             this->velocity.x = -this->velocity.x;
         }
-        this->position.y -= 0x80000;
         this->velocity.y = -0x40000;
+        this->mainAnimator.SetAnimation(sVars->aniFrames, 0, 0, 0);
+        this->state.Set(&Splats::State_BounceAround);
     }
 
-    this->mainAnimator.frameID = this->velocity.y < 0;
-
+    this->mainAnimator.Process();
     Splats::CheckPlayerCollisions();
     Splats::CheckOffScreen();
 }
