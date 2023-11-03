@@ -781,8 +781,6 @@ void UIButton::SelectedCB()
     this->timer = 0;
     this->state.Set(&UIButton::State_Selected);
 
-    parent->selectionDisabled = true; // ?? not sure why i have to do all that
-
     UIWidgets::sVars->sfxAccept.Play(false, 255);
 }
 
