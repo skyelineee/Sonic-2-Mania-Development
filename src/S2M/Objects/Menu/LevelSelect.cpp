@@ -66,7 +66,7 @@ void LevelSelect::StageLoad()
     UIPicture::sVars->aniFrames.Load("LSelect/Icons.bin", SCOPE_STAGE);
     UIText::sVars->aniFrames.Load("LSelect/Text.bin", SCOPE_STAGE);
 
-    SetPresence("", "In Level Select", "doggy", "doggy", "", "");
+    SetPresence("", "In Level Select", "levelselect", "Level Select", "", "");
 
     globals->medalMods |= MEDAL_DEBUGMODE;
 }

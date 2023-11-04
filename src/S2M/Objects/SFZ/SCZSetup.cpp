@@ -49,10 +49,10 @@ void SCZSetup::StageLoad()
                 break;
         }
         if (Stage::CheckSceneFolder("SCZ")) {
-            SetPresence(playingAsText, "In Sky Chase", "doggy", "doggy", characterImage, characterText);
+            SetPresence(playingAsText, "In Sky Chase", "sfz", "Sky Chase", characterImage, characterText);
         }
         else if (Stage::CheckSceneFolder("WFZ")) {
-            SetPresence(playingAsText, "In Wing Fortress", "doggy", "doggy", characterImage, characterText);
+            SetPresence(playingAsText, "In Wing Fortress", "sfz", "Wing Fortress", characterImage, characterText);
         }
     }
 }

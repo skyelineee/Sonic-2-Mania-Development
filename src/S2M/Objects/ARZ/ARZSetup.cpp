@@ -120,7 +120,7 @@ void ARZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Aquatic Ruin", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Aquatic Ruin", "arz", "Aquatic Ruin", characterImage, characterText);
     }
 }
 

@@ -58,7 +58,7 @@ void DEZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Death Egg", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Death Egg", "dez", "Death Egg", characterImage, characterText);
     }
 }
 
