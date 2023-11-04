@@ -112,7 +112,7 @@ void DASetup::StageLoad()
     sVars->sfxSSExit.Get("Special/SSExit.wav");
     sVars->sfxScoreTotal.Get("Global/ScoreTotal.wav");
 
-    SetPresence("", "In Cabaret", "doggy", "doggy", "", "");
+    SetPresence("", "In Cabaret", "menu", "Menus", "", "");
 }
 
 void DASetup::State_Idle()

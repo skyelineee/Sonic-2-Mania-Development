@@ -109,7 +109,12 @@ void EHZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Emerald Hill", "doggy", "doggy", characterImage, characterText);
+        if (Stage::CheckSceneFolder("EHZ")) {
+            SetPresence(playingAsText, "In Emerald Hill", "ehz", "Emerald Hill", characterImage, characterText);
+        }
+        else if (Stage::CheckSceneFolder("HEHZ")) {
+            SetPresence(playingAsText, "In H. Emerald Hill", "hehz", "H. Emerald Hill", characterImage, characterText);
+        }
     }
 
     sVars->background = SceneLayer::GetTileLayer(0);

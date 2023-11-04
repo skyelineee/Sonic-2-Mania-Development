@@ -41,16 +41,16 @@ void Music::Create(void *data)
 void Music::StageLoad()
 {
     // Slot 0: stage music
-    SetMusicTrack(TRACK_INVINCIBLE, "Invincible.ogg", 1088426);
+    SetMusicTrack(TRACK_INVINCIBLE, "Invincible.ogg", 262723);
     SetMusicTrack(TRACK_SNEAKERS, "Sneakers.ogg", 120960);
     SetMusicTrack(TRACK_MINIBOSS, "BossMini.ogg", 276105);
     SetMusicTrack(TRACK_HBHBOSS, "BossHBH.ogg", 70560);
     SetMusicTrack(TRACK_EGGMAN1, "BossEggman1.ogg", 282240);
-    SetMusicTrack(TRACK_EGGMAN2, "BossEggman2.ogg", 119368);
+    SetMusicTrack(TRACK_EGGMAN2, "BossEggman2.ogg", 238737);
     SetMusicTrack(TRACK_ACTCLEAR, "ActClear.ogg", false);
     SetMusicTrack(TRACK_DROWNING, "Drowning.ogg", false);
     SetMusicTrack(TRACK_GAMEOVER, "GameOver.ogg", false);
-    SetMusicTrack(TRACK_SUPER, "Super.ogg", 845250);
+    SetMusicTrack(TRACK_SUPER, "Super.ogg", 294000);
     SetMusicTrack(TRACK_HBHMISCHIEF, "HBHMischief.ogg", 381405);
     // Slot 12 (slot 11 in pre-plus): "no load"
     SetMusicTrack(TRACK_1UP, "1up.ogg", false);

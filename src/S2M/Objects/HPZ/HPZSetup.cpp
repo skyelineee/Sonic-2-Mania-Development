@@ -153,10 +153,10 @@ void HPZSetup::StageLoad()
                 break;
         }
         if (Stage::CheckSceneFolder("HPZ")) {
-            SetPresence(playingAsText, "In Hidden Palace", "doggy", "doggy", characterImage, characterText);
+            SetPresence(playingAsText, "In Hidden Palace", "hpz", "Hidden Palace", characterImage, characterText);
         }
         else if (Stage::CheckSceneFolder("PPZ")) {
-            SetPresence(playingAsText, "In Proto Palace", "doggy", "doggy", characterImage, characterText);
+            SetPresence(playingAsText, "In Proto Palace", "hpz", "Proto Palace", characterImage, characterText);
         }
     }
 }

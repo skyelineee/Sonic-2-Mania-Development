@@ -95,7 +95,7 @@ void CNZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Casino Night", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Casino Night", "cnz", "Casino Night", characterImage, characterText);
     }
 }
 

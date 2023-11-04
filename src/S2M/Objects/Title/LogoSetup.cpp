@@ -61,7 +61,7 @@ void LogoSetup::StageLoad()
         }
     }
 
-    SetPresence("", "Watching Logos", "doggy", "doggy", "", "");
+    SetPresence("", "Watching Logos", "title", "Title Screen", "", "");
 }
 
 bool32 LogoSetup::ImageCallback()

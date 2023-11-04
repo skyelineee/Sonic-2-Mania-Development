@@ -157,7 +157,7 @@ void MenuSetup::StageLoad()
         MenuSetup::sVars->fxFade = fade;
     }
 
-    SetPresence("", "In Menus", "doggy", "doggy", "", "");
+    SetPresence("", "In Menus", "menu", "Menus", "", "");
 }
 
 void MenuSetup::StartTransition(void (*callback)(), int32 delay)

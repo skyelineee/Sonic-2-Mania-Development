@@ -48,7 +48,7 @@ void SSZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Sand Shower", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Sand Shower", "ssz", "Sand Shower", characterImage, characterText);
     }
 }
 

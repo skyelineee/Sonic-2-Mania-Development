@@ -66,7 +66,7 @@ void HTZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Hill Top", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Hill Top", "htz", "Hill Top", characterImage, characterText);
     }
 }
 

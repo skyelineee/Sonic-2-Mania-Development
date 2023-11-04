@@ -5400,69 +5400,47 @@ void Player::State_KnuxLedgePullUp()
             break;
 
         case ManiaSprites:
+            this->left  = false;
+            this->right = false;
             this->animator.SetAnimation(this->aniFrames, ANI_LEDGE_PULL_UP, false, 1);
 
-            this->animator.Process();
+            Animator backup;
+            memcpy(&backup, &this->animator, sizeof(backup));
 
+            this->animator.Process();
             if (this->timer != this->animator.frameID && this->animator.frameID < 6) {
                 this->timer = this->animator.frameID;
 
-                switch (globals->gravityDir) {
-                    default: break;
+                if (!this->isChibi) {
+                    if (this->direction == FLIP_X)
+                        this->position.x -= 0x50000;
+                    else
+                        this->position.x += 0x50000;
 
-                    case CMODE_FLOOR:
-                        if (!this->isChibi) {
-                            if (this->direction & FLIP_X)
-                                this->position.x += -0x50000;
-                            else
-                                this->position.x += 0x50000;
+                    this->position.y -= 0x80000;
+                }
+                else {
+                    if (this->direction == FLIP_X)
+                        this->position.x -= 0x40000;
+                    else
+                        this->position.x += 0x40000;
 
-                            this->position.y += -0x80000;
-                        }
-                        else {
-                            if (this->direction & FLIP_X)
-                                this->position.x += -0x40000;
-                            else
-                                this->position.x += 0x40000;
-
-                            this->position.y += -0x40000;
-                        }
-                        break;
-
-                    case CMODE_ROOF:
-                        if (!this->isChibi) {
-                            if (this->direction & FLIP_X)
-                                this->position.x += 0x50000;
-                            else
-                                this->position.x += -0x50000;
-
-                            this->position.y += 0x80000;
-                        }
-                        else {
-                            if (this->direction & FLIP_X)
-                                this->position.x += 0x40000;
-                            else
-                                this->position.x += -0x40000;
-
-                            this->position.y += 0x40000;
-                        }
-                        break;
+                    this->position.y -= 0x40000;
                 }
             }
 
             if (this->animator.frameID == 6) {
                 this->onGround       = true;
-                this->tileCollisions = globals->tileCollisionMode;
+                this->tileCollisions = TILECOLLISION_DOWN;
             }
 
             if (this->animator.frameID == this->animator.frameCount - 1) {
-                this->timer          = 0;
-                this->outtaHereTimer = 0;
+                this->timer = 0;
                 this->state.Set(&Player::State_Ground);
             }
 
             memcpy(&this->animator, &backup, sizeof(backup));
-            break;
+        break;
     }
 }
 

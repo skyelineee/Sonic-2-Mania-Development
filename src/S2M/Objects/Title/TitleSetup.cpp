@@ -64,7 +64,7 @@ void TitleSetup::StageLoad()
     // String presence;
     // Localization::GetString(&presence, Localization::RPC_Title);
     // API::RichPresence::Set(PRESENCE_TITLE, &presence);
-    SetPresence("", "In Title Screen", "doggy", "doggy", "", "");
+    SetPresence("", "In Title Screen", "title", "Title Screen", "", "");
 
     API::Storage::SetNoSave(false);
 

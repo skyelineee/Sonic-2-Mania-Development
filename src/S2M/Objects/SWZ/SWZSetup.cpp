@@ -79,7 +79,7 @@ void SWZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Secret Woods", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Secret Woods", "swz", "Secret Woods", characterImage, characterText);
     }
 }
 

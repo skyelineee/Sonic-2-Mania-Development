@@ -139,7 +139,7 @@ void HP_Setup::StageLoad()
             characterText  = "Knuckles";
             break;
     }
-    SetPresence(playingAsText, "In a Special Stage", "doggy", "doggy", characterImage, characterText);
+    SetPresence(playingAsText, "In a Special Stage", "special", "Special Stage", characterImage, characterText);
 }
 
 #if RETRO_INCLUDE_EDITOR

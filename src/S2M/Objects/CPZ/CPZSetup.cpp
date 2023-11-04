@@ -119,7 +119,7 @@ void CPZSetup::StageLoad()
                 characterText  = "Knuckles";
                 break;
         }
-        SetPresence(playingAsText, "In Chemical Plant", "doggy", "doggy", characterImage, characterText);
+        SetPresence(playingAsText, "In Chemical Plant", "cpz", "Chemical Plant", characterImage, characterText);
     }
 }
 
