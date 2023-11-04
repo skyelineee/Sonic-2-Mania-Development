@@ -23,19 +23,21 @@ void InitDiscord()
 void SetPresence(const char *details, const char *state, const char *largeImage, const char *largeText, const char *smallImage, const char *smallText)
 {
 #if DISCORD_RPC
-    discord::Activity activity{};
-    activity.SetDetails(details);
-    activity.SetState(state);
-    discord::ActivityAssets activityAssets{};
-    activityAssets.SetLargeImage(largeImage);
-    activityAssets.SetLargeText(largeText);
-    activityAssets.SetSmallImage(smallImage);
-    activityAssets.SetSmallText(smallText);
-    discord::ActivityTimestamps activityTimestamps{};
-    activityTimestamps.SetStart(time(nullptr));
-    activity.GetTimestamps() = activityTimestamps;
-    activity.GetAssets()     = activityAssets;
-    core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {});
+    if (core) {
+        discord::Activity activity{};
+        activity.SetDetails(details);
+        activity.SetState(state);
+        discord::ActivityAssets activityAssets{};
+        activityAssets.SetLargeImage(largeImage);
+        activityAssets.SetLargeText(largeText);
+        activityAssets.SetSmallImage(smallImage);
+        activityAssets.SetSmallText(smallText);
+        discord::ActivityTimestamps activityTimestamps{};
+        activityTimestamps.SetStart(time(nullptr));
+        activity.GetTimestamps() = activityTimestamps;
+        activity.GetAssets()     = activityAssets;
+        core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {});
+    }
 #endif
 }
 
@@ -44,6 +46,11 @@ void SetPresence(const char *details, const char *state, const char *largeImage,
 void RPCallback()
 {
 #if DISCORD_RPC
-    ::core->RunCallbacks();
+    if (!core) {
+        InitDiscord();
+    }
+    if (core) {
+        ::core->RunCallbacks();
+    }
 #endif
 }
